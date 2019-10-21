@@ -13,11 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin maps/map1.tmx
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:maps/map1.tmx
-
 #begin TestImage.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -29,6 +24,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TestImage.png
+
+#begin testmap.csv
+/copy:testmap.csv
 
 #begin tileset/test_tileset-1/dirt.png
 /importer:TextureImporter
@@ -89,9 +87,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tileset/test_tileset-1/stone.png
-
-#begin tileset/test_tileset-1/test_tile_set.tsx
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:tileset/test_tileset-1/test_tile_set.tsx
 

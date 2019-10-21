@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace Engine
 {
     /// <summary>
-    /// This class is a class for reading files
+    /// This class will read a text file
+    /// This class is just for pre release purposes and will eventually be replaced with content pipeline
     /// </summary>
     public static class ContentReader
     {

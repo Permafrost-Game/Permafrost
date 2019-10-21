@@ -19,7 +19,7 @@ namespace Engine.TileGrid
         /// <param name="filePath">The Map file that is to be loaded</param>
         /// <param name="tileSet">The Tile set that is to be loaded</param>
         /// <returns></returns>
-        public static TileMap ParseTileMap(string filePath, TileSet tileSet)
+        public static TileMap parseTileMap(string filePath, TileSet tileSet)
         {
             List<string> rows = ContentReader.LoadText(filePath);
 
@@ -43,7 +43,7 @@ namespace Engine.TileGrid
                     Vector2 position = new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y);
 
                     Texture2D texture = tileSet.tileSetTextures[
-                        Int32.Parse(rows[y].Split(',')[x])
+                        rows[y].Split(',')[x]
                         ];
                     
                     tiles[x,y] = new Tile(texture, position, tileSet.textureSize);

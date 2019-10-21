@@ -51,7 +51,6 @@
     <Compile Include="TileGrid\TileMap.cs" />
     <Compile Include="TileGrid\TileMapParser.cs" />
     <Compile Include="TileGrid\TileSet.cs" />
-    <Compile Include="TileGrid\TileSetParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
