@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalWarmingGame", "Global
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine\Engine.csproj", "{79C44EE6-EF3C-42D8-B5FE-FB430B668142}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentPipeline", "ContentPipeline\ContentPipeline.csproj", "{301AB2D1-08C8-42DC-98E9-8BA0A78DE7F6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{79C44EE6-EF3C-42D8-B5FE-FB430B668142}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79C44EE6-EF3C-42D8-B5FE-FB430B668142}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79C44EE6-EF3C-42D8-B5FE-FB430B668142}.Release|Any CPU.Build.0 = Release|Any CPU
-		{301AB2D1-08C8-42DC-98E9-8BA0A78DE7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{301AB2D1-08C8-42DC-98E9-8BA0A78DE7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{301AB2D1-08C8-42DC-98E9-8BA0A78DE7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{301AB2D1-08C8-42DC-98E9-8BA0A78DE7F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
