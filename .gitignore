@@ -36,6 +36,9 @@ obj/
 [Rr]elease*/
 Ankh.NoLoad
 
+# Visual Studio 2015 cache/options directory
+.vs/
+
 #Tooling
 _ReSharper*/
 *.resharper

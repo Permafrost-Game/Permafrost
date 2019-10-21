@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine.TileGrid;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
@@ -11,6 +13,9 @@ namespace GlobalWarmingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        TileSet tileSet;
+        TileMap tileMap;
         
         public Game1()
         {
@@ -27,7 +32,7 @@ namespace GlobalWarmingGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -40,7 +45,23 @@ namespace GlobalWarmingGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            /*
+             * This section if for content loading
+             */
+            {
+                //TODO this is all just test code
+                var textureSet = new Dictionary<string, Texture2D>();
+                textureSet.Add("0", this.Content.Load<Texture2D>("tileset/test_tileset-1/error"));
+                textureSet.Add("1", this.Content.Load<Texture2D>("tileset/test_tileset-1/dirt"));
+                textureSet.Add("2", this.Content.Load<Texture2D>("tileset/test_tileset-1/grass"));
+                textureSet.Add("3", this.Content.Load<Texture2D>("tileset/test_tileset-1/snow"));
+                textureSet.Add("4", this.Content.Load<Texture2D>("tileset/test_tileset-1/stone"));
+
+                tileSet = new TileSet(textureSet, new Vector2(16));
+                tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
+            }
+            
+            
         }
 
         /// <summary>
@@ -50,6 +71,9 @@ namespace GlobalWarmingGame
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            {
+
+            }
         }
 
         /// <summary>
@@ -63,7 +87,9 @@ namespace GlobalWarmingGame
                 Exit();
 
             // TODO: Add your update logic here
+            {
 
+            }
             base.Update(gameTime);
         }
 
@@ -74,8 +100,20 @@ namespace GlobalWarmingGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            
+            spriteBatch.Begin();
 
-            // TODO: Add your drawing code here
+            {   
+                //This section is for drawing 
+                tileMap.Draw(spriteBatch);
+
+
+
+
+
+
+            }
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
