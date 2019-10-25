@@ -49,13 +49,13 @@ namespace GlobalWarmingGame
              * This section if for content loading
              */
             {
-                //TODO this is all just test code
+                //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
-                textureSet.Add("0", this.Content.Load<Texture2D>("tileset/test_tileset-1/error"));
-                textureSet.Add("1", this.Content.Load<Texture2D>("tileset/test_tileset-1/dirt"));
-                textureSet.Add("2", this.Content.Load<Texture2D>("tileset/test_tileset-1/grass"));
-                textureSet.Add("3", this.Content.Load<Texture2D>("tileset/test_tileset-1/snow"));
-                textureSet.Add("4", this.Content.Load<Texture2D>("tileset/test_tileset-1/stone"));
+                textureSet.Add("0", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
+                textureSet.Add("1", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
+                textureSet.Add("3", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
+                textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
