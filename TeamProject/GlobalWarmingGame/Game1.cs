@@ -1,4 +1,5 @@
-﻿using Engine.TileGrid;
+﻿using Engine;
+using Engine.TileGrid;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,13 +14,18 @@ namespace GlobalWarmingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        MouseSelectionManager mouseSelectionManager;
 
         TileSet tileSet;
         TileMap tileMap;
+
+        List<GameObject> gameObjects;
         
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            mouseSelectionManager = new MouseSelectionManager();
+            gameObjects = new List<GameObject>();
             Content.RootDirectory = "Content";
         }
 
@@ -88,7 +94,7 @@ namespace GlobalWarmingGame
 
             // TODO: Add your update logic here
             {
-
+                mouseSelectionManager.Update(gameObjects);
             }
             base.Update(gameTime);
         }
@@ -107,7 +113,10 @@ namespace GlobalWarmingGame
                 //This section is for drawing 
                 tileMap.Draw(spriteBatch);
 
-
+                foreach(Engine.IDrawable o in gameObjects)
+                {
+                    o.Draw(spriteBatch);
+                }
 
 
 

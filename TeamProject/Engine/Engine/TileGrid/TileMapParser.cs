@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,7 +32,8 @@ namespace Engine.TileGrid
 
                 if(cols.Count() != width)
                 {
-                    //TODO Irregular width
+                    //TODO custom exception
+                    throw new Exception("File has irregular widths");
                 }
 
                 for(int x = 0; x < cols.Count(); x++)
