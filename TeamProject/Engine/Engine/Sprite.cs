@@ -17,7 +17,16 @@ namespace Engine
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, null, color: Color.White, rotation, rotationOrigin, 1f, SpriteEffects.None, depth);
+            spriteBatch.Draw(
+                texture:    texture, 
+                position:   position,
+                sourceRectangle: null,
+                color:      Color.White,
+                rotation:   rotation,
+                origin:     rotationOrigin,
+                scale:      1f,
+                effects:    SpriteEffects.None,
+                layerDepth: depth);
         }
     }
 }
