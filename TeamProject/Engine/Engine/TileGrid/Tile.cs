@@ -11,7 +11,7 @@ namespace Engine.TileGrid
         private readonly Texture2D texture;
         private readonly Vector2 size;
 
-        public Tile(Texture2D texture, Vector2 Position, Vector2 size) : base(Position)
+        public Tile(Texture2D texture, Vector2 Position, Vector2 size) : base(Position, size)
         {
             this.texture = texture;
             this.size = size;

@@ -4,29 +4,22 @@ namespace Engine
 {
     public class GameObject
     {
+        protected Vector2 position;
+        protected Vector2 size;
+        protected float rotation;
+        protected Vector2 rotationOrigin;
 
-        protected Vector2 position = new Vector2();
-        protected int rotation = 0;
-        protected Vector2 velocity = new Vector2();
-
-        public GameObject()
-        {
-
-        }
-
-        public GameObject(Vector2 position) : this()
+        public GameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin)
         {
             this.position = position;
-        }
-
-        public GameObject(Vector2 position, int rotation) : this(position)
-        {
+            this.size = size;
             this.rotation = rotation;
+            this.rotationOrigin = rotationOrigin;
         }
 
-        public GameObject(Vector2 position, int rotation, Vector2 velocity) : this(position, rotation)
+        public GameObject(Vector2 position, Vector2 size) : this(position, size, 0, new Vector2(0))
         {
-            this.velocity = velocity;
+
         }
     }
 }
