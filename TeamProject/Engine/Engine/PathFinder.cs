@@ -4,7 +4,6 @@ using System.Linq;
 using Engine.TileGrid;
 using Microsoft.Xna.Framework;
 
-
 namespace Engine
 {
     public static class PathFinder
@@ -12,8 +11,9 @@ namespace Engine
         //Declare open and closed dictionaries
         private static Dictionary<double, Tile> open;
         private static Dictionary<double, Tile> closed;
+        private static TileMap tileMap = ZoneManager.currentZone.getTileMap();
 
-        public static void pathFinder(Tile start, Tile goal)
+        public static void find(Tile start, Tile goal)
         {
             //Create open dictionary with the start tile and leave closed null
             open = new Dictionary<double, Tile>() { { 0, start } };
