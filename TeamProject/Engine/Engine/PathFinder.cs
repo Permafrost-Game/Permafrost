@@ -7,22 +7,14 @@ using Microsoft.Xna.Framework;
 
 namespace Engine
 {
-    public class PathFinder
+    public static class PathFinder
     {
         //Declare open and closed dictionaries
         private static Dictionary<double, Tile> open;
         private static Dictionary<double, Tile> closed;
 
-        //Movement cost in relation to direction
-        private double xyCost;
-        private double diagonalCost;
-
         public static void pathFinder(Tile start, Tile goal)
         {
-            //xyCost = start.getSize().X; //The length and width are the same so horizontal and vertical cost to tile X width
-            //diagonalCost = Math.Sqrt((start.getSize().X) * (start.getSize().X) * 2); //The square root of length squared times 2 is the diagonal cost
-
-
             //Create open dictionary with the start tile and leave closed null
             open = new Dictionary<double, Tile>() { { 0, start } };
             closed = new Dictionary<double, Tile>() { };
@@ -51,10 +43,13 @@ namespace Engine
                 //Add current to the closed dictionary
                 closed.Add(currentKey, current);
 
-                if (current.Equals(goal))
+                if (current.Equals(goal)) //If the current tile is the destination tile
                 {
+                    //RETURN THE QUEUE THINGY AND FINISH
                     return;
                 }
+
+
 
 
 
