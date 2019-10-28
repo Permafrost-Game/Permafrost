@@ -46,5 +46,16 @@ namespace Engine.TileGrid
             return position;
         }
 
+        //Equality testing
+        public bool equals(object t) {
+            if (t is Tile) {
+                Tile tile = (Tile)t;
+                if (this.size.Equals(tile.getSize()) && this.position.Equals(tile.getPosition())) {
+                    return true;                                                            
+                }
+            }
+            return false;
+        }
+
     }
 }
