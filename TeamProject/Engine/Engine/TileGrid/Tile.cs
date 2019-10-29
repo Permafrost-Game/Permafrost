@@ -11,14 +11,17 @@ namespace Engine.TileGrid
         private readonly Texture2D texture;
         private readonly Vector2 size;
 
-        //Default tag and walkable boolean
+        //Default tag, walkable boolean
         private readonly int tag = -1;
         private bool walkable = true;
+
+        //Parent tile used for pathfinding
+        private Tile parent; 
 
 
         public Tile(Texture2D texture, Vector2 Position, Vector2 size) : base(Position, size)
         {
-            
+            parent = null;
             this.texture = texture;
             this.size = size;
         }
@@ -27,6 +30,26 @@ namespace Engine.TileGrid
         {
             spriteBatch.Draw(texture, new Rectangle(position.ToPoint(), size.ToPoint()), Color.White);
         }
+        
+        //Equality testing
+        public bool equals(object t)
+        {
+            if (t is Tile)
+            {
+                Tile tile = (Tile)t;
+                if (this.size.Equals(tile.getSize()) && this.position.Equals(tile.getPosition()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool hasParent() {
+            return (!parent.equals(null));            
+        }
+
+        //Getter methods
 
         public int getTag() {
             return tag;
@@ -46,15 +69,14 @@ namespace Engine.TileGrid
             return position;
         }
 
-        //Equality testing
-        public bool equals(object t) {
-            if (t is Tile) {
-                Tile tile = (Tile)t;
-                if (this.size.Equals(tile.getSize()) && this.position.Equals(tile.getPosition())) {
-                    return true;                                                            
-                }
-            }
-            return false;
+        public Tile getParent() {
+            return parent;
+        }
+
+        //Setter methods
+
+        public void setParent(Tile parent) {
+            this.parent = parent;                        
         }
 
     }

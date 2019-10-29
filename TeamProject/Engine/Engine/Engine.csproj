@@ -55,6 +55,7 @@
     <Compile Include="TileGrid\TileMap.cs" />
     <Compile Include="TileGrid\TileMapParser.cs" />
     <Compile Include="TileGrid\TileSet.cs" />
+    <Compile Include="TileCosts.cs" />
     <Compile Include="Zone.cs" />
     <Compile Include="ZoneManager.cs" />
   </ItemGroup>
