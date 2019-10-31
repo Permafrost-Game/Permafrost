@@ -9,35 +9,32 @@ namespace Engine.TileGrid
     public class Tile : GameObject, IDrawable
     {
         private readonly Texture2D texture;
-        private readonly Vector2 size;
+        public Vector2 size { get; }
+        public Vector2 Position { get; }
 
         //Default tag, walkable boolean
         private readonly int tag = -1;
-        private bool walkable = true;
-
-        //Parent tile used for pathfinding
-        private Tile parent; 
-
+        public bool Walkable { get; }
 
         public Tile(Texture2D texture, Vector2 Position, Vector2 size) : base(Position, size)
         {
-            parent = null;
             this.texture = texture;
             this.size = size;
+            Walkable = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, new Rectangle(position.ToPoint(), size.ToPoint()), Color.White);
         }
-        
+
         //Equality testing
-        public bool equals(object t)
+        public override bool Equals(object t)
         {
-            if (t is Tile)
+            if (t is Tile tile)
             {
-                Tile tile = (Tile)t;
-                if (this.size.Equals(tile.getSize()) && this.position.Equals(tile.getPosition()))
+                tile = (Tile)t;
+                if (this.size.Equals(tile.size) && this.Position.Equals(tile.Position) && this.GetHashCode() == tile.GetHashCode())
                 {
                     return true;
                 }
@@ -45,38 +42,9 @@ namespace Engine.TileGrid
             return false;
         }
 
-        public bool hasParent() {
-            return (!parent.equals(null));            
-        }
-
-        //Getter methods
-
-        public int getTag() {
-            return tag;
-        }
-
-        public Vector2 getSize()
+        public override int GetHashCode()
         {
-            return size;
-        }
-
-        public bool getWalkable() {
-            return walkable;
-        }
-
-        public Vector2 getPosition()
-        {
-            return position;
-        }
-
-        public Tile getParent() {
-            return parent;
-        }
-
-        //Setter methods
-
-        public void setParent(Tile parent) {
-            this.parent = parent;                        
+            return (base.GetHashCode() + tag);
         }
 
     }

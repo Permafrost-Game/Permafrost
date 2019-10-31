@@ -1,42 +1,31 @@
 ﻿
+using Engine.TileGrid;
+
 namespace Engine
 {
     public class TileCosts
     {
-        private double total; //Total cost of tile
-        private double fromStart; //Cost from this tile going to start through discovered paths
-        private double toGoal; //Cost from this tile directly to goal
 
-        public TileCosts(double fromStart, double toGoal)
+        //Cost from this tile going to start through discovered paths
+        public double FromStart { get; set; }
+        //Cost from this tile directly to goal
+        public double ToGoal { get; }
+        public Tile Parent { get; set; }
+
+        public TileCosts(double FromStart, double ToGoal)
         {
-            this.fromStart = fromStart;
-            this.toGoal = toGoal;
-            total = fromStart + toGoal; //initial calculations          
+            Parent = null;
+            this.FromStart = FromStart;
+            this.ToGoal = ToGoal;
         }
 
-        //Setter methods
-
-        public void setFromStart(double fromStart) //Update start
+        public double GetTotalCost()
         {
-            this.fromStart = fromStart;
-            total = fromStart + toGoal; //re-calculation
+            return (FromStart + ToGoal);
         }
 
-        //Getter methods
-
-        public double getFromStartCost()
-        {
-            return fromStart;
-        }
-
-        public double getToGoalCost()
-        {
-            return toGoal;
-        }
-
-        public double getTotalCost()
-        {
-            return total;
+        public bool HasParent() {
+            return (Parent != null);            
         }
     }
 }
