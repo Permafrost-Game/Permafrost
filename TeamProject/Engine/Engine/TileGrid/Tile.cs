@@ -16,16 +16,16 @@ namespace Engine.TileGrid
         private readonly int tag = -1;
         public bool Walkable { get; }
 
-        public Tile(Texture2D texture, Vector2 Position, Vector2 size) : base(Position, size)
+        public Tile(Texture2D texture, Vector2 Position, Vector2 size, bool walkable) : base(Position, size)
         {
             this.texture = texture;
             this.size = size;
-            Walkable = true;
+            this.Walkable = walkable;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle(position.ToPoint(), size.ToPoint()), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
         }
 
         //Equality testing

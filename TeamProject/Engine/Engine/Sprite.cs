@@ -8,8 +8,8 @@ namespace Engine
         protected float depth;
         protected Texture2D texture;
 
-        public Sprite(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, float depth, Texture2D texture) :
-            base(position, size, rotation, rotationOrigin)
+        public Sprite(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture) :
+            base(position, size, rotation, rotationOrigin, tag)
         {
             this.depth = depth;
             this.texture = texture;
@@ -18,11 +18,11 @@ namespace Engine
         {
             spriteBatch.Draw(
                 texture:    texture, 
-                position:   position,
+                position:   Position,
                 sourceRectangle: null,
                 color:      Color.White,
-                rotation:   rotation,
-                origin:     rotationOrigin,
+                rotation:   Rotation,
+                origin:     RotationOrigin,
                 scale:      1f,
                 effects:    SpriteEffects.None,
                 layerDepth: depth);

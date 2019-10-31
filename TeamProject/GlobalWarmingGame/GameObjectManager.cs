@@ -41,5 +41,20 @@ namespace GlobalWarmingGame
         {
             return _objects.OfType<T>().ToList();
         }
+
+        public static List<GameObject> GetObjectsByTag(string tag)
+        {
+            List<GameObject> go = new List<GameObject>();
+
+            foreach(GameObject o in _objects)
+            {
+                if(o.Tag == tag)
+                {
+                    go.Add(o);
+                }
+            }
+
+            return go;
+        }
     }
 }

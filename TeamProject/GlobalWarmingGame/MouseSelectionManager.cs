@@ -14,12 +14,16 @@ namespace GlobalWarmingGame
         {
             MouseState mouseState = Mouse.GetState();
 
-            
+
             if (mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton != mouseState.LeftButton)
             {
-                //foreach (IClickable o in gameObjects)
+                //this is test code!!
                 {
-                    //o.OnClick();
+                    foreach(IClickable o in GameObjectManager.GetObjectsByTag("PathFindable"))
+                    {
+                        o.OnClick(mouseState);
+                    }
+
                 }
             }
         }

@@ -39,34 +39,39 @@ namespace GlobalWarmingGame
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
-                
 
+                
                 textureSet.Add("0", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
                 textureSet.Add("1", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
                 textureSet.Add("2", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
                 textureSet.Add("3", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
+                textureSet.Add("5", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water"));
+
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
 
                 
+                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
+
 
                 tpf = new TestPathFindable(
-                    position: new Vector2(0),
-                    size: new Vector2(50),
-                    rotation: 0, 
+                    position:   new Vector2(0),
+                    size:       new Vector2(50),
+                    rotation:   0, 
                     rotationOrigin: new Vector2(0),
-                    depth: 0,
-                    texture: tileSet.tileSetTextures["0"],
-                    speed: 1f);
+                    tag:        "PathFindable",
+                    depth:      0,
+                    texture:    tileSet.tileSetTextures["0"],
+                    speed:      1f);;
 
                 GameObjectManager.Add(tpf) ;
                 
-                tpf.AddGoal(new Vector2(100, 100));
-                tpf.AddGoal(new Vector2(100, 50));
-                tpf.AddGoal(new Vector2(25,75));
-                tpf.AddGoal(new Vector2(0));
+                //tpf.AddGoal(new Vector2(100, 100));
+                //tpf.AddGoal(new Vector2(100, 50));
+                //tpf.AddGoal(new Vector2(25,75));
+                //tpf.AddGoal(new Vector2(0));
 
             }
         }
@@ -91,7 +96,7 @@ namespace GlobalWarmingGame
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
             tileMap.Draw(spriteBatch);

@@ -2,6 +2,6 @@
 {
     public interface IClickable
     {
-        void OnClick();
+        void OnClick(Microsoft.Xna.Framework.Input.MouseState mouseState);
     }
 }

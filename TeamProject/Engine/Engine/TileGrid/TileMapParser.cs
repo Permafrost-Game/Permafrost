@@ -43,8 +43,8 @@ namespace Engine.TileGrid
                     Texture2D texture = tileSet.tileSetTextures[
                         rows[y].Split(',')[x]
                         ];
-                    
-                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize);
+                    //TODO this is test code below - walkable
+                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("5"));
                     
                 }
                

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Engine.TileGrid
 {
@@ -7,8 +9,6 @@ namespace Engine.TileGrid
     /// </summary>
     public class TileMap : IDrawable
     {
-
-
 
         public Tile[,] Tiles { get; }
 
@@ -24,5 +24,14 @@ namespace Engine.TileGrid
                 tile.Draw(spriteBatch);
             }
         }
+
+        public Tile GetTileAtPosition(Vector2 position)
+        {
+            Vector2 tileSize = Tiles[0, 0].size;
+            int x = (Int32) Math.Round(position.X / tileSize.X);
+            int y = (Int32) Math.Round(position.Y / tileSize.Y);
+            return Tiles[x, y];
+        }
+
     }
 }

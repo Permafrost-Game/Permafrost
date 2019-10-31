@@ -1,7 +1,7 @@
 ﻿
 using Engine.TileGrid;
 
-namespace Engine
+namespace Engine.PathFinding
 {
     public class TileCosts
     {

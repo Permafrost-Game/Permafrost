@@ -4,7 +4,7 @@ using System.Linq;
 using Engine.TileGrid;
 using Microsoft.Xna.Framework;
 
-namespace Engine
+namespace Engine.PathFinding
 {
     public static class PathFinder
     {
@@ -12,8 +12,13 @@ namespace Engine
         private static Dictionary<Tile, TileCosts> openDictionary;
         private static Dictionary<Tile, TileCosts> closedSet;
 
-
-       
+        public static Queue<Tile> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
+        {
+            return Find(tileMap.GetTileAtPosition(start),
+                        tileMap.GetTileAtPosition(goal),
+                        canPassObstacles);
+        }
+        
 
 
         public static Queue<Tile> Find(Tile start, Tile goal, bool canPassOverObstacles)
