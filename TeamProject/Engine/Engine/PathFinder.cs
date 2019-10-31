@@ -8,9 +8,13 @@ namespace Engine
 {
     public static class PathFinder
     {
-        private static readonly TileMap tileMap = ZoneManager.currentZone.getTileMap();
+        private static readonly TileMap tileMap = ZoneManager.CurrentZone.TileMap;
         private static Dictionary<Tile, TileCosts> openDictionary;
         private static Dictionary<Tile, TileCosts> closedSet;
+
+
+       
+
 
         public static Queue<Tile> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {

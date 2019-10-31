@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Engine
 {
-    class Sprite : GameObject, IDrawable
+    public class Sprite : GameObject, IDrawable
     {
         protected float depth;
         protected Texture2D texture;
@@ -14,7 +14,6 @@ namespace Engine
             this.depth = depth;
             this.texture = texture;
         }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(

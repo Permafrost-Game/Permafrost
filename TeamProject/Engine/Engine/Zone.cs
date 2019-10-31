@@ -4,14 +4,11 @@ namespace Engine
 {
     public class Zone
     {
-        private TileMap tileMap;
+        public TileMap TileMap { get; set; }
 
         public Zone() {
 
         }
 
-        public TileMap getTileMap() {
-            return tileMap;
-        }
     }
 }
