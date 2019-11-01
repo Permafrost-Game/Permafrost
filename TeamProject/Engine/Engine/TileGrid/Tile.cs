@@ -18,6 +18,7 @@ namespace Engine.TileGrid
 
         public Tile(Texture2D texture, Vector2 Position, Vector2 size, bool walkable) : base(Position, size)
         {
+            this.Position = Position;
             this.texture = texture;
             this.size = size;
             this.Walkable = walkable;
@@ -34,7 +35,7 @@ namespace Engine.TileGrid
             if (t is Tile tile)
             {
                 tile = (Tile)t;
-                if (this.size.Equals(tile.size) && this.Position.Equals(tile.Position) && this.GetHashCode() == tile.GetHashCode())
+                if (this.size.Equals(tile.size) && this.Position.Equals(tile.Position))
                 {
                     return true;
                 }

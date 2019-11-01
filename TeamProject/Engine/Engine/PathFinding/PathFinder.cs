@@ -10,7 +10,7 @@ namespace Engine.PathFinding
     {
         private static readonly TileMap tileMap = ZoneManager.CurrentZone.TileMap;
         private static Dictionary<Tile, TileCosts> openDictionary;
-        private static Dictionary<Tile, TileCosts> closedSet;
+        private static Dictionary<Tile, TileCosts> closedDictionary;
 
         public static Queue<Tile> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
         {
@@ -25,26 +25,30 @@ namespace Engine.PathFinding
         {
             //Create open dictionary with the start tile and leave closed queue empty
             openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, DistanceCalculator(start, goal)) } };
-            closedSet = new Dictionary<Tile, TileCosts>();
+            closedDictionary = new Dictionary<Tile, TileCosts>();
 
             //While you still have places to look
             while (openDictionary.Count != 0)
             {
 
                 Tile current = null; //Current = null
+                
                 double lowest = 1000000; //Lowest is a number that shouldn't be a possible total cost in map 
-
+                TileCosts lowestTileCost = null;
                 //Loop through all possible tiles and select the one with the lowest total cost
                 foreach (TileCosts i in openDictionary.Values)
                 {
                     if (i.GetTotalCost() < lowest)
                     {
+                  
                         lowest = i.GetTotalCost();
+                        lowestTileCost = i;
+
                     }
                 }
 
                 //Get the current tile
-                current = openDictionary.FirstOrDefault(x => x.Key.Equals(current)).Key;
+                current = openDictionary.FirstOrDefault(x => x.Value.Equals(lowestTileCost)).Key;
 
                 //Get the current tile's TileCosts
                 TileCosts currentTotalCost = openDictionary[current];
@@ -53,19 +57,19 @@ namespace Engine.PathFinding
                 openDictionary.Remove(current);
                 
                 //Add current to the closed dictionary
-                closedSet.Add(current, currentTotalCost);
+                closedDictionary.Add(current, currentTotalCost);
 
                 if (current.Equals(goal)) //If the current tile is the destination tile
                 {
                     //RETURN THE QUEUE AND FINISH
-                    return BuildPath(current, closedSet);
+                    return BuildPath(current, closedDictionary);
                 }
 
-                Dictionary<Tile, TileCosts> neighbourTiles = GetAdjacentTiles(current, goal, currentTotalCost, tileMap, canPassOverObstacles);
+                Dictionary<Tile, TileCosts> neighbourTiles = GetAdjacentTiles(current, goal, currentTotalCost,closedDictionary, tileMap, canPassOverObstacles);
 
                 foreach (Tile neighbour in neighbourTiles.Keys)
                 {
-                    if (closedSet.ContainsKey(neighbour))
+                    if (closedDictionary.ContainsKey(neighbour))
                     { //If the neighbour is in the closed queue
                         continue;
                     }
@@ -96,7 +100,7 @@ namespace Engine.PathFinding
         }
 
         //Return a list of adjacent tiles
-        private static Dictionary<Tile,TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost, TileMap tMap, bool canPassOverObstacles)
+        private static Dictionary<Tile,TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost,Dictionary<Tile,TileCosts> closed , TileMap tMap, bool canPassOverObstacles)
         {
             //Temp adjacent tile list
             Dictionary<Tile, TileCosts> tileList = new Dictionary<Tile, TileCosts>();
@@ -108,11 +112,14 @@ namespace Engine.PathFinding
                 double tileX = tile.Position.X;
                 double tileY = tile.Position.Y;
 
-                if ((tileX - currentTileX) == tile.size.X || (tileX - currentTileX) == -tile.size.X) //If one tile to the left or right of current tile
+                if (((tileX - currentTileX) == tile.size.X || (tileX - currentTileX) == -tile.size.X) && (tileY == currentTileY)) //If one tile to the left or right of current tile
                 {
                     if (!canPassOverObstacles && !tile.Walkable) //If game object can't pass over game objects and tile is an obstacle
                     {
                         continue;
+                    }
+                    if (closed.ContainsKey(tile)) {
+                        continue;                        
                     }
 
                     //Distance from start to neighbour through current tile
@@ -125,9 +132,13 @@ namespace Engine.PathFinding
                     tileList.Add(tile, neighbourTileCosts); //Add tile to adjacent list
                     continue;
                 }
-                else if ((tileY - currentTileY) == tile.size.Y || (tileY - currentTileY) == -tile.size.Y) //If one tile above or below of current tile
+                else if (((tileY - currentTileY) == tile.size.Y || (tileY - currentTileY) == -tile.size.Y) && (tileX == currentTileX)) //If one tile above or below of current tile
                 {
                     if (!canPassOverObstacles && !tile.Walkable) //If game object can't pass over game objects and tile is an obstacle
+                    {
+                        continue;
+                    }
+                    if (closed.ContainsKey(tile))
                     {
                         continue;
                     }
