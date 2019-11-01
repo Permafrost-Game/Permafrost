@@ -6,9 +6,9 @@ namespace Engine.PathFinding
     public class TileCosts
     {
 
-        //Cost from this tile going to start through discovered paths
+        ///<summary>Cost from this tile going to start through discovered paths</summary>
         public double FromStart { get; set; }
-        //Cost from this tile directly to goal
+        ///<summary>Cost from this tile directly to goal</summary>
         public double ToGoal { get; }
         public Tile Parent { get; set; }
 

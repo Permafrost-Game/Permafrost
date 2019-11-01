@@ -19,23 +19,28 @@ namespace Engine.PathFinding
                         canPassObstacles);
         }
         
-
-
+        /// <summary>
+        /// Takes a start tile, end tile and a bool if the pathfinding should consider obsticles
+        /// </summary>
+        /// <returns> Queue<Tile> from the start tile to the end tile </returns>
         public static Queue<Tile> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {
-            //Create open dictionary with the start tile and leave closed queue empty
+            ///<summary>Create open dictionary with the start tile and leave closed queue empty</summary>
             openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, DistanceCalculator(start, goal)) } };
             closedDictionary = new Dictionary<Tile, TileCosts>();
 
-            //While you still have places to look
+            ///<summary>While you still have places to look</summary>
             while (openDictionary.Count != 0)
             {
+                ///<summary>Current = null</summary>
+                Tile current = null;
 
-                Tile current = null; //Current = null
-                
-                double lowest = 1000000; //Lowest is a number that shouldn't be a possible total cost in map 
+                ///<summary>Lowest is a number that shouldn't be a possible total cost in map</summary>
+                double lowest = 1000000; 
+
                 TileCosts lowestTileCost = null;
-                //Loop through all possible tiles and select the one with the lowest total cost
+
+                ///<summary>Loop through all possible tiles and select the one with the lowest total cost</summary>
                 foreach (TileCosts i in openDictionary.Values)
                 {
                     if (i.GetTotalCost() < lowest)
@@ -47,62 +52,72 @@ namespace Engine.PathFinding
                     }
                 }
 
-                //Get the current tile
+                ///<summary>Get the current tile</summary>
                 current = openDictionary.FirstOrDefault(x => x.Value.Equals(lowestTileCost)).Key;
 
-                //Get the current tile's TileCosts
+                ///<summary>Get the current tile's TileCosts</summary>
                 TileCosts currentTotalCost = openDictionary[current];
 
-                //Remove current from the open dictionary
+                ///<summary>Remove current from the open dictionary</summary>
                 openDictionary.Remove(current);
-                
-                //Add current to the closed dictionary
+
+                ///<summary>Add current to the closed dictionary</summary>
                 closedDictionary.Add(current, currentTotalCost);
 
-                if (current.Equals(goal)) //If the current tile is the destination tile
+                ///<summary>If the current tile is the destination tile</summary>
+                if (current.Equals(goal))
                 {
-                    //RETURN THE QUEUE AND FINISH
+                    ///<summary>RETURN THE QUEUE AND FINISH</summary>
                     return BuildPath(current, closedDictionary);
                 }
 
-                Dictionary<Tile, TileCosts> neighbourTiles = GetAdjacentTiles(current, goal, currentTotalCost,closedDictionary, tileMap, canPassOverObstacles);
+                Dictionary<Tile, TileCosts> neighbourTiles = GetAdjacentTiles(current, goal, currentTotalCost, tileMap, canPassOverObstacles);
 
                 foreach (Tile neighbour in neighbourTiles.Keys)
                 {
+                    ///<summary>If the neighbour is in the closed dictionary</summary>
                     if (closedDictionary.ContainsKey(neighbour))
-                    { //If the neighbour is in the closed queue
+                    {
                         continue;
                     }
 
-                    if (!openDictionary.ContainsKey(neighbour)) //If neighbour is not in the openDictionary 
-                    {          
-                        //Add the neighbour to the open dictionary
+                    ///<summary>If neighbour is not in the openDictionary</summary>
+                    if (!openDictionary.ContainsKey(neighbour))
+                    {
+                        ///<summary>Add the neighbour to the open dictionary</summary>
                         openDictionary.Add(neighbour, neighbourTiles[neighbour]);
                     }
-                    else { //Else we have potentially found a shorter path from the start to this neighbour tile in the open list
-                        
-                        //Version of neighbour already in the open dictionary
+
+                    ///<summary>Else we have potentially found a shorter path from the start to this neighbour tile in the open list</summary>
+                    else
+                    { 
+                        ///<summary>Version of neighbour already in the open dictionary</summary>
                         Tile openNeighbour = openDictionary.FirstOrDefault(x => x.Key.Equals(neighbour)).Key;
-                        
-                        //If the new fromStartTileCost for neighbour is less than the old cost
-                        if (neighbourTiles[neighbour].FromStart < openDictionary[openNeighbour].FromStart) {
-                            //Set the old cost to the new fromStartTileCost
+
+                        ///<summary>If the new fromStartTileCost for neighbour is less than the old cost</summary>
+                        if (neighbourTiles[neighbour].FromStart < openDictionary[openNeighbour].FromStart)
+                        {
+                            ///<summary>Set the old cost to the new fromStartTileCost</summary>
                             openDictionary[openNeighbour].FromStart = neighbourTiles[neighbour].FromStart;
-                            //Update the parent in the old version
+
+                            ///<summary>Update the parent in the old version</summary>
                             openDictionary[openNeighbour].Parent = neighbourTiles[neighbour].Parent;
                         }
                     }
                 }
             }
 
-            //Search failed return null
+            ///<summary>Search failed return null</summary>
             return null;
         }
 
-        //Return a list of adjacent tiles
-        private static Dictionary<Tile,TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost,Dictionary<Tile,TileCosts> closed , TileMap tMap, bool canPassOverObstacles)
+        /// <summary>
+        /// Look at all the map tiles and return the adjacent tiles
+        /// </summary>
+        /// <returns> Return a list of adjacent tiles </returns>
+        private static Dictionary<Tile,TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost, TileMap tMap, bool canPassOverObstacles)
         {
-            //Temp adjacent tile list
+            ///<summary>Temp adjacent tile list</summary>
             Dictionary<Tile, TileCosts> tileList = new Dictionary<Tile, TileCosts>();
             double currentTileX = current.Position.X;
             double currentTileY = current.Position.Y;
@@ -112,90 +127,84 @@ namespace Engine.PathFinding
                 double tileX = tile.Position.X;
                 double tileY = tile.Position.Y;
 
-                if (((tileX - currentTileX) == tile.size.X || (tileX - currentTileX) == -tile.size.X) && (tileY == currentTileY)) //If one tile to the left or right of current tile
+                ///<summary>Find the tiles that are diagonal, horizontal and vertical.</summary>
+                if ((DistanceCalculator(current,tile) == tile.size.X) || (DistanceCalculator(current, tile) == (tile.size.X * Math.Sqrt(2)))) 
                 {
-                    if (!canPassOverObstacles && !tile.Walkable) //If game object can't pass over game objects and tile is an obstacle
-                    {
-                        continue;
-                    }
-                    if (closed.ContainsKey(tile)) {
-                        continue;                        
-                    }
-
-                    //Distance from start to neighbour through current tile
-                    double neighbourToStartCost = currentTotalCost.FromStart + DistanceCalculator(current, tile); 
-                    //Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)
-                    TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, DistanceCalculator(tile, goal));
-
-                    neighbourTileCosts.Parent = current; //Set parent to current tile
-
-                    tileList.Add(tile, neighbourTileCosts); //Add tile to adjacent list
-                    continue;
-                }
-                else if (((tileY - currentTileY) == tile.size.Y || (tileY - currentTileY) == -tile.size.Y) && (tileX == currentTileX)) //If one tile above or below of current tile
-                {
-                    if (!canPassOverObstacles && !tile.Walkable) //If game object can't pass over game objects and tile is an obstacle
-                    {
-                        continue;
-                    }
-                    if (closed.ContainsKey(tile))
+                    ///<summary>If game object can't pass over game objects and tile is an obstacle</summary>
+                    if (!canPassOverObstacles && !tile.Walkable) 
                     {
                         continue;
                     }
 
-                    //Distance from start to neighbour through current tile
+                    ///<summary>Distance from start to neighbour through current tile</summary>
                     double neighbourToStartCost = currentTotalCost.FromStart + DistanceCalculator(current, tile);
-                    //Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)
+
+                    ///<summary>Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)</summary>
                     TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, DistanceCalculator(tile, goal));
 
-                    neighbourTileCosts.Parent = current; //Set parent to current tile
+                    ///<summary>Set parent to current tile</summary>
+                    neighbourTileCosts.Parent = current;
 
-                    tileList.Add(tile, neighbourTileCosts); //Add tile to adjacent list
+                    ///<summary>Add tile to adjacent list</summary>
+                    tileList.Add(tile, neighbourTileCosts); 
                     continue;
                 }
             }
             return tileList;
         }
 
-        //Calculate the distance of a tile to another tile
+        ///<summary>
+        ///Calculate the distance of a tile to another tile
+        ///</summary>
+        ///<returns>double toEndCost</returns>
         private static double DistanceCalculator(Tile current, Tile end)
         {
-            double toEndCost; //Cost from this node to another node
+            ///<summary>Cost from this node to another node</summary>
+            double toEndCost;
 
-            //Positions of the tiles in vector form
+            ///<summary>Positions of the tiles in vector form</summary>
             Vector2 currentVector = current.Position;
             Vector2 endVector2 = end.Position;
 
-            //Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)
+            ///<summary>Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)</summary>
             toEndCost = Math.Sqrt((currentVector.X - endVector2.X) * (currentVector.X - endVector2.X) + (currentVector.Y - endVector2.Y) * (currentVector.Y - endVector2.Y));
             
             return toEndCost;
         }
 
-        /** 
-         * Using the parent tiles we can work our way back to the start from the end tile and store the path.
-         *  Since the queue must have the starting tile at the front we have to push all of the tiles into a stack.
-         *  Then pop the stack and enqueue all the tiles
-         */
+        /// <summary>
+        /// Using the parent tiles we can work our way back to the start from the end tile and store the path.
+        /// Since the queue must have the starting tile at the front we have to push all of the tiles into a stack.
+        /// Then pop the stack and enqueue all the tiles
+        /// </summary>
+        /// <returns> Queue<Tile> </returns>
         private static Queue<Tile> BuildPath(Tile tile, Dictionary<Tile, TileCosts> closedTiles) {
 
             Stack<Tile> tileStack = new Stack<Tile>();
             Queue<Tile> tileQueueFromStart = new Queue<Tile>();
 
-            //Current equals the end tile
-            Tile current = tile;
-            tileStack.Push(current);
+            if (closedTiles != null) {
 
-            while (closedTiles[current].HasParent()) //This will stop once current is the start
-            {
-                current = closedTiles[current].Parent;
+                ///<summary>Current equals the end tile</summary>
+                Tile current = tile;
                 tileStack.Push(current);
-            }
 
-            //Since the start is on top of the stack we can just pop and enqueue till the stack is empty
-            for (int i = 0; i < tileStack.Count();i++)
-            {
-                tileQueueFromStart.Enqueue(tileStack.Pop());                                                
+                ///<summary>This will stop once current is the start</summary>
+                while (closedTiles[current].HasParent())
+                {
+                    tileStack.Push(closedTiles[current].Parent);
+                    current = closedTiles[current].Parent;
+
+                };
+
+                int count = tileStack.Count();
+
+                ///<summary>Since the start is on top of the stack we can just pop and enqueue till the stack is empty</summary>
+                for (int i = 0; i < count; i++)
+                {
+                    tileQueueFromStart.Enqueue(tileStack.Pop());
+                }
+
             }
 
             return tileQueueFromStart;

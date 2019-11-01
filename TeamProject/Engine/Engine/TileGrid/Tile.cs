@@ -10,9 +10,9 @@ namespace Engine.TileGrid
     {
         private readonly Texture2D texture;
         public Vector2 size { get; }
-        public Vector2 Position { get; }
+        public new Vector2 Position { get; }
 
-        //Default tag, walkable boolean
+        ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
         public bool Walkable { get; }
 
@@ -29,7 +29,7 @@ namespace Engine.TileGrid
             spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
         }
 
-        //Equality testing
+        ///<summary>Equality testing</summary>
         public override bool Equals(object t)
         {
             if (t is Tile tile)
