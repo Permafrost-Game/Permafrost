@@ -127,23 +127,25 @@ namespace Engine.PathFinding
                 double tileX = tile.Position.X;
                 double tileY = tile.Position.Y;
 
+                ///<summary>If game object can't pass over game objects and tile is an obstacle</summary>
+                if (!canPassOverObstacles && !tile.Walkable)
+                {
+                    continue;
+                }
+
                 ///<summary>Find the tiles that are diagonal, horizontal and vertical.</summary>
                 if ((DistanceCalculator(current,tile) == tile.size.X) || (DistanceCalculator(current, tile) == (tile.size.X * Math.Sqrt(2)))) 
                 {
-                    ///<summary>If game object can't pass over game objects and tile is an obstacle</summary>
-                    if (!canPassOverObstacles && !tile.Walkable) 
-                    {
-                        continue;
-                    }
 
                     ///<summary>Distance from start to neighbour through current tile</summary>
                     double neighbourToStartCost = currentTotalCost.FromStart + DistanceCalculator(current, tile);
 
                     ///<summary>Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)</summary>
-                    TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, DistanceCalculator(tile, goal));
-
-                    ///<summary>Set parent to current tile</summary>
-                    neighbourTileCosts.Parent = current;
+                    TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, DistanceCalculator(tile, goal))
+                    {
+                        ///<summary>Set parent to current tile</summary>
+                        Parent = current
+                    };
 
                     ///<summary>Add tile to adjacent list</summary>
                     tileList.Add(tile, neighbourTileCosts); 

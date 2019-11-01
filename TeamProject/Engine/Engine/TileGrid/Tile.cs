@@ -16,12 +16,12 @@ namespace Engine.TileGrid
         private readonly int tag = -1;
         public bool Walkable { get; }
 
-        public Tile(Texture2D texture, Vector2 Position, Vector2 size, bool walkable) : base(Position, size)
+        public Tile(Texture2D texture, Vector2 Position, Vector2 size, bool Walkable) : base(Position, size)
         {
             this.Position = Position;
             this.texture = texture;
             this.size = size;
-            this.Walkable = walkable;
+            this.Walkable = Walkable;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -43,6 +43,7 @@ namespace Engine.TileGrid
             return false;
         }
 
+        ///<summary>Unique hashcode based on tag</summary>
         public override int GetHashCode()
         {
             return (base.GetHashCode() + tag);
