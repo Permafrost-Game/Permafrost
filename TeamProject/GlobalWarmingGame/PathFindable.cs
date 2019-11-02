@@ -13,12 +13,12 @@ namespace GlobalWarmingGame
     /// This class is for development only
     /// This class is for testing the path finder
     /// </summary>
-    public class TestPathFindable : Sprite, IUpdatable, IClickable
+    public class PathFindable : Sprite, IUpdatable, IClickable
     {
         private float speed;
         private Queue<Vector2> path;
         private Queue<Vector2> goals;
-        public TestPathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
+        public PathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
             base(position, size, rotation, rotationOrigin, tag, depth, texture)
         {
             this.speed = speed;
@@ -33,8 +33,7 @@ namespace GlobalWarmingGame
 
         public void OnClick(MouseState mouseState)
         {
-            goals.Enqueue(mouseState.Position.ToVector2());
-            
+            AddGoal(mouseState.Position.ToVector2());
         }
 
         public void Update()
@@ -48,12 +47,25 @@ namespace GlobalWarmingGame
             {
                 if (goals.Count != 0)
                 {
-                    Queue<Tile> paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
+                    Queue<Tile> paths;
+                    try
+                    {
+                        paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
+                    }
+                    catch (PathFindingPathException)
+                    {
+                        //Path is not a valid path
+                        path.Clear();
+                        return;
+                    }
 
                     foreach (Tile t in paths)
                     {
                         path.Enqueue(t.Position);
                     }
+
+
+
                 }
             }
             if(path.Count != 0)

@@ -25,12 +25,26 @@ namespace Engine.TileGrid
             }
         }
 
+        /// <summary>
+        /// Gets a <see cref="Engine.TileGrid.Tile"/> within a given position by rounding <paramref name="position"/>
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>The <see cref="Engine.TileGrid.Tile"/> within the region of <paramref name="position"/></returns>
         public Tile GetTileAtPosition(Vector2 position)
         {
             Vector2 tileSize = Tiles[0, 0].size;
             int x = (Int32) Math.Round(position.X / tileSize.X);
             int y = (Int32) Math.Round(position.Y / tileSize.Y);
-            return Tiles[x, y];
+
+            Tile t = null;
+            if(x >= 0 &&
+               y >= 0 &&
+               x < Tiles.GetLength(0) &&
+               y < Tiles.GetLength(1))
+            {
+                t = Tiles[x, y];
+            }
+            return t;
         }
 
     }

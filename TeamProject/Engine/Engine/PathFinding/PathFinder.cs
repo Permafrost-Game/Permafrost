@@ -14,9 +14,9 @@ namespace Engine.PathFinding
 
         public static Queue<Tile> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
         {
-            return Find(tileMap.GetTileAtPosition(start),
-                        tileMap.GetTileAtPosition(goal),
-                        canPassObstacles);
+            Tile startT = tileMap.GetTileAtPosition(start);
+            Tile goalT = tileMap.GetTileAtPosition(goal);
+            return Find(startT, goalT, canPassObstacles);
         }
         
         /// <summary>
@@ -25,22 +25,26 @@ namespace Engine.PathFinding
         /// <returns> Queue<Tile> from the start tile to the end tile </returns>
         public static Queue<Tile> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {
-            ///<summary>Create open dictionary with the start tile and leave closed queue empty</summary>
+            if (start == null) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is null");
+            if (goal == null) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is null");
+            if (!start.Walkable) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is not walkable");
+            if (!goal.Walkable) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is not walkable");
+
             openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, DistanceCalculator(start, goal)) } };
             closedDictionary = new Dictionary<Tile, TileCosts>();
 
             ///<summary>While you still have places to look</summary>
             while (openDictionary.Count != 0)
             {
-                ///<summary>Current = null</summary>
+                
                 Tile current = null;
 
-                ///<summary>Lowest is a number that shouldn't be a possible total cost in map</summary>
+                //Lowest is a number that shouldn't be a possible total cost in map
                 double lowest = 1000000; 
 
                 TileCosts lowestTileCost = null;
 
-                ///<summary>Loop through all possible tiles and select the one with the lowest total cost</summary>
+                //Loop through all possible tiles and select the one with the lowest total cost
                 foreach (TileCosts i in openDictionary.Values)
                 {
                     if (i.GetTotalCost() < lowest)
@@ -52,22 +56,18 @@ namespace Engine.PathFinding
                     }
                 }
 
-                ///<summary>Get the current tile</summary>
+                //Get the current tile
                 current = openDictionary.FirstOrDefault(x => x.Value.Equals(lowestTileCost)).Key;
 
-                ///<summary>Get the current tile's TileCosts</summary>
+                //Get the current tile's TileCosts
                 TileCosts currentTotalCost = openDictionary[current];
 
-                ///<summary>Remove current from the open dictionary</summary>
                 openDictionary.Remove(current);
 
-                ///<summary>Add current to the closed dictionary</summary>
                 closedDictionary.Add(current, currentTotalCost);
 
-                ///<summary>If the current tile is the destination tile</summary>
                 if (current.Equals(goal))
                 {
-                    ///<summary>RETURN THE QUEUE AND FINISH</summary>
                     return BuildPath(current, closedDictionary);
                 }
 
@@ -75,39 +75,38 @@ namespace Engine.PathFinding
 
                 foreach (Tile neighbour in neighbourTiles.Keys)
                 {
-                    ///<summary>If the neighbour is in the closed dictionary</summary>
+                    //If the neighbour is in the closed dictionary
                     if (closedDictionary.ContainsKey(neighbour))
                     {
                         continue;
                     }
 
-                    ///<summary>If neighbour is not in the openDictionary</summary>
                     if (!openDictionary.ContainsKey(neighbour))
                     {
-                        ///<summary>Add the neighbour to the open dictionary</summary>
+                        //Add the neighbour to the open dictionary</summary>
                         openDictionary.Add(neighbour, neighbourTiles[neighbour]);
                     }
 
-                    ///<summary>Else we have potentially found a shorter path from the start to this neighbour tile in the open list</summary>
+                    //Else we have potentially found a shorter path from the start to this neighbour tile in the open list
                     else
                     { 
-                        ///<summary>Version of neighbour already in the open dictionary</summary>
+                        //Version of neighbour already in the open dictionary
                         Tile openNeighbour = openDictionary.FirstOrDefault(x => x.Key.Equals(neighbour)).Key;
 
-                        ///<summary>If the new fromStartTileCost for neighbour is less than the old cost</summary>
+                        //If the new fromStartTileCost for neighbour is less than the old cost
                         if (neighbourTiles[neighbour].FromStart < openDictionary[openNeighbour].FromStart)
                         {
-                            ///<summary>Set the old cost to the new fromStartTileCost</summary>
+                            //Set the old cost to the new fromStartTileCost
                             openDictionary[openNeighbour].FromStart = neighbourTiles[neighbour].FromStart;
 
-                            ///<summary>Update the parent in the old version</summary>
+                            //>Update the parent in the old version
                             openDictionary[openNeighbour].Parent = neighbourTiles[neighbour].Parent;
                         }
                     }
                 }
             }
 
-            ///<summary>Search failed return null</summary>
+            //Search failed return null
             return null;
         }
 
@@ -117,7 +116,7 @@ namespace Engine.PathFinding
         /// <returns> Return a list of adjacent tiles </returns>
         private static Dictionary<Tile,TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost, TileMap tMap, bool canPassOverObstacles)
         {
-            ///<summary>Temp adjacent tile list</summary>
+            //Temp adjacent tile list
             Dictionary<Tile, TileCosts> tileList = new Dictionary<Tile, TileCosts>();
             double currentTileX = current.Position.X;
             double currentTileY = current.Position.Y;
@@ -127,27 +126,25 @@ namespace Engine.PathFinding
                 double tileX = tile.Position.X;
                 double tileY = tile.Position.Y;
 
-                ///<summary>If game object can't pass over game objects and tile is an obstacle</summary>
+                //If game object can't pass over game objects and tile is an obstacle
                 if (!canPassOverObstacles && !tile.Walkable)
                 {
                     continue;
                 }
 
-                ///<summary>Find the tiles that are diagonal, horizontal and vertical.</summary>
+                //Find the tiles that are diagonal, horizontal and vertical.
                 if ((DistanceCalculator(current,tile) == tile.size.X) || (DistanceCalculator(current, tile) == (tile.size.X * Math.Sqrt(2)))) 
                 {
 
-                    ///<summary>Distance from start to neighbour through current tile</summary>
+                    //Distance from start to neighbour through current tile
                     double neighbourToStartCost = currentTotalCost.FromStart + DistanceCalculator(current, tile);
 
-                    ///<summary>Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)</summary>
+                    //Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)</summary>
                     TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, DistanceCalculator(tile, goal))
                     {
-                        ///<summary>Set parent to current tile</summary>
                         Parent = current
                     };
 
-                    ///<summary>Add tile to adjacent list</summary>
                     tileList.Add(tile, neighbourTileCosts); 
                     continue;
                 }
@@ -161,14 +158,14 @@ namespace Engine.PathFinding
         ///<returns>double toEndCost</returns>
         private static double DistanceCalculator(Tile current, Tile end)
         {
-            ///<summary>Cost from this node to another node</summary>
+            //Cost from this node to another node
             double toEndCost;
 
-            ///<summary>Positions of the tiles in vector form</summary>
+            //Positions of the tiles in vector form
             Vector2 currentVector = current.Position;
             Vector2 endVector2 = end.Position;
 
-            ///<summary>Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)</summary>
+            //Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)
             toEndCost = Math.Sqrt((currentVector.X - endVector2.X) * (currentVector.X - endVector2.X) + (currentVector.Y - endVector2.Y) * (currentVector.Y - endVector2.Y));
             
             return toEndCost;
@@ -187,11 +184,11 @@ namespace Engine.PathFinding
 
             if (closedTiles != null) {
 
-                ///<summary>Current equals the end tile</summary>
+                //Current equals the end tile
                 Tile current = tile;
                 tileStack.Push(current);
 
-                ///<summary>This will stop once current is the start</summary>
+                //This will stop once current is the start
                 while (closedTiles[current].HasParent())
                 {
                     tileStack.Push(closedTiles[current].Parent);
@@ -201,7 +198,7 @@ namespace Engine.PathFinding
 
                 int count = tileStack.Count();
 
-                ///<summary>Since the start is on top of the stack we can just pop and enqueue till the stack is empty</summary>
+                //Since the start is on top of the stack we can just pop and enqueue till the stack is empty
                 for (int i = 0; i < count; i++)
                 {
                     tileQueueFromStart.Enqueue(tileStack.Pop());

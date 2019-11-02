@@ -14,7 +14,7 @@ namespace GlobalWarmingGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         MouseSelectionManager mouseSelectionManager;
-        TestPathFindable tpf;
+        PathFindable tpf;
 
         TileSet tileSet;
         TileMap tileMap;
@@ -58,7 +58,7 @@ namespace GlobalWarmingGame
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
 
-                tpf = new TestPathFindable(
+                tpf = new PathFindable(
                     position:   new Vector2(0),
                     size:       new Vector2(50),
                     rotation:   0, 
