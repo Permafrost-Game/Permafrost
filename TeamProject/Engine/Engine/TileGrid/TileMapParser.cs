@@ -44,7 +44,8 @@ namespace Engine.TileGrid
                         rows[y].Split(',')[x]
                         ];
                     //TODO this is test code below - walkable
-                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("5"));
+                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("Non-Walkable"));
+                    
                     
                 }
                

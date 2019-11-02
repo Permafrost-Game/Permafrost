@@ -26,6 +26,7 @@ namespace GlobalWarmingGame
 
                 }
             }
+            lastMouseState = mouseState;
         }
 
 

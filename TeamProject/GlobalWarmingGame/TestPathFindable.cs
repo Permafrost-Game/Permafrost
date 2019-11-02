@@ -16,11 +16,13 @@ namespace GlobalWarmingGame
     public class TestPathFindable : Sprite, IUpdatable, IClickable
     {
         private float speed;
+        private Queue<Vector2> path;
         private Queue<Vector2> goals;
         public TestPathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
             base(position, size, rotation, rotationOrigin, tag, depth, texture)
         {
             this.speed = speed;
+            path = new Queue<Vector2>();
             goals = new Queue<Vector2>();
         }
 
@@ -31,11 +33,8 @@ namespace GlobalWarmingGame
 
         public void OnClick(MouseState mouseState)
         {
-            Queue<Tile> Goals = PathFinder.Find(this.Position, mouseState.Position.ToVector2(), false);
-            foreach (Tile t in Goals)
-            {
-                AddGoal(t.Position);
-            }
+            goals.Enqueue(mouseState.Position.ToVector2());
+            
         }
 
         public void Update()
@@ -45,20 +44,30 @@ namespace GlobalWarmingGame
 
         private void Move()
         {
-            if (goals.Count != 0)
+            if (path.Count == 0)
             {
-                Vector2 direction = goals.Peek() - Position;
+                if (goals.Count != 0)
+                {
+                    Queue<Tile> paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
+
+                    foreach (Tile t in paths)
+                    {
+                        path.Enqueue(t.Position);
+                    }
+                }
+            }
+            if(path.Count != 0)
+            {
+                Vector2 direction = path.Peek() - Position;
                 if (direction.Equals(Vector2.Zero))
                 {
                     this.Position += direction;
-                    goals.Dequeue();
+                    path.Dequeue();
                 }
 
                 this.Position += new Vector2(
                      direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X),
                      direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y));
-
-
             }
 
         }
