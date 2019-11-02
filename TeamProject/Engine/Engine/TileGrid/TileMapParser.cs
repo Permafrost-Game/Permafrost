@@ -2,10 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.TileGrid
 {
@@ -35,7 +32,8 @@ namespace Engine.TileGrid
 
                 if(cols.Count() != width)
                 {
-                    //TODO Irregular width
+                    //TODO custom exception
+                    throw new Exception("File has irregular widths");
                 }
 
                 for(int x = 0; x < cols.Count(); x++)
@@ -45,8 +43,9 @@ namespace Engine.TileGrid
                     Texture2D texture = tileSet.tileSetTextures[
                         rows[y].Split(',')[x]
                         ];
+                    //TODO this is test code below - walkable
+                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("Non-Walkable"));
                     
-                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize);
                     
                 }
                

@@ -45,12 +45,20 @@
   <ItemGroup>
     <Compile Include="ContentReader.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="IClickable.cs" />
+    <Compile Include="IUpdatable.cs" />
+    <Compile Include="PathFinding\PathFindingPathException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IDrawable.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="PathFinding\PathFinder.cs" />
     <Compile Include="TileGrid\Tile.cs" />
     <Compile Include="TileGrid\TileMap.cs" />
     <Compile Include="TileGrid\TileMapParser.cs" />
     <Compile Include="TileGrid\TileSet.cs" />
+    <Compile Include="PathFinding\TileCosts.cs" />
+    <Compile Include="Zone.cs" />
+    <Compile Include="ZoneManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

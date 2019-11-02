@@ -1,38 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine
 {
     public class GameObject
     {
+        public Vector2 Position { get; protected set;}
+        public Vector2 Size { get; protected set; }
+        public float Rotation { get; protected set; }
+        public Vector2 RotationOrigin { get; protected set; }
+        public string Tag { get; protected set; }
 
-        protected Vector2 position = new Vector2();
-        protected Vector2 rotation = new Vector2();
-        protected Vector2 velocity = new Vector2();
-
-        public GameObject()
+        public GameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag)
         {
-
+            this.Position = position;
+            this.Size = size;
+            this.Rotation = rotation;
+            this.RotationOrigin = rotationOrigin;
+            this.Tag = tag;
         }
 
-        public GameObject(Vector2 position) : this()
+        public GameObject(Vector2 position, Vector2 size) : this(position, size, 0, new Vector2(0), null)
         {
-            this.position = position;
 
-        }
-
-        public GameObject(Vector2 position, Vector2 rotation) : this(position)
-        {
-            this.rotation = rotation;
-        }
-
-        public GameObject(Vector2 position, Vector2 rotation, Vector2 velocity) : this(position, rotation)
-        {
-            this.velocity = velocity;
         }
     }
 }
