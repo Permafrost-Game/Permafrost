@@ -38,6 +38,7 @@ Ankh.NoLoad
 
 # Visual Studio 2015 cache/options directory
 .vs/
+TeamProject/.vs
 
 #Tooling
 _ReSharper*/
