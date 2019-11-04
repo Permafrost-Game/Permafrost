@@ -14,7 +14,6 @@ namespace GlobalWarmingGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         MouseSelectionManager mouseSelectionManager;
-        PathFindable tpf;
 
         TileSet tileSet;
         TileMap tileMap;
@@ -50,6 +49,8 @@ namespace GlobalWarmingGame
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
                 textureSet.Add("5", water);
 
+                Texture2D colonist =  this.Content.Load<Texture2D>(@"Colonist");
+
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
@@ -58,18 +59,22 @@ namespace GlobalWarmingGame
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
 
-                tpf = new PathFindable(
-                    position:   new Vector2(0),
-                    size:       new Vector2(50),
-                    rotation:   0, 
-                    rotationOrigin: new Vector2(0),
-                    tag:        "PathFindable",
-                    depth:      0,
-                    texture:    tileSet.tileSetTextures["0"],
-                    speed:      1f);;
+                var c1 = new Colonist(
+                    position:   new Vector2(0,0),
+                    texture: colonist);
 
-                GameObjectManager.Add(tpf) ;
-                
+                var c2 = new Colonist(
+                    position: new Vector2(0,0),
+                    texture: colonist);
+
+                var c3 = new Colonist(
+                    position: new Vector2(75,50),
+                    texture: colonist);
+
+                GameObjectManager.Add(c1);
+                //GameObjectManager.Add(c2);
+                GameObjectManager.Add(c3);
+
                 //tpf.AddGoal(new Vector2(100, 100));
                 //tpf.AddGoal(new Vector2(100, 50));
                 //tpf.AddGoal(new Vector2(25,75));
@@ -88,7 +93,7 @@ namespace GlobalWarmingGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            mouseSelectionManager.Update(GameObjectManager.Objects);
+            mouseSelectionManager.Update();
 
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update();
