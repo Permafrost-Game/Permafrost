@@ -21,6 +21,10 @@ namespace GlobalWarmingGame
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 800;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
+            graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             mouseSelectionManager = new MouseSelectionManager();
         }
@@ -49,15 +53,21 @@ namespace GlobalWarmingGame
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
                 textureSet.Add("5", water);
 
-                Texture2D colonist =  this.Content.Load<Texture2D>(@"Colonist");
+                Texture2D colonist = this.Content.Load<Texture2D>(@"colonist");
+                Texture2D farm = this.Content.Load<Texture2D>(@"farm");
 
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
 
-                
+
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
+                var f1 = new Building(
+                    position: new Vector2(100, 100),
+                    texture: farm,
+                    new List<Action.InstructionType>() { new Action.InstructionType("harvest", "Harvest", "Harvests food from the farm") }
+                    );
 
                 var c1 = new Colonist(
                     position:   new Vector2(0,0),
@@ -74,6 +84,7 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(c1);
                 //GameObjectManager.Add(c2);
                 GameObjectManager.Add(c3);
+                GameObjectManager.Add(f1);
 
                 //tpf.AddGoal(new Vector2(100, 100));
                 //tpf.AddGoal(new Vector2(100, 50));

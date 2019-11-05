@@ -17,9 +17,9 @@ namespace GlobalWarmingGame
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: position,
+            rotationOrigin: new Vector2(0),
             tag: "Building",
-            depth: 1f,
+            depth: 0.5f,
             texture: texture
         )
         {

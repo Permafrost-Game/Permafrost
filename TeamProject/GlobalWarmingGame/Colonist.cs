@@ -36,5 +36,6 @@ namespace GlobalWarmingGame
         {
             instruction.ActiveMember = this;
         }
+
     }
 }
