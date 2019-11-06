@@ -53,6 +53,9 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Myra, Version=0.9.6.184, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Myra.0.9.6.184\lib\net45\Myra.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -110,6 +113,7 @@
     <None Include="Content\testmap.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine\Engine.csproj">

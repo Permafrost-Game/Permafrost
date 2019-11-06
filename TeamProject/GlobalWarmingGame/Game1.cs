@@ -5,6 +5,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Myra;
+using Myra.Graphics2D.TextureAtlases;
+using Myra.Graphics2D.UI;
+
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -19,6 +23,10 @@ namespace GlobalWarmingGame
         TileSet tileSet;
         TileMap tileMap;
 
+        Point clickPos;
+
+        private Desktop _desktop;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -27,8 +35,59 @@ namespace GlobalWarmingGame
         }
         protected override void Initialize()
         {
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
             base.Initialize();
+        }
+
+        private void onClick()
+        {
+            clickPos = _desktop.TouchPosition;
+
+            if (_desktop.ContextMenu != null)
+            {
+                return;
+            }
+
+            var container = new VerticalStackPanel
+            {
+                Spacing = 4
+            };
+
+            var titleContainer = new Panel
+            {
+                Background = DefaultAssets.UISpritesheet["button"]
+            };
+
+            var titleLabel = new Label
+            {
+                Text = "Choose Action",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            titleContainer.Widgets.Add(titleLabel);
+            container.Widgets.Add(titleContainer);
+
+            var menuItem1 = new MenuItem();
+            menuItem1.Id = "";
+            menuItem1.Text = "Move Here";
+            menuItem1.Selected += (s, a) =>
+            {
+                foreach (IClickable o in GameObjectManager.GetObjectsByTag("PathFindable")) {
+                    o.OnClick(clickPos);
+                }
+            };
+
+            var menuItem2 = new MenuItem();
+            menuItem2.Id = "";
+            menuItem2.Text = "Do Nothing";
+
+            var verticalMenu = new VerticalMenu();
+            verticalMenu.Items.Add(menuItem1);
+            verticalMenu.Items.Add(menuItem2);
+
+            container.Widgets.Add(verticalMenu);
+
+            _desktop.ShowContextMenu(container, _desktop.TouchPosition);
         }
 
         protected override void LoadContent()
@@ -69,11 +128,16 @@ namespace GlobalWarmingGame
                     speed:      1f);;
 
                 GameObjectManager.Add(tpf) ;
-                
+
                 //tpf.AddGoal(new Vector2(100, 100));
                 //tpf.AddGoal(new Vector2(100, 50));
                 //tpf.AddGoal(new Vector2(25,75));
                 //tpf.AddGoal(new Vector2(0));
+
+                MyraEnvironment.Game = this;
+
+                _desktop = new Desktop();
+                _desktop.TouchDown += (s, a) => onClick();
 
             }
         }
@@ -88,7 +152,7 @@ namespace GlobalWarmingGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            mouseSelectionManager.Update(GameObjectManager.Objects);
+            // mouseSelectionManager.Update(GameObjectManager.Objects);
 
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update();
@@ -110,6 +174,9 @@ namespace GlobalWarmingGame
                 drawable.Draw(spriteBatch);
 
             spriteBatch.End();
+
+            _desktop.Render();
+
             base.Draw(gameTime);
         }
     }

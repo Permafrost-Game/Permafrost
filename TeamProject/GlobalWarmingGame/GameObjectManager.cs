@@ -37,7 +37,7 @@ namespace GlobalWarmingGame
                 _updatable.Remove(updatable);
         }
 
-        public static IEnumerable<T> Filter<T>() where T : GameObject
+        public static IEnumerable<T> Filter<T>()
         {
             return _objects.OfType<T>().ToList();
         }

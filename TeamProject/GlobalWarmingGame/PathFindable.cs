@@ -36,6 +36,11 @@ namespace GlobalWarmingGame
             AddGoal(mouseState.Position.ToVector2());
         }
 
+        public void OnClick(Point clickPos)
+        {
+            AddGoal(new Vector2(clickPos.X, clickPos.Y));
+        }
+
         public void Update()
         {
             Move();
