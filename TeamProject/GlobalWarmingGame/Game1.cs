@@ -18,6 +18,8 @@ namespace GlobalWarmingGame
         TileSet tileSet;
         TileMap tileMap;
 
+        Camera camera;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -30,8 +32,14 @@ namespace GlobalWarmingGame
         }
         protected override void Initialize()
         {
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.ApplyChanges();
+
+            camera = new Camera(GraphicsDevice.Viewport);
+
             this.IsMouseVisible = true;
-            base.Initialize();
+            base.Initialize();     
         }
 
         protected override void LoadContent()
@@ -86,11 +94,12 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
 
+                GameObjectManager.Add(tpf) ;
+
                 //tpf.AddGoal(new Vector2(100, 100));
                 //tpf.AddGoal(new Vector2(100, 50));
                 //tpf.AddGoal(new Vector2(25,75));
                 //tpf.AddGoal(new Vector2(0));
-
             }
         }
 
@@ -109,23 +118,23 @@ namespace GlobalWarmingGame
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update();
 
+            camera.UpdateCamera();
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin(SpriteSortMode.FrontToBack);
+
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
 
             tileMap.Draw(spriteBatch);
-
-            
-
-
             foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
                 drawable.Draw(spriteBatch);
 
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }
