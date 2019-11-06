@@ -58,6 +58,8 @@
     <Compile Include="TileGrid\TileMapParser.cs" />
     <Compile Include="TileGrid\TileSet.cs" />
     <Compile Include="PathFinding\TileCosts.cs" />
+    <Compile Include="UI\Button.cs" />
+    <Compile Include="UI\DropdownMenu.cs" />
     <Compile Include="Zone.cs" />
     <Compile Include="ZoneManager.cs" />
   </ItemGroup>
