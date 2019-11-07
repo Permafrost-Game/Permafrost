@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.TileGrid;
-
+using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,7 +18,7 @@ namespace GlobalWarmingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        MouseSelectionManager mouseSelectionManager;
+        SelectionManager selectionManager;
 
         TileSet tileSet;
         TileMap tileMap;
@@ -30,9 +31,11 @@ namespace GlobalWarmingGame
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 800;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 720   // set this value to the desired height of your window
+            };
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -41,62 +44,14 @@ namespace GlobalWarmingGame
         protected override void Initialize()
         {
             camera = new Camera(GraphicsDevice.Viewport);
-            mouseSelectionManager = new MouseSelectionManager(camera);
+            selectionManager = new SelectionManager();
+            
+
 
             this.IsMouseVisible = true;
             base.Initialize();     
         }
 
-        private void onClick()
-        {
-            clickPos = _desktop.TouchPosition;
-
-            if (_desktop.ContextMenu != null)
-            {
-                return;
-            }
-
-            var container = new VerticalStackPanel
-            {
-                Spacing = 4
-            };
-
-            var titleContainer = new Panel
-            {
-                Background = DefaultAssets.UISpritesheet["button"]
-            };
-
-            var titleLabel = new Label
-            {
-                Text = "Choose Action",
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-
-            titleContainer.Widgets.Add(titleLabel);
-            container.Widgets.Add(titleContainer);
-
-            var menuItem1 = new MenuItem();
-            menuItem1.Id = "";
-            menuItem1.Text = "Move Here";
-            menuItem1.Selected += (s, a) =>
-            {
-                foreach (IClickable o in GameObjectManager.GetObjectsByTag("PathFindable")) {
-                    o.OnClick(clickPos);
-                }
-            };
-
-            var menuItem2 = new MenuItem();
-            menuItem2.Id = "";
-            menuItem2.Text = "Do Nothing";
-
-            var verticalMenu = new VerticalMenu();
-            verticalMenu.Items.Add(menuItem1);
-            verticalMenu.Items.Add(menuItem2);
-
-            container.Widgets.Add(verticalMenu);
-
-            _desktop.ShowContextMenu(container, _desktop.TouchPosition);
-        }
 
         protected override void LoadContent()
         {
@@ -130,7 +85,7 @@ namespace GlobalWarmingGame
                 var f1 = new Building(
                     position: new Vector2(100, 100),
                     texture: farm,
-                    new List<Action.InstructionType>() { new Action.InstructionType("harvest", "Harvest", "Harvests food from the farm") }
+                    new List<InstructionType>() { new InstructionType("harvest", "Harvest", "Harvests food from the farm") }
                     );
 
                 var c1 = new Colonist(
@@ -149,12 +104,13 @@ namespace GlobalWarmingGame
                 //GameObjectManager.Add(c2);
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
+                selectionManager.CurrentInstruction.ActiveMember = (c1);
 
 
                 MyraEnvironment.Game = this;
 
                 _desktop = new Desktop();
-                _desktop.TouchDown += (s, a) => onClick();
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
 
             }
         }
@@ -170,11 +126,10 @@ namespace GlobalWarmingGame
                 Exit();
 
             camera.UpdateCamera();
-            //mouseSelectionManager.Update();
 
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update();
-
+             
             base.Update(gameTime);
         }
 

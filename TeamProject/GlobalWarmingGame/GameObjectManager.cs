@@ -1,5 +1,5 @@
 ﻿using Engine;
-
+using GlobalWarmingGame.Interactions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,14 +10,18 @@ namespace GlobalWarmingGame
         private static readonly List<GameObject> _objects = new List<GameObject>();
 
 
+        //FIXME having seperate list for interfaces is a terrible design, need to think of a better solution
+
         private static readonly List<IUpdatable> _updatable = new List<IUpdatable>();
         private static readonly List<IDrawable> _drawable = new List<IDrawable>();
         private static readonly List<IClickable> _clickable = new List<IClickable>();
+        private static readonly List<IInteractable> _interactable = new List<IInteractable>();
 
         public static List<GameObject> Objects { get => _objects.ToList(); }
         public static List<IUpdatable> Updatable { get => _updatable.ToList(); }
         public static List<IDrawable> Drawable { get => _drawable.ToList(); }
         public static List<IClickable> Clickable { get => _clickable.ToList(); }
+        public static List<IInteractable> Interactable { get => _interactable.ToList(); }
 
         public static void Add(GameObject gameObject)
         {
@@ -31,6 +35,9 @@ namespace GlobalWarmingGame
 
             if (gameObject is IClickable c)
                 _clickable.Add(c);
+
+            if (gameObject is IInteractable i)
+                _interactable.Add(i);
         }
 
         public static void Remove(GameObject gameObject)
@@ -45,6 +52,9 @@ namespace GlobalWarmingGame
 
             if (gameObject is IClickable c)
                 _clickable.Remove(c);
+
+            if (gameObject is IInteractable i)
+                _interactable.Remove(i);
         }
 
         public static IEnumerable<T> Filter<T>()

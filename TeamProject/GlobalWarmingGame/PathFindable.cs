@@ -15,9 +15,10 @@ namespace GlobalWarmingGame
     /// </summary>
     public class PathFindable : Sprite, IUpdatable, IClickable
     {
-        private float speed;
+        protected float speed;
+        protected Queue<Vector2> goals;
         private Queue<Vector2> path;
-        private Queue<Vector2> goals;
+        
         public PathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
             base(position, size, rotation, rotationOrigin, tag, depth, texture)
         {
@@ -31,9 +32,9 @@ namespace GlobalWarmingGame
             goals.Enqueue(goal);
         }
 
-        public void OnClick(MouseState mouseState)
+        public void OnClick(Vector2 Position)
         {
-            AddGoal(mouseState.Position.ToVector2());
+            AddGoal(Position);
         }
 
         public void OnClick(Point clickPos)
@@ -41,7 +42,7 @@ namespace GlobalWarmingGame
             AddGoal(new Vector2(clickPos.X, clickPos.Y));
         }
 
-        public void Update()
+        public virtual void Update()
         {
             Move();
         }

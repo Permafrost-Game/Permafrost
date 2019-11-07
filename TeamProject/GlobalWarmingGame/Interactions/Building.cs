@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame
+namespace GlobalWarmingGame.Interactions
 {
-    class Building : Sprite, IUpdatable
+    class Building : Sprite, IInteractable
     {
 
-        private List<InstructionType> InstructionTypes { get; }
+        public List<InstructionType> InstructionTypes { get; }
 
 
         public Building(Vector2 position, Texture2D texture, List<InstructionType> instructionTypes) : base
@@ -26,14 +26,6 @@ namespace GlobalWarmingGame
             InstructionTypes = instructionTypes;
         }
 
-        private void AddAction(InstructionType action)
-        {
-            InstructionTypes.Add(action);
-        }
 
-        public void Update()
-        {
-            
-        }
     }
 }
