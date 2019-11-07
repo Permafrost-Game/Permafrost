@@ -121,7 +121,15 @@ namespace GlobalWarmingGame
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
+            spriteBatch.Begin(
+                sortMode: SpriteSortMode.FrontToBack,
+                blendState: BlendState.AlphaBlend,
+                samplerState: SamplerState.PointClamp,
+                depthStencilState: null,
+                rasterizerState: null,
+                effect: null,
+                transformMatrix: camera.Transform
+            );
 
             tileMap.Draw(spriteBatch);
             foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
