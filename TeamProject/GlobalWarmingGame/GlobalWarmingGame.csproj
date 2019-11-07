@@ -42,6 +42,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Action\Instruction.cs" />
+    <Compile Include="Action\InstructionType.cs" />
+    <Compile Include="Building.cs" />
+    <Compile Include="Colonist.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="MouseSelectionManager.cs" />
@@ -120,6 +124,9 @@
       <Project>{79c44ee6-ef3c-42d8-b5fe-fb430b668142}</Project>
       <Name>Engine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
