@@ -28,15 +28,12 @@ namespace GlobalWarmingGame
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-            mouseSelectionManager = new MouseSelectionManager();
+            
         }
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 768;
-            graphics.ApplyChanges();
-
             camera = new Camera(GraphicsDevice.Viewport);
+            mouseSelectionManager = new MouseSelectionManager(camera);
 
             this.IsMouseVisible = true;
             base.Initialize();     
@@ -94,8 +91,6 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
 
-                GameObjectManager.Add(tpf) ;
-
                 //tpf.AddGoal(new Vector2(100, 100));
                 //tpf.AddGoal(new Vector2(100, 50));
                 //tpf.AddGoal(new Vector2(25,75));
@@ -113,12 +108,11 @@ namespace GlobalWarmingGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            camera.UpdateCamera();
             mouseSelectionManager.Update();
 
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update();
-
-            camera.UpdateCamera();
 
             base.Update(gameTime);
         }

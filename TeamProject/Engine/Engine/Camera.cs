@@ -13,6 +13,7 @@ namespace Engine
     {
         protected Viewport _viewport;
         protected Matrix _transform;
+        protected Matrix _inverseTransorm;
         protected Vector2 _position;
         protected float _zoom;
 
@@ -24,7 +25,7 @@ namespace Engine
         {
             _viewport = viewport;
             _position = Vector2.Zero;
-            _zoom = 1.0f;
+            _zoom = 2.0f;
             _scroll = 1;
         }
 
@@ -32,6 +33,11 @@ namespace Engine
         {
             get { return _transform; }
             set { _transform = value; }
+        }
+
+        public Matrix InverseTransform
+        {
+            get { return _inverseTransorm; }
         }
 
         public Vector2 Position
@@ -46,13 +52,21 @@ namespace Engine
             set { _zoom = value; }
         }
 
+        /// <summary>
+        /// Fetches input values and updates transforms accordingly
+        /// </summary>
         public void UpdateCamera()
         {
             GetInput();
 
-            _transform = Matrix.CreateScale(new Vector3(_zoom, _zoom, 0)) * 
+            _transform = Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) * 
                 Matrix.CreateTranslation(_position.X, _position.Y, 0);
+
+            _inverseTransorm = Matrix.Invert(_transform);
         }
+        /// <summary>
+        /// Fetches mouse and keyboard input
+        /// </summary>
 
         private void GetInput()
         {
@@ -60,6 +74,9 @@ namespace Engine
             GetKeyboardInput();
         }
 
+        /// <summary>
+        /// Captures mouse state, sets zoom value according to the current mouse wheel value then updates said value
+        /// </summary>
         private void GetMouseInput()
         {
             _mouseState = Mouse.GetState();
@@ -77,6 +94,9 @@ namespace Engine
             }
         }
 
+        /// <summary>
+        /// Captures keyboard state then updates the viewport's position based on fetched input
+        /// </summary>
         private void GetKeyboardInput()
         {
             _keyboardState = Keyboard.GetState();
