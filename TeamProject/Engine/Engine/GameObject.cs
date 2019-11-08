@@ -19,7 +19,12 @@ namespace Engine
             this.Tag = tag;
         }
 
-        public GameObject(Vector2 position, Vector2 size) : this(position, size, 0, new Vector2(0), null)
+        public GameObject(Vector2 position, Vector2 size, string tag) : this(position, size, 0, new Vector2(0), tag)
+        {
+
+        }
+
+        public GameObject(Vector2 position, Vector2 size) : this(position, size, null)
         {
 
         }

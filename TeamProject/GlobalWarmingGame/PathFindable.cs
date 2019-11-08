@@ -42,39 +42,22 @@ namespace GlobalWarmingGame
             AddGoal(new Vector2(clickPos.X, clickPos.Y));
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
-            Move();
+            Move(gameTime);
         }
 
-        private void Move()
+        private void Move(GameTime gameTime)
         {
             if (path.Count == 0)
             {
-                if (goals.Count != 0)
+                foreach (Tile t in QueueNextPath())
                 {
-                    Queue<Tile> paths;
-                    try
-                    {
-                        paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
-                    }
-                    catch (PathFindingPathException)
-                    {
-                        //Path is not a valid path
-                        path.Clear();
-                        return;
-                    }
-
-                    foreach (Tile t in paths)
-                    {
-                        path.Enqueue(t.Position);
-                    }
-
-
-
+                    path.Enqueue(t.Position);
                 }
             }
-            if(path.Count != 0)
+
+            if (path.Count != 0)
             {
                 Vector2 direction = path.Peek() - Position;
                 if (direction.Equals(Vector2.Zero))
@@ -82,13 +65,39 @@ namespace GlobalWarmingGame
                     this.Position += direction;
                     path.Dequeue();
                 }
-
+                //TODO game time
                 this.Position += new Vector2(
-                     direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X),
-                     direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y));
+                        direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X),
+                        direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y)
+                        );
             }
-
         }
+
+
+        protected virtual Queue<Tile> QueueNextPath()
+        {
+            Queue<Tile> paths = new Queue<Tile>();
+            if (goals.Count != 0)
+            {
+                
+                try
+                {
+                    paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
+                }
+                catch (PathFindingPathException)
+                {
+                    //Path is not a valid path
+                    path.Clear();
+                    return paths;
+                }
+
+                return paths;
+            }
+            //No more goals
+            return paths;
+        }
+
+
 
     }
 }

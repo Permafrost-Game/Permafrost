@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using GlobalWarmingGame.Action;
 using Engine;
 using GlobalWarmingGame;
+using Engine.TileGrid;
 
 namespace GlobalWarmingGame.Interactions
 {
@@ -42,26 +43,30 @@ namespace GlobalWarmingGame.Interactions
             instructions.Enqueue(instruction);
         }
 
-        public override void Update()
+
+        protected override Queue<Tile> QueueNextPath()
         {
-            base.Update();
-
-
-            if (goals.Count == 0)
+            if(instructions.Count != 0)
             {
+                
+
+
                 if (instructions.Count != 0)
                 {
-                    //Food += instructions.Peek().Type.FoodEffect;
-                    instructions.Dequeue();
-
-                    if(instructions.Count != 0)
-                    {
-                        AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
-                    }
-
+                    AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
                 }
+                //TEMP
+                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += instructions.Peek().Type.FoodEffect;
+
+                instructions.Dequeue();
             }
+
+
+            return base.QueueNextPath();
         }
+
+
+
 
     }
 }

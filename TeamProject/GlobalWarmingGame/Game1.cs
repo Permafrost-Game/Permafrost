@@ -23,7 +23,6 @@ namespace GlobalWarmingGame
         TileSet tileSet;
         TileMap tileMap;
 
-        Point clickPos;
 
         private Desktop _desktop;
 
@@ -56,11 +55,14 @@ namespace GlobalWarmingGame
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             {
+                _desktop = new Desktop();
+                MyraEnvironment.Game = this;
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
+
+
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
-
 
                 Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
                 water.Name = "Non-Walkable";
@@ -74,6 +76,7 @@ namespace GlobalWarmingGame
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"colonist");
                 Texture2D farm = this.Content.Load<Texture2D>(@"farm");
+                Texture2D bush = this.Content.Load<Texture2D>(@"berrybush");
 
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
@@ -82,10 +85,11 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
+                //ALL the Below code is testing
                 var f1 = new Building(
-                    position: new Vector2(100, 100),
+                    position: new Vector2(128, 128),
                     texture: farm,
-                    new List<InstructionType>() { new InstructionType("harvest", "Harvest", "Harvests food from the farm") }
+                    new List<InstructionType>() { new InstructionType("harvest", "Harvest", "Harvests food from the farm", 1) }
                     );
 
                 var c1 = new Colonist(
@@ -100,18 +104,22 @@ namespace GlobalWarmingGame
                     position: new Vector2(75,50),
                     texture: colonist);
 
+                var b1 = new Building(
+                     position: new Vector2(256, 256),
+                     texture: bush,
+                     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
+                     );
+
                 GameObjectManager.Add(c1);
                 //GameObjectManager.Add(c2);
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
+                GameObjectManager.Add(b1);
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
 
+                GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
 
-                MyraEnvironment.Game = this;
-
-                _desktop = new Desktop();
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
-
+                
             }
         }
 
@@ -128,7 +136,7 @@ namespace GlobalWarmingGame
             camera.UpdateCamera();
 
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
-                updatable.Update();
+                updatable.Update(gameTime);
              
             base.Update(gameTime);
         }

@@ -2,6 +2,6 @@
 {
     public interface IUpdatable
     {
-        void Update();
+        void Update(Microsoft.Xna.Framework.GameTime gameTime);
     }
 }
