@@ -43,7 +43,6 @@ namespace GlobalWarmingGame.Interactions
             instructions.Enqueue(instruction);
         }
 
-
         protected override void PathComplete()
         {
             if (instructions.Count != 0)

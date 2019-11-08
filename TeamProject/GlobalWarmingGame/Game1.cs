@@ -80,6 +80,7 @@ namespace GlobalWarmingGame
                 Texture2D colonist = this.Content.Load<Texture2D>(@"colonist");
                 Texture2D farm = this.Content.Load<Texture2D>(@"farm");
                 Texture2D bush = this.Content.Load<Texture2D>(@"berrybush");
+                Texture2D rabbit = this.Content.Load<Texture2D>(@"rabbit");
 
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
@@ -112,12 +113,18 @@ namespace GlobalWarmingGame
                      texture: bush,
                      new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
                      );
+                var p1 = new PassiveMovingGameObject(
+                     position: new Vector2(500, 500),
+                     texture: rabbit,
+                     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
+                     );
 
                 GameObjectManager.Add(c1);
                 //GameObjectManager.Add(c2);
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
                 GameObjectManager.Add(b1);
+                GameObjectManager.Add(p1);
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
 
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
