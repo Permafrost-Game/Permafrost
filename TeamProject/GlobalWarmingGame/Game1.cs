@@ -14,6 +14,9 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
+    /// <summary>
+    /// This class is the main class for the games implemntation. 
+    /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
@@ -86,7 +89,7 @@ namespace GlobalWarmingGame
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
                 //ALL the Below code is testing
-                var f1 = new Building(
+                var f1 = new InteractableGameObject(
                     position: new Vector2(128, 128),
                     texture: farm,
                     new List<InstructionType>() { new InstructionType("harvest", "Harvest", "Harvests food from the farm", 1) }
@@ -104,7 +107,7 @@ namespace GlobalWarmingGame
                     position: new Vector2(75,50),
                     texture: colonist);
 
-                var b1 = new Building(
+                var b1 = new InteractableGameObject(
                      position: new Vector2(256, 256),
                      texture: bush,
                      new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }

@@ -10,10 +10,9 @@ using System.Collections.Generic;
 namespace GlobalWarmingGame
 {
     /// <summary>
-    /// This class is for development only
-    /// This class is for testing the path finder
+    /// This class allows for the navigation of sprites through across the TileMap
     /// </summary>
-    public class PathFindable : Sprite, IUpdatable, IClickable
+    public abstract class PathFindable : Sprite, IUpdatable, IClickable
     {
         protected float speed;
         protected Queue<Vector2> goals;
@@ -27,6 +26,10 @@ namespace GlobalWarmingGame
             goals = new Queue<Vector2>();
         }
 
+        /// <summary>
+        /// Adds a Goal
+        /// </summary>
+        /// <param name="goal">The position of the place this object should navigate to</param>
         public void AddGoal(Vector2 goal)
         {
             goals.Enqueue(goal);
@@ -37,20 +40,25 @@ namespace GlobalWarmingGame
             AddGoal(Position);
         }
 
-        public void OnClick(Point clickPos)
-        {
-            AddGoal(new Vector2(clickPos.X, clickPos.Y));
-        }
+        //public void OnClick(Point clickPos)
+        //{
+        //    AddGoal(new Vector2(clickPos.X, clickPos.Y));
+        //}
 
         public virtual void Update(GameTime gameTime)
         {
             Move(gameTime);
         }
 
+        /// <summary>
+        /// Moves the sprite towards the next goal
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void Move(GameTime gameTime)
         {
             if (path.Count == 0)
             {
+                PathComplete();
                 foreach (Tile t in QueueNextPath())
                 {
                     path.Enqueue(t.Position);
@@ -73,13 +81,16 @@ namespace GlobalWarmingGame
             }
         }
 
-
+        /// <summary>
+        /// Takes the next Goal and calculates it's path
+        /// </summary>
+        /// <remarks>This method may be overridden to adjust functionality</remarks>
+        /// <returns></returns>
         protected virtual Queue<Tile> QueueNextPath()
         {
             Queue<Tile> paths = new Queue<Tile>();
             if (goals.Count != 0)
             {
-                
                 try
                 {
                     paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
@@ -97,7 +108,10 @@ namespace GlobalWarmingGame
             return paths;
         }
 
-
+        /// <summary>
+        /// Called when the object has finished a Goal, called before the next goal is loaded.
+        /// </summary>
+        protected abstract void PathComplete();
 
     }
 }

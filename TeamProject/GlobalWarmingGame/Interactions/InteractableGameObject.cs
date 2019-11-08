@@ -6,19 +6,21 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
 {
-    class Building : Sprite, IInteractable
+    /// <summary>
+    /// This class describes an interactable object
+    /// </summary>
+    class InteractableGameObject : Sprite, IInteractable
     {
-
         public List<InstructionType> InstructionTypes { get; }
 
-
-        public Building(Vector2 position, Texture2D texture, List<InstructionType> instructionTypes) : base
+        
+        public InteractableGameObject(Vector2 position, Texture2D texture, List<InstructionType> instructionTypes) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0),
-            tag: "Building",
+            tag: "Building", //TODO rename tag
             depth: 0.5f,
             texture: texture
         )

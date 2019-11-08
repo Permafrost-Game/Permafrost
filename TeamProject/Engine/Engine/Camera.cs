@@ -29,6 +29,7 @@ namespace Engine
             _scroll = 1;
         }
 
+
         public Matrix Transform
         {
             get { return _transform; }
@@ -64,10 +65,10 @@ namespace Engine
 
             _inverseTransorm = Matrix.Invert(_transform);
         }
+
         /// <summary>
         /// Fetches mouse and keyboard input
         /// </summary>
-
         private void GetInput()
         {
             GetMouseInput();

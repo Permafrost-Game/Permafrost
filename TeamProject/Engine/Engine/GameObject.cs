@@ -2,6 +2,9 @@
 
 namespace Engine
 {
+    /// <summary>
+    /// A GameObject is an object that exists in the game world this requires a position and a size
+    /// </summary>
     public class GameObject
     {
         public Vector2 Position { get; protected set;}

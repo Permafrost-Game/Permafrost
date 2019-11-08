@@ -44,25 +44,19 @@ namespace GlobalWarmingGame.Interactions
         }
 
 
-        protected override Queue<Tile> QueueNextPath()
+        protected override void PathComplete()
         {
-            if(instructions.Count != 0)
+            if (instructions.Count != 0)
             {
-                
-
-
                 if (instructions.Count != 0)
                 {
                     AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
                 }
-                //TEMP
+                //TEMP the building should be the one incrementing this value and needs to be informed when this hapens.
                 ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += instructions.Peek().Type.FoodEffect;
 
                 instructions.Dequeue();
             }
-
-
-            return base.QueueNextPath();
         }
 
 

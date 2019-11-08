@@ -46,7 +46,7 @@
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\SelectionInputMethod.cs" />
     <Compile Include="Action\SelectionManager.cs" />
-    <Compile Include="Interactions\Building.cs" />
+    <Compile Include="Interactions\InteractableGameObject.cs" />
     <Compile Include="Interactions\Colonist.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />

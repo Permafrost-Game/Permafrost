@@ -9,15 +9,24 @@ using Myra.Graphics2D.UI;
 using System;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame
+namespace GlobalWarmingGame.Action
 {
 
+    /// <summary>
+    /// This class manages the selection and instruction of interactable <see cref="GameObject"/>s using mouse input
+    /// </summary>
     class MouseInputMethod : SelectionInputMethod
     {
         private readonly Camera camera;
         private readonly Desktop desktop;
         private Instruction currentInstruction;
 
+        /// <summary>
+        /// Creates a new instance of the class
+        /// </summary>
+        /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
+        /// <param name="desktop">Myra UI desktop, required for mouse event handling</param>
+        /// <param name="currentInstruction">The current instruction</param>
         public MouseInputMethod(Camera camera, Desktop desktop, Instruction currentInstruction)
         {
             this.camera = camera;
