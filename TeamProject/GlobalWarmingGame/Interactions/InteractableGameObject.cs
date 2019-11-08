@@ -12,7 +12,6 @@ namespace GlobalWarmingGame.Interactions
     class InteractableGameObject : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
-
         
         public InteractableGameObject(Vector2 position, Texture2D texture, List<InstructionType> instructionTypes) : base
         (
