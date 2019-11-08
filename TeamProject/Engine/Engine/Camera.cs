@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine
 {
@@ -25,9 +20,10 @@ namespace Engine
         {
             _viewport = viewport;
             _position = Vector2.Zero;
-            _zoom = 2.0f;
+            _zoom = 1.0f;
             _scroll = 1;
         }
+
 
         public Matrix Transform
         {
@@ -53,21 +49,25 @@ namespace Engine
         }
 
         /// <summary>
-        /// Fetches input values and updates transforms accordingly
+        /// Fetches Input values and updates Transforms accordingly
         /// </summary>
         public void UpdateCamera()
         {
             GetInput();
 
-            _transform = Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) * 
-                Matrix.CreateTranslation(_position.X, _position.Y, 0);
+            _zoom = MathHelper.Clamp(_zoom, 0.5f, 3.0f); // Clamps Zoom value
 
-            _inverseTransorm = Matrix.Invert(_transform);
+            _transform = Matrix.CreateTranslation(_position.X, _position.Y, 0) * // Main Translation Matrix
+                Matrix.CreateTranslation(-400, -400, 0) * // Tilemap Offset Matrix (Assumes the Tilemap is 50x50 @ 16p per tile, to be changed later)
+                Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) * // Scale Matrix
+                Matrix.CreateTranslation(new Vector3(_viewport.Width / 2, _viewport.Height / 2, 0)); // Origin Offset Matrix
+
+            _inverseTransorm = Matrix.Invert(_transform); // Inverse Transform Matrix
         }
-        /// <summary>
-        /// Fetches mouse and keyboard input
-        /// </summary>
 
+        /// <summary>
+        /// Fetches Mouse and Keyboard Input
+        /// </summary>
         private void GetInput()
         {
             GetMouseInput();
@@ -75,7 +75,7 @@ namespace Engine
         }
 
         /// <summary>
-        /// Captures mouse state, sets zoom value according to the current mouse wheel value then updates said value
+        /// Captures Mouse State, sets Zoom value according to the current Mouse Wheel value then updates said value
         /// </summary>
         private void GetMouseInput()
         {
@@ -95,7 +95,7 @@ namespace Engine
         }
 
         /// <summary>
-        /// Captures keyboard state then updates the viewport's position based on fetched input
+        /// Captures Keyboard State then updates the Viewport's Position based on fetched Input
         /// </summary>
         private void GetKeyboardInput()
         {
