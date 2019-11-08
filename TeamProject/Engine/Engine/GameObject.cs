@@ -2,6 +2,9 @@
 
 namespace Engine
 {
+    /// <summary>
+    /// A GameObject is an object that exists in the game world this requires a position and a size
+    /// </summary>
     public class GameObject
     {
         public Vector2 Position { get; protected set;}
@@ -19,7 +22,12 @@ namespace Engine
             this.Tag = tag;
         }
 
-        public GameObject(Vector2 position, Vector2 size) : this(position, size, 0, new Vector2(0), null)
+        public GameObject(Vector2 position, Vector2 size, string tag) : this(position, size, 0, new Vector2(0), tag)
+        {
+
+        }
+
+        public GameObject(Vector2 position, Vector2 size) : this(position, size, null)
         {
 
         }

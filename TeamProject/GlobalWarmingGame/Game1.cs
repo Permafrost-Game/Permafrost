@@ -1,30 +1,43 @@
 ﻿using Engine;
 using Engine.TileGrid;
-
+using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using Myra;
+using Myra.Graphics2D.TextureAtlases;
+using Myra.Graphics2D.UI;
 
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
+    /// <summary>
+    /// This class is the main class for the games implemntation. 
+    /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        MouseSelectionManager mouseSelectionManager;
+        SelectionManager selectionManager;
 
         TileSet tileSet;
         TileMap tileMap;
+
+
+        private Desktop _desktop;
 
         Camera camera;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 800;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 720   // set this value to the desired height of your window
+            };
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -33,20 +46,26 @@ namespace GlobalWarmingGame
         protected override void Initialize()
         {
             camera = new Camera(GraphicsDevice.Viewport);
-            mouseSelectionManager = new MouseSelectionManager(camera);
+            selectionManager = new SelectionManager();
+            
+
 
             this.IsMouseVisible = true;
             base.Initialize();     
         }
 
+
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             {
+                _desktop = new Desktop();
+                MyraEnvironment.Game = this;
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
+
+
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
-
 
                 Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
                 water.Name = "Non-Walkable";
@@ -60,6 +79,7 @@ namespace GlobalWarmingGame
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"colonist");
                 Texture2D farm = this.Content.Load<Texture2D>(@"farm");
+                Texture2D bush = this.Content.Load<Texture2D>(@"berrybush");
 
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
@@ -68,10 +88,11 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
-                var f1 = new Building(
-                    position: new Vector2(100, 100),
+                //ALL the Below code is testing
+                var f1 = new InteractableGameObject(
+                    position: new Vector2(128, 128),
                     texture: farm,
-                    new List<Action.InstructionType>() { new Action.InstructionType("harvest", "Harvest", "Harvests food from the farm") }
+                    new List<InstructionType>() { new InstructionType("harvest", "Harvest", "Harvests food from the farm", 1) }
                     );
 
                 var c1 = new Colonist(
@@ -86,15 +107,22 @@ namespace GlobalWarmingGame
                     position: new Vector2(75,50),
                     texture: colonist);
 
+                var b1 = new InteractableGameObject(
+                     position: new Vector2(256, 256),
+                     texture: bush,
+                     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
+                     );
+
                 GameObjectManager.Add(c1);
                 //GameObjectManager.Add(c2);
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
+                GameObjectManager.Add(b1);
+                selectionManager.CurrentInstruction.ActiveMember = (c1);
 
-                //tpf.AddGoal(new Vector2(100, 100));
-                //tpf.AddGoal(new Vector2(100, 50));
-                //tpf.AddGoal(new Vector2(25,75));
-                //tpf.AddGoal(new Vector2(0));
+                GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
+
+                
             }
         }
 
@@ -109,11 +137,10 @@ namespace GlobalWarmingGame
                 Exit();
 
             camera.UpdateCamera();
-            mouseSelectionManager.Update();
 
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
-                updatable.Update();
-
+                updatable.Update(gameTime);
+             
             base.Update(gameTime);
         }
 
@@ -136,6 +163,8 @@ namespace GlobalWarmingGame
                 drawable.Draw(spriteBatch);
 
             spriteBatch.End();
+
+            _desktop.Render();
 
             base.Draw(gameTime);
         }
