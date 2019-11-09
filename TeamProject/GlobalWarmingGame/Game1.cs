@@ -35,9 +35,10 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1280,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 720   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
             };
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -47,6 +48,7 @@ namespace GlobalWarmingGame
         {
             camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
+
             
 
 
@@ -97,15 +99,15 @@ namespace GlobalWarmingGame
                     );
 
                 var c1 = new Colonist(
-                    position:   new Vector2(425, 400),
+                    position:   new Vector2(25, 25),
                     texture: colonist);
 
                 var c2 = new Colonist(
-                    position: new Vector2(400, 375),
+                    position: new Vector2(75, 75),
                     texture: colonist);
 
                 var c3 = new Colonist(
-                    position: new Vector2(450, 375),
+                    position: new Vector2(450, 450),
                     texture: colonist);
 
                 var b1 = new InteractableGameObject(
