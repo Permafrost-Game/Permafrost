@@ -97,15 +97,15 @@ namespace GlobalWarmingGame
                     );
 
                 var c1 = new Colonist(
-                    position:   new Vector2(0,0),
+                    position:   new Vector2(425, 400),
                     texture: colonist);
 
                 var c2 = new Colonist(
-                    position: new Vector2(0,0),
+                    position: new Vector2(400, 375),
                     texture: colonist);
 
                 var c3 = new Colonist(
-                    position: new Vector2(75,50),
+                    position: new Vector2(450, 375),
                     texture: colonist);
 
                 var b1 = new InteractableGameObject(
@@ -114,17 +114,18 @@ namespace GlobalWarmingGame
                      new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
                      );
                 var p1 = new PassiveMovingGameObject(
-                     position: new Vector2(500, 500),
+                     position: new Vector2(575, 575),
                      texture: rabbit,
                      new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
                      );
 
                 GameObjectManager.Add(c1);
-                //GameObjectManager.Add(c2);
+                GameObjectManager.Add(c2);
                 GameObjectManager.Add(c3);
                 GameObjectManager.Add(f1);
                 GameObjectManager.Add(b1);
                 GameObjectManager.Add(p1);
+
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
 
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
