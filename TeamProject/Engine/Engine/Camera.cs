@@ -56,6 +56,8 @@ namespace Engine
             GetInput();
 
             _zoom = MathHelper.Clamp(_zoom, 0.5f, 3.0f); // Clamps Zoom value
+            _position.X = MathHelper.Clamp(_position.X, -400f, 400f); // Clamps camera position on X
+            _position.Y = MathHelper.Clamp(_position.Y, -400f, 400f); // Clamps camera position on Y
 
             _transform = Matrix.CreateTranslation(_position.X, _position.Y, 0) * // Main Translation Matrix
                 Matrix.CreateTranslation(-400, -400, 0) * // Tilemap Offset Matrix (Assumes the Tilemap is 50x50 @ 16p per tile, to be changed later)
