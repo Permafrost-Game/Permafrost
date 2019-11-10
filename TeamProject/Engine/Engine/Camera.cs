@@ -105,22 +105,22 @@ namespace Engine
 
             if (_keyboardState.IsKeyDown(Keys.W) || _keyboardState.IsKeyDown(Keys.Up))
             {
-                _position.Y += 10.0f;
+                _position.Y += 5.0f;
             }
 
             if (_keyboardState.IsKeyDown(Keys.A) || _keyboardState.IsKeyDown(Keys.Left))
             {
-                _position.X += 10.0f;
+                _position.X += 5.0f;
             }
 
             if (_keyboardState.IsKeyDown(Keys.S) || _keyboardState.IsKeyDown(Keys.Down))
             {
-                _position.Y -= 10.0f;
+                _position.Y -= 5.0f;
             }
 
             if (_keyboardState.IsKeyDown(Keys.D) || _keyboardState.IsKeyDown(Keys.Right))
             {
-                _position.X -= 10.0f;
+                _position.X -= 5.0f;
             }
         }
     }

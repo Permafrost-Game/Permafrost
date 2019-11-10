@@ -32,7 +32,7 @@ namespace GlobalWarmingGame
             {
                 Text = $"{Message} : {Value}",
                 HorizontalAlignment = HorizontalAlignment.Center,
-                TextColor = Color.Black
+                TextColor = Color.HotPink
             };
 
             desktop.Widgets.Add(titleLabel);
