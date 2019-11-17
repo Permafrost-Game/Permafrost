@@ -20,7 +20,7 @@ namespace Engine
         {
             _viewport = viewport;
             _position = Vector2.Zero;
-            _zoom = 1.0f;
+            _zoom = 2.0f;
             _scroll = 1;
         }
 
@@ -55,7 +55,7 @@ namespace Engine
         {
             GetInput();
 
-            _zoom = MathHelper.Clamp(_zoom, 0.5f, 3.0f); // Clamps Zoom value
+            _zoom = MathHelper.Clamp(_zoom, 0.5f, 4.0f); // Clamps Zoom value
             _position.X = MathHelper.Clamp(_position.X, -400f, 400f); // Clamps camera position on X
             _position.Y = MathHelper.Clamp(_position.Y, -400f, 400f); // Clamps camera position on Y
 
