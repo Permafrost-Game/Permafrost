@@ -148,6 +148,9 @@ namespace GlobalWarmingGame
 
             camera.UpdateCamera();
 
+            ///TileMap.update is used to update the temperature of the tiles
+            tileMap.Update(gameTime);
+
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update(gameTime);
              

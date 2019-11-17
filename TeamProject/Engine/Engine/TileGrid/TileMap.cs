@@ -1,13 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Engine.TileGrid
 {
     /// <summary>
     /// This is class will store a 2D array of <see cref="Tile"/>
     /// </summary>
-    public class TileMap : IDrawable
+    public class TileMap : IDrawable, IUpdatable
     {
 
         public Tile[,] Tiles { get; }
@@ -47,5 +48,57 @@ namespace Engine.TileGrid
             return t;
         }
 
+        public void Update(GameTime gameTime)
+        {
+            if ((gameTime.ElapsedGameTime.Ticks % 60) == 0)
+            {
+                foreach (Tile t in Tiles)
+                {
+                    Tile current = t;
+                    Double sumTemperature = 0;
+                    Double count = 0;
+                    foreach (Tile adjT in AdjacentTiles(t)) {
+                        sumTemperature = sumTemperature + adjT.temperature.Value;
+                        count++;
+                    }
+                    current.temperature.Value = (sumTemperature / count);
+                }
+            }
+        }
+
+        private List<Tile> AdjacentTiles(Tile tile) 
+        {
+            List<Tile> adjTiles = new List<Tile>();
+
+            if ((tile.Position.X - 16) >= 0)
+            {
+
+                adjTiles.Add(Tiles[((int)tile.Position.X - 16)/16, ((int)tile.Position.Y)/16]);
+
+            }
+            
+            if ((tile.Position.X + 16) < Tiles.GetLength(0)*16)
+            {
+                
+                adjTiles.Add(Tiles[((int)tile.Position.X + 16)/16, ((int)tile.Position.Y)/16]);
+
+            }
+
+            if ((tile.Position.Y - 16) >= 0)
+            {
+                
+                adjTiles.Add(Tiles[((int)tile.Position.X)/16, ((int)tile.Position.Y - 16)/16]);
+
+            }
+
+            if ((tile.Position.Y + 16) < Tiles.GetLength(0)*16)
+            {
+                
+                adjTiles.Add(Tiles[((int)tile.Position.X)/16, ((int)tile.Position.Y + 16)/16]);
+
+            }
+
+            return adjTiles;
+        }
     }
 }
