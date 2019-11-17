@@ -2,6 +2,7 @@
 using GlobalWarmingGame;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Myra;

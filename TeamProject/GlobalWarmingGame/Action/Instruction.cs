@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame.Action
 {

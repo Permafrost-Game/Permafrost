@@ -7,7 +7,7 @@ using Engine;
 using GlobalWarmingGame;
 using Engine.TileGrid;
 
-namespace GlobalWarmingGame.Interactions
+namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Colonist : PathFindable, IInteractable
     {
@@ -51,8 +51,7 @@ namespace GlobalWarmingGame.Interactions
                 {
                     AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
                 }
-                //TEMP the building should be the one incrementing this value and needs to be informed when this hapens.
-                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += instructions.Peek().Type.FoodEffect;
+                instructions.Peek().Type.Act();
 
                 instructions.Dequeue();
             }
