@@ -12,6 +12,7 @@ namespace Engine.TileGrid
         public Vector2 size { get; }
         public new Vector2 Position { get; }
         public Temperature temperature;
+        public bool Heated { get; set; }
 
         ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
@@ -23,7 +24,7 @@ namespace Engine.TileGrid
             this.texture = texture;
             this.size = size;
             this.Walkable = Walkable;
-            temperature = new Temperature(-5);
+            temperature = new Temperature(ZoneManager.GlobalTemperature);
         }
 
         public void Draw(SpriteBatch spriteBatch)

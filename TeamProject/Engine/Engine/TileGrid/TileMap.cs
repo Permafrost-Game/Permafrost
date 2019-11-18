@@ -16,6 +16,9 @@ namespace Engine.TileGrid
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;
+            //Test for tile temperature
+            Tiles[25, 25].temperature.SetTemp(50);
+            Tiles[25, 25].Heated = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -44,7 +47,8 @@ namespace Engine.TileGrid
                y < Tiles.GetLength(1))
             {
                 t = Tiles[x, y];
-            }
+            }            
+
             return t;
         }
 
@@ -52,16 +56,24 @@ namespace Engine.TileGrid
         {
             if ((gameTime.ElapsedGameTime.Ticks % 60) == 0)
             {
-                foreach (Tile t in Tiles)
+                foreach (Tile tile in Tiles)
                 {
-                    Tile current = t;
-                    Double sumTemperature = 0;
-                    Double count = 0;
-                    foreach (Tile adjT in AdjacentTiles(t)) {
+                    if (tile.Heated)
+                    {
+                        Console.WriteLine(tile.temperature.Value);
+                        continue;
+                    }
+                    Tile current = tile;
+                    int sumTemperature = current.temperature.Value*2;
+                    int count = 1;
+                    foreach (Tile adjT in AdjacentTiles(tile))
+                    {
                         sumTemperature = sumTemperature + adjT.temperature.Value;
                         count++;
                     }
-                    current.temperature.Value = (sumTemperature / count);
+                    //Double currentTemp = current.temperature.Value;
+                    current.temperature.Value = (sumTemperature / (count));
+                    Console.WriteLine(current.temperature.Value);
                 }
             }
         }

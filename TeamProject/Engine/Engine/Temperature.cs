@@ -13,25 +13,19 @@ namespace Engine
     /// </summary>
     public class Temperature
     {
-        private double value;
+        private int value;
 
-        public double Value
+        public int Value
         {
-            get
-            {
-                return value;
-            }
-            set
-            {
-                TempSetter(value);
-            }
+            get => value;
+            set => SetTemp(value);
         }
 
-        public Temperature(Double t) {
-            TempSetter(t);
+        public Temperature(int t) {
+            SetTemp(t);
         }
 
-        private void TempSetter(Double temp)
+        public void SetTemp(int temp)
         {
             if (temp < -100)
             {
