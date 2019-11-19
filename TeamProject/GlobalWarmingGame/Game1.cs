@@ -38,7 +38,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
             };
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";

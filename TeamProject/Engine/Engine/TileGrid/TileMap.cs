@@ -16,6 +16,7 @@ namespace Engine.TileGrid
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;
+
             //Test for tile temperature
             Tiles[25, 25].temperature.SetTemp(50);
             Tiles[25, 25].Heated = true;
@@ -54,26 +55,40 @@ namespace Engine.TileGrid
 
         public void Update(GameTime gameTime)
         {
-            if ((gameTime.ElapsedGameTime.Ticks % 60) == 0)
+            if ((gameTime.TotalGameTime.Milliseconds % 2000 ) == 0)
             {
                 foreach (Tile tile in Tiles)
                 {
+                    ///if tile is being heated by a structure
                     if (tile.Heated)
                     {
                         Console.WriteLine(tile.temperature.Value);
                         continue;
                     }
+
                     Tile current = tile;
-                    int sumTemperature = current.temperature.Value*2;
+                    int sumTemperature = current.temperature.Value;
                     int count = 1;
                     foreach (Tile adjT in AdjacentTiles(tile))
                     {
                         sumTemperature = sumTemperature + adjT.temperature.Value;
                         count++;
                     }
-                    //Double currentTemp = current.temperature.Value;
+
                     current.temperature.Value = (sumTemperature / (count));
-                    Console.WriteLine(current.temperature.Value);
+
+                    ///Try to lower/raise the temp to the global temp
+                    if (tile.temperature.Value < ZoneManager.GlobalTemperature)
+                    {
+                        int Temperature = tile.temperature.Value;
+                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) /2);
+                    }
+                    else if(tile.temperature.Value > ZoneManager.GlobalTemperature)
+                    {
+                        int Temperature = tile.temperature.Value;
+                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 2);
+                    }
+                    Console.WriteLine(tile.temperature.Value);
                 }
             }
         }
