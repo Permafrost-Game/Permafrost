@@ -23,6 +23,7 @@ Examples of some non-moveable interactables are:
   - Bushes
   - Wild grass
   - Stashes or storage boxes
+
 Interactables may have multiple options for which actions can be performed. eg.a Tree could be burned, chopped down, tapped, or its fruit harvested.
 
 Interactable objects can also moving. For example
