@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set
             {
                 _isHarvestable = value;
-                texture = _isHarvestable ? textureHarvestable : textureHarvested;
+                 texture = _isHarvestable ? textureHarvestable : textureHarvested;
             }
         }
 
@@ -52,6 +52,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 1;
                 IsHarvestable = false;
+                timeUnitlHarvestable = timeToHarvestable;
             }
         }
 
@@ -63,7 +64,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (timeUnitlHarvestable <= 0f)
                 {
                     IsHarvestable = true;
-                    timeUnitlHarvestable = timeToHarvestable;
+                    
                 }
             }
             
