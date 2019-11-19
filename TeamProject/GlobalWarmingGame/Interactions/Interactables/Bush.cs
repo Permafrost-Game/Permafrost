@@ -33,7 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
             tag: "Bush",
-            depth: 1f,
+            depth: 0.7f,
             texture: harvestable,
             instructionTypes: new List<InstructionType>()
         )

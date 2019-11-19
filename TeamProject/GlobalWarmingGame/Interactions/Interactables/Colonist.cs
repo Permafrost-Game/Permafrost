@@ -9,7 +9,7 @@ using Engine.TileGrid;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Colonist : PathFindable, IInteractable
+    class Colonist : PathFindable, IInteractable, IUpdatable
     {
 
         public List<InstructionType> InstructionTypes { get; }
@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             tag: "Colonist",
             depth: 1f,
             texture: texture,
-            speed: 10f
+            speed: 100f
         )
         {
             Health = 10f;
@@ -43,21 +43,30 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions.Enqueue(instruction);
         }
 
-        protected override void PathComplete()
+        protected override void OnGoalComplete(Vector2 completedGoal)
         {
-            if (instructions.Count != 0)
+            
+            if (instructions.Count > 0 &&
+                //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
+                completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
+                instructions.Count != 0)
             {
-                if (instructions.Count != 0)
-                {
-                    AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
-                }
                 instructions.Peek().Type.Act();
-
                 instructions.Dequeue();
             }
         }
+            
 
+        
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
+            if(goals.Count == 0 && instructions.Count > 0 )
+            {
+                AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
+            }
+        }
 
 
     }

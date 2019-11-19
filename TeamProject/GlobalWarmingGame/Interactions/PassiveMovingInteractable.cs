@@ -36,7 +36,7 @@ namespace GlobalWarmingGame.Interactions
         }
 
         //TODO Adjust queuing the goals
-        protected override void PathComplete()
+        protected override void OnGoalComplete(Vector2 completedGoal)
         {
             while (NearMoves < 10)
             {

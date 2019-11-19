@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
             tag: "Farm",
-            depth: 1f,
+            depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
 

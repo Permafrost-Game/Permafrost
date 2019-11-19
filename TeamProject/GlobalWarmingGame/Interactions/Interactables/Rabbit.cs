@@ -18,10 +18,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
             tag: "Rabbit",
-            depth: 1f,
+            depth: 0.9f,
             texture: texture,
             instructionTypes: new List<InstructionType>(),
-            speed: 1f
+            speed: 10f
         )
         {
             InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", Hunt));
