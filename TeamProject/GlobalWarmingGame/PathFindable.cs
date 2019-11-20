@@ -40,44 +40,44 @@ namespace GlobalWarmingGame
             AddGoal(Position);
         }
 
-        //public void OnClick(Point clickPos)
-        //{
-        //    AddGoal(new Vector2(clickPos.X, clickPos.Y));
-        //}
-
         public virtual void Update(GameTime gameTime)
         {
             Move(gameTime);
         }
 
         /// <summary>
-        /// Moves the sprite towards the next goal
+        /// Moves the sprite towards the next path
         /// </summary>
         /// <param name="gameTime"></param>
         private void Move(GameTime gameTime)
         {
-            if (path.Count == 0)
+            if(goals.Count != 0)
             {
-                PathComplete();
-                foreach (Tile t in QueueNextPath())
+                if(path.Count != 0)
                 {
-                    path.Enqueue(t.Position);
-                }
-            }
+                    Vector2 direction = path.Peek() - Position;
+                    if (direction.Equals(Vector2.Zero))
+                    {
+                        this.Position += direction;
+                        path.Dequeue();
 
-            if (path.Count != 0)
-            {
-                Vector2 direction = path.Peek() - Position;
-                if (direction.Equals(Vector2.Zero))
+                        if(path.Count == 0)
+                        {
+                            OnGoalComplete(this.goals.Dequeue());
+                        }
+                    }
+                    float speed = this.speed / (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    this.Position += new Vector2(
+                            (direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X)),
+                            (direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y))
+                            );
+                } else
                 {
-                    this.Position += direction;
-                    path.Dequeue();
+                    foreach (Tile t in EnqueueNextPath(goals.Peek()))
+                    {
+                        path.Enqueue(t.Position);
+                    }
                 }
-                //TODO game time
-                this.Position += new Vector2(
-                        direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X),
-                        direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y)
-                        );
             }
         }
 
@@ -86,32 +86,26 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <remarks>This method may be overridden to adjust functionality</remarks>
         /// <returns></returns>
-        protected virtual Queue<Tile> QueueNextPath()
+        protected virtual Queue<Tile> EnqueueNextPath(Vector2 goal)
         {
             Queue<Tile> paths = new Queue<Tile>();
-            if (goals.Count != 0)
+            try
             {
-                try
-                {
-                    paths = PathFinder.Find(this.Position, this.goals.Dequeue(), false);
-                }
-                catch (PathFindingPathException)
-                {
-                    //Path is not a valid path
-                    path.Clear();
-                    return paths;
-                }
-
-                return paths;
+                paths = PathFinder.Find(this.Position, goal, false);
             }
-            //No more goals
+            catch (PathFindingPathException)
+            {
+                //Path is not a valid path
+                path.Clear();
+            }
+
             return paths;
         }
 
         /// <summary>
         /// Called when the object has finished a Goal, called before the next goal is loaded.
         /// </summary>
-        protected abstract void PathComplete();
+        protected abstract void OnGoalComplete(Vector2 completedGoal);
 
     }
 }

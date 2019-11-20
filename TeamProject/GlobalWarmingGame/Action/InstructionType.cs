@@ -8,18 +8,32 @@
         public string ID { get; }
         public string Name { get; }
         public string Description { get; }
-        public int FoodEffect { get; }
 
-        public InstructionType(string id, string name, string description)
+        public delegate void Action();
+        private Action action;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Unique ID</param>
+        /// <param name="name">Display name</param>
+        /// <param name="description">Display description</param>
+        /// <param name="action">Method that should be called on <see cref="InstructionType.Act"/></param>
+        public InstructionType(string id, string name, string description, Action action = default)
         {
-            ID = id;
-            Name = name;
-            Description = description;
+            this.ID = id;
+            this.Name = name;
+            this.Description = description;
+            this.action = action;
         }
-        public InstructionType(string id, string name, string description, int foodEffect) : this(id, name, description)
-        { 
-            FoodEffect = foodEffect;
+
+
+        public void Act()
+        {
+            action();
         }
+
+        
     }
 }
 

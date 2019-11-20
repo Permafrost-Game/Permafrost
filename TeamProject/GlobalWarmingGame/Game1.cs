@@ -2,7 +2,9 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -38,11 +40,12 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
             };
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-            
+
+
         }
         protected override void Initialize()
         {
@@ -79,11 +82,12 @@ namespace GlobalWarmingGame
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
                 textureSet.Add("5", water);
 
-                Texture2D colonist = this.Content.Load<Texture2D>(@"colonist");
-                Texture2D farm = this.Content.Load<Texture2D>(@"farm");
-                Texture2D bush = this.Content.Load<Texture2D>(@"berrybush");
-                Texture2D rabbit = this.Content.Load<Texture2D>(@"rabbit");
 
+                Texture2D colonist = this.Content.Load<Texture2D>(@"interactables/colonist");
+                Texture2D farm = this.Content.Load<Texture2D>(@"interactables/farm");
+                Texture2D bushH = this.Content.Load<Texture2D>(@"interactables/berrybush-harvestable");
+                Texture2D bushN = this.Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
+                Texture2D rabbit = this.Content.Load<Texture2D>(@"interactables/rabbit");
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
@@ -92,43 +96,50 @@ namespace GlobalWarmingGame
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
                 //ALL the Below code is testing
-                var f1 = new InteractableGameObject(
-                    position: new Vector2(128, 128),
-                    texture: farm,
-                    new List<InstructionType>() { new InstructionType("harvest", "Harvest", "Harvests food from the farm", 1) }
-                    );
+                
 
                 var c1 = new Colonist(
                     position:   new Vector2(25, 25),
                     texture: colonist);
-
-                var c2 = new Colonist(
-                    position: new Vector2(75, 75),
-                    texture: colonist);
-
-                var c3 = new Colonist(
-                    position: new Vector2(450, 450),
-                    texture: colonist);
-
-                var b1 = new InteractableGameObject(
-                     position: new Vector2(256, 256),
-                     texture: bush,
-                     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
-                     );
-                var p1 = new PassiveMovingGameObject(
-                     position: new Vector2(575, 575),
-                     texture: rabbit,
-                     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
-                     );
-
-                GameObjectManager.Add(c1);
-                GameObjectManager.Add(c2);
-                GameObjectManager.Add(c3);
-                GameObjectManager.Add(f1);
-                GameObjectManager.Add(b1);
-                GameObjectManager.Add(p1);
-
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
+                GameObjectManager.Add(c1);
+                
+                GameObjectManager.Add(new Colonist(
+                    position: new Vector2(75, 75),
+                    texture: colonist));
+
+                GameObjectManager.Add(new Colonist(
+                    position: new Vector2(450, 450),
+                    texture: colonist));
+
+                GameObjectManager.Add(new Farm(
+                    position: new Vector2(128, 128),
+                    texture: farm
+                    ));
+                GameObjectManager.Add(new Bush(
+                    position: new Vector2(256, 256),
+                    harvestable: bushH,
+                    harvested: bushN
+                    ));
+                GameObjectManager.Add(new Rabbit(
+                    position: new Vector2(575, 575),
+                    texture: rabbit
+                    ));
+
+                
+
+                //GameObjectManager.Add( new InteractableGameObject(
+                //    position: new Vector2(256, 256),
+                //     texture: bush,
+                //     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
+                //     );
+                //GameObjectManager.Add( new PassiveMovingGameObject(
+                //     position: new Vector2(575, 575),
+                //     texture: rabbit,
+                //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
+                //     );
+
+                
 
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
 
