@@ -12,7 +12,7 @@ namespace Engine.PathFinding
         private static Dictionary<Tile, TileCosts> openDictionary;
         private static Dictionary<Tile, TileCosts> closedDictionary;
 
-        public static Queue<Tile> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
+        public static Queue<Vector2> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
         {
             Tile startT = tileMap.GetTileAtPosition(start);
             Tile goalT = tileMap.GetTileAtPosition(goal);
@@ -23,7 +23,7 @@ namespace Engine.PathFinding
         /// Takes a start tile, end tile and a bool if the pathfinding should consider obsticles
         /// </summary>
         /// <returns> Queue<Tile> from the start tile to the end tile </returns>
-        public static Queue<Tile> Find(Tile start, Tile goal, bool canPassOverObstacles)
+        public static Queue<Vector2> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {
             if (start == null) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is null");
             if (goal == null) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is null");
@@ -177,21 +177,21 @@ namespace Engine.PathFinding
         /// Then pop the stack and enqueue all the tiles
         /// </summary>
         /// <returns> Queue<Tile> </returns>
-        private static Queue<Tile> BuildPath(Tile tile, Dictionary<Tile, TileCosts> closedTiles) {
+        private static Queue<Vector2> BuildPath(Tile tile, Dictionary<Tile, TileCosts> closedTiles) {
 
-            Stack<Tile> tileStack = new Stack<Tile>();
-            Queue<Tile> tileQueueFromStart = new Queue<Tile>();
+            Stack<Vector2> tileStack = new Stack<Vector2>();
+            Queue<Vector2> tileQueueFromStart = new Queue<Vector2>();
 
             if (closedTiles != null) {
 
                 //Current equals the end tile
                 Tile current = tile;
-                tileStack.Push(current);
+                tileStack.Push(current.Position);
 
                 //This will stop once current is the start
                 while (closedTiles[current].HasParent())
                 {
-                    tileStack.Push(closedTiles[current].Parent);
+                    tileStack.Push(closedTiles[current].Parent.Position);
                     current = closedTiles[current].Parent;
 
                 };
