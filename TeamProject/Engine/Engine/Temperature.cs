@@ -6,19 +6,19 @@ namespace Engine
     /// </summary>
     public class Temperature
     {
-        private int value;
+        private double value;
 
-        public int Value
+        public double Value
         {
             get => value;
             set => SetTemp(value);
         }
 
-        public Temperature(int t) {
+        public Temperature(double t) {
             SetTemp(t);
         }
 
-        public void SetTemp(int temp)
+        public void SetTemp(double temp)
         {
             if (temp < -100)
             {
@@ -31,6 +31,21 @@ namespace Engine
             else
             {
                 value = temp;
+            }
+            if (("" + value).Contains("."))
+            {
+                String sBefore = ("" + value).Split('.')[0];
+                String sAfter = ("" + value).Split('.')[1];
+
+                if (sAfter.Length > 2) {
+                    if (sAfter.ToCharArray()[0] != '5')
+                    {
+                        value = Math.Round(value);
+                    }
+                    else {
+                        value = double.Parse(sBefore) + 0.5;
+                    }
+                }
             }
         }
 
