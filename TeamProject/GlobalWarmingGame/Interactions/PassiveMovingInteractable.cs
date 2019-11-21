@@ -40,7 +40,6 @@ namespace GlobalWarmingGame.Interactions
         {
             while (NearMoves < 10)
             {
-                Console.WriteLine(NearMoves);
                 MoveAround(1f);
             }
             NearMoves = 0;

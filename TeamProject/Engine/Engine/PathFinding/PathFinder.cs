@@ -22,7 +22,7 @@ namespace Engine.PathFinding
         /// <summary>
         /// Takes a start tile, end tile and a bool if the pathfinding should consider obsticles
         /// </summary>
-        /// <returns> Queue<Tile> from the start tile to the end tile </returns>
+        /// <returns> Queue<Vector2> from the start tile to the end tile </returns>
         public static Queue<Vector2> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {
             if (start == null) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is null");
@@ -71,7 +71,7 @@ namespace Engine.PathFinding
                     return BuildPath(current, closedDictionary);
                 }
 
-                Dictionary<Tile, TileCosts> neighbourTiles = GetAdjacentTiles(current, goal, currentTotalCost, tileMap, canPassOverObstacles);
+                Dictionary<Tile, TileCosts> neighbourTiles = GetAdjacentTiles(current, goal, currentTotalCost, canPassOverObstacles);
 
                 foreach (Tile neighbour in neighbourTiles.Keys)
                 {
@@ -114,18 +114,23 @@ namespace Engine.PathFinding
         /// Look at all the map tiles and return the adjacent tiles
         /// </summary>
         /// <returns> list of adjacent tiles </returns>
-        private static Dictionary<Tile, TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost, TileMap tMap, bool canPassOverObstacles)
+        private static Dictionary<Tile, TileCosts> GetAdjacentTiles(Tile current, Tile goal, TileCosts currentTotalCost, bool canPassOverObstacles)
         {
             //Temp adjacent tile list
             Dictionary<Tile, TileCosts> tileList = new Dictionary<Tile, TileCosts>();
-            
-            int[] xDirections = new int[] { 1, -1, 0, 0, 1, -1, 1, -1 };
-            int[] yDirections = new int[] { 0, 0, 1, -1, 1, 1, -1, -1 };
+
+            //Storage for all 8 possible adjacent tiles
+            float tileSize = current.size.X;
+            float[] xDirections = new float[] { tileSize, -tileSize, 0,         0,        tileSize, -tileSize, tileSize, -tileSize };
+            float[] yDirections = new float[] { 0,         0,        tileSize, -tileSize, tileSize, tileSize, -tileSize, -tileSize };
 
             //Loop through all 8 possible adjacent tiles
             for (int i = 0; i < xDirections.Length; i++)
             {
-                Tile tile = AdjacentTile(current, tMap, canPassOverObstacles, xDirections[i], yDirections[i]);
+
+                Vector2 position = new Vector2((current.Position.X + xDirections[i]), (current.Position.Y + yDirections[i]));
+
+                Tile tile = tileMap.GetTileAtPosition(position);
 
                 //TileFinder will only return null if the tile is not passable or outside of the tilemap
                 if (tile != null)
@@ -139,41 +144,17 @@ namespace Engine.PathFinding
                         Parent = current
                     };
 
+                    //If game object can't pass over game objects and tile is an obstacle
+                    if (!canPassOverObstacles && !tile.Walkable)
+                    {
+                        continue;
+                    }
+
                     tileList.Add(tile, neighbourTileCosts);
                 }
             }
 
             return tileList;
-        }
-
-        /// <summary>
-        /// Find a tile within the map that is one tile away from the current tile 
-        /// </summary>
-        /// <param name="current"></param>
-        /// <param name="tMap"></param>
-        /// <param name="changeX"></param>
-        /// <param name="changeY"></param>
-        /// <returns> adjacent tile </returns>
-        private static Tile AdjacentTile(Tile current, TileMap tMap, bool canPassOverObstacles, int changeX, int changeY)
-        {
-            int x = (int)current.Position.X / (int)Math.Round(current.size.X);
-            int y = (int)current.Position.Y / (int)Math.Round(current.size.Y);
-
-            Tile t = null;
-            
-            //If tile is in the tile map
-            if ((x + changeX) >= 0 && (y + changeY) >= 0 && (x + changeX) < tMap.Tiles.GetLength(0) && (y + changeX) < tMap.Tiles.GetLength(1))
-            {
-                t = tMap.Tiles[(x + changeX), (y + changeY)];
-
-                //If game object can't pass over game objects and tile is an obstacle
-                if (!canPassOverObstacles && !t.Walkable)
-                {
-                    return null;
-                }
-            }
-
-            return t;
         }
 
         ///<summary>
