@@ -81,12 +81,12 @@ namespace Engine.TileGrid
                     if (tile.temperature.Value < ZoneManager.GlobalTemperature)
                     {
                         double Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) /4);
+                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
                     else if(tile.temperature.Value > ZoneManager.GlobalTemperature)
                     {
                         double Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) /4);
+                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
                     Console.WriteLine(tile.temperature.Value);
                 }
@@ -97,31 +97,36 @@ namespace Engine.TileGrid
         {
             List<Tile> adjTiles = new List<Tile>();
 
-            if ((tile.Position.X - 16) >= 0)
+            Vector2 v;
+            float tileSize = tile.size.X;
+
+            if ((tile.Position.X - tileSize) >= 0)
             {
-
-                adjTiles.Add(Tiles[((int)tile.Position.X - 16)/16, ((int)tile.Position.Y)/16]);
-
+                v = new Vector2((tile.Position.X - tileSize), tile.Position.Y);
+                adjTiles.Add(GetTileAtPosition(v));
             }
             
-            if ((tile.Position.X + 16) < Tiles.GetLength(0)*16)
+            if ((tile.Position.X + tileSize) < Tiles.GetLength(0)* tileSize)
             {
-                
-                adjTiles.Add(Tiles[((int)tile.Position.X + 16)/16, ((int)tile.Position.Y)/16]);
+
+                v = new Vector2((tile.Position.X + tileSize), tile.Position.Y);
+                adjTiles.Add(GetTileAtPosition(v));
 
             }
 
-            if ((tile.Position.Y - 16) >= 0)
+            if ((tile.Position.Y - tileSize) >= 0)
             {
-                
-                adjTiles.Add(Tiles[((int)tile.Position.X)/16, ((int)tile.Position.Y - 16)/16]);
+
+                v = new Vector2(tile.Position.X, (tile.Position.Y - tileSize));
+                adjTiles.Add(GetTileAtPosition(v));
 
             }
 
-            if ((tile.Position.Y + 16) < Tiles.GetLength(0)*16)
+            if ((tile.Position.Y + tileSize) < Tiles.GetLength(0)* tileSize)
             {
-                
-                adjTiles.Add(Tiles[((int)tile.Position.X)/16, ((int)tile.Position.Y + 16)/16]);
+
+                v = new Vector2(tile.Position.X, (tile.Position.Y + tileSize));
+                adjTiles.Add(GetTileAtPosition(v));
 
             }
 
