@@ -77,6 +77,10 @@ namespace GlobalWarmingGame
                     {
                         path.Enqueue(t.Position);
                     }
+                    if (path.Count == 0)
+                    {
+                        OnGoalComplete(this.goals.Dequeue());
+                    }
                 }
             }
         }
