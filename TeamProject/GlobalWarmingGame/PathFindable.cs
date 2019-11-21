@@ -17,7 +17,7 @@ namespace GlobalWarmingGame
         protected float speed;
         protected Queue<Vector2> goals;
         private Queue<Vector2> path;
-        
+
         public PathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
             base(position, size, rotation, rotationOrigin, tag, depth, texture)
         {
@@ -51,9 +51,9 @@ namespace GlobalWarmingGame
         /// <param name="gameTime"></param>
         private void Move(GameTime gameTime)
         {
-            if(goals.Count != 0)
+            if (goals.Count != 0)
             {
-                if(path.Count != 0)
+                if (path.Count != 0)
                 {
                     Vector2 direction = path.Peek() - Position;
                     if (direction.Equals(Vector2.Zero))
@@ -61,7 +61,7 @@ namespace GlobalWarmingGame
                         this.Position += direction;
                         path.Dequeue();
 
-                        if(path.Count == 0)
+                        if (path.Count == 0)
                         {
                             OnGoalComplete(this.goals.Dequeue());
                         }
@@ -71,7 +71,8 @@ namespace GlobalWarmingGame
                             (direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X)),
                             (direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y))
                             );
-                } else
+                }
+                else
                 {
                     foreach (Tile t in EnqueueNextPath(goals.Peek()))
                     {
@@ -95,8 +96,13 @@ namespace GlobalWarmingGame
             Queue<Tile> paths = new Queue<Tile>();
             try
             {
-                paths = PathFinder.Find(this.Position, goal, false);
+                path = PathFinder.Find(this.Position, goals.Peek(), false);
+                if (path.Count == 0)
+                {
+                    OnGoalComplete(this.goals.Dequeue());
+                }
             }
+
             catch (PathFindingPathException)
             {
                 //Path is not a valid path
