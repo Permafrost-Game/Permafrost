@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Xna.Framework;
 using System;
 
 namespace Engine
@@ -22,18 +23,8 @@ namespace Engine
 
         public void SetTemp(double temp)
         {
-            if (temp < -100)
-            {
-                value = -100;
-            }
-            else if (temp > 100)
-            {
-                value = 100;
-            }
-            else
-            {
-                value = temp;
-            }
+            value = MathHelper.Clamp((float)temp, -100, 100);
+
             if (("" + value).Contains("."))
             {
                 String sBefore = ("" + value).Split('.')[0];
