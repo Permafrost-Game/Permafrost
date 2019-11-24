@@ -18,7 +18,6 @@ namespace Engine.TileGrid
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;
-
             timeUntilTempTick = 2000;
         }
 

@@ -24,22 +24,7 @@ namespace Engine
         public void SetTemp(double temp)
         {
             value = MathHelper.Clamp((float)temp, -100, 100);
-
-            if (("" + value).Contains("."))
-            {
-                String sBefore = ("" + value).Split('.')[0];
-                String sAfter = ("" + value).Split('.')[1];
-
-                if (sAfter.Length > 2) {
-                    if (sAfter.ToCharArray()[0] != '5')
-                    {
-                        value = Math.Round(value);
-                    }
-                    else {
-                        value = double.Parse(sBefore) + 0.5;
-                    }
-                }
-            }
+            value = Math.Round(value, 2);
         }
 
     }
