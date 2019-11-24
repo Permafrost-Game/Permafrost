@@ -16,16 +16,16 @@ namespace GlobalWarmingGame.Interactions
         private Random Rand;
         private int NearMoves;
 
-        public PassiveMovingGameObject(Vector2 position, Texture2D texture, List<InstructionType> instructionTypes) : base
+        public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
-            rotation: 0f,
-            rotationOrigin: new Vector2(0),
-            tag: "Passive", //TODO rename tag
-            depth: 0.5f,
+            size: size,
+            rotation: rotation,
+            rotationOrigin: rotationOrigin,
+            tag: tag,
+            depth: depth,
             texture: texture,
-            speed: 0.5f
+            speed: speed
         )
         {
             base.AddGoal(Position);
@@ -36,11 +36,10 @@ namespace GlobalWarmingGame.Interactions
         }
 
         //TODO Adjust queuing the goals
-        protected override void PathComplete()
+        protected override void OnGoalComplete(Vector2 completedGoal)
         {
             while (NearMoves < 10)
             {
-                //Console.WriteLine(NearMoves);
                 MoveAround(1f);
             }
             NearMoves = 0;
