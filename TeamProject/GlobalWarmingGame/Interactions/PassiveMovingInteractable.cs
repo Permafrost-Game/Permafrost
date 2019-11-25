@@ -16,6 +16,11 @@ namespace GlobalWarmingGame.Interactions
         private Random Rand;
         private int NearMoves;
 
+        private float offset;
+
+        private readonly float[] xDirections;
+        private readonly float[] yDirections;
+
         public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed) : base
         (
             position: position,
@@ -31,68 +36,40 @@ namespace GlobalWarmingGame.Interactions
             base.AddGoal(Position);
             NearMoves = 0;
             Rand = new Random();
+
             Health = 1f;
             InstructionTypes = instructionTypes;
+
+            offset = texture.Width;
+            xDirections = new float[] { offset, -offset, 0,       0,      offset, -offset,  offset, -offset };
+            yDirections = new float[] { 0,       0,      offset, -offset, offset,  offset, -offset, -offset };
         }
 
         //TODO Adjust queuing the goals
         protected override void OnGoalComplete(Vector2 completedGoal)
         {
-            while (NearMoves < 10)
+            if (NearMoves < 15)
             {
                 MoveAround(1f);
             }
-            NearMoves = 0;
-            MoveAround(8f);
+            else
+            {
+                Console.WriteLine(NearMoves);
+                NearMoves = 0;
+                MoveAround(8f);
+            }
         }
 
         private void MoveAround(float multiplier)
         {
-            float i = Rand.Next(8);
+            int i = Rand.Next(8);
 
-            float offset = (texture.Width) * multiplier;
+            Vector2 v = new Vector2
+            {
+                X = Position.X + xDirections[i] * multiplier,
+                Y = Position.Y + yDirections[i] * multiplier
+            };
 
-            Vector2 v = new Vector2();
-            if (i == 0)
-            {
-                v.X = Position.X + offset;
-                v.Y = Position.Y;
-            }
-            else if (i == 1)
-            {
-                v.X = Position.X - offset;
-                v.Y = Position.Y;
-            }
-            else if (i == 2)
-            {
-                v.X = Position.X;
-                v.Y = Position.Y + offset;
-            }
-            else if (i == 3)
-            {
-                v.X = Position.X;
-                v.Y = Position.Y - offset;
-            }
-            else if (i == 4)
-            {
-                v.X = Position.X + offset;
-                v.Y = Position.Y + offset;
-            }
-            else if (i == 5)
-            {
-                v.X = Position.X - offset;
-                v.Y = Position.Y + offset;
-            }
-            else if (i == 6)
-            {
-                v.X = Position.X + offset;
-                v.Y = Position.Y - offset;
-            }
-            else if (i == 7)
-            {
-                v.X = Position.X - offset;
-                v.Y = Position.Y - offset;
-            }
             NearMoves++;
             base.AddGoal(v);
         }
