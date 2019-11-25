@@ -54,7 +54,6 @@ namespace GlobalWarmingGame.Interactions
             }
             else
             {
-                Console.WriteLine(NearMoves);
                 NearMoves = 0;
                 MoveAround(8f);
             }
