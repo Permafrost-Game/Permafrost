@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
-
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -28,8 +28,11 @@ namespace GlobalWarmingGame
         TileSet tileSet;
         TileMap tileMap;
 
-
         private Desktop _desktop;
+        private bool isPaused = false;
+
+        KeyboardState previousKeyboardState;
+        KeyboardState currentKeyboardState;
 
         Camera camera;
 
@@ -37,8 +40,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
@@ -154,15 +157,35 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            currentKeyboardState = Keyboard.GetState();
 
-            camera.UpdateCamera();
+            if (!isPaused)
+            {
+                camera.UpdateCamera();
 
-            foreach (IUpdatable updatable in GameObjectManager.Updatable)
-                updatable.Update(gameTime);
-             
-            base.Update(gameTime);
+                foreach (IUpdatable updatable in GameObjectManager.Updatable)
+                    updatable.Update(gameTime);
+
+                base.Update(gameTime);
+            }
+
+            if (CheckKeypress(Keys.Escape))
+                isPaused = !isPaused;
+
+            previousKeyboardState = currentKeyboardState;
+        }
+
+        /// <summary>
+        /// Checks if the currently released key had been pressed the previous frame
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        bool CheckKeypress(Keys key)
+        {
+            if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
+                return true;
+
+            return false;
         }
 
         protected override void Draw(GameTime gameTime)
