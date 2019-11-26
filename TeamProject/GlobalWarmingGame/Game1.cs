@@ -178,8 +178,6 @@ namespace GlobalWarmingGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            
-            _desktop.Render();
 
             if (isPlaying)
             {
@@ -200,10 +198,10 @@ namespace GlobalWarmingGame
 
                 spriteBatch.End();
 
-                _desktop.Render();
-
                 base.Draw(gameTime);
             }
+
+            _desktop.Render();
         }
 
         void ShowMainMenu()
