@@ -29,12 +29,14 @@ namespace GlobalWarmingGame
         TileMap tileMap;
 
         private Desktop _desktop;
-        private bool isPaused = false;
+        
+        Camera camera;
+        PauseMenu pauseMenu;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
-        Camera camera;
+        bool isPaused;
 
         public Game1()
         {
@@ -43,25 +45,21 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
+
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-
-
         }
+
         protected override void Initialize()
         {
             camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
 
-            
-
-
             this.IsMouseVisible = true;
             base.Initialize();     
         }
-
 
         protected override void LoadContent()
         {
@@ -71,6 +69,7 @@ namespace GlobalWarmingGame
                 MyraEnvironment.Game = this;
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
 
+                pauseMenu = new PauseMenu();
 
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
@@ -95,12 +94,10 @@ namespace GlobalWarmingGame
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
 
-
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
                 //ALL the Below code is testing
                 
-
                 var c1 = new Colonist(
                     position:   new Vector2(25, 25),
                     texture: colonist);
@@ -128,9 +125,6 @@ namespace GlobalWarmingGame
                     position: new Vector2(575, 575),
                     texture: rabbit
                     ));
-
-                
-
                 //GameObjectManager.Add( new InteractableGameObject(
                 //    position: new Vector2(256, 256),
                 //     texture: bush,
@@ -142,11 +136,7 @@ namespace GlobalWarmingGame
                 //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
                 //     );
 
-                
-
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
-
-                
             }
         }
 
@@ -160,7 +150,7 @@ namespace GlobalWarmingGame
             currentKeyboardState = Keyboard.GetState();
 
             if (!isPaused)
-            {
+            {   
                 camera.UpdateCamera();
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
@@ -170,7 +160,7 @@ namespace GlobalWarmingGame
             }
 
             if (CheckKeypress(Keys.Escape))
-                isPaused = !isPaused;
+                PauseGame();
 
             previousKeyboardState = currentKeyboardState;
         }
@@ -188,6 +178,53 @@ namespace GlobalWarmingGame
             return false;
         }
 
+        /// <summary>
+        /// Pauses the game
+        /// </summary>
+        void PauseGame()
+        {
+            isPaused = !isPaused;
+
+            SuspendContextMenuClick();
+
+            if (isPaused)
+            {
+                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+
+                pauseMenu.ShowPauseMenu(_desktop, position);
+                ProcessPauseMenuSelection();
+            }
+
+            else
+                _desktop.HideContextMenu();
+        }
+
+        /// <summary>
+        /// Suspends mouse input if game is paused. Otherwise resumes it.
+        /// </summary>
+        void SuspendContextMenuClick()
+        {
+            _desktop.ContextMenuClosing += (s, a) =>
+            {
+                if (!_desktop.ContextMenu.Bounds.Contains(_desktop.TouchPosition))
+                {
+                    if(isPaused)
+                        a.Cancel = true;
+                    else
+                        a.Cancel = false;
+                } 
+            };
+        }
+
+        /// <summary>
+        /// Executes selected commands on the Pause Menu
+        /// </summary>
+        void ProcessPauseMenuSelection()
+        {
+            pauseMenu.PauseToGame.Selected += (s, a) => isPaused = false;
+            pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -203,6 +240,7 @@ namespace GlobalWarmingGame
             );
 
             tileMap.Draw(spriteBatch);
+
             foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
                 drawable.Draw(spriteBatch);
 
