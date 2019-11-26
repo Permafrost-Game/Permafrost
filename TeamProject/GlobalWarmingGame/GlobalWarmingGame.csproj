@@ -59,6 +59,7 @@
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="DisplayLabel.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
+    <Compile Include="MainMenu.cs" />
     <Compile Include="PauseMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

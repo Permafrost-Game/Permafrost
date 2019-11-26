@@ -31,12 +31,14 @@ namespace GlobalWarmingGame
         private Desktop _desktop;
         
         Camera camera;
+        MainMenu mainMenu;
         PauseMenu pauseMenu;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
         bool isPaused;
+        bool isPlaying;
 
         public Game1()
         {
@@ -69,6 +71,7 @@ namespace GlobalWarmingGame
                 MyraEnvironment.Game = this;
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
 
+                mainMenu = new MainMenu();
                 pauseMenu = new PauseMenu();
 
                 //TODO this code should be loaded from a file
@@ -147,10 +150,12 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            currentKeyboardState = Keyboard.GetState();
+            ShowMainMenu();
+            ProcessMenuSelection();
+            SuspendContextMenuClick();
 
-            if (!isPaused)
-            {   
+            if (!isPaused && isPlaying)
+            {
                 camera.UpdateCamera();
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
@@ -159,10 +164,69 @@ namespace GlobalWarmingGame
                 base.Update(gameTime);
             }
 
-            if (CheckKeypress(Keys.Escape))
-                PauseGame();
+            if (isPlaying)
+            {
+                currentKeyboardState = Keyboard.GetState();
 
-            previousKeyboardState = currentKeyboardState;
+                if (CheckKeypress(Keys.Escape))
+                    ShowPauseMenu();
+
+                previousKeyboardState = currentKeyboardState;
+            }
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+            
+            _desktop.Render();
+
+            if (isPlaying)
+            {
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.FrontToBack,
+                    blendState: BlendState.AlphaBlend,
+                    samplerState: SamplerState.PointClamp,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: camera.Transform
+                );
+
+                tileMap.Draw(spriteBatch);
+
+                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                    drawable.Draw(spriteBatch);
+
+                spriteBatch.End();
+
+                _desktop.Render();
+
+                base.Draw(gameTime);
+            }
+        }
+
+        void ShowMainMenu()
+        {
+            if (!isPlaying)
+            {
+                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+                mainMenu.DrawMainMenu(_desktop, position);
+            }
+        }
+
+        void ShowPauseMenu()
+        {
+            isPaused = !isPaused;
+
+            if (isPaused)
+            {
+                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+                pauseMenu.DrawPauseMenu(_desktop, position);
+            }
+
+            else
+                _desktop.HideContextMenu();
         }
 
         /// <summary>
@@ -179,28 +243,7 @@ namespace GlobalWarmingGame
         }
 
         /// <summary>
-        /// Pauses the game
-        /// </summary>
-        void PauseGame()
-        {
-            isPaused = !isPaused;
-
-            SuspendContextMenuClick();
-
-            if (isPaused)
-            {
-                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
-
-                pauseMenu.ShowPauseMenu(_desktop, position);
-                ProcessPauseMenuSelection();
-            }
-
-            else
-                _desktop.HideContextMenu();
-        }
-
-        /// <summary>
-        /// Suspends mouse input if game is paused. Otherwise resumes it.
+        /// Suspends mouse input during Main and Pause Menus, otherwise resumes it.
         /// </summary>
         void SuspendContextMenuClick()
         {
@@ -208,47 +251,25 @@ namespace GlobalWarmingGame
             {
                 if (!_desktop.ContextMenu.Bounds.Contains(_desktop.TouchPosition))
                 {
-                    if(isPaused)
-                        a.Cancel = true;
-                    else
+                    if (!isPaused || isPlaying)
                         a.Cancel = false;
-                } 
+                    else
+                        a.Cancel = true;
+                }
             };
         }
 
         /// <summary>
-        /// Executes selected commands on the Pause Menu
+        /// Executes selected commands on the Main and Pause Menus
         /// </summary>
-        void ProcessPauseMenuSelection()
+        void ProcessMenuSelection()
         {
-            pauseMenu.PauseToGame.Selected += (s, a) => isPaused = false;
+            mainMenu.MainToGame.Selected += (s, a) => { isPaused = false; isPlaying = true; };
+            mainMenu.MainToQuit.Selected += (s, a) => Exit();
+
+            pauseMenu.PauseToGame.Selected += (s, a) => { isPaused = false; };
+            pauseMenu.PauseToMain.Selected += (s, a) => { isPlaying = false; ShowMainMenu(); };
             pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin(
-                sortMode: SpriteSortMode.FrontToBack,
-                blendState: BlendState.AlphaBlend,
-                samplerState: SamplerState.PointClamp,
-                depthStencilState: null,
-                rasterizerState: null,
-                effect: null,
-                transformMatrix: camera.Transform
-            );
-
-            tileMap.Draw(spriteBatch);
-
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
-                drawable.Draw(spriteBatch);
-
-            spriteBatch.End();
-
-            _desktop.Render();
-
-            base.Draw(gameTime);
         }
     }
 }

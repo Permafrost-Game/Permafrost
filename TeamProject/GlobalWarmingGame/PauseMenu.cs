@@ -9,14 +9,14 @@ namespace GlobalWarmingGame
         public MenuItem PauseToMain { get; set; }
         public MenuItem PauseToQuit { get; set; }
 
-        VerticalMenu verticalMenu;
-        
+        VerticalMenu pauseMenu;
+
         public PauseMenu()
         {
-            BuildUI();
+            BuildPauseMenu();
         }
 
-        void BuildUI()
+        void BuildPauseMenu()
 		{
             PauseToGame = new MenuItem
             {
@@ -39,22 +39,22 @@ namespace GlobalWarmingGame
                 ShortcutText = ""
             };
 
-            verticalMenu = new VerticalMenu
+            pauseMenu = new VerticalMenu
             {
                 HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center,
                 VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center
             };
 
-            verticalMenu.Items.Add(PauseToGame);
-			verticalMenu.Items.Add(PauseToMain);
-			verticalMenu.Items.Add(PauseToQuit);
+            pauseMenu.Items.Add(PauseToGame);
+			pauseMenu.Items.Add(PauseToMain);
+			pauseMenu.Items.Add(PauseToQuit);
 
-			Widgets.Add(verticalMenu);
-		}
+            Widgets.Add(pauseMenu);
+        }
 
-        public void ShowPauseMenu(Desktop desktop, Point position)
+        public void DrawPauseMenu(Desktop desktop, Point position)
         {
-            desktop.ShowContextMenu(verticalMenu, position);
+            desktop.ShowContextMenu(pauseMenu, position);
         }   
     }
 }
