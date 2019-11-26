@@ -1,6 +1,7 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.ResourceItems;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
-    class CollectiveInventory
+    class CollectiveInventory : IUpdatable
     {
         List<GameObject> colonists;
         Colonist colonist;
@@ -28,15 +29,20 @@ namespace GlobalWarmingGame.Resources
             {
                 colonist = (Colonist)go;
                 CollectiveInvetory.Add(colonist.Inventory);
+                CollectiveCapacity += colonist.Inventory.Capacity;
             }
 
+            CollectiveCurrentLoad = 0f;
+            IsFull = false;
+        }
+
+        public void Update(GameTime gameTime)
+        {
             foreach (Inventory inv in CollectiveInvetory)
             {
                 CollectiveCapacity += inv.Capacity;
                 CollectiveCurrentLoad += inv.CurrentLoad;
             }
-
-            IsFull = false;
         }
     }
 }
