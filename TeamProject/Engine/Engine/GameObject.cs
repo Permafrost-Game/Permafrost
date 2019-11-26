@@ -5,7 +5,7 @@ namespace Engine
     /// <summary>
     /// A GameObject is an object that exists in the game world this requires a position and a size
     /// </summary>
-    public class GameObject
+    public class Colonist
     {
         public Vector2 Position { get; protected set;}
         public Vector2 Size { get; protected set; }
@@ -13,7 +13,7 @@ namespace Engine
         public Vector2 RotationOrigin { get; protected set; }
         public string Tag { get; protected set; }
 
-        public GameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag)
+        public Colonist(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag)
         {
             this.Position = position;
             this.Size = size;
@@ -22,12 +22,12 @@ namespace Engine
             this.Tag = tag;
         }
 
-        public GameObject(Vector2 position, Vector2 size, string tag) : this(position, size, 0, new Vector2(0), tag)
+        public Colonist(Vector2 position, Vector2 size, string tag) : this(position, size, 0, new Vector2(0), tag)
         {
 
         }
 
-        public GameObject(Vector2 position, Vector2 size) : this(position, size, null)
+        public Colonist(Vector2 position, Vector2 size) : this(position, size, null)
         {
 
         }

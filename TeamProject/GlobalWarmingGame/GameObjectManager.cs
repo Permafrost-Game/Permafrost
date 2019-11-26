@@ -11,7 +11,7 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
-        private static readonly List<GameObject> _objects = new List<GameObject>();
+        private static readonly List<Colonist> _objects = new List<Colonist>();
 
 
         //FIXME having seperate list for interfaces is a terrible design, need to think of a better solution
@@ -21,7 +21,7 @@ namespace GlobalWarmingGame
         private static readonly List<IClickable> _clickable = new List<IClickable>();
         private static readonly List<IInteractable> _interactable = new List<IInteractable>();
 
-        public static List<GameObject> Objects { get => _objects.ToList(); }
+        public static List<Colonist> Objects { get => _objects.ToList(); }
         public static List<IUpdatable> Updatable { get => _updatable.ToList(); }
         public static List<IDrawable> Drawable { get => _drawable.ToList(); }
         public static List<IClickable> Clickable { get => _clickable.ToList(); }
@@ -31,7 +31,7 @@ namespace GlobalWarmingGame
         /// Adds a GameObject
         /// </summary>
         /// <param name="gameObject">The GameObject to be Added</param>
-        public static void Add(GameObject gameObject)
+        public static void Add(Colonist gameObject)
         {
             _objects.Add(gameObject);
 
@@ -52,7 +52,7 @@ namespace GlobalWarmingGame
         /// Removes a GameObject
         /// </summary>
         /// <param name="gameObject">The GameObject to be removed</param>
-        public static void Remove(GameObject gameObject)
+        public static void Remove(Colonist gameObject)
         {
             _objects.Remove(gameObject);
 
@@ -84,11 +84,11 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <param name="tag"></param>
         /// <returns>GameObjects with the specified tag</returns>
-        public static List<GameObject> GetObjectsByTag(string tag)
+        public static List<Colonist> GetObjectsByTag(string tag)
         {
-            List<GameObject> go = new List<GameObject>();
+            List<Colonist> go = new List<Colonist>();
 
-            foreach(GameObject o in _objects)
+            foreach(Colonist o in _objects)
             {
                 if(o.Tag == tag)
                 {

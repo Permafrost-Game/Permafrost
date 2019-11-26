@@ -7,13 +7,13 @@ namespace GlobalWarmingGame.Action
     abstract class SelectionInputMethod
     {
         /// <summary>
-        /// Calculates which <see cref="Interactions.IInteractable"/> <see cref="GameObject"/> was clicked
+        /// Calculates which <see cref="Interactions.IInteractable"/> <see cref="Colonist"/> was clicked
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        protected GameObject ObjectClicked(Point position)
+        protected Colonist ObjectClicked(Point position)
         {
-            foreach (GameObject o in GameObjectManager.Interactable)
+            foreach (Colonist o in GameObjectManager.Interactable)
             {
                 if (new Rectangle(o.Position.ToPoint(), o.Size.ToPoint()).Contains(position))
                 {

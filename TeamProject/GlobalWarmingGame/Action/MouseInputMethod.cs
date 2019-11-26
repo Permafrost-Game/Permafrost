@@ -14,7 +14,7 @@ namespace GlobalWarmingGame.Action
 {
 
     /// <summary>
-    /// This class manages the selection and instruction of interactable <see cref="GameObject"/>s using mouse input
+    /// This class manages the selection and instruction of interactable <see cref="Engine.Colonist"/>s using mouse input
     /// </summary>
     class MouseInputMethod : SelectionInputMethod
     {
@@ -39,7 +39,7 @@ namespace GlobalWarmingGame.Action
         private void OnClick()
         {
             Vector2 clickPos = Vector2.Transform(desktop.TouchPosition.ToVector2(), camera.InverseTransform);
-            GameObject objectClicked = ObjectClicked(clickPos.ToPoint());
+            Engine.Colonist objectClicked = ObjectClicked(clickPos.ToPoint());
 
 
 
@@ -120,14 +120,14 @@ namespace GlobalWarmingGame.Action
             currentInstruction.Type = type;
 
 
-            if(interactable is Colonist && type.ID == "select")
+            if(interactable is Interactions.Interactables.Colonist && type.ID == "select")
             {
-                currentInstruction.ActiveMember = (Colonist) interactable;
+                currentInstruction.ActiveMember = (Interactions.Interactables.Colonist) interactable;
             } else
             {
                 currentInstruction.PassiveMember = interactable;
                 currentInstruction.ActiveMember.AddInstruction(currentInstruction);
-                currentInstruction = new Instruction(currentInstruction.ActiveMember);
+                currentInstruction = new Instruction((Interactions.Interactables.Colonist)currentInstruction.ActiveMember);
             }
 
              

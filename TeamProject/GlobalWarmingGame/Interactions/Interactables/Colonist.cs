@@ -18,7 +18,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public float Health { get; private set; }
         public string Name { get; private set; }
-         
+        public float InventoryCapacity { get; set; }
 
         public Colonist(Vector2 position, Texture2D texture) : base
         (
@@ -33,6 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             Health = 10f;
+            InventoryCapacity = 100f;
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>();
             InstructionTypes.Add(new InstructionType("select", "Select Colonist", "Selects this colonist"));
@@ -48,7 +49,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             
             if (instructions.Count > 0 &&
                 //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
-                completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
+                completedGoal == (((Engine.Colonist)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
                 instructions.Peek().Type.Act();
@@ -56,18 +57,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
             
-
-        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             if(goals.Count == 0 && instructions.Count > 0 )
             {
-                AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
+                AddGoal(((Engine.Colonist)instructions.Peek().PassiveMember).Position);
             }
         }
-
-
     }
 }

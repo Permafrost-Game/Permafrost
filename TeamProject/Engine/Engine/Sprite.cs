@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Engine
 {
     /// <summary>
-    /// A <see cref="Sprite"/> is <see cref="GameObject"/> that is drawn with a texture and a depth.
+    /// A <see cref="Sprite"/> is <see cref="Colonist"/> that is drawn with a texture and a depth.
     /// </summary>
-    public class Sprite : GameObject, IDrawable
+    public class Sprite : Colonist, IDrawable
     {
         protected float depth;
         protected Texture2D texture;
