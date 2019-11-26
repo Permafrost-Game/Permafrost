@@ -6,6 +6,7 @@ using GlobalWarmingGame.Action;
 using Engine;
 using GlobalWarmingGame;
 using Engine.TileGrid;
+using GlobalWarmingGame.ResourceItems;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
@@ -13,14 +14,16 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
 
         public List<InstructionType> InstructionTypes { get; }
+        public Inventory Inventory { get; }
 
-        private Queue<Instruction> instructions; 
+    private Queue<Instruction> instructions;
+
+        
 
         public float Health { get; private set; }
         public string Name { get; private set; }
-        public float InventoryCapacity { get; set; }
 
-        public Colonist(Vector2 position, Texture2D texture) : base
+        public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
@@ -33,7 +36,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             Health = 10f;
-            InventoryCapacity = 100f;
+            Inventory = new Inventory(inventoryCapacity);
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>();
             InstructionTypes.Add(new InstructionType("select", "Select Colonist", "Selects this colonist"));

@@ -100,17 +100,20 @@ namespace GlobalWarmingGame
 
                 var c1 = new Colonist(
                     position:   new Vector2(25, 25),
-                    texture: colonist);
+                    texture: colonist,
+                    inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
                 GameObjectManager.Add(c1);
                 
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(75, 75),
-                    texture: colonist));
+                    texture: colonist,
+                    inventoryCapacity: 100f));
 
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(450, 450),
-                    texture: colonist));
+                    texture: colonist,
+                    inventoryCapacity: 100f));
 
                 GameObjectManager.Add(new Farm(
                     position: new Vector2(128, 128),

@@ -6,31 +6,20 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.ResourceItems
 {
-    public class Inventory : IUpdatable
+    public class Inventory
     {
         Dictionary<string, ResourceItem> Resources { get; set; }
-        List<GameObject> colonists;
-        Colonist colonist;
 
-        public float Capacity { get; set; } //TODO - Set as total of colonist inventory capacity [Harcode it ?]
-        public float CurrentLoad { get; private set; }
+        public float Capacity { get; set; }
+        public float CurrentLoad { get; set; }
+        public bool IsFull { get; set; }
 
-        bool isFull;
-
-        public Inventory()
+        public Inventory(float capacity)
         {
             this.Resources = new Dictionary<string, ResourceItem>();
-            colonists = GameObjectManager.GetObjectsByTag("Colonist");
+            Capacity = capacity;
             CurrentLoad = 0f;
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            foreach (GameObject go in colonists)
-            {
-                colonist = (Colonist)go;
-                Capacity += colonist.InventoryCapacity;
-            }
+            IsFull = false;
         }
 
         /// <summary>
@@ -43,7 +32,7 @@ namespace GlobalWarmingGame.ResourceItems
             CheckInventoryWeight();
             CheckWeightLimit();
 
-            if (!isFull)
+            if (!IsFull)
             {
                 if (Resources.ContainsKey(item.Type.ID))
                     Resources[item.Type.ID].Amount += item.Amount;
@@ -90,21 +79,21 @@ namespace GlobalWarmingGame.ResourceItems
         /// Checks if the inventory has reacher maximum capicity and sets isFull accordingly
         /// </summary>
         /// <returns></returns>
-        bool CheckWeightLimit()
+        public bool CheckWeightLimit()
         {
             if (CurrentLoad < Capacity)
-                isFull = false;
+                IsFull = false;
             else
-                isFull = true;
+                IsFull = true;
             
-            return isFull;
+            return IsFull;
         }
 
         /// <summary>
         /// Returns the total weight of all items in the inventory
         /// </summary>
         /// <returns></returns>
-        float CheckInventoryWeight()
+        public float CheckInventoryWeight()
         {
             foreach (var resource in Resources)
                 CurrentLoad += resource.Value.Type.Weight;
