@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,8 @@ namespace GlobalWarmingGame.ResourceItems
     public class Inventory : IUpdatable
     {
         Dictionary<string, ResourceItem> Resources { get; set; }
-        List<Colonist> colonists;
+        List<GameObject> colonists;
+        Colonist colonist;
 
         public float Capacity { get; set; } //TODO - Set as total of colonist inventory capacity [Harcode it ?]
         public float CurrentLoad { get; private set; }
@@ -24,9 +26,10 @@ namespace GlobalWarmingGame.ResourceItems
 
         public void Update(GameTime gameTime)
         {
-            foreach (Colonist colonist in colonists)
+            foreach (GameObject go in colonists)
             {
-                ;
+                colonist = (Colonist)go;
+                Capacity += colonist.InventoryCapacity;
             }
         }
 

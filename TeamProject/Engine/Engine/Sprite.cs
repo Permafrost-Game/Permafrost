@@ -6,7 +6,7 @@ namespace Engine
     /// <summary>
     /// A <see cref="Sprite"/> is <see cref="Colonist"/> that is drawn with a texture and a depth.
     /// </summary>
-    public class Sprite : Colonist, IDrawable
+    public class Sprite : GameObject, IDrawable
     {
         protected float depth;
         protected Texture2D texture;

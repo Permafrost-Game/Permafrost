@@ -49,7 +49,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             
             if (instructions.Count > 0 &&
                 //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
-                completedGoal == (((Engine.Colonist)instructions.Peek().PassiveMember).Position) &&
+                completedGoal == (((Colonist)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
                 instructions.Peek().Type.Act();
@@ -63,7 +63,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if(goals.Count == 0 && instructions.Count > 0 )
             {
-                AddGoal(((Engine.Colonist)instructions.Peek().PassiveMember).Position);
+                AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
             }
         }
     }

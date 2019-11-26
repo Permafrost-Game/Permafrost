@@ -6,7 +6,7 @@ namespace Engine.TileGrid
     /// <summary>
     /// This class reperesents a Tile Map Tile Game Object
     /// </summary>
-    public class Tile : Colonist, IDrawable
+    public class Tile : GameObject, IDrawable
     {
         private readonly Texture2D texture;
         public Vector2 size { get; }

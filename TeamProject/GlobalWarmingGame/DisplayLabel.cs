@@ -6,7 +6,7 @@ using Myra.Graphics2D.UI;
 namespace GlobalWarmingGame
 {
 
-    class DisplayLabel : Colonist, IUpdatable
+    class DisplayLabel : GameObject, IUpdatable
     {
         public int Value { get; set; }
         public string Message { get; set; }
