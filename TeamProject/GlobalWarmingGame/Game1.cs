@@ -3,6 +3,7 @@ using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -48,7 +49,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
             
-            //graphics.IsFullScreen = true;  
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -99,35 +100,41 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
+
                 //ALL the Below code is testing
                 
                 var c1 = new Colonist(
                     position:   new Vector2(25, 25),
-                    texture: colonist);
+                    texture: colonist,
+                    inventoryCapacity: 100f);
+                    
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
+                
                 GameObjectManager.Add(c1);
                 
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(75, 75),
-                    texture: colonist));
+                    texture: colonist,
+                    inventoryCapacity: 100f));
 
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(450, 450),
-                    texture: colonist));
+                    texture: colonist,
+                    inventoryCapacity: 100f));
 
                 GameObjectManager.Add(new Farm(
                     position: new Vector2(128, 128),
-                    texture: farm
-                    ));
+                    texture: farm));
+                    
                 GameObjectManager.Add(new Bush(
                     position: new Vector2(256, 256),
                     harvestable: bushH,
-                    harvested: bushN
-                    ));
+                    harvested: bushN));
+                    
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
-                    texture: rabbit
-                    ));
+                    texture: rabbit));
+                    
                 //GameObjectManager.Add( new InteractableGameObject(
                 //    position: new Vector2(256, 256),
                 //     texture: bush,
@@ -138,7 +145,7 @@ namespace GlobalWarmingGame
                 //     texture: rabbit,
                 //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
                 //     );
-
+                
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
             }
         }
@@ -163,6 +170,8 @@ namespace GlobalWarmingGame
                 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
+
+                CollectiveInventory.UpdateCollectiveInventory();
 
                 base.Update(gameTime);
             }

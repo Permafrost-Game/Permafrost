@@ -41,8 +41,6 @@ namespace GlobalWarmingGame.Action
             Vector2 clickPos = Vector2.Transform(desktop.TouchPosition.ToVector2(), camera.InverseTransform);
             GameObject objectClicked = ObjectClicked(clickPos.ToPoint());
 
-
-
             if (desktop.ContextMenu != null)
             {
                 return;

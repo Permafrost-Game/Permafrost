@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,10 +11,9 @@ namespace GlobalWarmingGame.Interactions
     class PassiveMovingGameObject : PathFindable, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
-
         public float Health { get; private set; }
 
-        private Random Rand;
+        private readonly Random Rand;
         private int NearMoves;
 
         private float offset;
@@ -33,13 +33,13 @@ namespace GlobalWarmingGame.Interactions
             speed: speed
         )
         {
-            base.AddGoal(Position);
+            AddGoal(Position);
             NearMoves = 0;
             Rand = new Random();
 
             Health = 1f;
             InstructionTypes = instructionTypes;
-
+            
             offset = texture.Width;
             xDirections = new float[] { offset, -offset, 0,       0,      offset, -offset,  offset, -offset };
             yDirections = new float[] { 0,       0,      offset, -offset, offset,  offset, -offset, -offset };
@@ -68,9 +68,9 @@ namespace GlobalWarmingGame.Interactions
                 X = Position.X + xDirections[i] * multiplier,
                 Y = Position.Y + yDirections[i] * multiplier
             };
-
+            
             NearMoves++;
-            base.AddGoal(v);
+            AddGoal(v);
         }
     }
 }

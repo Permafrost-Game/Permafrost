@@ -1,6 +1,7 @@
 ﻿
 using Engine;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -9,8 +10,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Rabbit : PassiveMovingGameObject
     {
-
-
         public Rabbit(Vector2 position, Texture2D texture) : base
         (
             position: position,
@@ -24,13 +23,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             speed: 10f
         )
         {
-            InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", Hunt));
+            InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt));
         }
 
         public void Hunt()
         {
             //This is tempory and should be replaced by the resource system
-            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 1;
+            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 2;
 
             GameObjectManager.Remove(this);
         }

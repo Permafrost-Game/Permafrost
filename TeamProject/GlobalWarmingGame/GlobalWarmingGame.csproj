@@ -64,6 +64,18 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathFindable.cs" />
+    <Compile Include="Resources\CollectiveInventory.cs" />
+    <Compile Include="Resources\Inventory.cs" />
+    <Compile Include="Resources\ResourceItem.cs" />
+    <Compile Include="Resources\ResourceType.cs" />
+    <Compile Include="Resources\ResourceTypes\Cloth.cs" />
+    <Compile Include="Resources\ResourceTypes\Fibers.cs" />
+    <Compile Include="Resources\ResourceTypes\Leather.cs" />
+    <Compile Include="Resources\ResourceTypes\Food.cs" />
+    <Compile Include="Resources\ResourceTypes\MachineParts.cs" />
+    <Compile Include="Resources\ResourceTypes\Coal.cs" />
+    <Compile Include="Resources\ResourceTypes\Wood.cs" />
+    <Compile Include="Resources\ResourceTypes\Stone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
