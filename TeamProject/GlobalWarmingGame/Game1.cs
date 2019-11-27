@@ -156,7 +156,7 @@ namespace GlobalWarmingGame
 
             if (!isPaused && isPlaying)
             {
-                camera.UpdateCamera()
+                camera.UpdateCamera();
                 
                 //TileMap.update is used to update the temperature of the tiles
                 tileMap.Update(gameTime);
