@@ -47,8 +47,8 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
-
-            //graphics.IsFullScreen = true;
+            
+            //graphics.IsFullScreen = true;  
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -156,14 +156,17 @@ namespace GlobalWarmingGame
 
             if (!isPaused && isPlaying)
             {
-                camera.UpdateCamera();
-
+                camera.UpdateCamera()
+                
+                //TileMap.update is used to update the temperature of the tiles
+                tileMap.Update(gameTime);
+                
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
                 base.Update(gameTime);
             }
-
+            
             if (isPlaying)
             {
                 currentKeyboardState = Keyboard.GetState();
