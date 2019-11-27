@@ -30,8 +30,16 @@ namespace GlobalWarmingGame
         TileMap tileMap;
 
         private Desktop _desktop;
-
+        
         Camera camera;
+        MainMenu mainMenu;
+        PauseMenu pauseMenu;
+
+        KeyboardState previousKeyboardState;
+        KeyboardState currentKeyboardState;
+
+        bool isPaused;
+        bool isPlaying;
 
         public Game1()
         {
@@ -40,12 +48,13 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
-
+            
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
         }
+
         protected override void Initialize()
         {
             camera = new Camera(GraphicsDevice.Viewport);
@@ -63,6 +72,8 @@ namespace GlobalWarmingGame
                 MyraEnvironment.Game = this;
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
 
+                mainMenu = new MainMenu();
+                pauseMenu = new PauseMenu();
 
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
@@ -87,17 +98,18 @@ namespace GlobalWarmingGame
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
 
-
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
 
                 //ALL the Below code is testing
-
+                
                 var c1 = new Colonist(
                     position:   new Vector2(25, 25),
                     texture: colonist,
                     inventoryCapacity: 100f);
+                    
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
+                
                 GameObjectManager.Add(c1);
                 
                 GameObjectManager.Add(new Colonist(
@@ -112,19 +124,17 @@ namespace GlobalWarmingGame
 
                 GameObjectManager.Add(new Farm(
                     position: new Vector2(128, 128),
-                    texture: farm
-                    ));
+                    texture: farm));
+                    
                 GameObjectManager.Add(new Bush(
                     position: new Vector2(256, 256),
                     harvestable: bushH,
-                    harvested: bushN
-                    ));
+                    harvested: bushN));
+                    
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
-                    texture: rabbit
-                    ));
-
-
+                    texture: rabbit));
+                    
                 //GameObjectManager.Add( new InteractableGameObject(
                 //    position: new Vector2(256, 256),
                 //     texture: bush,
@@ -135,8 +145,7 @@ namespace GlobalWarmingGame
                 //     texture: rabbit,
                 //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
                 //     );
-
-
+                
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
             }
         }
@@ -148,42 +157,129 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            ShowMainMenu();
+            ProcessMenuSelection();
+            SuspendContextMenuClick();
 
-            camera.UpdateCamera();
-    
-            foreach (IUpdatable updatable in GameObjectManager.Updatable)
-                updatable.Update(gameTime);
+            if (!isPaused && isPlaying)
+            {
+                camera.UpdateCamera();
+                
+                //TileMap.update is used to update the temperature of the tiles
+                tileMap.Update(gameTime);
+                
+                foreach (IUpdatable updatable in GameObjectManager.Updatable)
+                    updatable.Update(gameTime);
 
-            CollectiveInventory.UpdateCollectiveInventory();
-             
-            base.Update(gameTime);
+                CollectiveInventory.UpdateCollectiveInventory();
+
+                base.Update(gameTime);
+            }
+            
+            if (isPlaying)
+            {
+                currentKeyboardState = Keyboard.GetState();
+
+                if (CheckKeypress(Keys.Escape))
+                    ShowPauseMenu();
+
+                previousKeyboardState = currentKeyboardState;
+            }
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(
-                sortMode: SpriteSortMode.FrontToBack,
-                blendState: BlendState.AlphaBlend,
-                samplerState: SamplerState.PointClamp,
-                depthStencilState: null,
-                rasterizerState: null,
-                effect: null,
-                transformMatrix: camera.Transform
-            );
+            if (isPlaying)
+            {
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.FrontToBack,
+                    blendState: BlendState.AlphaBlend,
+                    samplerState: SamplerState.PointClamp,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: camera.Transform
+                );
 
-            tileMap.Draw(spriteBatch);
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
-                drawable.Draw(spriteBatch);
+                tileMap.Draw(spriteBatch);
 
-            spriteBatch.End();
+                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                    drawable.Draw(spriteBatch);
+
+                spriteBatch.End();
+
+                base.Draw(gameTime);
+            }
 
             _desktop.Render();
+        }
 
-            base.Draw(gameTime);
+        void ShowMainMenu()
+        {
+            if (!isPlaying)
+            {
+                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+                mainMenu.DrawMainMenu(_desktop, position);
+            }
+        }
+
+        void ShowPauseMenu()
+        {
+            isPaused = !isPaused;
+
+            if (isPaused)
+            {
+                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+                pauseMenu.DrawPauseMenu(_desktop, position);
+            }
+
+            else
+                _desktop.HideContextMenu();
+        }
+
+        /// <summary>
+        /// Checks if the currently released key had been pressed the previous frame
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        bool CheckKeypress(Keys key)
+        {
+            if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Suspends mouse input during Main and Pause Menus, otherwise resumes it.
+        /// </summary>
+        void SuspendContextMenuClick()
+        {
+            _desktop.ContextMenuClosing += (s, a) =>
+            {
+                if (!_desktop.ContextMenu.Bounds.Contains(_desktop.TouchPosition))
+                {
+                    if (!isPaused || isPlaying)
+                        a.Cancel = false;
+                    else
+                        a.Cancel = true;
+                }
+            };
+        }
+
+        /// <summary>
+        /// Executes selected commands on the Main and Pause Menus
+        /// </summary>
+        void ProcessMenuSelection()
+        {
+            mainMenu.MainToGame.Selected += (s, a) => { isPaused = false; isPlaying = true; };
+            mainMenu.MainToQuit.Selected += (s, a) => Exit();
+
+            pauseMenu.PauseToGame.Selected += (s, a) => { isPaused = false; };
+            pauseMenu.PauseToMain.Selected += (s, a) => { isPlaying = false; ShowMainMenu(); };
+            pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
         }
     }
 }

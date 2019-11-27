@@ -53,6 +53,7 @@
     <Compile Include="IDrawable.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="PathFinding\PathFinder.cs" />
+    <Compile Include="Temperature.cs" />
     <Compile Include="TileGrid\Tile.cs" />
     <Compile Include="TileGrid\TileMap.cs" />
     <Compile Include="TileGrid\TileMapParser.cs" />
