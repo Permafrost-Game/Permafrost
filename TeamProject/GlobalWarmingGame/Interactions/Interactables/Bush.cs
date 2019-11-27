@@ -36,15 +36,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             tag: "Bush",
             depth: 0.7f,
             texture: harvestable,
-            instructionTypes: new List<InstructionType>(),
-            resourceItem: new ResourceItem(new Food(), 1)
+            instructionTypes: new List<InstructionType>()
         )
         {
             
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
-            InstructionTypes.Add(new InstructionType("forrage", "Forrage", "Forrage for berries", ResourceItem, Forrage));
+            InstructionTypes.Add(new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 1), Forrage));
         }
 
         public void Forrage()

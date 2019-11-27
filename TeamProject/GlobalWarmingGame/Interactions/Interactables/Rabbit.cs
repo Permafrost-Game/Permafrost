@@ -20,11 +20,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             depth: 0.9f,
             texture: texture,
             instructionTypes: new List<InstructionType>(),
-            speed: 10f,
-            resourceItem: new ResourceItem(new Food(), 2)
+            speed: 10f
         )
         {
-            InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", ResourceItem, Hunt));
+            InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt));
         }
 
         public void Hunt()

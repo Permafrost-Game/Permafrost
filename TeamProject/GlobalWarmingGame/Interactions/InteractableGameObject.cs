@@ -13,7 +13,6 @@ namespace GlobalWarmingGame.Interactions
     class InteractableGameObject : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
-        public ResourceItem ResourceItem { get; }
 
         public InteractableGameObject(Vector2 position, Texture2D texture, string tag, List<InstructionType> instructionTypes) : this
         (
@@ -42,22 +41,5 @@ namespace GlobalWarmingGame.Interactions
         {
             InstructionTypes = instructionTypes;
         }
-
-        public InteractableGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, ResourceItem resourceItem) : base
-        (
-            position: position,
-            size: size,
-            rotation: rotation,
-            rotationOrigin: rotationOrigin,
-            tag: tag,
-            depth: depth,
-            texture: texture
-        )
-        {
-            InstructionTypes = instructionTypes;
-            ResourceItem = resourceItem;
-        }
-
-
     }
 }

@@ -23,7 +23,7 @@ namespace GlobalWarmingGame.ResourceItems
         }
 
         /// <summary>
-        /// Adds ResourceItems to the Iventory while space is available
+        /// Adds ResourceItems to the Inventory while space is available
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>

@@ -17,9 +17,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private Queue<Instruction> instructions;
 
-        public float Health { get; private set; }
         public string Name { get; private set; }
-        public ResourceItem Resource { get; private set; }
+        public float Health { get; private set; }
 
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (

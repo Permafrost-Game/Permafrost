@@ -20,11 +20,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             tag: "Farm",
             depth: 0.7f,
             texture: texture,
-            instructionTypes: new List<InstructionType>() { },
-            resourceItem: new ResourceItem(new Food(), 3)
+            instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("harvest", "Harvest", "Harvest the farm", ResourceItem, Harvest));
+            InstructionTypes.Add(new InstructionType("harvest", "Harvest", "Harvest the farm", new ResourceItem(new Food(), 3), Harvest));
         }
 
         public void Harvest()

@@ -12,7 +12,6 @@ namespace GlobalWarmingGame.Interactions
     {
         public List<InstructionType> InstructionTypes { get; }
         public float Health { get; private set; }
-        public ResourceItem ResourceItem { get; protected set; }
 
         private readonly Random Rand;
         private int NearMoves;
@@ -22,7 +21,7 @@ namespace GlobalWarmingGame.Interactions
         private readonly float[] xDirections;
         private readonly float[] yDirections;
 
-        public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed, ResourceItem resourceItem) : base
+        public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed) : base
         (
             position: position,
             size: size,
@@ -40,7 +39,6 @@ namespace GlobalWarmingGame.Interactions
 
             Health = 1f;
             InstructionTypes = instructionTypes;
-            ResourceItem = resourceItem;
             
             offset = texture.Width;
             xDirections = new float[] { offset, -offset, 0,       0,      offset, -offset,  offset, -offset };

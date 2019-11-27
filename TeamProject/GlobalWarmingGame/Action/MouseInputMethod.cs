@@ -41,8 +41,6 @@ namespace GlobalWarmingGame.Action
             Vector2 clickPos = Vector2.Transform(desktop.TouchPosition.ToVector2(), camera.InverseTransform);
             GameObject objectClicked = ObjectClicked(clickPos.ToPoint());
 
-
-
             if (desktop.ContextMenu != null)
             {
                 return;
@@ -127,7 +125,7 @@ namespace GlobalWarmingGame.Action
             {
                 currentInstruction.PassiveMember = interactable;
                 currentInstruction.ActiveMember.AddInstruction(currentInstruction);
-                currentInstruction = new Instruction((Colonist)currentInstruction.ActiveMember);
+                currentInstruction = new Instruction(currentInstruction.ActiveMember);
             }
 
              
