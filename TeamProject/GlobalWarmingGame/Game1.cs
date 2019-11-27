@@ -3,6 +3,7 @@ using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
-
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -39,12 +40,11 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
+
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-
-
         }
         protected override void Initialize()
         {
@@ -54,7 +54,6 @@ namespace GlobalWarmingGame
             this.IsMouseVisible = true;
             base.Initialize();     
         }
-
 
         protected override void LoadContent()
         {
@@ -91,8 +90,8 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
+
                 //ALL the Below code is testing
-                
 
                 var c1 = new Colonist(
                     position:   new Vector2(25, 25),
@@ -125,7 +124,6 @@ namespace GlobalWarmingGame
                     texture: rabbit
                     ));
 
-                
 
                 //GameObjectManager.Add( new InteractableGameObject(
                 //    position: new Vector2(256, 256),
@@ -138,7 +136,6 @@ namespace GlobalWarmingGame
                 //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
                 //     );
 
-                
 
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
             }
@@ -158,6 +155,8 @@ namespace GlobalWarmingGame
     
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update(gameTime);
+
+            CollectiveInventory.UpdateCollectiveInventory();
              
             base.Update(gameTime);
         }
