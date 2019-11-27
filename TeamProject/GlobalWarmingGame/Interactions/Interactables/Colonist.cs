@@ -12,16 +12,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Colonist : PathFindable, IInteractable, IUpdatable
     {
-
         public List<InstructionType> InstructionTypes { get; }
         public Inventory Inventory { get; }
 
-    private Queue<Instruction> instructions;
-
-        
+        private Queue<Instruction> instructions;
 
         public float Health { get; private set; }
         public string Name { get; private set; }
+        public ResourceItem Resource { get; private set; }
 
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
@@ -38,8 +36,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Health = 10f;
             Inventory = new Inventory(inventoryCapacity);
             instructions = new Queue<Instruction>();
-            InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("select", "Select Colonist", "Selects this colonist"));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("select", "Select Colonist", "Selects this colonist")
+            };
         }
 
         public void AddInstruction(Instruction instruction)
@@ -48,14 +48,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
 
         protected override void OnGoalComplete(Vector2 completedGoal)
-        {
-            
+        {     
             if (instructions.Count > 0 &&
                 //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
                 completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
-                instructions.Peek().Type.Act();
+                Instruction currentInstruction = instructions.Peek();
+                currentInstruction.Type.Act();
+
+                if (currentInstruction.Type.ResourceItem != null)
+                    Inventory.AddItem(currentInstruction.Type.ResourceItem);
+
                 instructions.Dequeue();
             }
         }
@@ -65,9 +69,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             base.Update(gameTime);
 
             if(goals.Count == 0 && instructions.Count > 0 )
-            {
                 AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
-            }
         }
     }
 }

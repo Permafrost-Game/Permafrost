@@ -29,7 +29,6 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns></returns>
         public bool AddItem(ResourceItem item)
         {
-            CheckInventoryWeight();
             CheckWeightLimit();
 
             if (!IsFull)
@@ -39,6 +38,8 @@ namespace GlobalWarmingGame.ResourceItems
 
                 else
                     Resources.Add(item.Type.ID, item);
+                    
+                CurrentLoad += item.Type.Weight * item.Amount;
             }
 
             return false;
@@ -49,19 +50,26 @@ namespace GlobalWarmingGame.ResourceItems
         /// </summary>
         /// <param name="item">Item to be removed</param
         /// <returns>If the remove was sucsessful</returns>
-        public bool RemoveItems(ResourceItem item)
+        public bool RemoveItem(ResourceItem item)
         {
             if(CheckContains(item))
             {
-                Resources[item.Type.ID].Amount -= item.Amount;
-                if (Resources[item.Type.ID].Amount == 0) 
+                if (Resources[item.Type.ID].Amount >= item.Amount)
+                {
+                    Resources[item.Type.ID].Amount -= item.Amount;
+                    CurrentLoad -= item.Type.Weight * item.Amount;
+                }
+
+                else
+                {
+                    CurrentLoad -= item.Type.Weight * Resources[item.Type.ID].Amount;
                     Resources.Remove(item.Type.ID);
+                }  
 
                 return true;
             } 
             
-            else
-                return false;
+         return false;
         }
 
         /// <summary>
@@ -71,8 +79,7 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns></returns>
         public bool CheckContains(ResourceItem item)
         {
-            return (Resources.ContainsKey(item.Type.ID) &&
-                    Resources[item.Type.ID].Amount >= item.Amount);
+            return (Resources.ContainsKey(item.Type.ID));
         }
 
         /// <summary>
@@ -87,18 +94,6 @@ namespace GlobalWarmingGame.ResourceItems
                 IsFull = true;
             
             return IsFull;
-        }
-
-        /// <summary>
-        /// Returns the total weight of all items in the inventory
-        /// </summary>
-        /// <returns></returns>
-        public float CheckInventoryWeight()
-        {
-            foreach (var resource in Resources)
-                CurrentLoad += resource.Value.Type.Weight;
-
-            return CurrentLoad;
         }
     }
 }

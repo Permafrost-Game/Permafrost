@@ -1,4 +1,6 @@
-﻿namespace GlobalWarmingGame.Action
+﻿using GlobalWarmingGame.ResourceItems;
+
+namespace GlobalWarmingGame.Action
 {
     /// <summary>
     /// This class descrives a class of Instruction
@@ -8,9 +10,10 @@
         public string ID { get; }
         public string Name { get; }
         public string Description { get; }
+        public ResourceItem ResourceItem { get; }
 
         public delegate void Action();
-        private Action action;
+        private readonly Action action;
 
         /// <summary>
         /// 
@@ -21,9 +24,20 @@
         /// <param name="action">Method that should be called on <see cref="InstructionType.Act"/></param>
         public InstructionType(string id, string name, string description, Action action = default)
         {
-            this.ID = id;
-            this.Name = name;
-            this.Description = description;
+            ID = id;
+            Name = name;
+            Description = description;
+
+            this.action = action;
+        }
+
+        public InstructionType(string id, string name, string description, ResourceItem resourceItem, Action action = default)
+        {
+            ID = id;
+            Name = name;
+            Description = description;
+            ResourceItem = resourceItem;
+
             this.action = action;
         }
 

@@ -1,5 +1,6 @@
 ﻿
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -19,17 +20,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
             tag: "Farm",
             depth: 0.7f,
             texture: texture,
-            instructionTypes: new List<InstructionType>() { }
-
+            instructionTypes: new List<InstructionType>() { },
+            resourceItem: new ResourceItem(new Food(), 3)
         )
         {
-            InstructionTypes.Add(new InstructionType("harvest", "Harvest", "Harvest the farm", Harvest));
+            InstructionTypes.Add(new InstructionType("harvest", "Harvest", "Harvest the farm", ResourceItem, Harvest));
         }
 
         public void Harvest()
         {
             //This is tempory and should be replaced by the resource system
-            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 5;
+            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 3;
         }
     }
 }

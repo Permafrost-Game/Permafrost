@@ -28,7 +28,6 @@ namespace GlobalWarmingGame
         TileSet tileSet;
         TileMap tileMap;
 
-
         private Desktop _desktop;
 
         Camera camera;
@@ -37,8 +36,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
@@ -51,9 +50,6 @@ namespace GlobalWarmingGame
         {
             camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
-
-            
-
 
             this.IsMouseVisible = true;
             base.Initialize();     
@@ -145,8 +141,6 @@ namespace GlobalWarmingGame
                 
 
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
-
-                
             }
         }
 
@@ -161,7 +155,7 @@ namespace GlobalWarmingGame
                 Exit();
 
             camera.UpdateCamera();
-
+    
             foreach (IUpdatable updatable in GameObjectManager.Updatable)
                 updatable.Update(gameTime);
              

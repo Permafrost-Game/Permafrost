@@ -1,6 +1,7 @@
 ﻿
 using Engine;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -35,14 +36,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
             tag: "Bush",
             depth: 0.7f,
             texture: harvestable,
-            instructionTypes: new List<InstructionType>()
+            instructionTypes: new List<InstructionType>(),
+            resourceItem: new ResourceItem(new Food(), 1)
         )
         {
             
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
-            InstructionTypes.Add(new InstructionType("forrage", "Forrage", "Forrage for berries", Forrage));
+            InstructionTypes.Add(new InstructionType("forrage", "Forrage", "Forrage for berries", ResourceItem, Forrage));
         }
 
         public void Forrage()

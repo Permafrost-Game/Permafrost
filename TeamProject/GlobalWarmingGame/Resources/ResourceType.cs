@@ -9,7 +9,7 @@ namespace GlobalWarmingGame.ResourceItems
         public string Description { get; private set; }
         public float Weight { get; private set;}
 
-        //Texture2D texture; //TODO - Add Textures for each resourceType
+        //Texture2D texture; //TODO - Add Textures for each ResourceType
 
         public ResourceType(string id, string displayName, string description, float weight/*, Texture2D texture*/)
         {

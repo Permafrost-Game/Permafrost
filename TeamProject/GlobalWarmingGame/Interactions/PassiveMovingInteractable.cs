@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,13 +11,13 @@ namespace GlobalWarmingGame.Interactions
     class PassiveMovingGameObject : PathFindable, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
-
         public float Health { get; private set; }
+        public ResourceItem ResourceItem { get; protected set; }
 
-        private Random Rand;
+        private readonly Random Rand;
         private int NearMoves;
 
-        public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed) : base
+        public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed, ResourceItem resourceItem) : base
         (
             position: position,
             size: size,
@@ -28,11 +29,12 @@ namespace GlobalWarmingGame.Interactions
             speed: speed
         )
         {
-            base.AddGoal(Position);
+            AddGoal(Position);
             NearMoves = 0;
             Rand = new Random();
             Health = 1f;
             InstructionTypes = instructionTypes;
+            ResourceItem = resourceItem;
         }
 
         //TODO Adjust queuing the goals
@@ -40,7 +42,6 @@ namespace GlobalWarmingGame.Interactions
         {
             while (NearMoves < 10)
             {
-                Console.WriteLine(NearMoves);
                 MoveAround(1f);
             }
             NearMoves = 0;
@@ -94,8 +95,9 @@ namespace GlobalWarmingGame.Interactions
                 v.X = Position.X - offset;
                 v.Y = Position.Y - offset;
             }
+
             NearMoves++;
-            base.AddGoal(v);
+            AddGoal(v);
         }
     }
 }
