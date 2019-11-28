@@ -51,7 +51,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             //This is tempory and should be replaced by the resource system
             if(IsHarvestable)
             {
-                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 1;
                 IsHarvestable = false;
                 timeUnitlHarvestable = timeToHarvestable;
             }
@@ -65,10 +64,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (timeUnitlHarvestable <= 0f)
                 {
                     IsHarvestable = true;
-                    
                 }
             }
-            
         }
     }
 }

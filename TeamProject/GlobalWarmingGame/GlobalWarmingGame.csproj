@@ -57,10 +57,9 @@
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Action\MouseInputMethod.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
-    <Compile Include="DisplayLabel.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
-    <Compile Include="MainMenu.cs" />
-    <Compile Include="PauseMenu.cs" />
+    <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Menus\PauseMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathFindable.cs" />
@@ -86,9 +85,6 @@
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Myra, Version=0.9.6.184, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Myra.0.9.6.184\lib\net45\Myra.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />

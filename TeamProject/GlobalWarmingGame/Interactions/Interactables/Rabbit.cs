@@ -28,9 +28,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public void Hunt()
         {
-            //This is tempory and should be replaced by the resource system
-            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 2;
-
             GameObjectManager.Remove(this);
         }
     }

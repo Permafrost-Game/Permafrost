@@ -1,19 +1,23 @@
-﻿using Engine;
+﻿using System;
+using System.Collections.Generic;
+
+using Engine;
 using Engine.TileGrid;
+
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Resources;
+
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-using Myra;
-using Myra.Graphics2D.TextureAtlases;
-using Myra.Graphics2D.UI;
-using System;
-using System.Collections.Generic;
+using GeonBit.UI;
+using GeonBit.UI.Entities;
+using GlobalWarmingGame.Menus;
+
 
 namespace GlobalWarmingGame
 {
@@ -28,12 +32,12 @@ namespace GlobalWarmingGame
 
         TileSet tileSet;
         TileMap tileMap;
-
-        private Desktop _desktop;
         
         Camera camera;
-        MainMenu mainMenu;
-        PauseMenu pauseMenu;
+
+        MainMenu MainMenu;
+        PauseMenu PauseMenu;
+        Texture2D logo;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
@@ -45,11 +49,11 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 768   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
             };
             
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -57,10 +61,11 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
+            UserInterface.Initialize(Content, "hd");
+
             camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
 
-            this.IsMouseVisible = true;
             base.Initialize();     
         }
 
@@ -68,43 +73,38 @@ namespace GlobalWarmingGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             {
-                _desktop = new Desktop();
-                MyraEnvironment.Game = this;
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
-
-                mainMenu = new MainMenu();
-                pauseMenu = new PauseMenu();
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, selectionManager.CurrentInstruction));
 
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
-                Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
+                Texture2D water = Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("0", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
+                textureSet.Add("0", Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
+                textureSet.Add("1", Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
+                textureSet.Add("2", Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
+                textureSet.Add("3", Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
+                textureSet.Add("4", Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
                 textureSet.Add("5", water);
 
+                Texture2D colonist = Content.Load<Texture2D>(@"interactables/colonist");
+                Texture2D farm = Content.Load<Texture2D>(@"interactables/farm");
+                Texture2D bushH = Content.Load<Texture2D>(@"interactables/berrybush-harvestable");
+                Texture2D bushN = Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
+                Texture2D rabbit = Content.Load<Texture2D>(@"interactables/rabbit");
 
-                Texture2D colonist = this.Content.Load<Texture2D>(@"interactables/colonist");
-                Texture2D farm = this.Content.Load<Texture2D>(@"interactables/farm");
-                Texture2D bushH = this.Content.Load<Texture2D>(@"interactables/berrybush-harvestable");
-                Texture2D bushN = this.Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
-                Texture2D rabbit = this.Content.Load<Texture2D>(@"interactables/rabbit");
+                logo = Content.Load<Texture2D>(@"logo");
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
-
                 //ALL the Below code is testing
                 
                 var c1 = new Colonist(
-                    position:   new Vector2(25, 25),
+                    position: new Vector2(25, 25),
                     texture: colonist,
                     inventoryCapacity: 100f);
                     
@@ -134,19 +134,12 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
                     texture: rabbit));
-                    
-                //GameObjectManager.Add( new InteractableGameObject(
-                //    position: new Vector2(256, 256),
-                //     texture: bush,
-                //     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
-                //     );
-                //GameObjectManager.Add( new PassiveMovingGameObject(
-                //     position: new Vector2(575, 575),
-                //     texture: rabbit,
-                //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
-                //     );
-                
-                GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
+
+                MainMenu = new MainMenu(logo, new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
+                PauseMenu = new PauseMenu();
+
+                UserInterface.Active.AddEntity(MainMenu.Menu);
+                UserInterface.Active.AddEntity(PauseMenu.Menu);
             }
         }
 
@@ -157,9 +150,11 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            ShowMainMenu();
+            UserInterface.Active.Update(gameTime);
+
+            ProcessMainMenu();
+            ProcessPauseMenu();
             ProcessMenuSelection();
-            SuspendContextMenuClick();
 
             if (!isPaused && isPlaying)
             {
@@ -175,13 +170,13 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
-            
+
             if (isPlaying)
             {
                 currentKeyboardState = Keyboard.GetState();
 
                 if (CheckKeypress(Keys.Escape))
-                    ShowPauseMenu();
+                    isPaused = !isPaused;
 
                 previousKeyboardState = currentKeyboardState;
             }
@@ -191,7 +186,7 @@ namespace GlobalWarmingGame
         {
             GraphicsDevice.Clear(Color.Black);
 
-            if (isPlaying)
+           // if (isPlaying)
             {
                 spriteBatch.Begin(
                     sortMode: SpriteSortMode.FrontToBack,
@@ -210,35 +205,12 @@ namespace GlobalWarmingGame
 
                 spriteBatch.End();
 
+                UserInterface.Active.Draw(spriteBatch);
+
                 base.Draw(gameTime);
             }
-
-            _desktop.Render();
         }
-
-        void ShowMainMenu()
-        {
-            if (!isPlaying)
-            {
-                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
-                mainMenu.DrawMainMenu(_desktop, position);
-            }
-        }
-
-        void ShowPauseMenu()
-        {
-            isPaused = !isPaused;
-
-            if (isPaused)
-            {
-                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
-                pauseMenu.DrawPauseMenu(_desktop, position);
-            }
-
-            else
-                _desktop.HideContextMenu();
-        }
-
+        
         /// <summary>
         /// Checks if the currently released key had been pressed the previous frame
         /// </summary>
@@ -252,34 +224,34 @@ namespace GlobalWarmingGame
             return false;
         }
 
-        /// <summary>
-        /// Suspends mouse input during Main and Pause Menus, otherwise resumes it.
-        /// </summary>
-        void SuspendContextMenuClick()
+        void ProcessMainMenu()
         {
-            _desktop.ContextMenuClosing += (s, a) =>
+            if (!isPlaying)
             {
-                if (!_desktop.ContextMenu.Bounds.Contains(_desktop.TouchPosition))
-                {
-                    if (!isPaused || isPlaying)
-                        a.Cancel = false;
-                    else
-                        a.Cancel = true;
-                }
-            };
+                UserInterface.Active.Clear();
+                UserInterface.Active.AddEntity(MainMenu.Menu);
+            }
+
+            else
+                UserInterface.Active.Clear();
         }
 
-        /// <summary>
-        /// Executes selected commands on the Main and Pause Menus
-        /// </summary>
+        void ProcessPauseMenu()
+        {
+            if (isPaused && isPlaying)
+            {
+                UserInterface.Active.AddEntity(PauseMenu.Menu);
+            }
+        }
+
         void ProcessMenuSelection()
         {
-            mainMenu.MainToGame.Selected += (s, a) => { isPaused = false; isPlaying = true; };
-            mainMenu.MainToQuit.Selected += (s, a) => Exit();
+            MainMenu.MainToGame.OnClick = (Entity button) => { isPaused = false; isPlaying = true; };
+            MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
-            pauseMenu.PauseToGame.Selected += (s, a) => { isPaused = false; };
-            pauseMenu.PauseToMain.Selected += (s, a) => { isPlaying = false; ShowMainMenu(); };
-            pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
+            PauseMenu.PauseToGame.OnClick = (Entity button) => { isPaused = false; isPlaying = true; };
+            PauseMenu.PauseToMain.OnClick = (Entity button) => { isPlaying = false; isPaused = false;  };
+            PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
         }
     }
 }

@@ -29,7 +29,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public void Harvest()
         {
             //This is tempory and should be replaced by the resource system
-            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 3;
         }
     }
 }
