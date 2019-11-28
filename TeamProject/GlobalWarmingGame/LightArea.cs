@@ -18,7 +18,7 @@ namespace GlobalWarmingGame
         public LightArea(GraphicsDevice graphicsDevice, ShadowmapSize size)
         {
             int baseSize = 2 << (int)size;
-            LightAreaSize = new Vector2(baseSize * 2);
+            LightAreaSize = new Vector2(baseSize);
             RenderTarget = new RenderTarget2D(graphicsDevice, baseSize, baseSize);
             this.graphicsDevice = graphicsDevice;
         }

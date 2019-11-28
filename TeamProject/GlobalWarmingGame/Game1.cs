@@ -44,8 +44,8 @@ namespace GlobalWarmingGame
 
 
         //testcode 
-        Vector2 lightPosition = new Vector2(128, 128);
-        Vector2 lightPosition2 = new Vector2(1000, 1000);
+        Vector2 lightPosition = new Vector2(256, 256);
+        Vector2 lightPosition2 = new Vector2(512, 512);
         LightArea lightArea1;
         LightArea lightArea2;
         ShadowmapResolver shadowmapResolver;
@@ -237,8 +237,8 @@ namespace GlobalWarmingGame
                         sortMode: SpriteSortMode.Deferred,
                         blendState: BlendState.AlphaBlend,
                         samplerState: SamplerState.PointClamp,
-                        depthStencilState: DepthStencilState.Default,
-                        rasterizerState: RasterizerState.CullNone,
+                        depthStencilState: null,
+                        rasterizerState: null,
                         effect: null,
                         transformMatrix: camera.Transform
                     );
@@ -276,21 +276,21 @@ namespace GlobalWarmingGame
             lightArea1.BeginDrawingShadowCasters();
             DrawCasters();
             lightArea1.EndDrawingShadowCasters();
-            shadowmapResolver.ResolveShadows(lightArea1.RenderTarget, lightArea1.RenderTarget, lightPosition);
+            shadowmapResolver.ResolveShadows(lightArea1.RenderTarget, lightArea1.RenderTarget, Vector2.Transform(lightPosition, camera.Transform));
 
             //second light area
             lightArea2.LightPosition = lightPosition2;
             lightArea2.BeginDrawingShadowCasters();
             DrawCasters();
             lightArea2.EndDrawingShadowCasters();
-            shadowmapResolver.ResolveShadows(lightArea2.RenderTarget, lightArea2.RenderTarget, lightPosition2);
+            shadowmapResolver.ResolveShadows(lightArea2.RenderTarget, lightArea2.RenderTarget, Vector2.Transform(lightPosition2, camera.Transform));
 
 
             GraphicsDevice.SetRenderTarget(screenShadows);
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            spriteBatch.Draw(lightArea1.RenderTarget, lightArea1.LightPosition - lightArea1.LightAreaSize * 0.5f, Color.Red);
-            spriteBatch.Draw(lightArea2.RenderTarget, lightArea2.LightPosition - lightArea2.LightAreaSize * 0.5f, Color.Blue);
+            spriteBatch.Draw(lightArea1.RenderTarget, lightArea1.LightPosition - (lightArea1.LightAreaSize * 0.5f), Color.Red);
+            spriteBatch.Draw(lightArea2.RenderTarget, lightArea2.LightPosition - (lightArea2.LightAreaSize * 0.5f), Color.Blue);
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
