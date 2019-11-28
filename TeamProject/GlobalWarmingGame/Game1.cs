@@ -49,11 +49,11 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
             
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";

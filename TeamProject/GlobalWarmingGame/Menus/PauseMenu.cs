@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 using GeonBit.UI.Entities;
 
@@ -14,21 +15,29 @@ namespace GlobalWarmingGame.Menus
 
         public PauseMenu()
         {
-            Menu = new Panel();
+            Menu = new Panel(new Vector2(350, 450));
 
-            Label label = new Label("", Anchor.Center, new Vector2(500, 200));
+            Label label = new Label("Paused", Anchor.TopCenter)
+            {
+                Scale = 2f,
+                Offset = new Vector2(0, 10)
+            };
             Menu.AddChild(label);
 
-            PauseToGame = new Button("Resume", ButtonSkin.Default, Anchor.Center, new Vector2(300, 50), new Vector2(0, -110));
+            PauseToGame = new Button("Resume", ButtonSkin.Default, Anchor.Center, new Vector2(250, 50), new Vector2(0, -85));
+            PauseToGame.ButtonParagraph.Scale = 0.8f;
             Menu.AddChild(PauseToGame);
 
-            PauseToOptions = new Button("Options", ButtonSkin.Default, Anchor.Center, new Vector2(300, 50), new Vector2(0, -35));
+            PauseToOptions = new Button("Options", ButtonSkin.Default, Anchor.Center, new Vector2(250, 50), new Vector2(0, -10));
+            PauseToOptions.ButtonParagraph.Scale = 0.8f;
             Menu.AddChild(PauseToOptions);
 
-            PauseToMain = new Button("Quit to Main Menu", ButtonSkin.Default, Anchor.Center, new Vector2(300, 50), new Vector2(0, 35));
+            PauseToMain = new Button("Quit to Main Menu", ButtonSkin.Default, Anchor.Center, new Vector2(250, 50), new Vector2(0, 60));
+            PauseToMain.ButtonParagraph.Scale = 0.8f;
             Menu.AddChild(PauseToMain);
 
-            PauseToQuit = new Button("Quit to Desktop", ButtonSkin.Default, Anchor.Center, new Vector2(300, 50), new Vector2(0, 110));
+            PauseToQuit = new Button("Quit to Desktop", ButtonSkin.Default, Anchor.Center, new Vector2(250, 50), new Vector2(0, 135));
+            PauseToQuit.ButtonParagraph.Scale = 0.8f;
             Menu.AddChild(PauseToQuit);
         }
     }
