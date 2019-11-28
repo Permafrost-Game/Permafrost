@@ -49,11 +49,11 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
             };
             
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -140,6 +140,8 @@ namespace GlobalWarmingGame
 
                 UserInterface.Active.AddEntity(MainMenu.Menu);
                 UserInterface.Active.AddEntity(PauseMenu.Menu);
+
+                PauseMenu.Menu.Visible = false;
             }
         }
 
@@ -152,8 +154,6 @@ namespace GlobalWarmingGame
         {
             UserInterface.Active.Update(gameTime);
 
-            ProcessMainMenu();
-            ProcessPauseMenu();
             ProcessMenuSelection();
 
             if (!isPaused && isPlaying)
@@ -176,7 +176,10 @@ namespace GlobalWarmingGame
                 currentKeyboardState = Keyboard.GetState();
 
                 if (CheckKeypress(Keys.Escape))
+                {
                     isPaused = !isPaused;
+                    ShowPauseMenu();
+                }
 
                 previousKeyboardState = currentKeyboardState;
             }
@@ -224,33 +227,31 @@ namespace GlobalWarmingGame
             return false;
         }
 
-        void ProcessMainMenu()
+        void ShowMainMenu()
         {
-            if (!isPlaying)
-            {
-                UserInterface.Active.Clear();
-                UserInterface.Active.AddEntity(MainMenu.Menu);
-            }
+            isPlaying = false;
+            isPaused = false;
 
-            else
-                UserInterface.Active.Clear();
+            PauseMenu.Menu.Visible = false;
+            MainMenu.Menu.Visible = true;
         }
 
-        void ProcessPauseMenu()
+        void ShowPauseMenu()
         {
-            if (isPaused && isPlaying)
-            {
-                UserInterface.Active.AddEntity(PauseMenu.Menu);
-            }
+            if (isPaused)
+                PauseMenu.Menu.Visible = true;
+
+            else
+                PauseMenu.Menu.Visible = false;
         }
 
         void ProcessMenuSelection()
         {
-            MainMenu.MainToGame.OnClick = (Entity button) => { isPaused = false; isPlaying = true; };
+            MainMenu.MainToGame.OnClick = (Entity button) => { MainMenu.Menu.Visible = false; isPaused = false; isPlaying = true; };
             MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
-            PauseMenu.PauseToGame.OnClick = (Entity button) => { isPaused = false; isPlaying = true; };
-            PauseMenu.PauseToMain.OnClick = (Entity button) => { isPlaying = false; isPaused = false;  };
+            PauseMenu.PauseToGame.OnClick = (Entity button) => { isPaused = false; PauseMenu.Menu.Visible = false; };
+            PauseMenu.PauseToMain.OnClick = (Entity button) => { ShowMainMenu(); };
             PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
         }
     }
