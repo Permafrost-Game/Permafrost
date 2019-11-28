@@ -30,8 +30,9 @@ namespace GlobalWarmingGame
         TileMap tileMap;
 
         private Desktop _desktop;
-        
+
         Camera camera;
+        Effect effect;
         MainMenu mainMenu;
         PauseMenu pauseMenu;
 
@@ -40,6 +41,16 @@ namespace GlobalWarmingGame
 
         bool isPaused;
         bool isPlaying;
+
+
+        //testcode 
+        Vector2 lightPosition = new Vector2(128, 128);
+        Vector2 lightPosition2 = new Vector2(1000, 1000);
+        LightArea lightArea1;
+        LightArea lightArea2;
+        ShadowmapResolver shadowmapResolver;
+        QuadRenderComponent quadRender;
+        RenderTarget2D screenShadows;
 
         public Game1()
         {
@@ -66,11 +77,27 @@ namespace GlobalWarmingGame
 
         protected override void LoadContent()
         {
+            { //TEST CODE
+                quadRender = new QuadRenderComponent(this);
+
+                shadowmapResolver = new ShadowmapResolver(GraphicsDevice, quadRender, ShadowmapSize.Size256, ShadowmapSize.Size1024);
+                shadowmapResolver.LoadContent(Content);
+                
+                lightArea1 = new LightArea(GraphicsDevice, ShadowmapSize.Size512);
+                lightArea2 = new LightArea(GraphicsDevice, ShadowmapSize.Size512);
+                screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
+
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             {
                 _desktop = new Desktop();
                 MyraEnvironment.Game = this;
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
+
+                effect = Content.Load<Effect>(@"shaders/Lights");
+                //effect = null; //Line is for testing reasons
+                var t = effect.Parameters[0];
 
                 mainMenu = new MainMenu();
                 pauseMenu = new PauseMenu();
@@ -187,30 +214,136 @@ namespace GlobalWarmingGame
             }
         }
 
+        private void DrawCasters()
+        {
+            spriteBatch.Begin(
+                        sortMode: SpriteSortMode.Deferred,
+                        blendState: BlendState.AlphaBlend,
+                        samplerState: SamplerState.PointClamp,
+                        depthStencilState: DepthStencilState.Default,
+                        rasterizerState: RasterizerState.CullNone,
+                        effect: null,
+                        transformMatrix: camera.Transform
+                    );
+
+            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                drawable.Draw(spriteBatch);
+            spriteBatch.End();
+        }
+
+        private void DrawScene()
+        {
+            spriteBatch.Begin(
+                        sortMode: SpriteSortMode.Deferred,
+                        blendState: BlendState.AlphaBlend,
+                        samplerState: SamplerState.PointClamp,
+                        depthStencilState: DepthStencilState.Default,
+                        rasterizerState: RasterizerState.CullNone,
+                        effect: null,
+                        transformMatrix: camera.Transform
+                    );
+            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                drawable.Draw(spriteBatch);
+            spriteBatch.End();
+        }
+        private void DrawGround()
+        {
+            //draw the tile texture tiles across the screen
+            Rectangle source = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            spriteBatch.Begin(
+                        sortMode: SpriteSortMode.Deferred,
+                        blendState: BlendState.Opaque,
+                        samplerState: SamplerState.PointClamp,
+                        depthStencilState: DepthStencilState.Default,
+                        rasterizerState: RasterizerState.CullNone,
+                        effect: null,
+                        transformMatrix: camera.Transform
+                    );
+
+            tileMap.Draw(spriteBatch);
+
+            
+
+            spriteBatch.End();
+
+        }
+
+        private void _Draw(GameTime gameTime)
+        {
+
+            //first light area
+            lightArea1.LightPosition = lightPosition;
+            lightArea1.BeginDrawingShadowCasters();
+            DrawCasters();
+            lightArea1.EndDrawingShadowCasters();
+            shadowmapResolver.ResolveShadows(lightArea1.RenderTarget, lightArea1.RenderTarget, lightPosition);
+
+            //second light area
+            lightArea2.LightPosition = lightPosition2;
+            lightArea2.BeginDrawingShadowCasters();
+            DrawCasters();
+            lightArea2.EndDrawingShadowCasters();
+            shadowmapResolver.ResolveShadows(lightArea2.RenderTarget, lightArea2.RenderTarget, lightPosition2);
+
+
+            GraphicsDevice.SetRenderTarget(screenShadows);
+            GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            spriteBatch.Draw(lightArea1.RenderTarget, lightArea1.LightPosition - lightArea1.LightAreaSize * 0.5f, Color.Red);
+            spriteBatch.Draw(lightArea2.RenderTarget, lightArea2.LightPosition - lightArea2.LightAreaSize * 0.5f, Color.Blue);
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+
+            GraphicsDevice.Clear(Color.Black);
+
+            DrawGround();
+
+            BlendState blendState = new BlendState();
+            blendState.ColorSourceBlend = Blend.DestinationColor;
+            blendState.ColorDestinationBlend = Blend.SourceColor;
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, blendState);
+            spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+            spriteBatch.End();
+
+            DrawScene();
+
+            base.Draw(gameTime);
+        }
         protected override void Draw(GameTime gameTime)
         {
+            
+
             GraphicsDevice.Clear(Color.Black);
 
             if (isPlaying)
             {
-                spriteBatch.Begin(
-                    sortMode: SpriteSortMode.FrontToBack,
-                    blendState: BlendState.AlphaBlend,
-                    samplerState: SamplerState.PointClamp,
-                    depthStencilState: null,
-                    rasterizerState: null,
-                    effect: null,
-                    transformMatrix: camera.Transform
-                );
+                //TEST CODE!!!
+                _Draw(gameTime);
+                if (false)
+                {
 
-                tileMap.Draw(spriteBatch);
+                    spriteBatch.Begin(
+                        sortMode: SpriteSortMode.FrontToBack,
+                        blendState: BlendState.AlphaBlend,
+                        samplerState: SamplerState.PointClamp,
+                        depthStencilState: null,
+                        rasterizerState: null,
+                        effect: effect,
+                        transformMatrix: camera.Transform
+                    );
 
-                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
-                    drawable.Draw(spriteBatch);
+                    tileMap.Draw(spriteBatch);
 
-                spriteBatch.End();
+                    foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                        drawable.Draw(spriteBatch);
 
-                base.Draw(gameTime);
+                    spriteBatch.End();
+
+                    base.Draw(gameTime);
+                }
             }
 
             _desktop.Render();
