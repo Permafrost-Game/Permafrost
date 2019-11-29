@@ -19,6 +19,8 @@ namespace Engine.TileGrid
         {
             this.Tiles = tiles;
             timeUntilTempTick = 2000;
+            Tiles[0, 0].temperature.Value = 50;
+            Tiles[0, 0].Heated = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -54,7 +56,7 @@ namespace Engine.TileGrid
 
         public void Update(GameTime gameTime)
         {
-            timeUntilTempTick = timeUntilTempTick - gameTime.ElapsedGameTime.Milliseconds;
+            timeUntilTempTick -= gameTime.ElapsedGameTime.Milliseconds;
 
             if ((timeUntilTempTick) <= 0)
             {

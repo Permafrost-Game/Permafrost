@@ -12,13 +12,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Colonist : PathFindable, IInteractable, IUpdatable
     {
+
         public List<InstructionType> InstructionTypes { get; }
         public Inventory Inventory { get; }
-
         private Queue<Instruction> instructions;
 
         public string Name { get; private set; }
         public float Health { get; private set; }
+        public Temperature Temperature { get; set; }
+        public readonly Temperature CoreBodyTemperature = new Temperature(38);
+        private int timeTillFoodTick;
+        private static readonly int Base_Consumption_Rate = 60000;
+
 
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
@@ -34,6 +39,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             Health = 10f;
             Inventory = new Inventory(inventoryCapacity);
+            Temperature = CoreBodyTemperature;
+            timeTillFoodTick = Base_Consumption_Rate;
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>
             {
@@ -69,6 +76,31 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if(goals.Count == 0 && instructions.Count > 0 )
                 AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
+            
+
+            timeTillFoodTick -= gameTime.ElapsedGameTime.Milliseconds;
+            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature.Value);
+
+            if (foodFormula <= 0.5) 
+            {
+                foodFormula = 0.5;
+            }
+            if ((timeTillFoodTick * foodFormula) < 0) 
+            {
+                FoodTick();
+                timeTillFoodTick = Base_Consumption_Rate;
+            }
         }
+
+        private void FoodTick() 
+        {
+            ResourceItem food = new ResourceItem(new Food(), 1);
+            if (!Inventory.RemoveItem(food))
+            {
+                Health -= 1;           
+            }
+        }
+
+
     }
 }

@@ -30,7 +30,7 @@ namespace GlobalWarmingGame
         TileMap tileMap;
 
         private Desktop _desktop;
-        
+
         Camera camera;
         MainMenu mainMenu;
         PauseMenu pauseMenu;
@@ -41,6 +41,8 @@ namespace GlobalWarmingGame
         bool isPaused;
         bool isPlaying;
 
+        private int timeUntilColonistTempTick;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -48,9 +50,11 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 768   // set this value to the desired height of your window
             };
-            
+
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            timeUntilColonistTempTick = 2000;
 
             Content.RootDirectory = "Content";
         }
@@ -61,7 +65,7 @@ namespace GlobalWarmingGame
             selectionManager = new SelectionManager();
 
             this.IsMouseVisible = true;
-            base.Initialize();     
+            base.Initialize();
         }
 
         protected override void LoadContent()
@@ -102,16 +106,16 @@ namespace GlobalWarmingGame
 
 
                 //ALL the Below code is testing
-                
+
                 var c1 = new Colonist(
-                    position:   new Vector2(25, 25),
+                    position: new Vector2(25, 25),
                     texture: colonist,
                     inventoryCapacity: 100f);
-                    
+
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
-                
+
                 GameObjectManager.Add(c1);
-                
+
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(75, 75),
                     texture: colonist,
@@ -125,16 +129,16 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Farm(
                     position: new Vector2(128, 128),
                     texture: farm));
-                    
+
                 GameObjectManager.Add(new Bush(
                     position: new Vector2(256, 256),
                     harvestable: bushH,
                     harvested: bushN));
-                    
+
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
                     texture: rabbit));
-                    
+
                 //GameObjectManager.Add( new InteractableGameObject(
                 //    position: new Vector2(256, 256),
                 //     texture: bush,
@@ -145,7 +149,7 @@ namespace GlobalWarmingGame
                 //     texture: rabbit,
                 //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
                 //     );
-                
+
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
             }
         }
@@ -164,18 +168,35 @@ namespace GlobalWarmingGame
             if (!isPaused && isPlaying)
             {
                 camera.UpdateCamera();
-                
+
                 //TileMap.update is used to update the temperature of the tiles
                 tileMap.Update(gameTime);
-                
+
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
+                
+                //Adjust the temperatures of the colonists
+                timeUntilColonistTempTick -= gameTime.ElapsedGameTime.Milliseconds;
+                if (timeUntilColonistTempTick < 0)
+                {
+                    foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
+                    {
+                        double tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                        double colonistTemp = colonist.Temperature.Value;
+
+                        colonist.Temperature.Value = colonistTemp + tileTemp / 2;
+                        Console.Out.WriteLine(colonist.Temperature.Value);
+                        
+                    }
+                    timeUntilColonistTempTick = 2000;
+                }
+
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
                 base.Update(gameTime);
             }
-            
+
             if (isPlaying)
             {
                 currentKeyboardState = Keyboard.GetState();
