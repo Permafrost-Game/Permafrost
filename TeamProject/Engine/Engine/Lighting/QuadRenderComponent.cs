@@ -1,12 +1,12 @@
-// Using Statements
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 
-namespace GlobalWarmingGame
+namespace Engine.Lighting
 {
+    /// <remarks>
+    /// This class was created by Catalin ZZ 
+    /// Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
+    /// </remarks>
     public partial class QuadRenderComponent : DrawableGameComponent
     {
         VertexPositionTexture[] verts = null;

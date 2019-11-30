@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace GlobalWarmingGame
+/// <remarks>
+/// This class was created by Catalin ZZ 
+/// Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
+/// </remarks>
+namespace Engine.Lighting
 {
-    enum ShadowmapSize
+    public enum ShadowmapSize
     {
         Size128 = 6,
         Size256 = 7,
         Size512 = 8,
         Size1024 = 9,
     }
-    class ShadowmapResolver
+    public class ShadowmapResolver
     {
         private GraphicsDevice graphicsDevice;
 

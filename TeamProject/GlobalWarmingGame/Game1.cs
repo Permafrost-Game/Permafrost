@@ -1,18 +1,14 @@
 ﻿using Engine;
+using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using Myra;
-using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
-using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -32,7 +28,6 @@ namespace GlobalWarmingGame
         private Desktop _desktop;
 
         Camera camera;
-        Effect effect;
         MainMenu mainMenu;
         PauseMenu pauseMenu;
 
@@ -42,12 +37,8 @@ namespace GlobalWarmingGame
         bool isPaused;
         bool isPlaying;
 
+        List<Light> lightObjects;
 
-        //testcode 
-        Vector2 lightPosition = new Vector2(256, 256);
-        Vector2 lightPosition2 = new Vector2(512, 512);
-        LightArea lightArea1;
-        LightArea lightArea2;
         ShadowmapResolver shadowmapResolver;
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
@@ -77,32 +68,40 @@ namespace GlobalWarmingGame
 
         protected override void LoadContent()
         {
-            { //TEST CODE
-                quadRender = new QuadRenderComponent(this);
-
-                shadowmapResolver = new ShadowmapResolver(GraphicsDevice, quadRender, ShadowmapSize.Size256, ShadowmapSize.Size1024);
-                shadowmapResolver.LoadContent(Content);
-                
-                lightArea1 = new LightArea(GraphicsDevice, ShadowmapSize.Size512);
-                lightArea2 = new LightArea(GraphicsDevice, ShadowmapSize.Size512);
-                screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            }
-
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            //INITALISING GAME COMPONENTS
             {
+                spriteBatch = new SpriteBatch(GraphicsDevice);
+
                 _desktop = new Desktop();
                 MyraEnvironment.Game = this;
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
 
-                effect = Content.Load<Effect>(@"shaders/Lights");
-                //effect = null; //Line is for testing reasons
-                var t = effect.Parameters[0];
 
                 mainMenu = new MainMenu();
                 pauseMenu = new PauseMenu();
+            }
 
-                //TODO this code should be loaded from a file
+            //TEST CODE FOR LIGHTING
+            {
+                quadRender = new QuadRenderComponent(this);
+
+                shadowmapResolver = new ShadowmapResolver(GraphicsDevice, quadRender, ShadowmapSize.Size256, ShadowmapSize.Size1024);
+                shadowmapResolver.LoadContent(Content);
+
+                lightObjects = new List<Light>()
+                {
+                    new Light(Vector2.Zero,         GraphicsDevice, 256f, new Color(201,226,255,128), "Light" ),
+                    new Light(new Vector2(256,256), GraphicsDevice, 256f, new Color(255,0  ,0  ,128), "Light" ),
+                    new Light(new Vector2(512,512), GraphicsDevice, 512, new Color(0,0  ,255  ,128), "Light" )
+                };
+
+                screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
+
+
+            //LOADING TILEMAP AND ZONES
+            {
+                //TODO textures should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
@@ -115,6 +114,15 @@ namespace GlobalWarmingGame
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
                 textureSet.Add("5", water);
 
+                tileSet = new TileSet(textureSet, new Vector2(16));
+                tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
+
+                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
+            }
+
+            //CREATING GAME 
+            {
+                //All this code below is for testing and will eventually be replaced.
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"interactables/colonist");
                 Texture2D farm = this.Content.Load<Texture2D>(@"interactables/farm");
@@ -122,23 +130,15 @@ namespace GlobalWarmingGame
                 Texture2D bushN = this.Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"interactables/rabbit");
 
-                tileSet = new TileSet(textureSet, new Vector2(16));
-                tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
-
-                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-
-
-                //ALL the Below code is testing
-                
                 var c1 = new Colonist(
-                    position:   new Vector2(25, 25),
+                    position: new Vector2(25, 25),
                     texture: colonist,
                     inventoryCapacity: 100f);
-                    
+
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
-                
+
                 GameObjectManager.Add(c1);
-                
+
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(75, 75),
                     texture: colonist,
@@ -152,29 +152,19 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Farm(
                     position: new Vector2(128, 128),
                     texture: farm));
-                    
+
                 GameObjectManager.Add(new Bush(
                     position: new Vector2(256, 256),
                     harvestable: bushH,
                     harvested: bushN));
-                    
+
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
                     texture: rabbit));
-                    
-                //GameObjectManager.Add( new InteractableGameObject(
-                //    position: new Vector2(256, 256),
-                //     texture: bush,
-                //     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
-                //     );
-                //GameObjectManager.Add( new PassiveMovingGameObject(
-                //     position: new Vector2(575, 575),
-                //     texture: rabbit,
-                //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
-                //     );
-                
+
                 GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
             }
+ 
         }
 
         protected override void UnloadContent()
@@ -192,13 +182,14 @@ namespace GlobalWarmingGame
             {
                 camera.UpdateCamera();
                 
-                //TileMap.update is used to update the temperature of the tiles
                 tileMap.Update(gameTime);
                 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
+
+                lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
                 base.Update(gameTime);
             }
@@ -214,141 +205,125 @@ namespace GlobalWarmingGame
             }
         }
 
-        private void DrawCasters()
-        {
-            spriteBatch.Begin(
-                        sortMode: SpriteSortMode.Deferred,
-                        blendState: BlendState.AlphaBlend,
-                        samplerState: SamplerState.PointClamp,
-                        depthStencilState: DepthStencilState.Default,
-                        rasterizerState: RasterizerState.CullNone,
-                        effect: null,
-                        transformMatrix: camera.Transform
-                    );
-
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
-                drawable.Draw(spriteBatch);
-            spriteBatch.End();
-        }
-
-        private void DrawScene()
-        {
-            spriteBatch.Begin(
-                        sortMode: SpriteSortMode.Deferred,
-                        blendState: BlendState.AlphaBlend,
-                        samplerState: SamplerState.PointClamp,
-                        depthStencilState: null,
-                        rasterizerState: null,
-                        effect: null,
-                        transformMatrix: camera.Transform
-                    );
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
-                drawable.Draw(spriteBatch);
-            spriteBatch.End();
-        }
-        private void DrawGround()
-        {
-            //draw the tile texture tiles across the screen
-            Rectangle source = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            spriteBatch.Begin(
-                        sortMode: SpriteSortMode.Deferred,
-                        blendState: BlendState.Opaque,
-                        samplerState: SamplerState.PointClamp,
-                        depthStencilState: DepthStencilState.Default,
-                        rasterizerState: RasterizerState.CullNone,
-                        effect: null,
-                        transformMatrix: camera.Transform
-                    );
-
-            tileMap.Draw(spriteBatch);
-
-            
-
-            spriteBatch.End();
-
-        }
-
-        private void _Draw(GameTime gameTime)
-        {
-
-            //first light area
-            lightArea1.LightPosition = lightPosition;
-            lightArea1.BeginDrawingShadowCasters();
-            DrawCasters();
-            lightArea1.EndDrawingShadowCasters();
-            shadowmapResolver.ResolveShadows(lightArea1.RenderTarget, lightArea1.RenderTarget, Vector2.Transform(lightPosition, camera.Transform));
-
-            //second light area
-            lightArea2.LightPosition = lightPosition2;
-            lightArea2.BeginDrawingShadowCasters();
-            DrawCasters();
-            lightArea2.EndDrawingShadowCasters();
-            shadowmapResolver.ResolveShadows(lightArea2.RenderTarget, lightArea2.RenderTarget, Vector2.Transform(lightPosition2, camera.Transform));
-
-
-            GraphicsDevice.SetRenderTarget(screenShadows);
-            GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            spriteBatch.Draw(lightArea1.RenderTarget, lightArea1.LightPosition - (lightArea1.LightAreaSize * 0.5f), Color.Red);
-            spriteBatch.Draw(lightArea2.RenderTarget, lightArea2.LightPosition - (lightArea2.LightAreaSize * 0.5f), Color.Blue);
-            spriteBatch.End();
-
-            GraphicsDevice.SetRenderTarget(null);
-
-
-            GraphicsDevice.Clear(Color.Black);
-
-            DrawGround();
-
-            BlendState blendState = new BlendState();
-            blendState.ColorSourceBlend = Blend.DestinationColor;
-            blendState.ColorDestinationBlend = Blend.SourceColor;
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, blendState);
-            spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
-            spriteBatch.End();
-
-            DrawScene();
-
-            base.Draw(gameTime);
-        }
+        #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-            
 
-            GraphicsDevice.Clear(Color.Black);
-
-            if (isPlaying)
+            //CALCULATE SHADOWS
+            foreach (Light light in lightObjects)
             {
-                //TEST CODE!!!
-                _Draw(gameTime);
-                if (false)
-                {
+                GraphicsDevice.SetRenderTarget(light.RenderTarget);
+                GraphicsDevice.Clear(Color.Transparent);
+                DrawShadowCasters(light);
 
-                    spriteBatch.Begin(
-                        sortMode: SpriteSortMode.FrontToBack,
-                        blendState: BlendState.AlphaBlend,
-                        samplerState: SamplerState.PointClamp,
-                        depthStencilState: null,
-                        rasterizerState: null,
-                        effect: effect,
-                        transformMatrix: camera.Transform
-                    );
-
-                    tileMap.Draw(spriteBatch);
-
-                    foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
-                        drawable.Draw(spriteBatch);
-
-                    spriteBatch.End();
-
-                    base.Draw(gameTime);
-                }
+                shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.Position);
             }
 
-            _desktop.Render();
+            //DRAW LIGHTS
+            {
+                GraphicsDevice.SetRenderTarget(screenShadows);
+                GraphicsDevice.Clear(Color.Black);
+
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
+                foreach (Light light in lightObjects)
+                {
+                    light.Draw(spriteBatch);
+                }
+                spriteBatch.End();
+
+                GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.Clear(Color.Black);
+            }
+
+            //DRAW BACKGROUND
+            {
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.Deferred,
+                    blendState: BlendState.Opaque,
+                    samplerState: SamplerState.PointClamp,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: camera.Transform
+                );
+
+                tileMap.Draw(spriteBatch);
+
+                spriteBatch.End();
+            }
+
+            //DRAW SHADOWS
+            {
+                BlendState blendState = new BlendState()
+                {
+                    ColorSourceBlend = Blend.DestinationColor,
+                    ColorDestinationBlend = Blend.SourceColor
+                };
+
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.Immediate,
+                    blendState: blendState,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: null
+                );
+                spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+                spriteBatch.End();
+            }
+
+            //DRAW FORGROUND
+            {
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.Deferred,
+                    blendState: BlendState.AlphaBlend,
+                    samplerState: SamplerState.PointClamp,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: camera.Transform
+                );
+
+                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                    drawable.Draw(spriteBatch);
+                spriteBatch.End();
+            }
+
+            //DRAW UI
+            {
+                _desktop.Render();
+            }
+
+            base.Draw(gameTime);
+
         }
 
+        private void DrawShadowCasters(Light light)
+        {
+            Matrix transform = Matrix.CreateTranslation(light.Position.X - (light.Size.X * 0.5f),
+                light.Position.Y - light.Size.Y * 0.5f,
+                0);
+
+            spriteBatch.Begin(
+                        sortMode: SpriteSortMode.Deferred,
+                        blendState: BlendState.AlphaBlend,
+                        samplerState: SamplerState.PointClamp,
+                        depthStencilState: DepthStencilState.Default,
+                        rasterizerState: RasterizerState.CullNone,
+                        effect: null,
+                        transformMatrix: transform
+                    );
+
+            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+            {
+                drawable.Draw(spriteBatch);
+            }
+
+            spriteBatch.End();
+        }
+        #endregion
+
+        #region Pause and Main Menu
         void ShowMainMenu()
         {
             if (!isPlaying)
@@ -414,5 +389,8 @@ namespace GlobalWarmingGame
             pauseMenu.PauseToMain.Selected += (s, a) => { isPlaying = false; ShowMainMenu(); };
             pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
         }
+
+
+        #endregion
     }
 }

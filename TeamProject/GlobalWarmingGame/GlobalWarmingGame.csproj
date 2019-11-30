@@ -59,13 +59,11 @@
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="DisplayLabel.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
-    <Compile Include="LightArea.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="PauseMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathFindable.cs" />
-    <Compile Include="QuadRenderComponent.cs" />
     <Compile Include="Resources\CollectiveInventory.cs" />
     <Compile Include="Resources\Inventory.cs" />
     <Compile Include="Resources\ResourceItem.cs" />
@@ -78,7 +76,6 @@
     <Compile Include="Resources\ResourceTypes\Coal.cs" />
     <Compile Include="Resources\ResourceTypes\Wood.cs" />
     <Compile Include="Resources\ResourceTypes\Stone.cs" />
-    <Compile Include="ShadowmapResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -154,10 +151,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Content\shaders\Lights.fx" />
-    <Content Include="Content\shaders\Normal.fx" />
-    <Content Include="Content\shaders\reductionEffect.fx" />
-    <Content Include="Content\shaders\resolveShadowsEffect.fx" />
+    <None Include="Content\shaders\reductionEffect.fx" />
+    <None Include="Content\shaders\resolveShadowsEffect.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

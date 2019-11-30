@@ -1,3 +1,7 @@
+// This shader was created by Catalin ZZ 
+// Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
+
+
 texture SourceTexture; 
           
 sampler inputSampler = sampler_state      
