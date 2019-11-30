@@ -56,8 +56,8 @@ technique HorizontalReduction
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 VS();
-        PixelShader  = compile ps_2_0 HorizontalReductionPS();
+        VertexShader = compile vs_3_0 VS();
+        PixelShader  = compile ps_3_0 HorizontalReductionPS();
     }
 }
 
@@ -65,7 +65,7 @@ technique Copy
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 VS();
-        PixelShader  = compile ps_2_0 CopyPS();
+        VertexShader = compile vs_3_0 VS();
+        PixelShader  = compile ps_3_0 CopyPS();
     }
 }

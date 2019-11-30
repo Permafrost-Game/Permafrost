@@ -47,8 +47,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 768   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
             };
             
             //graphics.IsFullScreen = true;
@@ -90,9 +90,9 @@ namespace GlobalWarmingGame
 
                 lightObjects = new List<Light>()
                 {
-                    new Light(Vector2.Zero,         GraphicsDevice, 256f, new Color(201,226,255,128), "Light" ),
+                    new Light(Vector2.Zero,         GraphicsDevice, 128f, new Color(201,226,255,128), "Light" ),
                     new Light(new Vector2(256,256), GraphicsDevice, 256f, new Color(255,0  ,0  ,128), "Light" ),
-                    new Light(new Vector2(512,512), GraphicsDevice, 512, new Color(0,0  ,255  ,128), "Light" )
+                    new Light(new Vector2(512,512), GraphicsDevice, 512f, new Color(0,0  ,255  ,128), "Light" )
                 };
 
                 screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -300,9 +300,10 @@ namespace GlobalWarmingGame
 
         private void DrawShadowCasters(Light light)
         {
-            Matrix transform = Matrix.CreateTranslation(light.Position.X - (light.Size.X * 0.5f),
-                light.Position.Y - light.Size.Y * 0.5f,
-                0);
+            Matrix transform = Matrix.CreateTranslation(
+                -light.Position.X + light.Radius,
+                -light.Position.Y +light.Radius,
+               0);
 
             spriteBatch.Begin(
                         sortMode: SpriteSortMode.Deferred,

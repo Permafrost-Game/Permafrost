@@ -251,8 +251,8 @@ technique ComputeDistances
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 FullScreenVS();
-        PixelShader  = compile ps_2_0 ComputeDistancesPS();
+        VertexShader = compile vs_3_0 FullScreenVS();
+        PixelShader  = compile ps_3_0 ComputeDistancesPS();
     }
 }
 
@@ -260,8 +260,8 @@ technique Distort
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 FullScreenVS();
-        PixelShader  = compile ps_2_0 DistortPS();
+        VertexShader = compile vs_3_0 FullScreenVS();
+        PixelShader  = compile ps_3_0 DistortPS();
     }
 }
 
@@ -278,8 +278,8 @@ technique BlurHorizontally
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 FullScreenVS();
-        PixelShader  = compile ps_2_0 BlurHorizontallyPS();
+        VertexShader = compile vs_3_0 FullScreenVS();
+        PixelShader  = compile ps_3_0 BlurHorizontallyPS();
     }
 }
 
@@ -287,7 +287,7 @@ technique BlurVerticallyAndAttenuate
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 FullScreenVS();
-        PixelShader  = compile ps_2_0 BlurVerticallyPS();
+        VertexShader = compile vs_3_0 FullScreenVS();
+        PixelShader  = compile ps_3_0 BlurVerticallyPS();
     }
 }
