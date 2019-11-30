@@ -52,6 +52,7 @@
     <Compile Include="Lighting\QuadRenderComponent.cs" />
     <Compile Include="Lighting\ShadowmapResolver.cs" />
     <Compile Include="PathFinding\PathFindingPathException.cs" />
+    <Compile Include="PeformanceMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="Sprite.cs" />

@@ -31,6 +31,8 @@ namespace GlobalWarmingGame
         MainMenu mainMenu;
         PauseMenu pauseMenu;
 
+        PeformanceMonitor peformanceMonitor;
+
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
@@ -61,8 +63,14 @@ namespace GlobalWarmingGame
         {
             camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
+            peformanceMonitor = new PeformanceMonitor();
 
             this.IsMouseVisible = true;
+            
+            //Removes 60 FPS limit
+            this.graphics.SynchronizeWithVerticalRetrace = false;
+            base.IsFixedTimeStep = false;
+
             base.Initialize();     
         }
 
@@ -162,7 +170,12 @@ namespace GlobalWarmingGame
                     position: new Vector2(575, 575),
                     texture: rabbit));
 
-                GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
+                GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
+
+
+                //Comment out the line below to dissable FPS counter
+                GameObjectManager.Add(new DisplayLabel(new Vector2(100, 0), 0, "", _desktop, "lblPerf"));
+                
             }
  
         }
@@ -202,6 +215,12 @@ namespace GlobalWarmingGame
                     ShowPauseMenu();
 
                 previousKeyboardState = currentKeyboardState;
+            }
+
+            peformanceMonitor.Update(gameTime);
+            foreach(DisplayLabel lbl in GameObjectManager.GetObjectsByTag("lblPerf"))
+            {
+                lbl.Message = "\n\n\n" + peformanceMonitor.GetPrintString();
             }
         }
 
@@ -302,7 +321,7 @@ namespace GlobalWarmingGame
         {
             Matrix transform = Matrix.CreateTranslation(
                 -light.Position.X + light.Radius,
-                -light.Position.Y +light.Radius,
+                -light.Position.Y + light.Radius,
                0);
 
             spriteBatch.Begin(
