@@ -306,7 +306,7 @@ namespace GlobalWarmingGame
             //DRAW FORGROUND
             {
                 spriteBatch.Begin(
-                    sortMode: SpriteSortMode.Deferred,
+                    sortMode: SpriteSortMode.FrontToBack,
                     blendState: BlendState.AlphaBlend,
                     samplerState: SamplerState.PointClamp,
                     depthStencilState: null,
