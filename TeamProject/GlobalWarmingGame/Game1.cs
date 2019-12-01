@@ -74,6 +74,7 @@ namespace GlobalWarmingGame
             base.Initialize();     
         }
 
+        #region Load Content
         protected override void LoadContent()
         {
             //INITALISING GAME COMPONENTS
@@ -98,9 +99,9 @@ namespace GlobalWarmingGame
 
                 lightObjects = new List<Light>()
                 {
-                    new Light(Vector2.Zero,         GraphicsDevice, 128f, new Color(201,226,255,128), "Light" ),
-                    new Light(new Vector2(256,256), GraphicsDevice, 256f, new Color(255,0  ,0  ,128), "Light" ),
-                    new Light(new Vector2(512,512), GraphicsDevice, 512f, new Color(0,0  ,255  ,128), "Light" )
+                    //new Light(Vector2.Zero,         GraphicsDevice, 128f, new Color(201,226,255,32), "Light" ),
+                    new Light(new Vector2(256,224), GraphicsDevice, 256f, new Color(255,0  ,0  ,255), "Light" ),
+                    new Light(new Vector2(224,512), GraphicsDevice, 256f, new Color(0,0  ,255  ,255), "Light" )
                 };
 
                 screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -184,6 +185,7 @@ namespace GlobalWarmingGame
         {
 
         }
+        #endregion
 
         protected override void Update(GameTime gameTime)
         {
@@ -202,7 +204,8 @@ namespace GlobalWarmingGame
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
-                lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
+                //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
+                //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
                 base.Update(gameTime);
             }
@@ -248,6 +251,12 @@ namespace GlobalWarmingGame
                 {
                     light.Draw(spriteBatch);
                 }
+
+                Texture2D _texture = new Texture2D(GraphicsDevice, 1, 1);
+                _texture.SetData(new Color[] { Color.DimGray });
+
+                spriteBatch.Draw(_texture, new Rectangle(0, 0, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth), Color.White);
+
                 spriteBatch.End();
 
                 GraphicsDevice.SetRenderTarget(null);
