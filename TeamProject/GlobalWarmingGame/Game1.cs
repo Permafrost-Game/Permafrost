@@ -40,9 +40,7 @@ namespace GlobalWarmingGame
 
         bool isPaused;
         bool isPlaying;
-
-        private int timeUntilColonistTempTick;
-
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -53,8 +51,6 @@ namespace GlobalWarmingGame
 
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-
-            timeUntilColonistTempTick = 2000;
 
             Content.RootDirectory = "Content";
         }
@@ -174,23 +170,22 @@ namespace GlobalWarmingGame
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
-                
+
                 //Adjust the temperatures of the colonists
-                timeUntilColonistTempTick -= gameTime.ElapsedGameTime.Milliseconds;
-                if (timeUntilColonistTempTick < 0)
+                foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
                 {
-                    foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
+                    double tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                    double colonistTemp = colonist.Temperature.Value;
+
+                    if (colonistTemp > 50 || colonistTemp < -5)
                     {
-                        double tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
-                        double colonistTemp = colonist.Temperature.Value;
-
-                        colonist.Temperature.Value = colonistTemp + tileTemp / 2;
-                        Console.Out.WriteLine(colonist.Temperature.Value);
-                        
+                        colonist.Temperature.Value = MathHelper.Clamp((float)colonistTemp,-5,50);
+                        continue;
                     }
-                    timeUntilColonistTempTick = 2000;
-                }
 
+                    colonist.UpdateTemp(tileTemp,gameTime);
+                    Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
+                }
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
