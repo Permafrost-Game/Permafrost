@@ -44,6 +44,7 @@ namespace GlobalWarmingGame
         ShadowmapResolver shadowmapResolver;
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
+        Texture2D ambiantLight;
 
         public Game1()
         {
@@ -71,6 +72,7 @@ namespace GlobalWarmingGame
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
 
+
             base.Initialize();     
         }
 
@@ -88,6 +90,8 @@ namespace GlobalWarmingGame
 
                 mainMenu = new MainMenu();
                 pauseMenu = new PauseMenu();
+                ambiantLight = new Texture2D(GraphicsDevice, 1, 1);
+                ambiantLight.SetData(new Color[] { Color.DimGray });
             }
 
             //TEST CODE FOR LIGHTING
@@ -224,6 +228,7 @@ namespace GlobalWarmingGame
             foreach(DisplayLabel lbl in GameObjectManager.GetObjectsByTag("lblPerf"))
             {
                 lbl.Message = "\n\n\n" + peformanceMonitor.GetPrintString();
+                
             }
         }
 
@@ -252,10 +257,8 @@ namespace GlobalWarmingGame
                     light.Draw(spriteBatch);
                 }
 
-                Texture2D _texture = new Texture2D(GraphicsDevice, 1, 1);
-                _texture.SetData(new Color[] { Color.DimGray });
-
-                spriteBatch.Draw(_texture, new Rectangle(0, 0, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth), Color.White);
+                
+                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth), Color.White);
 
                 spriteBatch.End();
 
