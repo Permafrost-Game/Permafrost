@@ -11,25 +11,31 @@
     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endregion*/
+// Using Statements
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Engine.Lighting
 {
     /// <remarks>
-    /// This class was created by Catalin ZZ and improved by
-    /// Original Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
-    /// Improved Version http://www.funhazard.com/xna-resources.html
+    /// This class was created by Catalin ZZ 
+    /// Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
     /// </remarks>
-    public partial class QuadRenderComponent
+    public partial class QuadRenderComponent : DrawableGameComponent
     {
         VertexPositionTexture[] verts = null;
         short[] ib = null;
 
         // Constructor
-        public QuadRenderComponent()
+        public QuadRenderComponent(Game game)
+            : base(game)
         {
-            this.verts = new VertexPositionTexture[]
+            LoadContent();
+        }
+
+        protected override void LoadContent()
+        {
+            verts = new VertexPositionTexture[]
             {
                 new VertexPositionTexture(
                     new Vector3(0,0,0),
@@ -46,9 +52,17 @@ namespace Engine.Lighting
             };
 
             ib = new short[] { 0, 1, 2, 2, 3, 0 };
+
+            base.LoadContent();
         }
 
-        public void Render(GraphicsDevice graphics, Vector2 v1, Vector2 v2)
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+        }
+
+        public void Render(Vector2 v1, Vector2 v2)
         {
             verts[0].Position.X = v2.X;
             verts[0].Position.Y = v1.Y;
@@ -62,7 +76,8 @@ namespace Engine.Lighting
             verts[3].Position.X = v2.X;
             verts[3].Position.Y = v2.Y;
 
-            graphics.DrawUserIndexedPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, verts, 0, 4, ib, 0, 2);
+            GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, verts, 0, 4, ib, 0, 2);
         }
+
     }
 }
