@@ -1,18 +1,14 @@
 ﻿using Engine;
+using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using Myra;
-using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
-using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -30,10 +26,12 @@ namespace GlobalWarmingGame
         TileMap tileMap;
 
         private Desktop _desktop;
-        
+
         Camera camera;
         MainMenu mainMenu;
         PauseMenu pauseMenu;
+
+        PeformanceMonitor peformanceMonitor;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
@@ -41,12 +39,19 @@ namespace GlobalWarmingGame
         bool isPaused;
         bool isPlaying;
 
+        List<Light> lightObjects;
+
+        ShadowmapResolver shadowmapResolver;
+        QuadRenderComponent quadRender;
+        RenderTarget2D screenShadows;
+        Texture2D ambiantLight;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 768   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
+                PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
             };
             
             //graphics.IsFullScreen = true;
@@ -59,23 +64,57 @@ namespace GlobalWarmingGame
         {
             camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
+            peformanceMonitor = new PeformanceMonitor();
 
             this.IsMouseVisible = true;
+            
+            //Removes 60 FPS limit
+            this.graphics.SynchronizeWithVerticalRetrace = false;
+            base.IsFixedTimeStep = false;
+
+
             base.Initialize();     
         }
 
+        #region Load Content
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            //INITALISING GAME COMPONENTS
             {
+                spriteBatch = new SpriteBatch(GraphicsDevice);
+
                 _desktop = new Desktop();
                 MyraEnvironment.Game = this;
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
 
+
                 mainMenu = new MainMenu();
                 pauseMenu = new PauseMenu();
+                ambiantLight = new Texture2D(GraphicsDevice, 1, 1);
+                ambiantLight.SetData(new Color[] { Color.DimGray });
+            }
 
-                //TODO this code should be loaded from a file
+            //TEST CODE FOR LIGHTING
+            {
+                quadRender = new QuadRenderComponent(this);
+
+                shadowmapResolver = new ShadowmapResolver(GraphicsDevice, quadRender, ShadowmapSize.Size256, ShadowmapSize.Size1024);
+                shadowmapResolver.LoadContent(Content);
+
+                lightObjects = new List<Light>()
+                {
+                    //new Light(Vector2.Zero,         GraphicsDevice, 128f, new Color(201,226,255,32), "Light" ),
+                    new Light(new Vector2(256,224), GraphicsDevice, 256f, new Color(255,0  ,0  ,255), "Light" ),
+                    new Light(new Vector2(224,512), GraphicsDevice, 256f, new Color(0,0  ,255  ,255), "Light" )
+                };
+
+                screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
+
+
+            //LOADING TILEMAP AND ZONES
+            {
+                //TODO textures should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
@@ -88,6 +127,15 @@ namespace GlobalWarmingGame
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
                 textureSet.Add("5", water);
 
+                tileSet = new TileSet(textureSet, new Vector2(16));
+                tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
+
+                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
+            }
+
+            //CREATING GAME 
+            {
+                //All this code below is for testing and will eventually be replaced.
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"interactables/colonist");
                 Texture2D farm = this.Content.Load<Texture2D>(@"interactables/farm");
@@ -95,23 +143,15 @@ namespace GlobalWarmingGame
                 Texture2D bushN = this.Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"interactables/rabbit");
 
-                tileSet = new TileSet(textureSet, new Vector2(16));
-                tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
-
-                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-
-
-                //ALL the Below code is testing
-                
                 var c1 = new Colonist(
-                    position:   new Vector2(25, 25),
+                    position: new Vector2(25, 25),
                     texture: colonist,
                     inventoryCapacity: 100f);
-                    
+
                 selectionManager.CurrentInstruction.ActiveMember = (c1);
-                
+
                 GameObjectManager.Add(c1);
-                
+
                 GameObjectManager.Add(new Colonist(
                     position: new Vector2(75, 75),
                     texture: colonist,
@@ -125,35 +165,31 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Farm(
                     position: new Vector2(128, 128),
                     texture: farm));
-                    
+
                 GameObjectManager.Add(new Bush(
                     position: new Vector2(256, 256),
                     harvestable: bushH,
                     harvested: bushN));
-                    
+
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
                     texture: rabbit));
-                    
-                //GameObjectManager.Add( new InteractableGameObject(
-                //    position: new Vector2(256, 256),
-                //     texture: bush,
-                //     new List<InstructionType>() { new InstructionType("pick", "Pick Berries", "Pick Berries from the bush", 1) }
-                //     );
-                //GameObjectManager.Add( new PassiveMovingGameObject(
-                //     position: new Vector2(575, 575),
-                //     texture: rabbit,
-                //     new List<InstructionType>() { new InstructionType("hunt", "Hunt Rabbit", "Pick Flesh from rabbit", 1) }
-                //     );
+
+                GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
+
+
+                //Comment out the line below to dissable FPS counter
+                GameObjectManager.Add(new DisplayLabel(new Vector2(100, 0), 0, "", _desktop, "lblPerf"));
                 
-                GameObjectManager.Add(new DisplayLabel(0, "Food", _desktop, "lblFood"));
             }
+ 
         }
 
         protected override void UnloadContent()
         {
 
         }
+        #endregion
 
         protected override void Update(GameTime gameTime)
         {
@@ -165,13 +201,15 @@ namespace GlobalWarmingGame
             {
                 camera.UpdateCamera();
                 
-                //TileMap.update is used to update the temperature of the tiles
                 tileMap.Update(gameTime);
                 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
+
+                //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
+                //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
                 base.Update(gameTime);
             }
@@ -185,13 +223,87 @@ namespace GlobalWarmingGame
 
                 previousKeyboardState = currentKeyboardState;
             }
+
+            peformanceMonitor.Update(gameTime);
+            foreach(DisplayLabel lbl in GameObjectManager.GetObjectsByTag("lblPerf"))
+            {
+                lbl.Message = "\n\n\n" + peformanceMonitor.GetPrintString();
+                
+            }
         }
 
+        #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
 
-            if (isPlaying)
+            //CALCULATE SHADOWS
+            foreach (Light light in lightObjects)
+            {
+                GraphicsDevice.SetRenderTarget(light.RenderTarget);
+                GraphicsDevice.Clear(Color.Transparent);
+                DrawShadowCasters(light);
+
+                shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.Position);
+            }
+
+            //DRAW LIGHTS
+            {
+                GraphicsDevice.SetRenderTarget(screenShadows);
+                GraphicsDevice.Clear(Color.Black);
+
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
+                foreach (Light light in lightObjects)
+                {
+                    light.Draw(spriteBatch);
+                }
+
+                
+                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth), Color.White);
+
+                spriteBatch.End();
+
+                GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.Clear(Color.Black);
+            }
+
+            //DRAW BACKGROUND
+            {
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.Deferred,
+                    blendState: BlendState.Opaque,
+                    samplerState: SamplerState.PointClamp,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: camera.Transform
+                );
+
+                tileMap.Draw(spriteBatch);
+
+                spriteBatch.End();
+            }
+
+            //DRAW SHADOWS
+            {
+                BlendState blendState = new BlendState()
+                {
+                    ColorSourceBlend = Blend.DestinationColor,
+                    ColorDestinationBlend = Blend.SourceColor
+                };
+
+                spriteBatch.Begin(
+                    sortMode: SpriteSortMode.Immediate,
+                    blendState: blendState,
+                    depthStencilState: null,
+                    rasterizerState: null,
+                    effect: null,
+                    transformMatrix: null
+                );
+                spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+                spriteBatch.End();
+            }
+
+            //DRAW FORGROUND
             {
                 spriteBatch.Begin(
                     sortMode: SpriteSortMode.FrontToBack,
@@ -203,19 +315,47 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                tileMap.Draw(spriteBatch);
-
                 foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
                     drawable.Draw(spriteBatch);
-
                 spriteBatch.End();
-
-                base.Draw(gameTime);
             }
 
-            _desktop.Render();
+            //DRAW UI
+            {
+                _desktop.Render();
+            }
+
+            base.Draw(gameTime);
+
         }
 
+        private void DrawShadowCasters(Light light)
+        {
+            Matrix transform = Matrix.CreateTranslation(
+                -light.Position.X + light.Radius,
+                -light.Position.Y + light.Radius,
+               0);
+
+            spriteBatch.Begin(
+                        sortMode: SpriteSortMode.Deferred,
+                        blendState: BlendState.AlphaBlend,
+                        samplerState: SamplerState.PointClamp,
+                        depthStencilState: DepthStencilState.Default,
+                        rasterizerState: RasterizerState.CullNone,
+                        effect: null,
+                        transformMatrix: transform
+                    );
+
+            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+            {
+                drawable.Draw(spriteBatch);
+            }
+
+            spriteBatch.End();
+        }
+        #endregion
+
+        #region Pause and Main Menu
         void ShowMainMenu()
         {
             if (!isPlaying)
@@ -281,5 +421,8 @@ namespace GlobalWarmingGame
             pauseMenu.PauseToMain.Selected += (s, a) => { isPlaying = false; ShowMainMenu(); };
             pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
         }
+
+
+        #endregion
     }
 }

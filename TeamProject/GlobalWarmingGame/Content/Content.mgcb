@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:interactables/rabbit.png
 
+#begin shaders/reductionEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/reductionEffect.fx
+
+#begin shaders/resolveShadowsEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/resolveShadowsEffect.fx
+
 #begin TestImage.png
 /importer:TextureImporter
 /processor:TextureProcessor
