@@ -34,7 +34,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(plant);
         }
 
-        public void Harvest(PathFindable findable)
+        public void Harvest(Colonist colonist)
         {
             //Harvest wheat
             ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 10;
@@ -42,12 +42,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(plant);
         }
 
-        public void Plant(PathFindable findable)
+        public void Plant(Colonist colonist)
         {
             //Plant wheat seeds
             InstructionTypes.Remove(plant);
-            Colonist c = (Colonist)findable;
-            c.Wait = true;
             growing = true;
         }
 

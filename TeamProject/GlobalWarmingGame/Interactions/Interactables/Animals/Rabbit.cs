@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt));
         }
 
-        public void Hunt(PathFindable pathFindable)
+        public void Hunt(Colonist colonist)
         {
             //This is tempory and should be replaced by the resource system
             ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 2;

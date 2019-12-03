@@ -46,7 +46,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 1), Forrage));
         }
 
-        public void Forrage(PathFindable findable)
+        public void Forrage(Colonist colonist)
         {
             //This is tempory and should be replaced by the resource system
             if(IsHarvestable)

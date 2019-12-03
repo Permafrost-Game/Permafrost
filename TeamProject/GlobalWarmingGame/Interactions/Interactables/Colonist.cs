@@ -19,7 +19,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public string Name { get; private set; }
         public float Health { get; private set; }
-        public bool Wait { get; set; } = false;
 
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (

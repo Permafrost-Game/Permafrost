@@ -27,11 +27,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("retrieve", "Retrieve", "Retrieve items", Retrieve));
         }
 
-        public void Store(PathFindable findable)
+        public void Store(Colonist colonist)
         {
 
         }
-        public void Retrieve(PathFindable findable)
+        public void Retrieve(Colonist colonist)
         {
 
         }

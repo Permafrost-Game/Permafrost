@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", ForgeItem));
         }
 
-        public void ForgeItem(PathFindable findable)
+        public void ForgeItem(Colonist colonist)
         {
             //Check colonist's inventory for iron
             //Force the colonist to wait at the station until job is done
