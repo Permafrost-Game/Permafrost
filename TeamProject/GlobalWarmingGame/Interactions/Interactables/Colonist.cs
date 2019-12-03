@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             tag: "Colonist",
             depth: 1f,
             texture: texture,
-            speed: 100f
+            speed: 0.5f
         )
         {
             Health = 10f;

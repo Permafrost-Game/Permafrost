@@ -42,7 +42,7 @@ namespace Engine
         private void ResetCamera()
         {
             this.Position = ClampSize / 2;
-            this.MovementSpeed = 5.0f;
+            this.MovementSpeed = 0.5f;
             this.ZoomSpeed = 0.1f;
             this.Zoom = 2.0f;
         }
@@ -54,7 +54,7 @@ namespace Engine
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            GetInput();
+            GetInput(gameTime);
 
             Vector2 clampSize = ClampSize;
             Zoom = MathHelper.Clamp(Zoom, 1f, 5.0f); // Clamps Zoom value
@@ -71,16 +71,16 @@ namespace Engine
         /// <summary>
         /// Fetches Mouse and Keyboard Input
         /// </summary>
-        private void GetInput()
+        private void GetInput(GameTime gameTime)
         {
-            GetMouseInput();
-            GetKeyboardInput();
+            GetMouseInput(gameTime);
+            GetKeyboardInput(gameTime);
         }
 
         /// <summary>
         /// Captures Mouse State, sets Zoom value according to the current Mouse Wheel value then updates said value
         /// </summary>
-        private void GetMouseInput()
+        private void GetMouseInput(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
 
@@ -100,28 +100,30 @@ namespace Engine
         /// <summary>
         /// Captures Keyboard State then updates the Viewport's Position based on fetched Input
         /// </summary>
-        private void GetKeyboardInput()
+        private void GetKeyboardInput(GameTime gameTime)
         {
             keyboardState = Keyboard.GetState();
 
+            float distance = MovementSpeed * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                _position.Y += MovementSpeed;
+                _position.Y += distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                _position.X += MovementSpeed;
+                _position.X += distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                _position.Y -= MovementSpeed;
+                _position.Y -= distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                _position.X -= MovementSpeed;
+                _position.X -= distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.R))
