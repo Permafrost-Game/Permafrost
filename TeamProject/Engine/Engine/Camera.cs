@@ -4,67 +4,68 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Engine
 {
-    public class Camera
+    public class Camera : IUpdatable
     {
-        protected Viewport _viewport;
-        protected Matrix _transform;
-        protected Matrix _inverseTransorm;
-        protected Vector2 _position;
-        protected float _zoom;
+       
+        protected Viewport viewport;
+        private MouseState mouseState;
+        private KeyboardState keyboardState;
+        private int scroll;
+        
 
-        protected MouseState _mouseState;
-        protected KeyboardState _keyboardState;
-        protected int _scroll;
+        public float MovementSpeed { get; set; }
+        public float ZoomSpeed { get; set; }
+        public Vector2 ClampSize { get; set; }
+        public Matrix Transform { get; set; }
+        public Matrix InverseTransform { get { return Matrix.Invert(Transform); } }
 
-        public Camera(Viewport viewport)
-        {
-            _viewport = viewport;
-            _position = Vector2.Zero;
-            _zoom = 2.0f;
-            _scroll = 1;
-        }
+        public float Zoom { get; set; }
 
 
-        public Matrix Transform
-        {
-            get { return _transform; }
-            set { _transform = value; }
-        }
-
-        public Matrix InverseTransform
-        {
-            get { return _inverseTransorm; }
-        }
-
+        private Vector2 _position;
         public Vector2 Position
         {
             get { return _position; }
             set { _position = value; }
         }
 
-        public float Zoom
+
+        public Camera(Viewport viewport, Vector2 clampSize)
         {
-            get { return _zoom; }
-            set { _zoom = value; }
+            this.viewport = viewport;
+            this.Position = Vector2.Zero;
+            this.scroll = 1;
+            this.ClampSize = clampSize;
+            ResetCamera();
         }
+
+        private void ResetCamera()
+        {
+            this.Position = ClampSize / 2;
+            this.MovementSpeed = 5.0f;
+            this.ZoomSpeed = 0.1f;
+            this.Zoom = 2.0f;
+        }
+
+        
 
         /// <summary>
         /// Fetches Input values and updates Transforms accordingly
         /// </summary>
-        public void UpdateCamera()
+        public void Update(GameTime gameTime)
         {
             GetInput();
 
-            _zoom = MathHelper.Clamp(_zoom, 0.5f, 4.0f); // Clamps Zoom value
-            _position.X = MathHelper.Clamp(_position.X, -400f, 400f); // Clamps camera position on X
-            _position.Y = MathHelper.Clamp(_position.Y, -400f, 400f); // Clamps camera position on Y
+            Vector2 clampSize = ClampSize;
+            Zoom = MathHelper.Clamp(Zoom, 1f, 5.0f); // Clamps Zoom value
+            _position.X = MathHelper.Clamp(Position.X, 0f, clampSize.X ); // Clamps camera position on X
+            _position.Y = MathHelper.Clamp(Position.Y, 0f, clampSize.Y ); // Clamps camera position on Y
 
-            _transform = Matrix.CreateTranslation(_position.X, _position.Y, 0) * // Main Translation Matrix
-                Matrix.CreateTranslation(-400, -400, 0) * // Tilemap Offset Matrix (Assumes the Tilemap is 50x50 @ 16p per tile, to be changed later)
-                Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) * // Scale Matrix
-                Matrix.CreateTranslation(new Vector3(_viewport.Width / 2, _viewport.Height / 2, 0)); // Origin Offset Matrix
+            Transform = Matrix.CreateTranslation(Position.X, Position.Y, 0) * // Main Translation Matrix
+                Matrix.CreateTranslation(-clampSize.X, -clampSize.Y, 0) *
+                Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) * // Scale Matrix
+                Matrix.CreateTranslation(new Vector3(viewport.Width / 2, viewport.Height / 2, 0)); // Origin Offset Matrix
 
-            _inverseTransorm = Matrix.Invert(_transform); // Inverse Transform Matrix
         }
 
         /// <summary>
@@ -81,18 +82,18 @@ namespace Engine
         /// </summary>
         private void GetMouseInput()
         {
-            _mouseState = Mouse.GetState();
+            mouseState = Mouse.GetState();
 
-            if (_mouseState.ScrollWheelValue > _scroll)
+            if (mouseState.ScrollWheelValue > scroll)
             {
-                _zoom += 0.1f;
-                _scroll = _mouseState.ScrollWheelValue;
+                Zoom += ZoomSpeed;
+                scroll = mouseState.ScrollWheelValue;
             }
 
-            if (_mouseState.ScrollWheelValue < _scroll)
+            if (mouseState.ScrollWheelValue < scroll)
             {
-                _zoom -= 0.1f;
-                _scroll = _mouseState.ScrollWheelValue;
+                Zoom -= ZoomSpeed;
+                scroll = mouseState.ScrollWheelValue;
             }
         }
 
@@ -101,26 +102,31 @@ namespace Engine
         /// </summary>
         private void GetKeyboardInput()
         {
-            _keyboardState = Keyboard.GetState();
+            keyboardState = Keyboard.GetState();
 
-            if (_keyboardState.IsKeyDown(Keys.W) || _keyboardState.IsKeyDown(Keys.Up))
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                _position.Y += 5.0f;
+                _position.Y += MovementSpeed;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.A) || _keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                _position.X += 5.0f;
+                _position.X += MovementSpeed;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.S) || _keyboardState.IsKeyDown(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                _position.Y -= 5.0f;
+                _position.Y -= MovementSpeed;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.D) || _keyboardState.IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                _position.X -= 5.0f;
+                _position.X -= MovementSpeed;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                ResetCamera();
             }
         }
     }

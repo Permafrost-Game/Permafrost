@@ -62,7 +62,7 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
-            camera = new Camera(GraphicsDevice.Viewport);
+            
             selectionManager = new SelectionManager();
             peformanceMonitor = new PeformanceMonitor();
 
@@ -85,8 +85,6 @@ namespace GlobalWarmingGame
 
                 _desktop = new Desktop();
                 MyraEnvironment.Game = this;
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
-
 
                 mainMenu = new MainMenu();
                 pauseMenu = new PauseMenu();
@@ -131,6 +129,8 @@ namespace GlobalWarmingGame
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
+                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
             }
 
             //CREATING GAME 
@@ -199,7 +199,7 @@ namespace GlobalWarmingGame
 
             if (!isPaused && isPlaying)
             {
-                camera.UpdateCamera();
+                camera.Update(gameTime);
                 
                 tileMap.Update(gameTime);
                 
