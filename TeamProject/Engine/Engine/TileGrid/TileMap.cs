@@ -13,12 +13,13 @@ namespace Engine.TileGrid
 
         public Tile[,] Tiles { get; }
 
-        private int timeUntilTempTick;
+        private float timeToTempTick;
+        private float timeUntilTempTick = 2000f;
 
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;
-            timeUntilTempTick = 2000;
+            timeToTempTick = timeUntilTempTick;
             Tiles[0, 0].temperature.Value = 50;
             Tiles[0, 0].Heated = true;
         }
@@ -56,13 +57,13 @@ namespace Engine.TileGrid
 
         public void Update(GameTime gameTime)
         {
-            timeUntilTempTick -= gameTime.ElapsedGameTime.Milliseconds;
+            timeToTempTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if ((timeUntilTempTick) <= 0)
+            if ((timeToTempTick) <= 0)
             {
                 foreach (Tile tile in Tiles)
                 {
-                    ///if tile is being heated by a structure
+                    //if tile is being heated by a structure
                     if (tile.Heated)
                     {
                         //Console.WriteLine(tile.temperature.Value);
@@ -80,7 +81,7 @@ namespace Engine.TileGrid
 
                     current.temperature.Value = (sumTemperature / (count));
 
-                    ///Try to lower/raise the temp to the global temp
+                    //Try to lower/raise the tile temp to the global temp
                     if (tile.temperature.Value < ZoneManager.GlobalTemperature)
                     {
                         float Temperature = tile.temperature.Value;
@@ -93,7 +94,7 @@ namespace Engine.TileGrid
                     }
                     //Console.WriteLine(tile.temperature.Value);
                 }
-                timeUntilTempTick = 2000;
+                timeToTempTick = timeUntilTempTick;
             }
         }
 

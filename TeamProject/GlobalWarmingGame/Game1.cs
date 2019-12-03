@@ -176,8 +176,7 @@ namespace GlobalWarmingGame
                 {
                     float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
                     float colonistTemp = colonist.Temperature.Value;
-
-                    //
+                    
                     if (colonistTemp > 50 || colonistTemp < -5)
                     {
                         colonist.Temperature.Value = MathHelper.Clamp(colonistTemp,-5,50);

@@ -89,7 +89,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
 
             //Temperature affecting food
-            timeUntillFoodTick -= gameTime.ElapsedGameTime.Milliseconds;
+            timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature.Value);
 
             if (foodFormula <= 0.25) 
@@ -105,7 +105,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
 
             //Temperature affecting colonist's health          
-            timeToTemperature -= gameTime.ElapsedGameTime.Milliseconds;
+            timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToTemperature < 0f)
             {
                 if (Temperature.Value < LowerComfortRange || Temperature.Value > UpperComfortRange) 
@@ -119,7 +119,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public void UpdateTemp(float tileTemp, GameTime gameTime)
         {
             //Adjust the colonist's temperature based on the tile they are over
-            timeToTemperatureUpdate -= gameTime.ElapsedGameTime.Milliseconds;
+            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToTemperatureUpdate < 0f) 
             {
                 Temperature.Value = Temperature.Value + (tileTemp / 8);
