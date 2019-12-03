@@ -7,29 +7,33 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Farm : InteractableGameObject
+    class StorageUnit : InteractableGameObject
     {
+        private Inventory inventory;
         
-
-        public Farm(Vector2 position, Texture2D texture) : base
+        public StorageUnit(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "Farm",
+            tag: "StorageUnit",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("harvest", "Harvest", "Harvest the farm", new ResourceItem(new Food(), 3), Harvest));
+            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
+            InstructionTypes.Add(new InstructionType("retrieve", "Retrieve", "Retrieve items", Retrieve));
         }
 
-        public void Harvest()
+        public void Store(PathFindable findable)
         {
-            //This is tempory and should be replaced by the resource system
-            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 3;
+
+        }
+        public void Retrieve(PathFindable findable)
+        {
+
         }
     }
 }

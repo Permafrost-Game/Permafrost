@@ -46,9 +46,12 @@
   <ItemGroup>
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
-    <Compile Include="Interactions\Interactables\Bush.cs" />
-    <Compile Include="Interactions\Interactables\Rabbit.cs" />
-    <Compile Include="Interactions\Interactables\Farm.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\Bush.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\Oven.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\Forge.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
+    <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="Action\SelectionInputMethod.cs" />
     <Compile Include="Action\SelectionManager.cs" />
     <Compile Include="Interactions\InteractableGameObject.cs" />

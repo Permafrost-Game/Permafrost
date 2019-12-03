@@ -19,13 +19,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public string Name { get; private set; }
         public float Health { get; private set; }
+        public bool Wait { get; set; } = false;
 
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0,0),
+            rotationOrigin: new Vector2(0, 0),
             tag: "Colonist",
             depth: 1f,
             texture: texture,
@@ -47,14 +48,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
 
         protected override void OnGoalComplete(Vector2 completedGoal)
-        {     
+        {
             if (instructions.Count > 0 &&
                 //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
                 completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Act();
+                currentInstruction.Type.Act(this);
 
                 if (currentInstruction.Type.ResourceItem != null)
                     Inventory.AddItem(currentInstruction.Type.ResourceItem);
@@ -62,12 +63,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Dequeue();
             }
         }
-            
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            if(goals.Count == 0 && instructions.Count > 0 )
+            if (goals.Count == 0 && instructions.Count > 0)
                 AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
         }
     }

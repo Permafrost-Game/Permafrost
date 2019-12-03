@@ -12,7 +12,7 @@ namespace GlobalWarmingGame.Action
         public string Description { get; }
         public ResourceItem ResourceItem { get; }
 
-        public delegate void Action();
+        public delegate void Action(PathFindable pathFindable);
         private readonly Action action;
 
         /// <summary>
@@ -40,11 +40,10 @@ namespace GlobalWarmingGame.Action
 
             this.action = action;
         }
-
-
-        public void Act()
+        
+        public void Act(PathFindable pathFindable)
         {
-            action();
+            action(pathFindable);
         }
 
         
