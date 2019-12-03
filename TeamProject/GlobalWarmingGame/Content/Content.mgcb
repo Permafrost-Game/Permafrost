@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin 00.csv
+/copy:00.csv
+
 #begin interactables/berrybush-harvestable.png
 /importer:TextureImporter
 /processor:TextureProcessor

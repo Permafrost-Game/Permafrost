@@ -40,8 +40,9 @@ namespace Engine.TileGrid
                 {
                     Vector2 position = new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y);
 
-                    Texture2D texture = tileSet.tileSetTextures[
-                        rows[y].Split(',')[x]
+                    string key = rows[y].Split(',')[x];
+                    Texture2D texture = tileSet.tileSetTextures[key
+
                         ];
                     //TODO this is test code below - walkable
                     tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("Non-Walkable"));

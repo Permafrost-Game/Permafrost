@@ -118,15 +118,15 @@ namespace GlobalWarmingGame
                 Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("0", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
-                textureSet.Add("5", water);
+                textureSet.Add("1", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
+                textureSet.Add("3", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
+                textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
+                textureSet.Add("5", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
+                textureSet.Add("6", water);
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
-                tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
+                tileMap = TileMapParser.parseTileMap(@"Content/00.csv", tileSet);
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
                 camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
@@ -257,9 +257,11 @@ namespace GlobalWarmingGame
                     light.Draw(spriteBatch);
                 }
 
-                
-                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferWidth), Color.White);
+                spriteBatch.End();
 
+
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+                spriteBatch.Draw(ambiantLight, new Rectangle(0,0,GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
 
                 GraphicsDevice.SetRenderTarget(null);
@@ -360,7 +362,7 @@ namespace GlobalWarmingGame
         {
             if (!isPlaying)
             {
-                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+                Point position = new Vector2(GraphicsDevice.Viewport.Width / 2 - 75f, GraphicsDevice.Viewport.Height / 2 - 50f).ToPoint();
                 mainMenu.DrawMainMenu(_desktop, position);
             }
         }
@@ -371,7 +373,7 @@ namespace GlobalWarmingGame
 
             if (isPaused)
             {
-                Point position = new Vector2(graphics.PreferredBackBufferWidth / 2 - 75f, graphics.PreferredBackBufferHeight / 2 - 50f).ToPoint();
+                Point position = new Vector2(GraphicsDevice.Viewport.Width / 2 - 75f, GraphicsDevice.Viewport.Height / 2 - 50f).ToPoint();
                 pauseMenu.DrawPauseMenu(_desktop, position);
             }
 
