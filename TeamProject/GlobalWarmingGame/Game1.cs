@@ -92,14 +92,14 @@ namespace GlobalWarmingGame
                 ambiantLight.SetData(new Color[] { Color.DimGray });
             }
 
-            //TEST CODE FOR LIGHTING
+            //LIGHTING
             {
                 quadRender = new QuadRenderComponent(this);
 
                 shadowmapResolver = new ShadowmapResolver(GraphicsDevice, quadRender, ShadowmapSize.Size256, ShadowmapSize.Size1024);
                 shadowmapResolver.LoadContent(Content);
 
-                lightObjects = new List<Light>()
+                lightObjects = new List<Light>() //This code will be replaced
                 {
                     //new Light(Vector2.Zero,         GraphicsDevice, 128f, new Color(201,226,255,32), "Light" ),
                     new Light(new Vector2(256,224), GraphicsDevice, 256f, new Color(255,0  ,0  ,255), "Light" ),
@@ -115,36 +115,38 @@ namespace GlobalWarmingGame
                 //TODO textures should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
-                Texture2D water = this.Content.Load<Texture2D>(@"tileset/test_tileset-1/water");
+                Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/error"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/dirt"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/grass"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/snow"));
-                textureSet.Add("5", this.Content.Load<Texture2D>(@"tileset/test_tileset-1/stone"));
+                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/dirt"));
+                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/grass"));
+                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/snow"));
+                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
                 textureSet.Add("6", water);
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
-                tileMap = TileMapParser.parseTileMap(@"Content/00.csv", tileSet);
+                //                                                  map0/00.csv  //50x50 tilemap
+                //                                                  map1/00.csv  //100x100 tilemap
+                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
                 camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
             }
 
-            //CREATING GAME 
+            //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                Texture2D colonist = this.Content.Load<Texture2D>(@"interactables/colonist");
-                Texture2D farm = this.Content.Load<Texture2D>(@"interactables/farm");
-                Texture2D bushH = this.Content.Load<Texture2D>(@"interactables/berrybush-harvestable");
-                Texture2D bushN = this.Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
-                Texture2D rabbit = this.Content.Load<Texture2D>(@"interactables/rabbit");
+                Texture2D colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
+                Texture2D farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
+                Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
+                Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
+                Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
 
                 var c1 = new Colonist(
-                    position: new Vector2(25, 25),
+                    position: new Vector2(480, 200),
                     texture: colonist,
                     inventoryCapacity: 100f);
 
@@ -153,7 +155,7 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(c1);
 
                 GameObjectManager.Add(new Colonist(
-                    position: new Vector2(75, 75),
+                    position: new Vector2(256, 512),
                     texture: colonist,
                     inventoryCapacity: 100f));
 
@@ -163,11 +165,11 @@ namespace GlobalWarmingGame
                     inventoryCapacity: 100f));
 
                 GameObjectManager.Add(new Farm(
-                    position: new Vector2(128, 128),
+                    position: new Vector2(256, 256),
                     texture: farm));
 
                 GameObjectManager.Add(new Bush(
-                    position: new Vector2(256, 256),
+                    position: new Vector2(512, 512),
                     harvestable: bushH,
                     harvested: bushN));
 
