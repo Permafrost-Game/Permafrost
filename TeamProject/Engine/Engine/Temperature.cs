@@ -9,22 +9,22 @@ namespace Engine
     /// </summary>
     public class Temperature
     {
-        private double value;
+        private float value;
 
-        public double Value
+        public float Value
         {
             get => value;
             set => SetTemp(value);
         }
 
-        public Temperature(double t) {
+        public Temperature(float t) {
             SetTemp(t);
         }
 
-        public void SetTemp(double temp)
+        public void SetTemp(float temp)
         {
-            value = MathHelper.Clamp((float)temp, -100, 100);
-            value = Math.Round(value, 2);
+            value = MathHelper.Clamp(temp, -100, 100);
+            value = (float)Math.Round(value, 2);
         }
 
     }

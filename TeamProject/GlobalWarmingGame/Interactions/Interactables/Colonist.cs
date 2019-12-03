@@ -21,13 +21,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public float Health { get; private set; }
         public Temperature Temperature { get; set; }
         public readonly Temperature CoreBodyTemperature = new Temperature(38);
-        private static readonly int Base_Consumption_Rate = 60000;
         public int UpperComfortRange { get; private set; } = 40;
         public int LowerComfortRange { get; private set; } = 15;
 
-        private int timeUntillFoodTick;
-        private int timeUntillTemperatureTick;
-        private int timeUntillTemperatureUpdateTick;
+        private static readonly float Base_Consumption_Rate = 60000f;
+        private float timeUntillFoodTick;
+        private float timeUntillTemperature = 2000f;
+        private float timeToTemperature;
+        private float timeUntilTemperatureUpdate = 2000f;
+        private float timeToTemperatureUpdate;
 
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
@@ -46,8 +48,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             Temperature = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;
-            timeUntillTemperatureTick = 2000;
-            timeUntillTemperatureUpdateTick = 2000;
+            timeToTemperature = timeUntillTemperature;
+            timeToTemperatureUpdate = timeUntilTemperatureUpdate;
 
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>
@@ -103,25 +105,25 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
 
             //Temperature affecting colonist's health          
-            timeUntillTemperatureTick -= gameTime.ElapsedGameTime.Milliseconds;
-            if (timeUntillTemperatureTick < 0)
+            timeToTemperature -= gameTime.ElapsedGameTime.Milliseconds;
+            if (timeToTemperature < 0f)
             {
-                if (!(Temperature.Value >= LowerComfortRange || Temperature.Value <= UpperComfortRange)) 
+                if (Temperature.Value < LowerComfortRange || Temperature.Value > UpperComfortRange) 
                 {
                     Health -= 1;                                    
                 }
-                timeUntillTemperatureTick = 2000;
+                timeToTemperature = timeUntillTemperature;
             }
         }
 
-        public void UpdateTemp(double tileTemp, GameTime gameTime)
+        public void UpdateTemp(float tileTemp, GameTime gameTime)
         {
             //Adjust the colonist's temperature based on the tile they are over
-            timeUntillTemperatureUpdateTick -= gameTime.ElapsedGameTime.Milliseconds;
-            if (timeUntillTemperatureUpdateTick < 0) 
+            timeToTemperatureUpdate -= gameTime.ElapsedGameTime.Milliseconds;
+            if (timeToTemperatureUpdate < 0f) 
             {
-                Temperature.Value = Temperature.Value + tileTemp / 8;
-                timeUntillTemperatureUpdateTick = 2000;
+                Temperature.Value = Temperature.Value + (tileTemp / 8);
+                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
 

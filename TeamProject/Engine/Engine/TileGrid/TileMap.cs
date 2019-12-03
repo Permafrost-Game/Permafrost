@@ -70,8 +70,8 @@ namespace Engine.TileGrid
                     }
 
                     Tile current = tile;
-                    double sumTemperature = current.temperature.Value;
-                    double count = 1;
+                    float sumTemperature = current.temperature.Value;
+                    float count = 1;
                     foreach (Tile adjT in AdjacentTiles(tile))
                     {
                         sumTemperature = sumTemperature + adjT.temperature.Value;
@@ -83,12 +83,12 @@ namespace Engine.TileGrid
                     ///Try to lower/raise the temp to the global temp
                     if (tile.temperature.Value < ZoneManager.GlobalTemperature)
                     {
-                        double Temperature = tile.temperature.Value;
+                        float Temperature = tile.temperature.Value;
                         tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
                     else if(tile.temperature.Value > ZoneManager.GlobalTemperature)
                     {
-                        double Temperature = tile.temperature.Value;
+                        float Temperature = tile.temperature.Value;
                         tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
                     //Console.WriteLine(tile.temperature.Value);

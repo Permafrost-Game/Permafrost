@@ -174,12 +174,13 @@ namespace GlobalWarmingGame
                 //Adjust the temperatures of the colonists
                 foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
                 {
-                    double tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
-                    double colonistTemp = colonist.Temperature.Value;
+                    float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                    float colonistTemp = colonist.Temperature.Value;
 
+                    //
                     if (colonistTemp > 50 || colonistTemp < -5)
                     {
-                        colonist.Temperature.Value = MathHelper.Clamp((float)colonistTemp,-5,50);
+                        colonist.Temperature.Value = MathHelper.Clamp(colonistTemp,-5,50);
                         continue;
                     }
 
