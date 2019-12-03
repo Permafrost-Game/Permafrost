@@ -37,6 +37,7 @@ namespace GlobalWarmingGame
 
         MainMenu MainMenu;
         PauseMenu PauseMenu;
+
         Texture2D logo;
 
         KeyboardState previousKeyboardState;
@@ -165,6 +166,9 @@ namespace GlobalWarmingGame
                 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
+
+                foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
+                    mouseInputMethod.Update(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
 

@@ -6,7 +6,6 @@ namespace Engine
 {
     public class Camera
     {
-        protected Viewport _viewport;
         protected Matrix _transform;
         protected Matrix _inverseTransorm;
         protected Vector2 _position;
@@ -16,14 +15,7 @@ namespace Engine
         protected KeyboardState _keyboardState;
         protected int _scroll;
 
-        public Camera(Viewport viewport)
-        {
-            _viewport = viewport;
-            _position = Vector2.Zero;
-            _zoom = 2.0f;
-            _scroll = 1;
-        }
-
+        public Viewport Viewport { get; private set; }
 
         public Matrix Transform
         {
@@ -48,6 +40,14 @@ namespace Engine
             set { _zoom = value; }
         }
 
+        public Camera(Viewport viewport)
+        {
+            Viewport = viewport;
+            _position = Vector2.Zero;
+            _zoom = 2.0f;
+            _scroll = 1;
+        }
+
         /// <summary>
         /// Fetches Input values and updates Transforms accordingly
         /// </summary>
@@ -62,7 +62,7 @@ namespace Engine
             _transform = Matrix.CreateTranslation(_position.X, _position.Y, 0) * // Main Translation Matrix
                 Matrix.CreateTranslation(-400, -400, 0) * // Tilemap Offset Matrix (Assumes the Tilemap is 50x50 @ 16p per tile, to be changed later)
                 Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) * // Scale Matrix
-                Matrix.CreateTranslation(new Vector3(_viewport.Width / 2, _viewport.Height / 2, 0)); // Origin Offset Matrix
+                Matrix.CreateTranslation(new Vector3(Viewport.Width / 2, Viewport.Height / 2, 0)); // Origin Offset Matrix
 
             _inverseTransorm = Matrix.Invert(_transform); // Inverse Transform Matrix
         }
