@@ -144,6 +144,8 @@ namespace GlobalWarmingGame
                 Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+                Texture2D tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
+                Texture2D treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
 
                 var c1 = new Colonist(
                     position: new Vector2(480, 200),
@@ -169,9 +171,14 @@ namespace GlobalWarmingGame
                     texture: farm));
 
                 GameObjectManager.Add(new Bush(
-                    position: new Vector2(512, 512),
+                    position: new Vector2(312, 512),
                     harvestable: bushH,
                     harvested: bushN));
+
+                GameObjectManager.Add(new Interactions.Interactables.Tree(
+                    position: new Vector2(312, 612),
+                    textureTree: tree,
+                    textureStump: treeStump));
 
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),

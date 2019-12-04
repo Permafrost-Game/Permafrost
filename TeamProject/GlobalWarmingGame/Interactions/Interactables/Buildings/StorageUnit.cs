@@ -24,16 +24,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
-            InstructionTypes.Add(new InstructionType("retrieve", "Retrieve", "Retrieve items", Retrieve));
         }
 
         public void Store(Colonist colonist)
         {
-
-        }
-        public void Retrieve(Colonist colonist)
-        {
-
+            //Open menu to either store or retrieve items
         }
     }
 }

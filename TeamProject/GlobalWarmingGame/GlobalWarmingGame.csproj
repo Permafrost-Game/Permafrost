@@ -46,7 +46,11 @@
   <ItemGroup>
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\Bush.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
+    <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
+    <Compile Include="Interactions\Interactables\Environment\StoneNode.cs" />
+    <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
+    <Compile Include="Interactions\Interactables\Environment\Bush.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Oven.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Forge.cs" />
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />

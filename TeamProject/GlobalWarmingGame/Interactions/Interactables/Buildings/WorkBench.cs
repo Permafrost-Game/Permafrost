@@ -7,26 +7,26 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Forge : InteractableGameObject
+    class WorkBench : InteractableGameObject
     {
         private Inventory inventory;
-        
-        public Forge(Vector2 position, Texture2D texture) : base
+
+        public WorkBench(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "Forge",
+            tag: "StorageUnit",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", ForgeItem));
+            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", CraftItem));
         }
 
-        public void ForgeItem(Colonist colonist)
+        public void CraftItem(Colonist colonist)
         {
             //Open craft menu
             //Force the colonist to wait at the station until job is done

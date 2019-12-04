@@ -7,31 +7,26 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Forge : InteractableGameObject
-    {
-        private Inventory inventory;
-        
-        public Forge(Vector2 position, Texture2D texture) : base
+    class CoalNode : InteractableGameObject
+    {        
+        public CoalNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "Forge",
+            tag: "CoalNode",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", ForgeItem));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", new ResourceItem(new Coal(), 5), Mine));
         }
 
-        public void ForgeItem(Colonist colonist)
+        public void Mine(Colonist colonist)
         {
-            //Open craft menu
-            //Force the colonist to wait at the station until job is done
+            //Maybe destory the node or allow 3 more mine operations
         }
-
-        //Other methods for selected crafting recipe
     }
 }
