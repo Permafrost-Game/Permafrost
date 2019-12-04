@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.UI;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -212,16 +213,9 @@ namespace GlobalWarmingGame
                 foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
                 {
                     float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
-                    float colonistTemp = colonist.Temperature.Value;
-
-                    if (colonistTemp > 50 || colonistTemp < -5)
-                    {
-                        colonist.Temperature.Value = MathHelper.Clamp(colonistTemp,-5,50);
-                        continue;
-                    }
 
                     colonist.UpdateTemp(tileTemp,gameTime);
-                    Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
+                    //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
                 }
 
                 CollectiveInventory.UpdateCollectiveInventory();

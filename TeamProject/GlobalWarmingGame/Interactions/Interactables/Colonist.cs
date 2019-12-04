@@ -19,8 +19,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public string Name { get; private set; }
         public float Health { get; private set; }
-        public Temperature Temperature { get; set; }
-        public readonly Temperature CoreBodyTemperature = new Temperature(38);
+        public Temperature Temperature { get; set; } = new Temperature(38);
+        private readonly float CoreBodyTemperature = 38;
         public int UpperComfortRange { get; private set; } = 40;
         public int LowerComfortRange { get; private set; } = 15;
 
@@ -45,8 +45,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             Health = 10f;
             Inventory = new Inventory(inventoryCapacity);
-
-            Temperature = CoreBodyTemperature;
+            Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;
             timeToTemperature = timeUntillTemperature;
             timeToTemperatureUpdate = timeUntilTemperatureUpdate;
@@ -90,7 +89,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             //Temperature affecting food
             timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature.Value);
+            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
 
             if (foodFormula <= 0.25) 
             {
@@ -122,7 +121,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToTemperatureUpdate < 0f) 
             {
-                Temperature.Value = Temperature.Value + (tileTemp / 8);
+                if (tileTemp > CoreBodyTemperature)
+                {
+                    Temperature.Value = Temperature.Value + (tileTemp / 8);
+                    Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
+                    Console.Out.WriteLine("Greater"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature);
+                }
+                else
+                {
+                    Temperature.Value = Temperature.Value + (tileTemp / 8);
+                    Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
+                    Console.Out.WriteLine("Lower"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature);
+                }
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
@@ -133,7 +143,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             ResourceItem food = new ResourceItem(new Food(), 1);
             if (!Inventory.RemoveItem(food))
             {
-                Health -= 1;           
+                Health -= 1;
+            }
+            else 
+            {
+                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
             }
         }
 

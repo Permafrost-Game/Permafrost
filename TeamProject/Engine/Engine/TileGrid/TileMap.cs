@@ -25,8 +25,8 @@ namespace Engine.TileGrid
         {
             this.Tiles = tiles;
             timeToTempTick = timeUntilTempTick;
-            Tiles[0, 0].temperature.Value = 50;
-            Tiles[0, 0].Heated = true;
+            Tiles[256/16, 512/16].temperature.Value = 50;
+            Tiles[256/16, 512/16].Heated = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
