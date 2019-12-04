@@ -56,9 +56,8 @@ namespace GlobalWarmingGame
                 if (path.Count != 0)
                 {
                     Vector2 direction = path.Peek() - Position;
-                    if (direction.Equals(Vector2.Zero))
+                    if (path.Peek().Equals(Position))
                     {
-                        this.Position += direction;
                         path.Dequeue();
 
                         if (path.Count == 0)
@@ -66,11 +65,13 @@ namespace GlobalWarmingGame
                             OnGoalComplete(this.goals.Dequeue());
                         }
                     }
-                    float speed = this.speed / (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                    float speed = this.speed * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     this.Position += new Vector2(
                             (direction.X < 0f ? Math.Max(-speed, direction.X) : Math.Min(+speed, direction.X)),
                             (direction.Y < 0f ? Math.Max(-speed, direction.Y) : Math.Min(+speed, direction.Y))
-                            );
+                           );
+
                 }
                 else
                 {

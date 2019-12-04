@@ -16,6 +16,11 @@ namespace Engine.TileGrid
         private float timeToTempTick;
         private float timeUntilTempTick = 2000f;
 
+        public Vector2 Size
+        {
+            get { return new Vector2(Tiles.GetLength(0), Tiles.GetLength(1)); }
+        }
+
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;

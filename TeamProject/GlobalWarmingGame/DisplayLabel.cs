@@ -13,7 +13,7 @@ namespace GlobalWarmingGame
         Label titleLabel = null;
 
         private Desktop desktop;
-        public DisplayLabel(int value, string message, Desktop desktop, string tag) : base (new Vector2(0), new Vector2(1), tag)
+        public DisplayLabel(Vector2 position, int value, string message, Desktop desktop, string tag) : base (position, new Vector2(1), tag)
         {
             Value = value;
             Message = message;
@@ -32,7 +32,7 @@ namespace GlobalWarmingGame
             {
                 Text = $"{Message} : {Value}",
                 HorizontalAlignment = HorizontalAlignment.Center,
-                TextColor = Color.HotPink
+                TextColor = Color.HotPink,
             };
 
             desktop.Widgets.Add(titleLabel);
