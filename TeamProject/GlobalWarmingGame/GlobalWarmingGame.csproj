@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
+    <Compile Include="Interactions\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Bush.cs" />
     <Compile Include="Interactions\Interactables\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Farm.cs" />

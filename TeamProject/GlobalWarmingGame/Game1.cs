@@ -2,6 +2,7 @@
 using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
@@ -176,6 +177,8 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
                     texture: rabbit));
+
+                SetBuildingTemperatures();
 
                 GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
 
@@ -428,5 +431,31 @@ namespace GlobalWarmingGame
 
 
         #endregion
+
+        private void SetBuildingTemperatures() 
+        {
+            foreach (IBuildable buildable in GameObjectManager.Buildable) 
+            {
+                double temperature = buildable.Temperature.Value;
+                Vector2 position = buildable.Position;
+                Vector2 size = buildable.Size;
+                GetBuildingArea(position, size, temperature);
+            }       
+        }
+
+        private List<Tile> GetBuildingArea(Vector2 position, Vector2 size, double temperature)
+        {
+            float tileWidth = tileMap.Tiles[0, 0].size.X;
+            int numberOfTiles = (int)((size.X / tileWidth) * (size.Y / tileWidth));
+
+            for (int i = 0; i < numberOfTiles; i++) 
+            {
+                Tile t = tileMap.Tiles[(int)(position.X/tileWidth),(int)(position.Y/tileWidth)];
+                t.temperature.SetTemp(temperature);
+                t.Heated = true;                
+            }
+
+            return null;        
+        }
     }
 }
