@@ -211,7 +211,7 @@ namespace GlobalWarmingGame
         {
             currentKeyboardState = Keyboard.GetState();
 
-            if (CheckKeypress(Keys.Escape))
+            if (CheckKeyPress(Keys.Escape))
             {
                 if (gameState == GameState.playing)
                     gameState = GameState.paused;
@@ -223,7 +223,7 @@ namespace GlobalWarmingGame
             previousKeyboardState = currentKeyboardState;
         }
 
-        bool CheckKeypress(Keys key)
+        bool CheckKeyPress(Keys key)
         {
             if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
                 return true;

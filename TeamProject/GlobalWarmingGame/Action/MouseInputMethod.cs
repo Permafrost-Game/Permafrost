@@ -23,7 +23,8 @@ namespace GlobalWarmingGame.Action
         readonly TileMap tileMap;
         Instruction currentInstruction;
 
-        MouseState mouseState;
+        MouseState currentMouseState;
+        MouseState previousMouseState;
 
         bool emptyTile;
 
@@ -48,12 +49,29 @@ namespace GlobalWarmingGame.Action
             Screen.OnClick = (Entity btn) => { OnClick(); };
         }
 
+        /*
+        currentKeyboardState = Keyboard.GetState();
+
+            if (CheckKeypress(Keys.Escape))
+            {
+                if (gameState == GameState.playing)
+                    gameState = GameState.paused;
+
+                else if (gameState == GameState.paused)
+                    gameState = GameState.playing;
+            }
+
+        previousKeyboardState = currentKeyboardState;
+        
+            
+             */
+
         void OnClick()
         {
             if (Menu != null)
                 Menu.Visible = false;
 
-            Vector2 positionClicked = Vector2.Transform(mouseState.Position.ToVector2(), camera.InverseTransform);
+            Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
 
             if (tileMap.GetTileAtPosition(positionClicked) == null)
                 emptyTile = true;
@@ -64,7 +82,7 @@ namespace GlobalWarmingGame.Action
             {
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
-                Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(mouseState.X, mouseState.Y));
+                Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
                 Screen.AddChild(Menu);
 
                 Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
@@ -114,7 +132,23 @@ namespace GlobalWarmingGame.Action
 
         public void Update(GameTime gameTime)
         {
-            mouseState = Mouse.GetState();
+            currentMouseState = Mouse.GetState();
+
+            if (CheckMouseClick())
+            {
+                if (Menu != null)
+                    Menu.Visible = false;
+            }
+
+            previousMouseState = currentMouseState;
+        }
+
+        bool CheckMouseClick()
+        {
+            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+                return true;
+
+            return false;
         }
     }
 }
