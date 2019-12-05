@@ -97,7 +97,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToTemperature < 0f)
             {
-                if (Temperature.Value < LowerComfortRange || Temperature.Value > UpperComfortRange)
+                if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
                 {
                     Health -= 1;
                 }
@@ -152,14 +152,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     Temperature.Value = Temperature.Value + (tileTemp / 10);
                     //Colonist's temperature should be able to be greater than the tile they are over
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                    Console.Out.WriteLine("Greater"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature);
+                    Console.Out.WriteLine("Greater"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 else
                 {
                     Temperature.Value = Temperature.Value - 1;
                     //Colonist's temperature should be able to be lower than the tile they are over
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                    Console.Out.WriteLine("Lower"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature);
+                    Console.Out.WriteLine("Lower"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
