@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using GeonBit.UI.Entities;
-
+using GeonBit.UI;
 
 namespace GlobalWarmingGame.Menus
 {
@@ -31,6 +31,8 @@ namespace GlobalWarmingGame.Menus
 
             MainToQuit = new Button("Quit", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 35));
             Menu.AddChild(MainToQuit);
+
+            UserInterface.Active.AddEntity(Menu);
         }
     }
 }

@@ -58,11 +58,9 @@
     <Compile Include="Action\MouseInputMethod.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
-    <Compile Include="Menus\BottomPanel.cs" />
     <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Menus\OptionsMenu.cs" />
+    <Compile Include="Menus\MainUI.cs" />
     <Compile Include="Menus\PauseMenu.cs" />
-    <Compile Include="Menus\TopPanel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathFindable.cs" />

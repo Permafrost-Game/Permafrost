@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
+using GeonBit.UI;
 using GeonBit.UI.Entities;
 
 namespace GlobalWarmingGame.Menus
@@ -39,6 +39,8 @@ namespace GlobalWarmingGame.Menus
             PauseToQuit = new Button("Quit to Desktop", ButtonSkin.Default, Anchor.Center, new Vector2(250, 50), new Vector2(0, 135));
             PauseToQuit.ButtonParagraph.Scale = 0.8f;
             Menu.AddChild(PauseToQuit);
+
+            UserInterface.Active.AddEntity(Menu);
         }
     }
 }

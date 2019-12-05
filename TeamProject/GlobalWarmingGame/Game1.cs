@@ -37,14 +37,15 @@ namespace GlobalWarmingGame
 
         MainMenu MainMenu;
         PauseMenu PauseMenu;
+        MainUI MainUI;
 
         Texture2D logo;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
-        bool isPaused;
-        bool isPlaying;
+        enum GameState { mainmenu, playing, paused }
+        GameState gameState;
 
         public Game1()
         {
@@ -58,6 +59,8 @@ namespace GlobalWarmingGame
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
+
+            gameState = GameState.mainmenu;
         }
 
         protected override void Initialize()
@@ -74,7 +77,6 @@ namespace GlobalWarmingGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             {
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, selectionManager.CurrentInstruction));
 
                 //TODO this code should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
@@ -102,8 +104,10 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
 
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction));
+
                 //ALL the Below code is testing
-                
+
                 var c1 = new Colonist(
                     position: new Vector2(25, 25),
                     texture: colonist,
@@ -138,32 +142,31 @@ namespace GlobalWarmingGame
 
                 MainMenu = new MainMenu(logo, new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
                 PauseMenu = new PauseMenu();
-
-                UserInterface.Active.AddEntity(MainMenu.Menu);
-                UserInterface.Active.AddEntity(PauseMenu.Menu);
+                MainUI = new MainUI();
 
                 PauseMenu.Menu.Visible = false;
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+
+                ProcessMenuSelection();
             }
-        }
-
-        protected override void UnloadContent()
-        {
-
         }
 
         protected override void Update(GameTime gameTime)
         {
             UserInterface.Active.Update(gameTime);
 
-            ProcessMenuSelection();
+            ShowMainMenu();
+            ShowPauseMenu();
+            ShowMainUI();
+            PauseGame();
 
-            if (!isPaused && isPlaying)
+            if (gameState == GameState.playing)
             {
                 camera.UpdateCamera();
-                
-                //TileMap.update is used to update the temperature of the tiles
+
                 tileMap.Update(gameTime);
-                
+
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
@@ -174,26 +177,12 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
-
-            if (isPlaying)
-            {
-                currentKeyboardState = Keyboard.GetState();
-
-                if (CheckKeypress(Keys.Escape))
-                {
-                    isPaused = !isPaused;
-                    ShowPauseMenu();
-                }
-
-                previousKeyboardState = currentKeyboardState;
-            }
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
-           // if (isPlaying)
             {
                 spriteBatch.Begin(
                     sortMode: SpriteSortMode.FrontToBack,
@@ -217,12 +206,23 @@ namespace GlobalWarmingGame
                 base.Draw(gameTime);
             }
         }
-        
-        /// <summary>
-        /// Checks if the currently released key had been pressed the previous frame
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+
+        void PauseGame()
+        {
+            currentKeyboardState = Keyboard.GetState();
+
+            if (CheckKeypress(Keys.Escape))
+            {
+                if (gameState == GameState.playing)
+                    gameState = GameState.paused;
+
+                else if (gameState == GameState.paused)
+                    gameState = GameState.playing;
+            }
+
+            previousKeyboardState = currentKeyboardState;
+        }
+
         bool CheckKeypress(Keys key)
         {
             if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
@@ -233,29 +233,56 @@ namespace GlobalWarmingGame
 
         void ShowMainMenu()
         {
-            isPlaying = false;
-            isPaused = false;
-
-            PauseMenu.Menu.Visible = false;
-            MainMenu.Menu.Visible = true;
+            if (gameState == GameState.mainmenu)
+            {
+                MainMenu.Menu.Visible = true;
+                PauseMenu.Menu.Visible = false;
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+            }
+                
+            else
+                MainMenu.Menu.Visible = false;
         }
 
         void ShowPauseMenu()
         {
-            if (isPaused)
+            if (gameState == GameState.paused)
+            {
+                MainMenu.Menu.Visible = false;
                 PauseMenu.Menu.Visible = true;
-
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+            }
+                    
             else
                 PauseMenu.Menu.Visible = false;
         }
 
+        void ShowMainUI()
+        {
+            if (gameState == GameState.playing)
+            {
+                MainMenu.Menu.Visible = false;
+                PauseMenu.Menu.Visible = false;
+                MainUI.TopPanel.Visible = true;
+                MainUI.BottomPanel.Visible = true;
+            }
+
+            else
+            {
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+            }   
+        }
+
         void ProcessMenuSelection()
         {
-            MainMenu.MainToGame.OnClick = (Entity button) => { MainMenu.Menu.Visible = false; isPaused = false; isPlaying = true; };
+            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
             MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
-            PauseMenu.PauseToGame.OnClick = (Entity button) => { isPaused = false; PauseMenu.Menu.Visible = false; };
-            PauseMenu.PauseToMain.OnClick = (Entity button) => { ShowMainMenu(); };
+            PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
+            PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
             PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
         }
     }
