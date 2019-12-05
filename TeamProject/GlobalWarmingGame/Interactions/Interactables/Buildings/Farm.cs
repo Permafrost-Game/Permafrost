@@ -1,6 +1,7 @@
 ﻿
 using Engine;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,8 +9,9 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Farm : InteractableGameObject, IUpdatable
+    class Farm : InteractableGameObject, IUpdatable, IBuildable
     {
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
         private InstructionType plant;
         private InstructionType harvest;
         private bool growing;
@@ -28,8 +30,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            plant = new InstructionType("plant", "Plant", "Plant wheat seeds", Plant);
-            harvest = new InstructionType("harvest", "Harvest", "Harvest the farm", new ResourceItem(new Food(), 10), Harvest);
+            plant = new InstructionType("plant", "Plant", "Plant", Plant);
+            harvest = new InstructionType("harvest", "Harvest", "Harvest", new ResourceItem(new Food(), 10), Harvest);
             timeUntilGrown = 20000f;
             InstructionTypes.Add(plant);
         }

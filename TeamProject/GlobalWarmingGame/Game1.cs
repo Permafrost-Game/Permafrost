@@ -230,6 +230,12 @@ namespace GlobalWarmingGame
                 if (CheckKeypress(Keys.Escape))
                     ShowPauseMenu();
 
+                if (CheckKeypress(Keys.NumPad1)) 
+                {
+
+                }
+
+
                 previousKeyboardState = currentKeyboardState;
             }
 

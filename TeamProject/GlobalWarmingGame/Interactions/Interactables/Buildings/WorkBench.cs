@@ -1,5 +1,6 @@
 ﻿
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,9 +8,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class WorkBench : InteractableGameObject
+    class WorkBench : InteractableGameObject, IBuildable
     {
         private Inventory inventory;
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
+                                                                                                   new ResourceItem(new Wood(), 8)};
 
         public WorkBench(Vector2 position, Texture2D texture) : base
         (
@@ -17,13 +20,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "StorageUnit",
+            tag: "WorkBench",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", CraftItem));
+            inventory = new Inventory(10);
+            InstructionTypes.Add(new InstructionType("craft", "Craft", "Craft items", CraftItem));
         }
 
         public void CraftItem(Colonist colonist)
