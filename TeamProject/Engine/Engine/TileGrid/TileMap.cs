@@ -13,7 +13,8 @@ namespace Engine.TileGrid
 
         public Tile[,] Tiles { get; }
 
-        private int timeUntilTempTick;
+        private float timeToTempTick;
+        private float timeUntilTempTick = 2000f;
 
         public Vector2 Size
         {
@@ -23,7 +24,7 @@ namespace Engine.TileGrid
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;
-            timeUntilTempTick = 2000;
+            timeToTempTick = timeUntilTempTick;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -59,13 +60,19 @@ namespace Engine.TileGrid
 
         public void Update(GameTime gameTime)
         {
-            timeUntilTempTick = timeUntilTempTick - gameTime.ElapsedGameTime.Milliseconds;
+            UpdateTilesTemperatures(gameTime);
+        }
 
-            if ((timeUntilTempTick) <= 0)
+        #region Update Tiles Temperature
+        private void UpdateTilesTemperatures(GameTime gameTime) 
+        {
+            timeToTempTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if ((timeToTempTick) <= 0)
             {
                 foreach (Tile tile in Tiles)
                 {
-                    ///if tile is being heated by a structure
+                    //if tile is being heated by a structure
                     if (tile.Heated)
                     {
                         //Console.WriteLine(tile.temperature.Value);
@@ -73,30 +80,30 @@ namespace Engine.TileGrid
                     }
 
                     Tile current = tile;
-                    double sumTemperature = current.temperature.Value;
-                    double count = 1;
+                    float sumTemperature = current.temperature.Value;
+                    float count = 1;
                     foreach (Tile adjT in AdjacentTiles(tile))
                     {
-                        sumTemperature = sumTemperature + adjT.temperature.Value;
+                        sumTemperature += adjT.temperature.Value;
                         count++;
                     }
 
                     current.temperature.Value = (sumTemperature / (count));
 
-                    ///Try to lower/raise the temp to the global temp
+                    //Try to lower/raise the tile temp to the global temp
                     if (tile.temperature.Value < ZoneManager.GlobalTemperature)
                     {
-                        double Temperature = tile.temperature.Value;
+                        float Temperature = tile.temperature.Value;
                         tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
-                    else if(tile.temperature.Value > ZoneManager.GlobalTemperature)
+                    else if (tile.temperature.Value > ZoneManager.GlobalTemperature)
                     {
-                        double Temperature = tile.temperature.Value;
+                        float Temperature = tile.temperature.Value;
                         tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
                     //Console.WriteLine(tile.temperature.Value);
                 }
-                timeUntilTempTick = 2000;
+                timeToTempTick = timeUntilTempTick;
             }
         }
 
@@ -139,5 +146,6 @@ namespace Engine.TileGrid
 
             return adjTiles;
         }
+        #endregion
     }
 }
