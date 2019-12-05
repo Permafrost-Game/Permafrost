@@ -78,7 +78,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (!_building)
                 {
-                    Console.WriteLine("he");
                     Instruction currentInstruction = instructions.Peek();
                     currentInstruction.Type.Act(this);
 
@@ -89,7 +88,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
                 else
                 {
-                    Console.WriteLine("build");
                     switch (buildingType)
                     {
                         case 0:
