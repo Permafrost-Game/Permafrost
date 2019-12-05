@@ -8,7 +8,8 @@ using Microsoft.Xna.Framework;
 
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-
+using Engine;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GlobalWarmingGame.Menus
 {
@@ -17,14 +18,56 @@ namespace GlobalWarmingGame.Menus
         public Panel TopPanel { get; private set; }
         public Panel BottomPanel { get; private set; }
 
+        string[] buildings = new string[5];
+
+        Icon[] itemSlots = new Icon[24];
+        bool open;
+
         public MainUI()
         {
-            TopPanel = new Panel(new Vector2(1000, 100), PanelSkin.Default, Anchor.TopCenter);
+            //Top Panel
+            TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Default, Anchor.TopCenter);
 
-            BottomPanel = new Panel(new Vector2(1000, 100), PanelSkin.Default, Anchor.BottomCenter);
+            DropDown buildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0,4), PanelSkin.ListBackground, PanelSkin.ListBackground, true);
+            buildMenu.DefaultText = "Buildings";
+            TopPanel.AddChild(buildMenu);
+            
+            //TODO Fix List not extending properly
+            for (int i = 0; i < buildings.Length; i++)
+            {
+                buildings[i] = "Building " + (i + 1);
+                buildMenu.AddItem(buildings[i]);
+            }
+
+            Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false, new Vector2(80, 0));
+            Label foodLabel = new Label("Food Counter", Anchor.CenterRight, new Vector2(100, 50));
+            TopPanel.AddChild(foodIcon);
+            TopPanel.AddChild(foodLabel);
 
             UserInterface.Active.AddEntity(TopPanel);
+
+            //Bottom Panel
+            BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Default, Anchor.BottomCenter);
+
+            Icon collectiveInventoryButton = new Icon(IconType.Sack, Anchor.CenterLeft, 1f, true);
+            BottomPanel.AddChild(collectiveInventoryButton);
+
+            Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Default, Anchor.TopLeft, new Vector2(-26, -426));
+            BottomPanel.AddChild(collectiveInventory);
+            collectiveInventory.Visible = open;
+
+            collectiveInventoryButton.OnClick = (Entity btn) => { open = !open; collectiveInventory.Visible = open; };
+
+            for (int i = 0; i < itemSlots.Length; i++)
+            {
+                itemSlots[i] = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
+                collectiveInventory.AddChild(itemSlots[i]);
+            }
+
             UserInterface.Active.AddEntity(BottomPanel);
+
+            TopPanel.Visible = false;
+            BottomPanel.Visible = false;
         }
     }
 }

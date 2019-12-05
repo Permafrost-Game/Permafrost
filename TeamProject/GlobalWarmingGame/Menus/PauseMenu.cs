@@ -41,6 +41,8 @@ namespace GlobalWarmingGame.Menus
             Menu.AddChild(PauseToQuit);
 
             UserInterface.Active.AddEntity(Menu);
+
+            Menu.Visible = false;
         }
     }
 }

@@ -49,27 +49,9 @@ namespace GlobalWarmingGame.Action
             Screen.OnClick = (Entity btn) => { OnClick(); };
         }
 
-        /*
-        currentKeyboardState = Keyboard.GetState();
-
-            if (CheckKeypress(Keys.Escape))
-            {
-                if (gameState == GameState.playing)
-                    gameState = GameState.paused;
-
-                else if (gameState == GameState.paused)
-                    gameState = GameState.playing;
-            }
-
-        previousKeyboardState = currentKeyboardState;
-        
-            
-             */
-
         void OnClick()
         {
-            if (Menu != null)
-                Menu.Visible = false;
+            Screen.ClearChildren();
 
             Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
 
@@ -92,7 +74,7 @@ namespace GlobalWarmingGame.Action
                 Button button1 = new Button("Move Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25));
                 button1.ButtonParagraph.Scale = 0.5f;
                 Menu.AddChild(button1);
-                button1.OnClick = (Entity btn) => { currentInstruction.ActiveMember.AddGoal(positionClicked); };
+                button1.OnClick = (Entity btn) => { currentInstruction.ActiveMember.AddGoal(positionClicked); Screen.ClearChildren(); };
 
                 if (objectClicked is IInteractable)
                 {
@@ -101,17 +83,14 @@ namespace GlobalWarmingGame.Action
                         Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                         button2.ButtonParagraph.Scale = 0.5f;
                         Menu.AddChild(button2);
-                        button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Menu.Visible = false; };
+                        button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Screen.ClearChildren(); };
                     }
                 }
 
                 Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
                 button3.ButtonParagraph.Scale = 0.5f;
                 Menu.AddChild(button3);
-                button3.OnClick = (Entity btn) => { Menu.Visible = false; };
-
-                if (!Menu.Visible)
-                    Menu.Visible = true;
+                button3.OnClick = (Entity btn) => { Screen.ClearChildren(); };
             }
         }
 
@@ -135,10 +114,7 @@ namespace GlobalWarmingGame.Action
             currentMouseState = Mouse.GetState();
 
             if (CheckMouseClick())
-            {
-                if (Menu != null)
-                    Menu.Visible = false;
-            }
+                Screen.ClearChildren();
 
             previousMouseState = currentMouseState;
         }

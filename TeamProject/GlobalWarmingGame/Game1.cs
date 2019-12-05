@@ -39,8 +39,6 @@ namespace GlobalWarmingGame
         PauseMenu PauseMenu;
         MainUI MainUI;
 
-        Texture2D logo;
-
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
@@ -97,7 +95,7 @@ namespace GlobalWarmingGame
                 Texture2D bushN = Content.Load<Texture2D>(@"interactables/berrybush-nonharvestable");
                 Texture2D rabbit = Content.Load<Texture2D>(@"interactables/rabbit");
 
-                logo = Content.Load<Texture2D>(@"logo");
+                Texture2D logo = Content.Load<Texture2D>(@"logo");
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 tileMap = TileMapParser.parseTileMap(@"Content/testmap.csv", tileSet);
@@ -140,13 +138,9 @@ namespace GlobalWarmingGame
                     position: new Vector2(575, 575),
                     texture: rabbit));
 
-                MainMenu = new MainMenu(logo, new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight));
+                MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
                 MainUI = new MainUI();
-
-                PauseMenu.Menu.Visible = false;
-                MainUI.TopPanel.Visible = false;
-                MainUI.BottomPanel.Visible = false;
 
                 ProcessMenuSelection();
             }
