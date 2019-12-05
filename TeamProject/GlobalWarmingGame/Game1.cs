@@ -432,6 +432,7 @@ namespace GlobalWarmingGame
 
         #endregion
 
+        #region Set Building Temperatures
         private void SetBuildingTemperatures() 
         {
             foreach (IBuildable buildable in GameObjectManager.Buildable) 
@@ -457,5 +458,6 @@ namespace GlobalWarmingGame
 
             return null;        
         }
+        #endregion
     }
 }
