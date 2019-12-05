@@ -209,14 +209,7 @@ namespace GlobalWarmingGame
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
-                //Adjust the temperatures of the colonists
-                foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
-                {
-                    float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
-
-                    colonist.UpdateTemp(tileTemp,gameTime);
-                    //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
-                }
+                UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
@@ -243,6 +236,20 @@ namespace GlobalWarmingGame
 
             }
         }
+
+        #region Update Colonists Temperatures
+        private void UpdateColonistTemperatures(GameTime gameTime)
+        {
+            //Adjust the temperatures of the colonists
+            foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
+            {
+                float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+
+                colonist.UpdateTemp(tileTemp, gameTime);
+                //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
+            }
+        }
+        #endregion
 
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)

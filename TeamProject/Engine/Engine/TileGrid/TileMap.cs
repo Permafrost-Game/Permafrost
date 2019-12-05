@@ -62,6 +62,12 @@ namespace Engine.TileGrid
 
         public void Update(GameTime gameTime)
         {
+            UpdateTilesTemperatures(gameTime);
+        }
+
+        #region Update Tiles Temperature
+        private void UpdateTilesTemperatures(GameTime gameTime) 
+        {
             timeToTempTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if ((timeToTempTick) <= 0)
@@ -92,7 +98,7 @@ namespace Engine.TileGrid
                         float Temperature = tile.temperature.Value;
                         tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
                     }
-                    else if(tile.temperature.Value > ZoneManager.GlobalTemperature)
+                    else if (tile.temperature.Value > ZoneManager.GlobalTemperature)
                     {
                         float Temperature = tile.temperature.Value;
                         tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
@@ -142,5 +148,6 @@ namespace Engine.TileGrid
 
             return adjTiles;
         }
+        #endregion
     }
 }
