@@ -454,14 +454,14 @@ namespace GlobalWarmingGame
         {
             foreach (IBuildable buildable in GameObjectManager.Buildable) 
             {
-                double temperature = buildable.Temperature.Value;
+                float temperature = buildable.Temperature.Value;
                 Vector2 position = buildable.Position;
                 Vector2 size = buildable.Size;
                 GetBuildingArea(position, size, temperature);
             }       
         }
 
-        private List<Tile> GetBuildingArea(Vector2 position, Vector2 size, double temperature)
+        private List<Tile> GetBuildingArea(Vector2 position, Vector2 size, float temperature)
         {
             float tileWidth = tileMap.Tiles[0, 0].size.X;
             int numberOfTiles = (int)((size.X / tileWidth) * (size.Y / tileWidth));
