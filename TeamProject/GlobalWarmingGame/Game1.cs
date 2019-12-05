@@ -10,12 +10,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.UI;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
     /// <summary>
-    /// This class is the main class for the games implemntation. 
+    /// This class is the main class for the games implemntation.
     /// </summary>
     public class Game1 : Game
     {
@@ -54,7 +55,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
                 PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
             };
-            
+
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
@@ -63,18 +64,18 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
-            
+
             selectionManager = new SelectionManager();
             peformanceMonitor = new PeformanceMonitor();
 
             this.IsMouseVisible = true;
-            
+
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
 
 
-            base.Initialize();     
+            base.Initialize();
         }
 
         #region Load Content
@@ -185,9 +186,9 @@ namespace GlobalWarmingGame
 
                 //Comment out the line below to dissable FPS counter
                 GameObjectManager.Add(new DisplayLabel(new Vector2(100, 0), 0, "", _desktop, "lblPerf"));
-                
+
             }
- 
+
         }
 
         protected override void UnloadContent()
@@ -205,11 +206,13 @@ namespace GlobalWarmingGame
             if (!isPaused && isPlaying)
             {
                 camera.Update(gameTime);
-                
+
                 tileMap.Update(gameTime);
-                
+
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
+
+                UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
@@ -218,7 +221,7 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
-            
+
             if (isPlaying)
             {
                 currentKeyboardState = Keyboard.GetState();
@@ -233,9 +236,23 @@ namespace GlobalWarmingGame
             foreach(DisplayLabel lbl in GameObjectManager.GetObjectsByTag("lblPerf"))
             {
                 lbl.Message = "\n\n\n" + peformanceMonitor.GetPrintString();
-                
+
             }
         }
+
+        #region Update Colonists Temperatures
+        private void UpdateColonistTemperatures(GameTime gameTime)
+        {
+            //Adjust the temperatures of the colonists
+            foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
+            {
+                float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+
+                colonist.UpdateTemp(tileTemp, gameTime);
+                //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
+            }
+        }
+        #endregion
 
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
