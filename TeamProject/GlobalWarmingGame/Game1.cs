@@ -47,6 +47,10 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
+        MouseInputMethod mouseInputMethod;
+
+        Texture2D farm;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -133,7 +137,8 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
                 camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
+                mouseInputMethod = new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction);
+                selectionManager.InputMethods.Add(mouseInputMethod);
             }
 
             //CREATING GAME OBJECTS
@@ -141,7 +146,7 @@ namespace GlobalWarmingGame
                 //All this code below is for testing and will eventually be replaced.
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
-                Texture2D farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
+                farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
@@ -167,9 +172,7 @@ namespace GlobalWarmingGame
                     texture: colonist,
                     inventoryCapacity: 100f));
 
-                GameObjectManager.Add(new Farm(
-                    position: new Vector2(256, 256),
-                    texture: farm));
+                GameObjectManager.Add(new Farm(position: new Vector2(256, 256), texture: farm));
 
                 GameObjectManager.Add(new Bush(
                     position: new Vector2(312, 512),
@@ -233,11 +236,17 @@ namespace GlobalWarmingGame
                 if (CheckKeypress(Keys.Escape))
                     ShowPauseMenu();
 
-                if (CheckKeypress(Keys.NumPad1)) 
+                if (CheckKeypress(Keys.NumPad0))
                 {
-
+                    mouseInputMethod.BuildingTexture = null;
+                    mouseInputMethod.BuildingType = 0;
                 }
 
+                if (CheckKeypress(Keys.NumPad1)) 
+                {
+                    mouseInputMethod.BuildingTexture = farm;
+                    mouseInputMethod.BuildingType = 1;
+                }
 
                 previousKeyboardState = currentKeyboardState;
             }

@@ -31,6 +31,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
 
+        private Texture2D buildingTexture;
+        private int buildingType;
+        private Vector2 buildingLocation;
+        private bool _building;
+
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
             position: position,
@@ -49,6 +54,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillFoodTick = Base_Consumption_Rate;
             timeToTemperature = timeUntillTemperature;
             timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+
+            _building = false;
 
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>
@@ -69,14 +76,48 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
-                Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Act(this);
+                if (!_building)
+                {
+                    Console.WriteLine("he");
+                    Instruction currentInstruction = instructions.Peek();
+                    currentInstruction.Type.Act(this);
 
-                if (currentInstruction.Type.ResourceItem != null)
-                    Inventory.AddItem(currentInstruction.Type.ResourceItem);
+                    if (currentInstruction.Type.ResourceItem != null)
+                        Inventory.AddItem(currentInstruction.Type.ResourceItem);
 
-                instructions.Dequeue();
+                    instructions.Dequeue();
+                }
+                else
+                {
+                    Console.WriteLine("build");
+                    switch (buildingType)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            Farm farm = new Farm(buildingLocation, buildingTexture);
+                            GameObjectManager.Add(farm);
+                            break;
+                    }
+
+                    instructions.Dequeue();
+                    _building = false;
+                }
             }
+        }
+
+        public void Build(Vector2 goal, Texture2D buildingTexture, int buildingType)
+        {
+            Instruction build = new Instruction(this)
+            {
+                PassiveMember = new InteractableGameObject(goal, buildingTexture, "building", null)
+            };
+            instructions.Enqueue(build);
+
+            this.buildingTexture = buildingTexture;
+            this.buildingType = buildingType;
+            buildingLocation = goal;
+            _building = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -106,7 +147,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
         #region Colonist Hunger Check
-        private void HungerCheck(GameTime gameTime) 
+        private void HungerCheck(GameTime gameTime)
         {
             //Temperature affecting food
             timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -144,7 +185,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             //Adjust the colonist's temperature based on the tile they are over
             timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperatureUpdate < 0f) 
+            if (timeToTemperatureUpdate < 0f)
             {
                 if (tileTemp > CoreBodyTemperature)
                 {
@@ -164,6 +205,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
         #endregion
-               
+
     }
 }

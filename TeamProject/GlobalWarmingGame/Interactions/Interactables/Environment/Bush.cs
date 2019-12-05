@@ -10,6 +10,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Bush : InteractableGameObject, IUpdatable
     {
+        private InstructionType forrage;
         private bool _isHarvestable;
 
         private float timeToHarvestable = 3000f;
@@ -39,11 +40,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>()
         )
         {
-            
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 1), Forrage);
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
-            InstructionTypes.Add(new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 1), Forrage));
+            InstructionTypes.Add(forrage);
         }
 
         public void Forrage(Colonist colonist)
@@ -53,6 +54,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 1;
                 IsHarvestable = false;
+                InstructionTypes.Remove(forrage);
                 timeUnitlHarvestable = timeToHarvestable;
             }
         }
@@ -64,8 +66,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 timeUnitlHarvestable -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (timeUnitlHarvestable <= 0f)
                 {
+                    InstructionTypes.Add(forrage);
                     IsHarvestable = true;
-                    
                 }
             }
             

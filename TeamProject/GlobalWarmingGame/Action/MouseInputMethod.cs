@@ -4,6 +4,7 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.UI;
@@ -21,6 +22,9 @@ namespace GlobalWarmingGame.Action
         private readonly Camera camera;
         private readonly Desktop desktop;
         private Instruction currentInstruction;
+
+        public Texture2D BuildingTexture { get; set; }
+        public int BuildingType { get; set; }
 
         /// <summary>
         /// Creates a new instance of the class
@@ -68,7 +72,7 @@ namespace GlobalWarmingGame.Action
             var verticalMenu = new VerticalMenu();
 
             //Menu Items
-            
+
             {
                 var moveMenuItem = new MenuItem()
                 {
@@ -94,11 +98,26 @@ namespace GlobalWarmingGame.Action
                         newMenuItem.Selected += (s, a) =>
                         {
                             UpdateInstruction(t, (IInteractable)objectClicked);
-                            
+
                         };
 
                         verticalMenu.Items.Add(newMenuItem);
                     }
+                }
+
+                if (BuildingTexture != null)
+                {
+                    var buildMenuItem = new MenuItem()
+                    {
+                        Id = "build",
+                        Text = "Build Here",
+                    };
+                    buildMenuItem.Selected += (s, a) =>
+                    {
+                        currentInstruction.ActiveMember.Build(clickPos, BuildingTexture, BuildingType);
+                    };
+
+                    verticalMenu.Items.Add(buildMenuItem);
                 }
 
                 verticalMenu.Items.Add(new MenuItem()
@@ -118,18 +137,19 @@ namespace GlobalWarmingGame.Action
             currentInstruction.Type = type;
 
 
-            if(interactable is Colonist && type.ID == "select")
+            if (interactable is Colonist && type.ID == "select")
             {
-                currentInstruction.ActiveMember = (Colonist) interactable;
-            } else
+                currentInstruction.ActiveMember = (Colonist)interactable;
+            }
+            else
             {
                 currentInstruction.PassiveMember = interactable;
                 currentInstruction.ActiveMember.AddInstruction(currentInstruction);
                 currentInstruction = new Instruction(currentInstruction.ActiveMember);
             }
 
-             
-            
+
+
         }
 
     }
