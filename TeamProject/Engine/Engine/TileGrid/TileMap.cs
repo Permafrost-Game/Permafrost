@@ -25,8 +25,6 @@ namespace Engine.TileGrid
         {
             this.Tiles = tiles;
             timeToTempTick = timeUntilTempTick;
-            Tiles[256/16, 512/16].temperature.Value = 50;
-            Tiles[256/16, 512/16].Heated = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -86,7 +84,7 @@ namespace Engine.TileGrid
                     float count = 1;
                     foreach (Tile adjT in AdjacentTiles(tile))
                     {
-                        sumTemperature = sumTemperature + adjT.temperature.Value;
+                        sumTemperature += adjT.temperature.Value;
                         count++;
                     }
 
