@@ -18,7 +18,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Menus;
-
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 
 namespace GlobalWarmingGame
 {
@@ -53,8 +53,6 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
-        MouseInputMethod mouseInputMethod;
-
         Texture2D farm;
 
         public Game1()
@@ -65,7 +63,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferHeight = 1080
             };
             
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -156,6 +154,15 @@ namespace GlobalWarmingGame
 
                 Texture2D logo = Content.Load<Texture2D>(@"logo");
 
+
+                Texture2D[] textureArray = new Texture2D[] { farm };
+                string[] stringArray = new string[] { "farm" };
+                for (int i = 0; i < textureArray.Length; i++) 
+                {
+                   BuildingManager.AddBuilding(i, stringArray[i], textureArray[i]);
+                }
+
+
                 var c1 = new Colonist(
                     position: new Vector2(480, 200),
                     texture: colonist,
@@ -242,18 +249,6 @@ namespace GlobalWarmingGame
                         gameState = GameState.paused;
                     else if (gameState == GameState.paused)
                         gameState = GameState.playing;
-                }
-
-                if (CheckKeyPress(Keys.NumPad0))
-                {
-                    mouseInputMethod.BuildingTexture = null;
-                    mouseInputMethod.BuildingType = 0;
-                }
-
-                if (CheckKeyPress(Keys.NumPad1))
-                {
-                    mouseInputMethod.BuildingTexture = farm;
-                    mouseInputMethod.BuildingType = 1;
                 }
 
                 previousKeyboardState = currentKeyboardState;
