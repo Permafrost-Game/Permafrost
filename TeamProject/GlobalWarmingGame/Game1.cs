@@ -246,8 +246,6 @@ namespace GlobalWarmingGame
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-            
-            /*
             //CALCULATE SHADOWS
             foreach (Light light in lightObjects)
             {
@@ -278,7 +276,7 @@ namespace GlobalWarmingGame
 
                 GraphicsDevice.SetRenderTarget(null);
                 GraphicsDevice.Clear(Color.Black);
-            }*/
+            }
 
             //DRAW BACKGROUND
             {
@@ -296,7 +294,7 @@ namespace GlobalWarmingGame
 
                 spriteBatch.End();
             }
-            /*
+
             //DRAW SHADOWS
             {
                 BlendState blendState = new BlendState()
@@ -315,7 +313,7 @@ namespace GlobalWarmingGame
                 );
                 spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
                 spriteBatch.End();
-            }*/
+            }
 
             //DRAW FORGROUND
             {
@@ -361,11 +359,7 @@ namespace GlobalWarmingGame
                 drawable.Draw(spriteBatch);
             }
 
-            
-
             spriteBatch.End();
-
-            
         }
         #endregion
 
