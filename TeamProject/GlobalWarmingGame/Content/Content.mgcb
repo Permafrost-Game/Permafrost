@@ -4781,7 +4781,121 @@
 /processor:PassThroughProcessor
 /build:GeonBit.UI/themes/lowres/ThemeData.xml
 
-#begin interactables/berrybush-harvestable.png
+#begin logo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:logo.png
+
+#begin maps/map0/00.csv
+/copy:maps/map0/00.csv
+
+#begin maps/map1/00.csv
+/copy:maps/map1/00.csv
+
+#begin maps/map1/01.csv
+/copy:maps/map1/01.csv
+
+#begin maps/map1/02.csv
+/copy:maps/map1/02.csv
+
+#begin maps/map1/10.csv
+/copy:maps/map1/10.csv
+
+#begin maps/map1/11.csv
+/copy:maps/map1/11.csv
+
+#begin maps/map1/12.csv
+/copy:maps/map1/12.csv
+
+#begin maps/map1/20.csv
+/copy:maps/map1/20.csv
+
+#begin maps/map1/21.csv
+/copy:maps/map1/21.csv
+
+#begin maps/map1/22.csv
+/copy:maps/map1/22.csv
+
+#begin shaders/reductionEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/reductionEffect.fx
+
+#begin shaders/resolveShadowsEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/resolveShadowsEffect.fx
+
+#begin textures/interactables/animals/colonist/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/sprite0.png
+
+#begin textures/interactables/animals/rabbit/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/rabbit/sprite0.png
+
+#begin textures/interactables/buildings/farm/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/farm/sprite0.png
+
+#begin textures/interactables/environment/berry_bush/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/berry_bush/sprite0.png
+
+#begin textures/interactables/environment/berry_bush/sprite1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/berry_bush/sprite1.png
+
+#begin textures/interactables/environment/berry_bush/sprite1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -4840,19 +4954,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/error.png
-
-
-#begin logo.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:logo.png
 
 #begin textures/tiles/main_tileset/grass.png
 /importer:TextureImporter

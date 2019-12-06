@@ -135,7 +135,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else
             {
-                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
+                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
             }
         }
         #endregion

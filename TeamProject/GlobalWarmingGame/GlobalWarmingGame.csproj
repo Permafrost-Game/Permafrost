@@ -150,9 +150,6 @@
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Bold.spritefont" />
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Italic.spritefont" />
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Regular.spritefont" />
-    <None Include="Content\testmap.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

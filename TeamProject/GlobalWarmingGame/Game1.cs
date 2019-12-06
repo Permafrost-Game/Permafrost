@@ -73,11 +73,7 @@ namespace GlobalWarmingGame
         {
             UserInterface.Initialize(Content, "hd");
 
-            camera = new Camera(GraphicsDevice.Viewport);
             selectionManager = new SelectionManager();
-            peformanceMonitor = new PeformanceMonitor();
-
-           
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
@@ -93,10 +89,6 @@ namespace GlobalWarmingGame
             //INITALISING GAME COMPONENTS
             {
                 spriteBatch = new SpriteBatch(GraphicsDevice);
-
-
-                mainMenu = new MainMenu();
-                pauseMenu = new PauseMenu();
                 ambiantLight = new Texture2D(GraphicsDevice, 1, 1);
                 ambiantLight.SetData(new Color[] { Color.DimGray });
             }
@@ -134,7 +126,7 @@ namespace GlobalWarmingGame
                 textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
                 textureSet.Add("6", water);
 
-                Texture2D logo = Content.Load<Texture2D>(@"logo");
+                
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 //                                                  map0/00.csv  //50x50 tilemap
@@ -155,6 +147,8 @@ namespace GlobalWarmingGame
                 Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+
+                Texture2D logo = Content.Load<Texture2D>(@"logo");
 
                 var c1 = new Colonist(
                     position: new Vector2(480, 200),
@@ -252,7 +246,8 @@ namespace GlobalWarmingGame
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-
+            
+            /*
             //CALCULATE SHADOWS
             foreach (Light light in lightObjects)
             {
@@ -283,7 +278,7 @@ namespace GlobalWarmingGame
 
                 GraphicsDevice.SetRenderTarget(null);
                 GraphicsDevice.Clear(Color.Black);
-            }
+            }*/
 
             //DRAW BACKGROUND
             {
@@ -301,7 +296,7 @@ namespace GlobalWarmingGame
 
                 spriteBatch.End();
             }
-
+            /*
             //DRAW SHADOWS
             {
                 BlendState blendState = new BlendState()
@@ -320,7 +315,7 @@ namespace GlobalWarmingGame
                 );
                 spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
                 spriteBatch.End();
-            }
+            }*/
 
             //DRAW FORGROUND
             {
@@ -339,13 +334,9 @@ namespace GlobalWarmingGame
                 spriteBatch.End();
             }
 
-            //DRAW UI
-            {
-                _desktop.Render();
-            }
+            UserInterface.Active.Draw(spriteBatch);
 
             base.Draw(gameTime);
-
         }
 
         private void DrawShadowCasters(Light light)
@@ -370,7 +361,11 @@ namespace GlobalWarmingGame
                 drawable.Draw(spriteBatch);
             }
 
+            
+
             spriteBatch.End();
+
+            
         }
         #endregion
 
@@ -452,8 +447,5 @@ namespace GlobalWarmingGame
             PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
             PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
         }
-
-
-        #endregion
     }
 }
