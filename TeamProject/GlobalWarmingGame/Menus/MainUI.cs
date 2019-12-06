@@ -10,6 +10,8 @@ using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Engine;
 using Microsoft.Xna.Framework.Graphics;
+using GlobalWarmingGame.Resources;
+using GlobalWarmingGame.ResourceItems;
 
 namespace GlobalWarmingGame.Menus
 {
@@ -19,6 +21,8 @@ namespace GlobalWarmingGame.Menus
         public Panel BottomPanel { get; private set; }
 
         string[] buildings = new string[5];
+
+        Label foodLabel;
 
         Icon[] itemSlots = new Icon[24];
         bool open;
@@ -40,7 +44,7 @@ namespace GlobalWarmingGame.Menus
             }
 
             Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false, new Vector2(80, 0));
-            Label foodLabel = new Label("Food Counter", Anchor.CenterRight, new Vector2(100, 50));
+            foodLabel = new Label("Food Counter", Anchor.CenterRight, new Vector2(100, 50));
             TopPanel.AddChild(foodIcon);
             TopPanel.AddChild(foodLabel);
 
@@ -68,6 +72,11 @@ namespace GlobalWarmingGame.Menus
 
             TopPanel.Visible = false;
             BottomPanel.Visible = false;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foodLabel.Text = CollectiveInventory.TotalFood.ToString();
         }
     }
 }

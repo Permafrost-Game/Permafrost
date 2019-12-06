@@ -26,9 +26,8 @@ namespace GlobalWarmingGame.Action
         MouseState currentMouseState;
         MouseState previousMouseState;
 
-        bool emptyTile;
-
-        public Panel Screen { get; private set; }
+        bool hovering;
+        
         public Panel Menu { get; private set; }
 
         /// <summary>
@@ -41,57 +40,62 @@ namespace GlobalWarmingGame.Action
             this.camera = camera;
             this.tileMap = tileMap;
             this.currentInstruction = currentInstruction;
-
-            Screen = new Panel(new Vector2(0,0), PanelSkin.None, Anchor.Center);
-
-            UserInterface.Active.AddEntity(Screen);
-
-            Screen.OnClick = (Entity btn) => { OnClick(); };
         }
 
         void OnClick()
         {
-            Screen.ClearChildren();
-
-            Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
-
-            if (tileMap.GetTileAtPosition(positionClicked) == null)
-                emptyTile = true;
-            else
-                emptyTile = false;
-
-            if (!emptyTile)
+            if (!hovering)
             {
+                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
+                Tile tileClicked = tileMap.GetTileAtPosition(positionClicked);
 
-                Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
-                Screen.AddChild(Menu);
-
-                Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
-                label.Scale = 0.7f;
-                Menu.AddChild(label);
-
-                Button button1 = new Button("Move Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25));
-                button1.ButtonParagraph.Scale = 0.5f;
-                Menu.AddChild(button1);
-                button1.OnClick = (Entity btn) => { currentInstruction.ActiveMember.AddGoal(positionClicked); Screen.ClearChildren(); };
-
-                if (objectClicked is IInteractable)
+                if (tileClicked != null)
                 {
-                    foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
-                    {
-                        Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        button2.ButtonParagraph.Scale = 0.5f;
-                        Menu.AddChild(button2);
-                        button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Screen.ClearChildren(); };
-                    }
-                }
+                    if (Menu != null && Menu.Visible == true)
+                        Menu.Visible = false;
 
-                Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
-                button3.ButtonParagraph.Scale = 0.5f;
-                Menu.AddChild(button3);
-                button3.OnClick = (Entity btn) => { Screen.ClearChildren(); };
+                    Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
+                    Menu.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
+                    UserInterface.Active.AddEntity(Menu);
+
+                    Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
+                    label.Scale = 0.7f;
+                    Menu.AddChild(label);
+
+                    Button button1 = new Button("Move Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25));
+                    button1.ButtonParagraph.Scale = 0.5f;
+                    Menu.AddChild(button1);
+                    button1.OnClick = (Entity btn) =>
+                    {
+                        if (objectClicked != null)
+                            currentInstruction.ActiveMember.AddGoal(objectClicked.Position);
+
+                        else
+                            currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
+
+                        Menu.Visible = false;
+                    };
+
+                    if (objectClicked is IInteractable)
+                    {
+                        foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
+                        {
+                            Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            button2.ButtonParagraph.Scale = 0.5f;
+                            Menu.AddChild(button2);
+                            button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Menu.Visible = false; };
+                        }
+                    }
+
+                    Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
+                    button3.ButtonParagraph.Scale = 0.5f;
+                    Menu.AddChild(button3);
+                    button3.OnClick = (Entity btn) => { Menu.Visible = false; };
+                }
             }
+            
+            hovering = false;
         }
 
         void UpdateInstruction(InstructionType type, IInteractable interactable)
@@ -113,18 +117,13 @@ namespace GlobalWarmingGame.Action
         {
             currentMouseState = Mouse.GetState();
 
-            if (CheckMouseClick())
-                Screen.ClearChildren();
+            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
+                OnClick();
+                
+            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+                Menu.Visible = false;    
 
             previousMouseState = currentMouseState;
-        }
-
-        bool CheckMouseClick()
-        {
-            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-                return true;
-
-            return false;
         }
     }
 }

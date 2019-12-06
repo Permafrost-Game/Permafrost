@@ -13,10 +13,11 @@ namespace GlobalWarmingGame.Resources
     static class CollectiveInventory
     {
         static List<GameObject> Colonists { get; set; }
-        static List<Inventory> ColonistInventories { get; set; }
+        public static List<Inventory> ColonistInventories { get; set; }
 
         public static float CollectiveCapacity { get; set; }
         public static float CollectiveCurrentLoad { get; set; }
+        public static int TotalFood { get; set; }
 
         static CollectiveInventory()
         {
@@ -28,6 +29,7 @@ namespace GlobalWarmingGame.Resources
 
         public static void BuildCollectiveInventory()
         {
+            TotalFood = 0;
             CollectiveCapacity = 0f;
             CollectiveCurrentLoad = 0f;
 
@@ -47,8 +49,17 @@ namespace GlobalWarmingGame.Resources
         {
             Colonists.Clear();
             ColonistInventories.Clear();
-
+            
             BuildCollectiveInventory();
+
+            foreach (Inventory inventory in ColonistInventories)
+            {
+                if (inventory.Resources.ContainsKey("food"))
+                {
+                    ResourceItem food = inventory.Resources["food"];
+                    TotalFood += food.Amount;
+                }
+            }
         }
     }
 }

@@ -167,6 +167,8 @@ namespace GlobalWarmingGame
                 foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
                     mouseInputMethod.Update(gameTime);
 
+                MainUI.Update(gameTime);
+
                 CollectiveInventory.UpdateCollectiveInventory();
 
                 base.Update(gameTime);
