@@ -40,6 +40,8 @@ namespace GlobalWarmingGame.Action
             this.camera = camera;
             this.tileMap = tileMap;
             this.currentInstruction = currentInstruction;
+
+            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
         }
 
         void OnClick()
@@ -56,7 +58,6 @@ namespace GlobalWarmingGame.Action
                         Menu.Visible = false;
 
                     Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
-                    Menu.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
                     UserInterface.Active.AddEntity(Menu);
 
                     Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
@@ -92,10 +93,8 @@ namespace GlobalWarmingGame.Action
                     button3.ButtonParagraph.Scale = 0.5f;
                     Menu.AddChild(button3);
                     button3.OnClick = (Entity btn) => { Menu.Visible = false; };
-                }
+                } 
             }
-            
-            hovering = false;
         }
 
         void UpdateInstruction(InstructionType type, IInteractable interactable)
@@ -119,7 +118,9 @@ namespace GlobalWarmingGame.Action
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
                 OnClick();
-                
+
+            hovering = false;
+
             if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
                 Menu.Visible = false;    
 
