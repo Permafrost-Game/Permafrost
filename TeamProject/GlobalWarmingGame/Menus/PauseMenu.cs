@@ -15,7 +15,10 @@ namespace GlobalWarmingGame.Menus
 
         public PauseMenu()
         {
-            Menu = new Panel(new Vector2(350, 450));
+            Menu = new Panel(new Vector2(350, 450), PanelSkin.Simple)
+            {
+                Opacity = 192
+            };
 
             Label label = new Label("Paused", Anchor.TopCenter)
             {

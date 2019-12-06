@@ -15,7 +15,7 @@ namespace GlobalWarmingGame.Menus
 
         public MainMenu(Texture2D texture)
         {
-            Menu = new Panel(new Vector2(0,0), PanelSkin.Default, Anchor.Center);
+            Menu = new Panel(new Vector2(0,0), PanelSkin.Simple, Anchor.Center);
 
             Panel frame = new Panel(new Vector2(400, 400), PanelSkin.Golden, Anchor.TopCenter, new Vector2(0, 35));
             Menu.AddChild(frame);

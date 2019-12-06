@@ -20,7 +20,7 @@ namespace GlobalWarmingGame.Menus
         public Panel TopPanel { get; private set; }
         public Panel BottomPanel { get; private set; }
 
-        string[] buildings = new string[5];
+        string[] buildings = new string[10];
 
         Label foodLabel;
 
@@ -30,39 +30,47 @@ namespace GlobalWarmingGame.Menus
         public MainUI()
         {
             //Top Panel
-            TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter);
-            TopPanel.Opacity = 192;
+            TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
+            {
+                Opacity = 192
+            };
 
-            DropDown buildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0,4), PanelSkin.ListBackground, PanelSkin.ListBackground, true);
-            buildMenu.DefaultText = "Buildings";
-            buildMenu.AutoSetListHeight = true;
+            DropDown buildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
+            {
+                DefaultText = "Buildings",
+                AutoSetListHeight = true
+            };
             TopPanel.AddChild(buildMenu);
             
-            //TODO Fix List not extending properly
             for (int i = 0; i < buildings.Length; i++)
             {
                 buildings[i] = "Building " + (i + 1);
                 buildMenu.AddItem(buildings[i]);
             }
 
-            Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false, new Vector2(80, 0));
-            foodLabel = new Label("Food Counter", Anchor.CenterRight, new Vector2(100, 50));
+            Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false);
             TopPanel.AddChild(foodIcon);
+            foodLabel = new Label("Food Counter", Anchor.CenterRight, null, new Vector2(75,0));
             TopPanel.AddChild(foodLabel);
 
             UserInterface.Active.AddEntity(TopPanel);
 
             //Bottom Panel
-            BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter);
-            BottomPanel.Opacity = 192;
+            BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter)
+            {
+                Opacity = 192
+            };
 
             Icon collectiveInventoryButton = new Icon(IconType.Sack, Anchor.CenterLeft, 1f, true);
             BottomPanel.AddChild(collectiveInventoryButton);
 
-            Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426));
-            collectiveInventory.Opacity = 192;
+            Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426))
+            {
+                Opacity = 192,
+                Visible = open
+            };
             BottomPanel.AddChild(collectiveInventory);
-            collectiveInventory.Visible = open;
+            
 
             collectiveInventoryButton.OnClick = (Entity btn) => { open = !open; collectiveInventory.Visible = open; };
 
