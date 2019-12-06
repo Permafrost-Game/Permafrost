@@ -30,10 +30,12 @@ namespace GlobalWarmingGame.Menus
         public MainUI()
         {
             //Top Panel
-            TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Default, Anchor.TopCenter);
+            TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter);
+            TopPanel.Opacity = 192;
 
             DropDown buildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0,4), PanelSkin.ListBackground, PanelSkin.ListBackground, true);
             buildMenu.DefaultText = "Buildings";
+            buildMenu.AutoSetListHeight = true;
             TopPanel.AddChild(buildMenu);
             
             //TODO Fix List not extending properly
@@ -51,12 +53,14 @@ namespace GlobalWarmingGame.Menus
             UserInterface.Active.AddEntity(TopPanel);
 
             //Bottom Panel
-            BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Default, Anchor.BottomCenter);
+            BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter);
+            BottomPanel.Opacity = 192;
 
             Icon collectiveInventoryButton = new Icon(IconType.Sack, Anchor.CenterLeft, 1f, true);
             BottomPanel.AddChild(collectiveInventoryButton);
 
-            Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Default, Anchor.TopLeft, new Vector2(-26, -426));
+            Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426));
+            collectiveInventory.Opacity = 192;
             BottomPanel.AddChild(collectiveInventory);
             collectiveInventory.Visible = open;
 
