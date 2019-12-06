@@ -24,7 +24,7 @@ namespace GlobalWarmingGame
         SelectionManager selectionManager;
 
         TileSet tileSet;
-        TileMap tileMap;
+        // TileMap tileMap;
 
         private Desktop _desktop;
 
@@ -129,10 +129,11 @@ namespace GlobalWarmingGame
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 //                                                  map0/00.csv  //50x50 tilemap
                 //                                                  map1/00.csv  //100x100 tilemap
-                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                //tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                GameObjectManager.Init(tileSet);
 
-                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
+                ZoneManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * 16f);
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
             }
 
@@ -200,11 +201,13 @@ namespace GlobalWarmingGame
             ProcessMenuSelection();
             SuspendContextMenuClick();
 
+            currentKeyboardState = Keyboard.GetState();
+
             if (!isPaused && isPlaying)
             {
                 camera.Update(gameTime);
 
-                tileMap.Update(gameTime);
+                GameObjectManager.ZoneMap.Update(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
@@ -219,14 +222,22 @@ namespace GlobalWarmingGame
                 base.Update(gameTime);
             }
 
+            if (!isPaused && isPlaying)
+            {
+                if (currentKeyboardState.IsKeyUp(Keys.I) && previousKeyboardState.IsKeyDown(Keys.I))
+                    GameObjectManager.MoveZone(new Vector2(0, 1));
+                else if (currentKeyboardState.IsKeyUp(Keys.K) && previousKeyboardState.IsKeyDown(Keys.K))
+                    GameObjectManager.MoveZone(new Vector2(0, -1));
+                else if (currentKeyboardState.IsKeyUp(Keys.L) && previousKeyboardState.IsKeyDown(Keys.L))
+                    GameObjectManager.MoveZone(new Vector2(1, 0));
+                else if (currentKeyboardState.IsKeyUp(Keys.J) && previousKeyboardState.IsKeyDown(Keys.J))
+                    GameObjectManager.MoveZone(new Vector2(-1, 0));
+            }
+
             if (isPlaying)
             {
-                currentKeyboardState = Keyboard.GetState();
-
                 if (CheckKeypress(Keys.Escape))
                     ShowPauseMenu();
-
-                previousKeyboardState = currentKeyboardState;
             }
 
             peformanceMonitor.Update(gameTime);
@@ -235,6 +246,8 @@ namespace GlobalWarmingGame
                 lbl.Message = "\n\n\n" + peformanceMonitor.GetPrintString();
 
             }
+
+            previousKeyboardState = currentKeyboardState;
         }
 
         #region Update Colonists Temperatures
@@ -243,7 +256,7 @@ namespace GlobalWarmingGame
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
             {
-                float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
                 colonist.UpdateTemp(tileTemp, gameTime);
                 //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
@@ -299,7 +312,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                tileMap.Draw(spriteBatch);
+                GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                 spriteBatch.End();
             }

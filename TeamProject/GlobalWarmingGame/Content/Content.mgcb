@@ -17,37 +17,31 @@
 /copy:maps/map0/00.csv
 
 #begin maps/map1/00.csv
-/copy:maps/map1/00.csv
+/copy:maps/map1/00.csv;maps/map1/0,0.csv
 
 #begin maps/map1/01.csv
-/copy:maps/map1/01.csv
+/copy:maps/map1/01.csv;maps/map1/0,1.csv
 
 #begin maps/map1/02.csv
-/copy:maps/map1/02.csv
+/copy:maps/map1/02.csv;maps/map1/0,2.csv
 
 #begin maps/map1/10.csv
-/copy:maps/map1/10.csv
+/copy:maps/map1/10.csv;maps/map1/1,0.csv
 
 #begin maps/map1/11.csv
-/copy:maps/map1/11.csv
+/copy:maps/map1/11.csv;maps/map1/1,1.csv
 
 #begin maps/map1/12.csv
-/copy:maps/map1/12.csv
+/copy:maps/map1/12.csv;maps/map1/1,2.csv
 
 #begin maps/map1/20.csv
-/copy:maps/map1/20.csv
+/copy:maps/map1/20.csv;maps/map1/2,0.csv
 
 #begin maps/map1/21.csv
-/copy:maps/map1/21.csv
+/copy:maps/map1/21.csv;maps/map1/2,1.csv
 
 #begin maps/map1/22.csv
-/copy:maps/map1/22.csv
-
-#begin shaders/reductionEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:shaders/reductionEffect.fx
+/copy:maps/map1/22.csv;maps/map1/2,2.csv
 
 #begin shaders/reductionEffect.fx
 /importer:EffectImporter
@@ -60,24 +54,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
-
-#begin shaders/resolveShadowsEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:shaders/resolveShadowsEffect.fx
-
-#begin textures/interactables/animals/colonist/sprite0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/interactables/animals/colonist/sprite0.png
 
 #begin textures/interactables/animals/colonist/sprite0.png
 /importer:TextureImporter
@@ -103,18 +79,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/animals/rabbit/sprite0.png
 
-#begin textures/interactables/animals/rabbit/sprite0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/interactables/animals/rabbit/sprite0.png
-
 #begin textures/interactables/buildings/farm/sprite0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -126,30 +90,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
-
-#begin textures/interactables/buildings/farm/sprite0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/interactables/buildings/farm/sprite0.png
-
-#begin textures/interactables/environment/berry_bush/sprite0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/interactables/environment/berry_bush/sprite0.png
 
 #begin textures/interactables/environment/berry_bush/sprite0.png
 /importer:TextureImporter
@@ -175,18 +115,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/berry_bush/sprite1.png
 
-#begin textures/interactables/environment/berry_bush/sprite1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/interactables/environment/berry_bush/sprite1.png
-
 #begin textures/tiles/main_tileset/dirt.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -198,30 +126,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/dirt.png
-
-#begin textures/tiles/main_tileset/dirt.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/dirt.png
-
-#begin textures/tiles/main_tileset/error.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/error.png
 
 #begin textures/tiles/main_tileset/error.png
 /importer:TextureImporter
@@ -247,30 +151,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/grass.png
 
-#begin textures/tiles/main_tileset/grass.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/grass.png
-
-#begin textures/tiles/main_tileset/snow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/snow.png
-
 #begin textures/tiles/main_tileset/snow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -294,30 +174,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/stone.png
-
-#begin textures/tiles/main_tileset/stone.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/stone.png
-
-#begin textures/tiles/main_tileset/water.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/water.png
 
 #begin textures/tiles/main_tileset/water.png
 /importer:TextureImporter
