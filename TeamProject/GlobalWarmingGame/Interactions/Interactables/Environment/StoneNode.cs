@@ -7,28 +7,26 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Farm : InteractableGameObject
-    {
-        
-
-        public Farm(Vector2 position, Texture2D texture) : base
+    class StoneNode : InteractableGameObject
+    {        
+        public StoneNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "Farm",
+            tag: "StoneNode",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("harvest", "Harvest", "Harvest the farm", new ResourceItem(new Food(), 3), Harvest));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 5), Mine));
         }
 
-        public void Harvest()
+        public void Mine(Colonist colonist)
         {
-            //This is tempory and should be replaced by the resource system
+            //Maybe destory the node or allow 3 more mine operations
         }
     }
 }

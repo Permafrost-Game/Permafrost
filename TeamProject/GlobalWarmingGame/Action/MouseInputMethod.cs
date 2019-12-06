@@ -30,6 +30,9 @@ namespace GlobalWarmingGame.Action
         
         public Panel Menu { get; private set; }
 
+        public Texture2D BuildingTexture { get; set; }
+        public int BuildingType { get; set; }
+
         /// <summary>
         /// Creates a new instance of the class
         /// </summary>
@@ -89,11 +92,26 @@ namespace GlobalWarmingGame.Action
                         }
                     }
 
-                    Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
-                    button3.ButtonParagraph.Scale = 0.5f;
-                    Menu.AddChild(button3);
-                    button3.OnClick = (Entity btn) => { Menu.Visible = false; };
-                } 
+                if (BuildingTexture != null)
+                {
+                    var buildMenuItem = new MenuItem()
+                    {
+                        Id = "build",
+                        Text = "Build Here",
+                    };
+                    buildMenuItem.Selected += (s, a) =>
+                    {
+                        currentInstruction.ActiveMember.Build(clickPos, BuildingTexture, BuildingType);
+                    };
+
+                    verticalMenu.Items.Add(buildMenuItem);
+                }
+
+                verticalMenu.Items.Add(new MenuItem()
+                {
+                    Id = "no",
+                    Text = "Do Nothing"
+                });
             }
         }
 

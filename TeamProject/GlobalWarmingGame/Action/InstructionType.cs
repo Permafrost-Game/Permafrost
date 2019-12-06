@@ -1,4 +1,5 @@
-﻿using GlobalWarmingGame.ResourceItems;
+﻿using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.ResourceItems;
 
 namespace GlobalWarmingGame.Action
 {
@@ -12,7 +13,7 @@ namespace GlobalWarmingGame.Action
         public string Description { get; }
         public ResourceItem ResourceItem { get; }
 
-        public delegate void Action();
+        public delegate void Action(Colonist colonist);
         private readonly Action action;
 
         /// <summary>
@@ -40,11 +41,10 @@ namespace GlobalWarmingGame.Action
 
             this.action = action;
         }
-
-
-        public void Act()
+        
+        public void Act(Colonist colonist)
         {
-            action();
+            action(colonist);
         }
 
         

@@ -4871,18 +4871,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
 
-#begin textures/interactables/environment/berry_bush/sprite0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/interactables/environment/berry_bush/sprite0.png
-
 #begin textures/interactables/environment/berry_bush/sprite1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4895,7 +4883,7 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/berry_bush/sprite1.png
 
-#begin textures/interactables/environment/berry_bush/sprite1.png
+#begin textures/interactables/environment/tree/sprite0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -4905,9 +4893,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/interactables/environment/berry_bush/sprite1.png
+/build:textures/interactables/environment/tree/sprite0.png
 
-#begin textures/tiles/main_tileset/dirt.png
+#begin textures/interactables/environment/tree/sprite2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -4917,7 +4905,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/dirt.png
+/build:textures/interactables/environment/tree/sprite2.png
 
 #begin textures/tiles/main_tileset/dirt.png
 /importer:TextureImporter
@@ -4943,30 +4931,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/error.png
 
-#begin textures/tiles/main_tileset/error.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/error.png
-
-#begin textures/tiles/main_tileset/grass.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/grass.png
-
 #begin textures/tiles/main_tileset/grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4991,18 +4955,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/snow.png
 
-#begin textures/tiles/main_tileset/snow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/snow.png
-
 #begin textures/tiles/main_tileset/stone.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5014,30 +4966,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/stone.png
-
-#begin textures/tiles/main_tileset/stone.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/stone.png
-
-#begin textures/tiles/main_tileset/water.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/water.png
 
 #begin textures/tiles/main_tileset/water.png
 /importer:TextureImporter

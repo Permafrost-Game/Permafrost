@@ -53,6 +53,10 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
+        MouseInputMethod mouseInputMethod;
+
+        Texture2D farm;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -143,10 +147,12 @@ namespace GlobalWarmingGame
                 //All this code below is for testing and will eventually be replaced.
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
-                Texture2D farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
+                farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+                Texture2D tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
+                Texture2D treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
 
                 Texture2D logo = Content.Load<Texture2D>(@"logo");
 
@@ -169,14 +175,17 @@ namespace GlobalWarmingGame
                     texture: colonist,
                     inventoryCapacity: 100f));
 
-                GameObjectManager.Add(new Farm(
-                    position: new Vector2(256, 256),
-                    texture: farm));
+                GameObjectManager.Add(new Farm(position: new Vector2(256, 256), texture: farm));
 
                 GameObjectManager.Add(new Bush(
-                    position: new Vector2(512, 512),
+                    position: new Vector2(312, 512),
                     harvestable: bushH,
                     harvested: bushN));
+
+                GameObjectManager.Add(new Interactions.Interactables.Tree(
+                    position: new Vector2(312, 612),
+                    textureTree: tree,
+                    textureStump: treeStump));
 
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
@@ -227,7 +236,28 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
-        }
+
+            if (isPlaying)
+            {
+                currentKeyboardState = Keyboard.GetState();
+
+                if (CheckKeypress(Keys.Escape))
+                    ShowPauseMenu();
+
+                if (CheckKeypress(Keys.NumPad0))
+                {
+                    mouseInputMethod.BuildingTexture = null;
+                    mouseInputMethod.BuildingType = 0;
+                }
+
+                if (CheckKeypress(Keys.NumPad1)) 
+                {
+                    mouseInputMethod.BuildingTexture = farm;
+                    mouseInputMethod.BuildingType = 1;
+                }
+
+                previousKeyboardState = currentKeyboardState;
+            }
 
         #region Update Colonists Temperatures
         private void UpdateColonistTemperatures(GameTime gameTime)

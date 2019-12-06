@@ -1,5 +1,4 @@
 ﻿
-using Engine;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
@@ -8,27 +7,26 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Rabbit : PassiveMovingGameObject
-    {
-        public Rabbit(Vector2 position, Texture2D texture) : base
+    class CoalNode : InteractableGameObject
+    {        
+        public CoalNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "Rabbit",
-            depth: 0.9f,
+            tag: "CoalNode",
+            depth: 0.7f,
             texture: texture,
-            instructionTypes: new List<InstructionType>(),
-            speed: 0.05f
+            instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", new ResourceItem(new Coal(), 5), Mine));
         }
 
-        public void Hunt()
+        public void Mine(Colonist colonist)
         {
-            GameObjectManager.Remove(this);
+            //Maybe destory the node or allow 3 more mine operations
         }
     }
 }
