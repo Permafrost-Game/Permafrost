@@ -28,6 +28,8 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns></returns>
         public bool AddItem(ResourceItem item)
         {
+            item = item.Clone();
+
             CheckWeightLimit();
 
             if (!IsFull)
@@ -39,8 +41,6 @@ namespace GlobalWarmingGame.ResourceItems
                     Resources.Add(item.Type.ID, item);
                     
                 CurrentLoad += item.Type.Weight * item.Amount;
-
-                Console.WriteLine("CURRENTLY HAVE: " + Resources[item.Type.ID].Amount);
             }
 
             return false;
