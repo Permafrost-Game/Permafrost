@@ -45,9 +45,7 @@ namespace GlobalWarmingGame.Action
         public void Act(Colonist colonist)
         {
             action(colonist);
-        }
-
-        
+        }   
     }
 }
 

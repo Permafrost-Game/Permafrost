@@ -39,7 +39,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public void Harvest(Colonist colonist)
         {
             //Harvest wheat
-            ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value += 10;
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }

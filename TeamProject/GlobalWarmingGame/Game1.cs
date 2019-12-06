@@ -234,33 +234,36 @@ namespace GlobalWarmingGame
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
-                base.Update(gameTime);
-            }
-
-            if (isPlaying)
-            {
                 currentKeyboardState = Keyboard.GetState();
 
-                if (CheckKeypress(Keys.Escape))
-                    ShowPauseMenu();
+                if (CheckKeyPress(Keys.Escape))
+                {
+                    if (gameState == GameState.playing)
+                        gameState = GameState.paused;
+                    else if (gameState == GameState.paused)
+                        gameState = GameState.playing;
+                }
 
-                if (CheckKeypress(Keys.NumPad0))
+                if (CheckKeyPress(Keys.NumPad0))
                 {
                     mouseInputMethod.BuildingTexture = null;
                     mouseInputMethod.BuildingType = 0;
                 }
 
-                if (CheckKeypress(Keys.NumPad1)) 
+                if (CheckKeyPress(Keys.NumPad1))
                 {
                     mouseInputMethod.BuildingTexture = farm;
                     mouseInputMethod.BuildingType = 1;
                 }
 
                 previousKeyboardState = currentKeyboardState;
+
+                base.Update(gameTime);
             }
+        }
 
         #region Update Colonists Temperatures
-        private void UpdateColonistTemperatures(GameTime gameTime)
+        void UpdateColonistTemperatures(GameTime gameTime)
         {
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))

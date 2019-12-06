@@ -9,7 +9,7 @@ using GlobalWarmingGame.Interactions.Interactables;
 
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GlobalWarmingGame.Action
 {
@@ -27,7 +27,7 @@ namespace GlobalWarmingGame.Action
         MouseState previousMouseState;
 
         bool hovering;
-        
+
         public Panel Menu { get; private set; }
 
         public Texture2D BuildingTexture { get; set; }
@@ -75,6 +75,9 @@ namespace GlobalWarmingGame.Action
                         if (objectClicked != null)
                             currentInstruction.ActiveMember.AddGoal(objectClicked.Position);
 
+                        else if (BuildingTexture != null)
+                            currentInstruction.ActiveMember.Build(tileClicked.Position, BuildingTexture, BuildingType);
+
                         else
                             currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
 
@@ -92,27 +95,12 @@ namespace GlobalWarmingGame.Action
                         }
                     }
 
-                if (BuildingTexture != null)
-                {
-                    var buildMenuItem = new MenuItem()
-                    {
-                        Id = "build",
-                        Text = "Build Here",
-                    };
-                    buildMenuItem.Selected += (s, a) =>
-                    {
-                        currentInstruction.ActiveMember.Build(clickPos, BuildingTexture, BuildingType);
-                    };
-
-                    verticalMenu.Items.Add(buildMenuItem);
+                    Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
+                    button3.ButtonParagraph.Scale = 0.5f;
+                    Menu.AddChild(button3);
+                    button3.OnClick = (Entity btn) => { Menu.Visible = false; };
                 }
-
-                verticalMenu.Items.Add(new MenuItem()
-                {
-                    Id = "no",
-                    Text = "Do Nothing"
-                });
-            }
+            }   
         }
 
         void UpdateInstruction(InstructionType type, IInteractable interactable)
@@ -140,9 +128,10 @@ namespace GlobalWarmingGame.Action
             hovering = false;
 
             if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-                Menu.Visible = false;    
+                Menu.Visible = false;
 
             previousMouseState = currentMouseState;
         }
     }
 }
+
