@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using System.Collections.Generic;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Menus;
 
 namespace GlobalWarmingGame.Action
 {
@@ -26,13 +27,15 @@ namespace GlobalWarmingGame.Action
         readonly TileMap tileMap;
         Instruction currentInstruction;
 
+        MainUI mainUI;
+
         MouseState currentMouseState;
         MouseState previousMouseState;
 
         KeyboardState currentKeyboardState;
         KeyboardState previousKeyboardState;
 
-        bool buildingSelected;
+        public bool buildingSelected;
         int buildingId;
 
         bool hovering;
@@ -44,11 +47,12 @@ namespace GlobalWarmingGame.Action
         /// </summary>
         /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
         /// <param name="currentInstruction">The current instruction</param>
-        public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction)
+        public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction, MainUI mainUI)
         {
             this.camera = camera;
             this.tileMap = tileMap;
             this.currentInstruction = currentInstruction;
+            this.mainUI = mainUI;
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
         }
 
@@ -120,7 +124,7 @@ namespace GlobalWarmingGame.Action
             }   
         }
 
-        private void PlaceBuilding(Tile tileClicked) 
+        void PlaceBuilding(Tile tileClicked) 
         {
             Colonist colonist = currentInstruction.ActiveMember;
             Building buildingDetails = BuildingManager.GetTextureByID(buildingId);
@@ -167,17 +171,20 @@ namespace GlobalWarmingGame.Action
 
             hovering = false;
 
-            if (CheckKeyPress(Keys.NumPad0))
+            mainUI.BuildMenu.OnValueChange = (Entity e) =>
             {
-                buildingSelected = false;
-                buildingId = 0;
-            }
-
-            if (CheckKeyPress(Keys.NumPad1))
-            {
-                buildingSelected = true;
-                buildingId = 1;
-            }
+                switch (mainUI.BuildMenu.SelectedIndex)
+                {
+                    case 0:
+                        buildingSelected = false;
+                        buildingId = 0;
+                        break;
+                    case 1:
+                        buildingSelected = true;
+                        buildingId = 1;
+                        break;
+                }
+            };
 
             if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
                 Menu.Visible = false;
@@ -185,15 +192,6 @@ namespace GlobalWarmingGame.Action
             previousMouseState = currentMouseState;
             previousKeyboardState = currentKeyboardState;
         }
-
-        bool CheckKeyPress(Keys key)
-        {
-            if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
-                return true;
-
-            return false;
-        }
-
     }
 }
 

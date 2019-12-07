@@ -59,8 +59,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
             };
             
             graphics.IsFullScreen = false;
@@ -137,7 +137,6 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
                 camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction));
             }
 
             //CREATING GAME OBJECTS
@@ -202,6 +201,8 @@ namespace GlobalWarmingGame
                 PauseMenu = new PauseMenu();
                 MainUI = new MainUI();
 
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction, MainUI));
+
                 ProcessMenuSelection();
             }
         }
@@ -240,18 +241,6 @@ namespace GlobalWarmingGame
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
-
-                currentKeyboardState = Keyboard.GetState();
-
-                if (CheckKeyPress(Keys.Escape))
-                {
-                    if (gameState == GameState.playing)
-                        gameState = GameState.paused;
-                    else if (gameState == GameState.paused)
-                        gameState = GameState.playing;
-                }
-
-                previousKeyboardState = currentKeyboardState;
 
                 base.Update(gameTime);
             }
