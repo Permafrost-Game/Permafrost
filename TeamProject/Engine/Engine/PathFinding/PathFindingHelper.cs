@@ -6,9 +6,22 @@ using System.Linq;
 
 namespace Engine.PathFinding
 {
+    /// <summary>
+    /// This class is class should be used by <see cref="IPathFindable"/> objects to calculate moves
+    /// </summary>
     public static class PathFindingHelper
     {
 
+        /// <summary>
+        /// Calculates the translation that the <paramref name="pathFindable"/> should make given its <see cref="IPathFindable.Path"/>
+        /// </summary>
+        /// <param name="gameTime">the current <see cref="GameTime"/></param>
+        /// <param name="pathFindable">the <param cref="IPathFindable"/> <see cref="GameObject"/></param>
+        /// <returns>Returns the <see cref="Vector2"/> translation that is <paramref name="pathFindable"/> next move</returns>
+        /// <example>
+        ///     In the <see cref="IUpdatable.Update(GameTime)"/> method in a class that inherits from <see cref="Engine.GameObject"/> and implements <see cref="IPathFindable"/> and <see cref="IUpdatable"/><br/>
+        ///     <c>this.position += CalculateNextMove(gameTime, this);</c>
+        /// </example>
         public static Vector2 CalculateNextMove(GameTime gameTime, IPathFindable pathFindable)
         {
             if (pathFindable.Goals.Count != 0)
@@ -48,6 +61,7 @@ namespace Engine.PathFinding
             }
             return Vector2.Zero;
         }
+
 
         private static Queue<Tile> EnqueueNextPath(IPathFindable pathFindable)
         {

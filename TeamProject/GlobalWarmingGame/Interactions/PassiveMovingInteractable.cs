@@ -40,8 +40,6 @@ namespace GlobalWarmingGame.Interactions
             Rand = new Random();
             NearMoves = 0;
             offset = texture.Width;
-            xDirections = new float[] { offset, -offset, 0, 0, offset, -offset, offset, -offset };
-            yDirections = new float[] { 0, 0, offset, -offset, offset, offset, -offset, -offset };
 
             this.Health = 1f;
             this.InstructionTypes = instructionTypes;
@@ -68,17 +66,21 @@ namespace GlobalWarmingGame.Interactions
 
         private void MoveAround(float multiplier)
         {
-            int i = Rand.Next(8);
+
+            float x = Rand.Next(-1, 2) * offset;
+            float y = Rand.Next(-1, 2) * offset;
 
             Vector2 v = new Vector2
             {
-                X = Position.X + xDirections[i] * multiplier,
-                Y = Position.Y + yDirections[i] * multiplier
+                X = Position.X + x * multiplier,
+                Y = Position.Y + y * multiplier
             };
-            
+
+
             NearMoves++;
             Goals.Enqueue(v);
         }
+
 
         public void Update(GameTime gameTime)
         {
