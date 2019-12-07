@@ -166,17 +166,17 @@ namespace GlobalWarmingGame
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(480, 200), texture: colonist, inventoryCapacity: 100f);
+                Vector2 position = camera.Position;
+                var c1 = new Colonist(position: position, texture: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[6];
+                string[] spawnables = new string[5];
                 spawnables[0] = "Colonist";
-                spawnables[1] = "Colonist";
-                spawnables[2] = "Rabbit";
-                spawnables[3] = "Farm";
-                spawnables[4] = "Tree";
-                spawnables[5] = "Bush";
+                spawnables[1] = "Rabbit";
+                spawnables[2] = "Farm";
+                spawnables[3] = "Tree";
+                spawnables[4] = "Bush";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -186,22 +186,19 @@ namespace GlobalWarmingGame
                     switch (MainUI.SpawnMenu.SelectedIndex)
                     {
                         case 0:
-                            GameObjectManager.Add(new Colonist(position: new Vector2(256, 512), texture: colonist, inventoryCapacity: 100f));
+                            GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
                             break;
                         case 1:
-                            GameObjectManager.Add(new Colonist(position: new Vector2(450, 450), texture: colonist, inventoryCapacity: 100f));
+                            GameObjectManager.Add(new Rabbit(position: position + new Vector2(0, 100), texture: rabbit));
                             break;
                         case 2:
-                            GameObjectManager.Add(new Rabbit(position: new Vector2(575, 575), texture: rabbit));
+                            GameObjectManager.Add(new Farm(position: position + new Vector2(0, -100), texture: farm));
                             break;
                         case 3:
-                            GameObjectManager.Add(new Farm(position: new Vector2(256, 256), texture: farm));
+                            GameObjectManager.Add(new Tree(position: position + new Vector2(0, 100), textureTree: tree, textureStump: treeStump));
                             break;
                         case 4:
-                            GameObjectManager.Add(new Tree(position: new Vector2(312, 612), textureTree: tree, textureStump: treeStump));
-                            break;
-                        case 5:
-                            GameObjectManager.Add(new Bush(position: new Vector2(312, 512), harvestable: bushH, harvested: bushN));
+                            GameObjectManager.Add(new Bush(position: position + new Vector2(100, 0), harvestable: bushH, harvested: bushN));
                             break;
                     }
                 };
