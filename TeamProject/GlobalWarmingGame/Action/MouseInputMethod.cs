@@ -28,6 +28,7 @@ namespace GlobalWarmingGame.Action
         Instruction currentInstruction;
 
         MainUI mainUI;
+        string[] buildings;
 
         MouseState currentMouseState;
         MouseState previousMouseState;
@@ -54,6 +55,8 @@ namespace GlobalWarmingGame.Action
             this.currentInstruction = currentInstruction;
             this.mainUI = mainUI;
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
+
+            PopulateBuildMenu();
         }
 
         void OnClick()
@@ -146,6 +149,31 @@ namespace GlobalWarmingGame.Action
             }
         }
 
+        void PopulateBuildMenu()
+        {
+            buildings = new string[2];
+            buildings[0] = "No Building";
+            buildings[1] = "Farm";
+
+            for (int i = 0; i < buildings.Length; i++)
+                mainUI.BuildMenu.AddItem(buildings[i]);
+
+            mainUI.BuildMenu.OnValueChange = (Entity e) =>
+            {
+                switch (mainUI.BuildMenu.SelectedIndex)
+                {
+                    case 0:
+                        buildingSelected = false;
+                        buildingId = 0;
+                        break;
+                    case 1:
+                        buildingSelected = true;
+                        buildingId = 1;
+                        break;
+                }
+            };
+        }
+
         void UpdateInstruction(InstructionType type, IInteractable interactable)
         {
             currentInstruction.Type = type;
@@ -170,21 +198,6 @@ namespace GlobalWarmingGame.Action
                 OnClick();
 
             hovering = false;
-
-            mainUI.BuildMenu.OnValueChange = (Entity e) =>
-            {
-                switch (mainUI.BuildMenu.SelectedIndex)
-                {
-                    case 0:
-                        buildingSelected = false;
-                        buildingId = 0;
-                        break;
-                    case 1:
-                        buildingSelected = true;
-                        buildingId = 1;
-                        break;
-                }
-            };
 
             if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
                 Menu.Visible = false;

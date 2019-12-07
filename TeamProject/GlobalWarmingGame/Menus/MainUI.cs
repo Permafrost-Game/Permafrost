@@ -22,8 +22,6 @@ namespace GlobalWarmingGame.Menus
         public Panel BottomPanel { get; private set; }
         public DropDown BuildMenu { get; private set; }
 
-        string[] buildings = new string[2];
-
         Label foodLabel;
 
         Icon[] itemSlots = new Icon[24];
@@ -43,12 +41,6 @@ namespace GlobalWarmingGame.Menus
                 AutoSetListHeight = true
             };
             TopPanel.AddChild(BuildMenu);
-
-            buildings[0] = "No Building";
-            buildings[1] = "Farm";
-
-            for (int i = 0; i < buildings.Length; i++)
-                BuildMenu.AddItem(buildings[i]);
 
             Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false);
             TopPanel.AddChild(foodIcon);
