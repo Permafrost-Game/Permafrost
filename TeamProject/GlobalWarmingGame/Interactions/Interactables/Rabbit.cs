@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
@@ -10,6 +11,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Rabbit : PassiveMovingGameObject
     {
+
         public Rabbit(Vector2 position, Texture2D texture) : base
         (
             position: position,
@@ -25,6 +27,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt));
         }
+
+        
 
         public void Hunt()
         {

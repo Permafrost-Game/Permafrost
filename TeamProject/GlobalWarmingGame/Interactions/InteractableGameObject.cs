@@ -3,6 +3,7 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
@@ -10,6 +11,7 @@ namespace GlobalWarmingGame.Interactions
     /// <summary>
     /// This class describes an interactable object
     /// </summary>
+    [Obsolete]
     class InteractableGameObject : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }

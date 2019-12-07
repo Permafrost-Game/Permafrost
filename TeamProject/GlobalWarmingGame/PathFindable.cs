@@ -12,12 +12,14 @@ namespace GlobalWarmingGame
     /// <summary>
     /// This class allows for the navigation of sprites through across the TileMap
     /// </summary>
+    [Obsolete]
     public abstract class PathFindable : Sprite, IUpdatable, IClickable
     {
         protected float speed;
         protected Queue<Vector2> goals;
         private Queue<Vector2> path;
 
+        
         public PathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
             base(position, size, rotation, rotationOrigin, tag, depth, texture)
         {

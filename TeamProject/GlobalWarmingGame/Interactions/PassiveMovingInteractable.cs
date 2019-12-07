@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
@@ -8,11 +9,8 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
 {
-    class PassiveMovingGameObject : PathFindable, IInteractable
+    class PassiveMovingGameObject : Sprite, Engine.IUpdatable, IPathFindable, IInteractable
     {
-        public List<InstructionType> InstructionTypes { get; }
-        public float Health { get; private set; }
-
         private readonly Random Rand;
         private int NearMoves;
 
@@ -20,6 +18,12 @@ namespace GlobalWarmingGame.Interactions
 
         private readonly float[] xDirections;
         private readonly float[] yDirections;
+
+        public float Health { get; private set; }
+        public List<InstructionType> InstructionTypes { get; }
+        public Queue<Vector2> Goals { get; set; }
+        public Queue<Vector2> Path { get; set; }
+        public float Speed { get; set; }
 
         public PassiveMovingGameObject(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, List<InstructionType> instructionTypes, float speed) : base
         (
@@ -29,24 +33,26 @@ namespace GlobalWarmingGame.Interactions
             rotationOrigin: rotationOrigin,
             tag: tag,
             depth: depth,
-            texture: texture,
-            speed: speed
+            texture: texture
         )
         {
-            AddGoal(Position);
-            NearMoves = 0;
             Rand = new Random();
-
-            Health = 1f;
-            InstructionTypes = instructionTypes;
-            
+            NearMoves = 0;
             offset = texture.Width;
-            xDirections = new float[] { offset, -offset, 0,       0,      offset, -offset,  offset, -offset };
-            yDirections = new float[] { 0,       0,      offset, -offset, offset,  offset, -offset, -offset };
+            xDirections = new float[] { offset, -offset, 0, 0, offset, -offset, offset, -offset };
+            yDirections = new float[] { 0, 0, offset, -offset, offset, offset, -offset, -offset };
+
+            this.Health = 1f;
+            this.InstructionTypes = instructionTypes;
+            this.Goals = new Queue<Vector2>();
+            this.Goals.Enqueue(Position);
+            this.Path = new Queue<Vector2>();
+            this.Speed = speed;
+            
         }
 
         //TODO Adjust queuing the goals
-        protected override void OnGoalComplete(Vector2 completedGoal)
+        public void OnGoalComplete(Vector2 completedGoal)
         {
             if (NearMoves < 15)
             {
@@ -70,7 +76,12 @@ namespace GlobalWarmingGame.Interactions
             };
             
             NearMoves++;
-            AddGoal(v);
+            Goals.Enqueue(v);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
         }
     }
 }
