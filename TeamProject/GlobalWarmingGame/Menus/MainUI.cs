@@ -21,6 +21,7 @@ namespace GlobalWarmingGame.Menus
         public Panel TopPanel { get; private set; }
         public Panel BottomPanel { get; private set; }
         public DropDown BuildMenu { get; private set; }
+        public DropDown SpawnMenu { get; private set; }
 
         Label foodLabel;
 
@@ -41,6 +42,13 @@ namespace GlobalWarmingGame.Menus
                 AutoSetListHeight = true
             };
             TopPanel.AddChild(BuildMenu);
+
+            SpawnMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(250, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
+            {
+                DefaultText = "Spawn",
+                AutoSetListHeight = true
+            };
+            TopPanel.AddChild(SpawnMenu);
 
             Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false);
             TopPanel.AddChild(foodIcon);

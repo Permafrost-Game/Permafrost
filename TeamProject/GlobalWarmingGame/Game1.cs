@@ -156,44 +156,7 @@ namespace GlobalWarmingGame
 
                 BuildingManager.AddBuilding(0, "No Building");
                 for (int i = 0; i < stringArray.Length; i++) 
-                {
                    BuildingManager.AddBuilding(i+1, stringArray[i], textureArray[i]);
-                }
-
-                var c1 = new Colonist(
-                    position: new Vector2(480, 200),
-                    texture: colonist,
-                    inventoryCapacity: 100f);
-
-                selectionManager.CurrentInstruction.ActiveMember = (c1);
-
-                GameObjectManager.Add(c1);
-
-                GameObjectManager.Add(new Colonist(
-                    position: new Vector2(256, 512),
-                    texture: colonist,
-                    inventoryCapacity: 100f));
-
-                GameObjectManager.Add(new Colonist(
-                    position: new Vector2(450, 450),
-                    texture: colonist,
-                    inventoryCapacity: 100f));
-
-                GameObjectManager.Add(new Farm(position: new Vector2(256, 256), texture: farm));
-
-                GameObjectManager.Add(new Bush(
-                    position: new Vector2(312, 512),
-                    harvestable: bushH,
-                    harvested: bushN));
-
-                GameObjectManager.Add(new Interactions.Interactables.Tree(
-                    position: new Vector2(312, 612),
-                    textureTree: tree,
-                    textureStump: treeStump));
-
-                GameObjectManager.Add(new Rabbit(
-                    position: new Vector2(575, 575),
-                    texture: rabbit));
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
@@ -202,6 +165,46 @@ namespace GlobalWarmingGame
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction, MainUI));
 
                 ProcessMenuSelection();
+
+                var c1 = new Colonist(position: new Vector2(480, 200), texture: colonist, inventoryCapacity: 100f);
+                selectionManager.CurrentInstruction.ActiveMember = c1;
+                GameObjectManager.Add(c1);
+
+                string[] spawnables = new string[6];
+                spawnables[0] = "Colonist";
+                spawnables[1] = "Colonist";
+                spawnables[2] = "Rabbit";
+                spawnables[3] = "Farm";
+                spawnables[4] = "Tree";
+                spawnables[5] = "Bush";
+
+                for (int i = 0; i < spawnables.Length; i++)
+                    MainUI.SpawnMenu.AddItem(spawnables[i]);
+
+                MainUI.SpawnMenu.OnValueChange = (Entity e) =>
+                {
+                    switch (MainUI.SpawnMenu.SelectedIndex)
+                    {
+                        case 0:
+                            GameObjectManager.Add(new Colonist(position: new Vector2(256, 512), texture: colonist, inventoryCapacity: 100f));
+                            break;
+                        case 1:
+                            GameObjectManager.Add(new Colonist(position: new Vector2(450, 450), texture: colonist, inventoryCapacity: 100f));
+                            break;
+                        case 2:
+                            GameObjectManager.Add(new Rabbit(position: new Vector2(575, 575), texture: rabbit));
+                            break;
+                        case 3:
+                            GameObjectManager.Add(new Farm(position: new Vector2(256, 256), texture: farm));
+                            break;
+                        case 4:
+                            GameObjectManager.Add(new Tree(position: new Vector2(312, 612), textureTree: tree, textureStump: treeStump));
+                            break;
+                        case 5:
+                            GameObjectManager.Add(new Bush(position: new Vector2(312, 512), harvestable: bushH, harvested: bushN));
+                            break;
+                    }
+                };
             }
         }
         protected override void UnloadContent()
