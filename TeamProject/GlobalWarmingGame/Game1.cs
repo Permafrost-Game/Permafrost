@@ -1,16 +1,24 @@
-﻿using Engine;
+﻿using System;
+using System.Collections.Generic;
+
+using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
+
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
+using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
+
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra;
-using Myra.Graphics2D.UI;
-using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+
+using GeonBit.UI;
+using GeonBit.UI.Entities;
+using GlobalWarmingGame.Menus;
+
 
 namespace GlobalWarmingGame
 {
@@ -25,20 +33,18 @@ namespace GlobalWarmingGame
 
         TileSet tileSet;
         TileMap tileMap;
-
-        private Desktop _desktop;
-
+        
         Camera camera;
-        MainMenu mainMenu;
-        PauseMenu pauseMenu;
 
-        PeformanceMonitor peformanceMonitor;
+        MainMenu MainMenu;
+        PauseMenu PauseMenu;
+        MainUI MainUI;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
-        bool isPaused;
-        bool isPlaying;
+        enum GameState { mainmenu, playing, paused }
+        GameState gameState;
 
         List<Light> lightObjects;
 
@@ -47,27 +53,31 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
+        MouseInputMethod mouseInputMethod;
+
+        Texture2D farm;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,  // set this value to the desired width of your window
-                PreferredBackBufferHeight = 1080   // set this value to the desired height of your window
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
-
-            //graphics.IsFullScreen = true;
+            
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
+
+            gameState = GameState.mainmenu;
         }
 
         protected override void Initialize()
         {
+            UserInterface.Initialize(Content, "hd");
 
             selectionManager = new SelectionManager();
-            peformanceMonitor = new PeformanceMonitor();
-
-            this.IsMouseVisible = true;
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
@@ -83,12 +93,6 @@ namespace GlobalWarmingGame
             //INITALISING GAME COMPONENTS
             {
                 spriteBatch = new SpriteBatch(GraphicsDevice);
-
-                _desktop = new Desktop();
-                MyraEnvironment.Game = this;
-
-                mainMenu = new MainMenu();
-                pauseMenu = new PauseMenu();
                 ambiantLight = new Texture2D(GraphicsDevice, 1, 1);
                 ambiantLight.SetData(new Color[] { Color.DimGray });
             }
@@ -126,6 +130,8 @@ namespace GlobalWarmingGame
                 textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
                 textureSet.Add("6", water);
 
+                
+
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 //                                                  map0/00.csv  //50x50 tilemap
                 //                                                  map1/00.csv  //100x100 tilemap
@@ -133,7 +139,7 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
                 camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, _desktop, selectionManager.CurrentInstruction));
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction));
             }
 
             //CREATING GAME OBJECTS
@@ -141,10 +147,14 @@ namespace GlobalWarmingGame
                 //All this code below is for testing and will eventually be replaced.
 
                 Texture2D colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
-                Texture2D farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
+                farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+                Texture2D tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
+                Texture2D treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
+
+                Texture2D logo = Content.Load<Texture2D>(@"logo");
 
                 var c1 = new Colonist(
                     position: new Vector2(480, 200),
@@ -165,29 +175,29 @@ namespace GlobalWarmingGame
                     texture: colonist,
                     inventoryCapacity: 100f));
 
-                GameObjectManager.Add(new Farm(
-                    position: new Vector2(256, 256),
-                    texture: farm));
+                GameObjectManager.Add(new Farm(position: new Vector2(256, 256), texture: farm));
 
                 GameObjectManager.Add(new Bush(
-                    position: new Vector2(512, 512),
+                    position: new Vector2(312, 512),
                     harvestable: bushH,
                     harvested: bushN));
+
+                GameObjectManager.Add(new Interactions.Interactables.Tree(
+                    position: new Vector2(312, 612),
+                    textureTree: tree,
+                    textureStump: treeStump));
 
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
                     texture: rabbit));
 
-                GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
+                MainMenu = new MainMenu(logo);
+                PauseMenu = new PauseMenu();
+                MainUI = new MainUI();
 
-
-                //Comment out the line below to dissable FPS counter
-                GameObjectManager.Add(new DisplayLabel(new Vector2(100, 0), 0, "", _desktop, "lblPerf"));
-
+                ProcessMenuSelection();
             }
-
         }
-
         protected override void UnloadContent()
         {
 
@@ -196,11 +206,14 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            ShowMainMenu();
-            ProcessMenuSelection();
-            SuspendContextMenuClick();
+            UserInterface.Active.Update(gameTime);
 
-            if (!isPaused && isPlaying)
+            ShowMainMenu();
+            ShowPauseMenu();
+            ShowMainUI();
+            PauseGame();
+
+            if (gameState == GameState.playing)
             {
                 camera.Update(gameTime);
 
@@ -209,6 +222,11 @@ namespace GlobalWarmingGame
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
+                foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
+                    mouseInputMethod.Update(gameTime);
+
+                MainUI.Update(gameTime);
+
                 UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
@@ -216,29 +234,36 @@ namespace GlobalWarmingGame
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
-                base.Update(gameTime);
-            }
-
-            if (isPlaying)
-            {
                 currentKeyboardState = Keyboard.GetState();
 
-                if (CheckKeypress(Keys.Escape))
-                    ShowPauseMenu();
+                if (CheckKeyPress(Keys.Escape))
+                {
+                    if (gameState == GameState.playing)
+                        gameState = GameState.paused;
+                    else if (gameState == GameState.paused)
+                        gameState = GameState.playing;
+                }
+
+                if (CheckKeyPress(Keys.NumPad0))
+                {
+                    mouseInputMethod.BuildingTexture = null;
+                    mouseInputMethod.BuildingType = 0;
+                }
+
+                if (CheckKeyPress(Keys.NumPad1))
+                {
+                    mouseInputMethod.BuildingTexture = farm;
+                    mouseInputMethod.BuildingType = 1;
+                }
 
                 previousKeyboardState = currentKeyboardState;
-            }
 
-            peformanceMonitor.Update(gameTime);
-            foreach(DisplayLabel lbl in GameObjectManager.GetObjectsByTag("lblPerf"))
-            {
-                lbl.Message = "\n\n\n" + peformanceMonitor.GetPrintString();
-
+                base.Update(gameTime);
             }
         }
 
         #region Update Colonists Temperatures
-        private void UpdateColonistTemperatures(GameTime gameTime)
+        void UpdateColonistTemperatures(GameTime gameTime)
         {
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
@@ -254,7 +279,6 @@ namespace GlobalWarmingGame
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-
             //CALCULATE SHADOWS
             foreach (Light light in lightObjects)
             {
@@ -341,13 +365,9 @@ namespace GlobalWarmingGame
                 spriteBatch.End();
             }
 
-            //DRAW UI
-            {
-                _desktop.Render();
-            }
+            UserInterface.Active.Draw(spriteBatch);
 
             base.Draw(gameTime);
-
         }
 
         private void DrawShadowCasters(Light light)
@@ -376,36 +396,23 @@ namespace GlobalWarmingGame
         }
         #endregion
 
-        #region Pause and Main Menu
-        void ShowMainMenu()
+        void PauseGame()
         {
-            if (!isPlaying)
-            {
-                Point position = new Vector2(GraphicsDevice.Viewport.Width / 2 - 75f, GraphicsDevice.Viewport.Height / 2 - 50f).ToPoint();
-                mainMenu.DrawMainMenu(_desktop, position);
-            }
-        }
+            currentKeyboardState = Keyboard.GetState();
 
-        void ShowPauseMenu()
-        {
-            isPaused = !isPaused;
-
-            if (isPaused)
+            if (CheckKeyPress(Keys.Escape))
             {
-                Point position = new Vector2(GraphicsDevice.Viewport.Width / 2 - 75f, GraphicsDevice.Viewport.Height / 2 - 50f).ToPoint();
-                pauseMenu.DrawPauseMenu(_desktop, position);
+                if (gameState == GameState.playing)
+                    gameState = GameState.paused;
+
+                else if (gameState == GameState.paused)
+                    gameState = GameState.playing;
             }
 
-            else
-                _desktop.HideContextMenu();
+            previousKeyboardState = currentKeyboardState;
         }
 
-        /// <summary>
-        /// Checks if the currently released key had been pressed the previous frame
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        bool CheckKeypress(Keys key)
+        bool CheckKeyPress(Keys key)
         {
             if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
                 return true;
@@ -413,37 +420,59 @@ namespace GlobalWarmingGame
             return false;
         }
 
-        /// <summary>
-        /// Suspends mouse input during Main and Pause Menus, otherwise resumes it.
-        /// </summary>
-        void SuspendContextMenuClick()
+        void ShowMainMenu()
         {
-            _desktop.ContextMenuClosing += (s, a) =>
+            if (gameState == GameState.mainmenu)
             {
-                if (!_desktop.ContextMenu.Bounds.Contains(_desktop.TouchPosition))
-                {
-                    if (!isPaused || isPlaying)
-                        a.Cancel = false;
-                    else
-                        a.Cancel = true;
-                }
-            };
+                MainMenu.Menu.Visible = true;
+                PauseMenu.Menu.Visible = false;
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+            }
+                
+            else
+                MainMenu.Menu.Visible = false;
         }
 
-        /// <summary>
-        /// Executes selected commands on the Main and Pause Menus
-        /// </summary>
+        void ShowPauseMenu()
+        {
+            if (gameState == GameState.paused)
+            {
+                MainMenu.Menu.Visible = false;
+                PauseMenu.Menu.Visible = true;
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+            }
+                    
+            else
+                PauseMenu.Menu.Visible = false;
+        }
+
+        void ShowMainUI()
+        {
+            if (gameState == GameState.playing)
+            {
+                MainMenu.Menu.Visible = false;
+                PauseMenu.Menu.Visible = false;
+                MainUI.TopPanel.Visible = true;
+                MainUI.BottomPanel.Visible = true;
+            }
+
+            else
+            {
+                MainUI.TopPanel.Visible = false;
+                MainUI.BottomPanel.Visible = false;
+            }   
+        }
+
         void ProcessMenuSelection()
         {
-            mainMenu.MainToGame.Selected += (s, a) => { isPaused = false; isPlaying = true; };
-            mainMenu.MainToQuit.Selected += (s, a) => Exit();
+            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
+            MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
-            pauseMenu.PauseToGame.Selected += (s, a) => { isPaused = false; };
-            pauseMenu.PauseToMain.Selected += (s, a) => { isPlaying = false; ShowMainMenu(); };
-            pauseMenu.PauseToQuit.Selected += (s, a) => Exit();
+            PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
+            PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
+            PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
         }
-
-
-        #endregion
     }
 }
