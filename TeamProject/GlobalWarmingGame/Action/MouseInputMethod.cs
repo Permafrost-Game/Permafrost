@@ -28,13 +28,9 @@ namespace GlobalWarmingGame.Action
         Instruction currentInstruction;
 
         MainUI mainUI;
-        string[] buildings;
 
         MouseState currentMouseState;
         MouseState previousMouseState;
-
-        KeyboardState currentKeyboardState;
-        KeyboardState previousKeyboardState;
 
         public bool buildingSelected;
         int buildingId;
@@ -130,7 +126,7 @@ namespace GlobalWarmingGame.Action
         void PlaceBuilding(Tile tileClicked) 
         {
             Colonist colonist = currentInstruction.ActiveMember;
-            Building buildingDetails = BuildingManager.GetTextureByID(buildingId);
+            Building buildingDetails = BuildingManager.GetBuilding(buildingId);
             Farm building = new Farm(tileClicked.Position, buildingDetails.Texture);
             List<ResourceItem> buildingCosts = building.CraftingCosts;
             bool build = true;
@@ -151,12 +147,10 @@ namespace GlobalWarmingGame.Action
 
         void PopulateBuildMenu()
         {
-            buildings = new string[2];
-            buildings[0] = "No Building";
-            buildings[1] = "Farm";
+            string[] buildings = BuildingManager.GetBuildingStrings();
 
             for (int i = 0; i < buildings.Length; i++)
-                mainUI.BuildMenu.AddItem(buildings[i]);
+                mainUI.BuildMenu.AddItem(buildings[i]);            
 
             mainUI.BuildMenu.OnValueChange = (Entity e) =>
             {
@@ -192,7 +186,6 @@ namespace GlobalWarmingGame.Action
         public void Update(GameTime gameTime)
         {
             currentMouseState = Mouse.GetState();
-            currentKeyboardState = Keyboard.GetState();
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
                 OnClick();
@@ -203,7 +196,6 @@ namespace GlobalWarmingGame.Action
                 Menu.Visible = false;
 
             previousMouseState = currentMouseState;
-            previousKeyboardState = currentKeyboardState;
         }
     }
 }

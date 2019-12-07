@@ -10,31 +10,38 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     static class BuildingManager
     {
-        static List<Building> buildings;
+        public static List<Building> Buildings { get; private set; }
 
         static BuildingManager() 
         {
-            buildings = new List<Building>(20);
+            Buildings = new List<Building>(20);
         }
 
-        public static void AddBuilding(int id, string stringID, Texture2D texture) 
+        public static void AddBuilding(int id, string stringID, Texture2D texture = null) 
         {
             InstructionType instructionType = new InstructionType(stringID, "Build", "Build " + stringID, Build);
-            Building b = new Building(id+1, texture, instructionType);
-            buildings.Add(b);
+            Building b = new Building(id, stringID, instructionType, texture);
+            Buildings.Add(b);
         }
 
-        public static Building GetTextureByID(int id) 
+        public static Building GetBuilding(int id) 
         {
             Building building = null;
-            foreach (Building b in buildings) 
-            {
-                if (b.ID == id) 
-                {
+            foreach (Building b in Buildings) 
+                if (b.ID == id)
                     building = b;
-                }
-            }
+ 
             return building;
+        }
+
+        public static string[] GetBuildingStrings()
+        {
+            string[] buildings = new string[Buildings.Count];
+
+            for (int i = 0; i < buildings.Length; i++)
+                buildings[i] = GetBuilding(i).StringID;
+
+            return buildings; 
         }
 
         private static void Build(Colonist colonist) 

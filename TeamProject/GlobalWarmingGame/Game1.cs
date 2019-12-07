@@ -81,7 +81,6 @@ namespace GlobalWarmingGame
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
 
-
             base.Initialize();
         }
 
@@ -150,17 +149,16 @@ namespace GlobalWarmingGame
                 Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
                 Texture2D tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 Texture2D treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
-
                 Texture2D logo = Content.Load<Texture2D>(@"logo");
 
-
                 Texture2D[] textureArray = new Texture2D[] { farm };
-                string[] stringArray = new string[] { "farm" };
-                for (int i = 0; i < textureArray.Length; i++) 
-                {
-                   BuildingManager.AddBuilding(i, stringArray[i], textureArray[i]);
-                }
+                string[] stringArray = new string[] { "Farm" };
 
+                BuildingManager.AddBuilding(0, "No Building");
+                for (int i = 0; i < stringArray.Length; i++) 
+                {
+                   BuildingManager.AddBuilding(i+1, stringArray[i], textureArray[i]);
+                }
 
                 var c1 = new Colonist(
                     position: new Vector2(480, 200),

@@ -11,13 +11,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     class Building
     {
         public int ID { get; }
+        public string StringID { get; }
         public Texture2D Texture { get; }
         public InstructionType InstructionType { get; }
 
-        public Building(int id, Texture2D tex, InstructionType instructionType)
+        public Building(int id, String stringID, InstructionType instructionType, Texture2D texture = null)
         {
             ID = id;
-            Texture = tex;
+            StringID = stringID;
+            Texture = texture;
             InstructionType = instructionType;
         }
     }
