@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine.Drawing;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Engine.TileGrid
@@ -6,7 +7,7 @@ namespace Engine.TileGrid
     /// <summary>
     /// This class reperesents a Tile Map Tile Game Object
     /// </summary>
-    public class Tile : GameObject, IDrawable
+    public class Tile : GameObject, Engine.Drawing.IDrawable
     {
         private readonly Texture2D texture;
         public Vector2 size { get; }

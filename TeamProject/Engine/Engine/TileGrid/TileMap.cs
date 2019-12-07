@@ -8,7 +8,7 @@ namespace Engine.TileGrid
     /// <summary>
     /// This is class will store a 2D array of <see cref="Tile"/>
     /// </summary>
-    public class TileMap : IDrawable, IUpdatable
+    public class TileMap : Engine.Drawing.IDrawable, IUpdatable
     {
 
         public Tile[,] Tiles { get; }

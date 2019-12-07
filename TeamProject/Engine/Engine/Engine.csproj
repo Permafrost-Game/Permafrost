@@ -56,8 +56,8 @@
     <Compile Include="PathFinding\PathFindingPathException.cs" />
     <Compile Include="PeformanceMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IDrawable.cs" />
-    <Compile Include="Sprite.cs" />
+    <Compile Include="Drawing\IDrawable.cs" />
+    <Compile Include="Drawing\Sprite.cs" />
     <Compile Include="PathFinding\PathFinder.cs" />
     <Compile Include="Temperature.cs" />
     <Compile Include="TileGrid\Tile.cs" />

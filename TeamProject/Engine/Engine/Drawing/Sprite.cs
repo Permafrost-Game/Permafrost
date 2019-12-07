@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Engine
+namespace Engine.Drawing
 {
     /// <summary>
     /// A <see cref="Sprite"/> is <see cref="GameObject"/> that is drawn with a texture and a depth.

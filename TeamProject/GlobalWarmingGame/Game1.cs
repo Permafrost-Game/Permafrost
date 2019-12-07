@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
@@ -336,7 +337,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
                     drawable.Draw(spriteBatch);
                 spriteBatch.End();
             }
@@ -367,7 +368,7 @@ namespace GlobalWarmingGame
                         transformMatrix: transform
                     );
 
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+            foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
             {
                 drawable.Draw(spriteBatch);
             }

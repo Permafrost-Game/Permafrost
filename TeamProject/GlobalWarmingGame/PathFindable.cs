@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.PathFinding;
 using Engine.TileGrid;
+using Engine.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
