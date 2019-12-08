@@ -10,6 +10,10 @@ using GlobalWarmingGame.Interactions.Interactables;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework.Graphics;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using System.Collections.Generic;
+using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Menus;
 
 namespace GlobalWarmingGame.Action
 {
@@ -17,34 +21,38 @@ namespace GlobalWarmingGame.Action
     /// <summary>
     /// This class manages the selection and instruction of interactable <see cref="GameObject"/>s using mouse input
     /// </summary>
-    class MouseInputMethod : SelectionInputMethod
+    class MouseInputMethod : SelectionInputMethod, IUpdatable
     {
         readonly Camera camera;
         readonly TileMap tileMap;
         Instruction currentInstruction;
 
+        MainUI mainUI;
+
         MouseState currentMouseState;
         MouseState previousMouseState;
+
+        public bool buildingSelected;
+        int buildingId;
 
         bool hovering;
 
         public Panel Menu { get; private set; }
-
-        public Texture2D BuildingTexture { get; set; }
-        public int BuildingType { get; set; }
 
         /// <summary>
         /// Creates a new instance of the class
         /// </summary>
         /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
         /// <param name="currentInstruction">The current instruction</param>
-        public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction)
+        public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction, MainUI mainUI)
         {
             this.camera = camera;
             this.tileMap = tileMap;
             this.currentInstruction = currentInstruction;
-
+            this.mainUI = mainUI;
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
+
+            PopulateBuildMenu();
         }
 
         void OnClick()
@@ -74,10 +82,6 @@ namespace GlobalWarmingGame.Action
                     {
                         if (objectClicked != null)
                             currentInstruction.ActiveMember.AddGoal(objectClicked.Position);
-
-                        else if (BuildingTexture != null)
-                            currentInstruction.ActiveMember.Build(tileClicked.Position, BuildingTexture, BuildingType);
-
                         else
                             currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
 
@@ -99,8 +103,69 @@ namespace GlobalWarmingGame.Action
                     button3.ButtonParagraph.Scale = 0.5f;
                     Menu.AddChild(button3);
                     button3.OnClick = (Entity btn) => { Menu.Visible = false; };
+
+                    if (buildingSelected) 
+                    {
+                        Button button4 = new Button("Build Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        button4.ButtonParagraph.Scale = 0.5f;
+                        Menu.AddChild(button4);
+                        button4.OnClick = (Entity btn) =>
+                        {
+                            if (objectClicked == null && tileClicked.Walkable)
+                            {
+                                PlaceBuilding(tileClicked);
+                            }
+
+                            Menu.Visible = false;
+                        };
+                    }
                 }
             }   
+        }
+
+        void PlaceBuilding(Tile tileClicked) 
+        {
+            Colonist colonist = currentInstruction.ActiveMember;
+            Building buildingDetails = BuildingManager.GetBuilding(buildingId);
+            Farm building = new Farm(tileClicked.Position, buildingDetails.Texture);
+            List<ResourceItem> buildingCosts = building.CraftingCosts;
+            bool build = true;
+
+            foreach (ResourceItem resource in buildingCosts)
+            {
+                if (!colonist.Inventory.RemoveItem(resource))
+                {
+                    build = false;
+                }
+            }
+
+            if (build)
+            {
+                GameObjectManager.Add(building);
+            }
+        }
+
+        void PopulateBuildMenu()
+        {
+            string[] buildings = BuildingManager.GetBuildingStrings();
+
+            for (int i = 0; i < buildings.Length; i++)
+                mainUI.BuildMenu.AddItem(buildings[i]);            
+
+            mainUI.BuildMenu.OnValueChange = (Entity e) =>
+            {
+                switch (mainUI.BuildMenu.SelectedIndex)
+                {
+                    case 0:
+                        buildingSelected = false;
+                        buildingId = 0;
+                        break;
+                    case 1:
+                        buildingSelected = true;
+                        buildingId = 1;
+                        break;
+                }
+            };
         }
 
         void UpdateInstruction(InstructionType type, IInteractable interactable)

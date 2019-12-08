@@ -5,13 +5,15 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Farm : InteractableGameObject, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 5)};
+
         private InstructionType plant;
         private InstructionType harvest;
         private bool growing;
@@ -36,14 +38,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(plant);
         }
 
-        public void Harvest(Colonist colonist)
+        private void Harvest(Colonist colonist)
         {
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }
 
-        public void Plant(Colonist colonist)
+        private void Plant(Colonist colonist)
         {
             //Plant wheat seeds
             InstructionTypes.Remove(plant);
