@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
@@ -9,23 +10,19 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Rabbit : PassiveMovingGameObject
+    class Rabbit : PassiveAnimal
     {
+        private static readonly RandomAI RabbitAI = new RandomAI(32f, 24f);
 
-        public Rabbit(Vector2 position, Texture2D texture) : base
+        public Rabbit(Vector2 position, Texture2D[][] textureSet) : base
         (
-            position: position,
-            size: new Vector2(texture.Width, texture.Height),
-            rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
-            tag: "Rabbit",
-            depth: 0.9f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>(),
-            speed: 0.05f
+            position, "Rabbit", textureSet, 10f, RabbitAI, 10f
         )
         {
-            InstructionTypes.Add(new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt));
+
+            this.InstructionTypes.Add(
+                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt)
+            );
         }
 
         
@@ -37,5 +34,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             GameObjectManager.Remove(this);
         }
+
     }
 }

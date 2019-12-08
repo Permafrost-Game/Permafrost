@@ -53,6 +53,7 @@
     <Compile Include="Lighting\QuadRenderComponent.cs" />
     <Compile Include="Lighting\ShadowmapResolver.cs" />
     <Compile Include="PathFinding\IPathFindable.cs" />
+    <Compile Include="PathFinding\RandomAI.cs" />
     <Compile Include="PathFinding\PathFindingHelper.cs" />
     <Compile Include="PathFinding\PathFindingPathException.cs" />
     <Compile Include="PeformanceMonitor.cs" />

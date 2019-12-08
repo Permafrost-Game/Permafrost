@@ -2,7 +2,6 @@
 using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,6 +9,10 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
 {
+    /// <summary>
+    /// This class is obsolete, instead see <see cref="GlobalWarmingGame.Interactions.Interactables.PassiveAnimal"/>
+    /// </summary>
+    [Obsolete]
     class PassiveMovingGameObject : Sprite, Engine.IUpdatable, IPathFindable, IInteractable
     {
         private readonly Random Rand;

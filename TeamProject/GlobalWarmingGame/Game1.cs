@@ -145,7 +145,25 @@ namespace GlobalWarmingGame
                 Texture2D farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                Texture2D rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+                //Rabbit test code
+                Texture2D[][] rabbit = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite0"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite2")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite4")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
+                    }
+                };
 
                 var c1 = new Colonist(
                     position: new Vector2(480, 200),
@@ -177,7 +195,7 @@ namespace GlobalWarmingGame
 
                 GameObjectManager.Add(new Rabbit(
                     position: new Vector2(575, 575),
-                    texture: rabbit));
+                    textureSet: rabbit));
 
                 GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
 
