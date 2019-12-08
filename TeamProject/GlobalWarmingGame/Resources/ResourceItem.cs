@@ -1,4 +1,6 @@
-﻿namespace GlobalWarmingGame.ResourceItems
+﻿using System;
+
+namespace GlobalWarmingGame.ResourceItems
 {
     public class ResourceItem
     {
@@ -9,6 +11,11 @@
         {
             this.Type = Type;
             this.Amount = Amount;
+        }
+
+        public ResourceItem Clone()
+        {
+            return (ResourceItem)MemberwiseClone();
         }
     }
 }
