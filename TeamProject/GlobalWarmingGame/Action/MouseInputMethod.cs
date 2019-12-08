@@ -30,9 +30,6 @@ namespace GlobalWarmingGame.Action
 
         public Panel Menu { get; private set; }
 
-        public Texture2D BuildingTexture { get; set; }
-        public int BuildingType { get; set; }
-
         /// <summary>
         /// Creates a new instance of the class
         /// </summary>
@@ -74,9 +71,6 @@ namespace GlobalWarmingGame.Action
                     {
                         if (objectClicked != null)
                             currentInstruction.ActiveMember.AddGoal(objectClicked.Position);
-
-                        else if (BuildingTexture != null)
-                            currentInstruction.ActiveMember.Build(tileClicked.Position, BuildingTexture, BuildingType);
 
                         else
                             currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
