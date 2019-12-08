@@ -12,6 +12,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
     class Farm : InteractableGameObject, IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
+        public Temperature Temperature { get; set; } = new Temperature(10);
+        public new Vector2 Position { get; set; }
+        public new Vector2 Size { get; set; }
+
         private InstructionType plant;
         private InstructionType harvest;
         private bool growing;
@@ -30,6 +34,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
+            Position = position;
+            Size = new Vector2(texture.Width, texture.Height);
             plant = new InstructionType("plant", "Plant", "Plant", Plant);
             harvest = new InstructionType("harvest", "Harvest", "Harvest", new ResourceItem(new Food(), 10), Harvest);
             timeUntilGrown = 20000f;

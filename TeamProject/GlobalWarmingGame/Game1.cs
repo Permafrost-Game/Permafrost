@@ -9,8 +9,6 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
-using GlobalWarmingGame.Interactions;
-using GlobalWarmingGame.Interactions.Interactables;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -20,7 +18,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Menus;
-
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 
 namespace GlobalWarmingGame
 {
@@ -55,8 +53,6 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
-        MouseInputMethod mouseInputMethod;
-
         Texture2D farm;
 
         public Game1()
@@ -67,7 +63,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferHeight = 1080
             };
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -195,13 +191,14 @@ namespace GlobalWarmingGame
 
 
 
-                SetBuildingTemperatures();
+                UpdateBuildingTemperatures();
 
-                GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
+                //GameObjectManager.Add(new DisplayLabel(Vector2.Zero, 0, "Food", _desktop, "lblFood"));
 
 
                 //Comment out the line below to dissable FPS counter
-                GameObjectManager.Add(new DisplayLabel(new Vector2(100, 0), 0, "", _desktop, "lblPerf"));
+                //GameObjectManager.Add(new DisplayLabel(new Vector2(100, 0), 0, "", _desktop, "lblPerf"));
+
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
                 MainUI = new MainUI();
@@ -255,18 +252,6 @@ namespace GlobalWarmingGame
                         gameState = GameState.playing;
                 }
 
-                if (CheckKeyPress(Keys.NumPad0))
-                {
-                    mouseInputMethod.BuildingTexture = null;
-                    mouseInputMethod.BuildingType = 0;
-                }
-
-                if (CheckKeyPress(Keys.NumPad1))
-                {
-                    mouseInputMethod.BuildingTexture = farm;
-                    mouseInputMethod.BuildingType = 1;
-                }
-
                 previousKeyboardState = currentKeyboardState;
 
                 base.Update(gameTime);
@@ -315,7 +300,7 @@ namespace GlobalWarmingGame
 
 
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-                spriteBatch.Draw(ambiantLight, new Rectangle(0,0,GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
 
                 GraphicsDevice.SetRenderTarget(null);
@@ -407,6 +392,7 @@ namespace GlobalWarmingGame
         }
         #endregion
 
+        #region Main Menu and Pause Menu
         void PauseGame()
         {
             currentKeyboardState = Keyboard.GetState();
@@ -481,14 +467,14 @@ namespace GlobalWarmingGame
             MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
             MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
-PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
-PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
-PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
-}
+            PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
+            PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
+            PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
+        }
         #endregion
 
-        #region Set Building Temperatures
-        private void SetBuildingTemperatures()
+        #region Update Building Temperatures
+        private void UpdateBuildingTemperatures()
         {
             foreach (IBuildable buildable in GameObjectManager.Buildable)
             {
@@ -496,22 +482,23 @@ PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
                 Vector2 position = buildable.Position;
                 Vector2 size = buildable.Size;
                 GetBuildingArea(position, size, temperature);
-            }       
+            }
         }
 
-        private List<Tile> GetBuildingArea(Vector2 position, Vector2 size, float temperature)
+        private void GetBuildingArea(Vector2 position, Vector2 size, float temperature)
         {
             float tileWidth = tileMap.Tiles[0, 0].size.X;
-            int numberOfTiles = (int)((size.X / tileWidth) * (size.Y / tileWidth));
-
-            for (int i = 0; i < numberOfTiles; i++)
+            int numberOfTilesX = (int)(size.X / tileWidth);
+            int numberOfTilesY = (int)(size.Y / tileWidth);
+            for (int y = 0; y < numberOfTilesX; y++)
             {
-                Tile t = tileMap.Tiles[(int)(position.X/tileWidth),(int)(position.Y/tileWidth)];
-                t.temperature.SetTemp(temperature);
-                t.Heated = true;
+                for (int x = 0; x < numberOfTilesY; x++)
+                {
+                    Tile t = tileMap.Tiles[(int)(position.X / tileWidth + x), (int)(position.Y / tileWidth + y)];
+                    t.Heated = true;
+                    t.temperature.SetTemp(temperature);
+                }
             }
-
-            return null;
         }
         #endregion
     }

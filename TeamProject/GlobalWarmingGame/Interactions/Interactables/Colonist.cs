@@ -31,11 +31,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
 
-        private Texture2D buildingTexture;
-        private int buildingType;
-        private Vector2 buildingLocation;
-        private bool _building;
-
         public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
         (
             position: position,
@@ -54,8 +49,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillFoodTick = Base_Consumption_Rate;
             timeToTemperature = timeUntillTemperature;
             timeToTemperatureUpdate = timeUntilTemperatureUpdate;
-
-            _building = false;
 
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>
@@ -76,46 +69,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
-                if (!_building)
-                {
-                    Instruction currentInstruction = instructions.Peek();
-                    currentInstruction.Type.Act(this);
+                Instruction currentInstruction = instructions.Peek();
+                currentInstruction.Type.Act(this);
 
-                    if (currentInstruction.Type.ResourceItem != null)
-                        Inventory.AddItem(currentInstruction.Type.ResourceItem);
+                if (currentInstruction.Type.ResourceItem != null)
+                    Inventory.AddItem(currentInstruction.Type.ResourceItem);
 
-                    instructions.Dequeue();
-                }
-                else
-                {
-                    switch (buildingType)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            Farm farm = new Farm(buildingLocation, buildingTexture);
-                            GameObjectManager.Add(farm);
-                            break;
-                    }
+                instructions.Dequeue();
 
-                    instructions.Dequeue();
-                    _building = false;
-                }
             }
-        }
-
-        public void Build(Vector2 goal, Texture2D buildingTexture, int buildingType)
-        {
-            Instruction build = new Instruction(this)
-            {
-                PassiveMember = new InteractableGameObject(goal, buildingTexture, "building", null)
-            };
-            instructions.Enqueue(build);
-
-            this.buildingTexture = buildingTexture;
-            this.buildingType = buildingType;
-            buildingLocation = goal;
-            _building = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -190,14 +152,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     Temperature.Value = Temperature.Value + (tileTemp / 10);
                     //Colonist's temperature should be able to be greater than the tile they are over
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                    //Console.Out.WriteLine("Greater"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 else
                 {
                     Temperature.Value = Temperature.Value - 1;
                     //Colonist's temperature should be able to be lower than the tile they are over
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                    //Console.Out.WriteLine("Lower"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
