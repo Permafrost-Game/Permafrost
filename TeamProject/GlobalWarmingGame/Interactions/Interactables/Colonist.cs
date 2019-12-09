@@ -44,7 +44,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0,0),
+            rotationOrigin: new Vector2(0, 0),
             tag: "Colonist",
             depth: 1f,
             texture: texture
@@ -80,7 +80,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Count != 0)
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Act();
+                currentInstruction.Type.Act(this);
 
                 if (currentInstruction.Type.ResourceItem != null)
                     Inventory.AddItem(currentInstruction.Type.ResourceItem);
@@ -117,7 +117,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
         #region Colonist Hunger Check
-        private void HungerCheck(GameTime gameTime) 
+        private void HungerCheck(GameTime gameTime)
         {
             //Temperature affecting food
             timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -145,7 +145,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else
             {
-                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
+                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
             }
         }
         #endregion
@@ -155,7 +155,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             //Adjust the colonist's temperature based on the tile they are over
             timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperatureUpdate < 0f) 
+            if (timeToTemperatureUpdate < 0f)
             {
                 if (tileTemp > CoreBodyTemperature)
                 {
