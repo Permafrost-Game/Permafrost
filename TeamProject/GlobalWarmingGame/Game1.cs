@@ -19,6 +19,8 @@ using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Menus;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Environment;
+using GlobalWarmingGame.Interactions.Interactables.Animals;
 
 namespace GlobalWarmingGame
 {
