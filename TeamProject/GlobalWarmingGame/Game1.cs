@@ -66,8 +66,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
             };
 
             graphics.IsFullScreen = false;
@@ -163,7 +163,7 @@ namespace GlobalWarmingGame
 
                 BuildingManager.AddBuilding(0, "No Building");
                 for (int i = 0; i < stringArray.Length; i++)
-                   BuildingManager.AddBuilding(i+1, stringArray[i], textureArray[i]);
+                    BuildingManager.AddBuilding(i + 1, stringArray[i], textureArray[i]);
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
@@ -173,7 +173,7 @@ namespace GlobalWarmingGame
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(800,800), texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: new Vector2(800, 800), texture: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -183,10 +183,6 @@ namespace GlobalWarmingGame
                 spawnables[2] = "Farm";
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
-
-                MainMenu = new MainMenu(logo);
-                PauseMenu = new PauseMenu();
-                MainUI = new MainUI();
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
