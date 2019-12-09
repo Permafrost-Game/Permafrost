@@ -47,7 +47,7 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
-    <Compile Include="BuildingManager.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
