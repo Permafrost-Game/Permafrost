@@ -4,13 +4,13 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
     class WorkBench : InteractableGameObject, IBuildable
     {
-        private Inventory inventory;
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 8)};
 
@@ -26,14 +26,25 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            inventory = new Inventory(10);
-            InstructionTypes.Add(new InstructionType("craft", "Craft", "Craft items", CraftItem));
+            InstructionTypes.Add(new InstructionType("craft axe", "Craft axe", "Craft axe", CraftAxe));
         }
 
-        private void CraftItem(Colonist colonist)
+        private void CraftAxe(Colonist colonist)
         {
-            //Open craft menu
-            //Force the colonist to wait at the station until job is done
+            if (colonist.Inventory.CheckContainsList(CraftingCosts))
+            {
+                foreach (ResourceItem item in CraftingCosts) 
+                {
+                    colonist.Inventory.RemoveItem(item);
+                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
+                }
+                Console.WriteLine("Added axe" + " amount: " + 1);
+                colonist.Inventory.AddItem(new ResourceItem(new Axe(), 1));                
+            }
+            else
+            {
+                Console.WriteLine("failed");
+            }
         }
 
         //Other methods for selected crafting recipe
