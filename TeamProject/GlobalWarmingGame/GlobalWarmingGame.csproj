@@ -48,6 +48,8 @@
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="BuildingManager.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />

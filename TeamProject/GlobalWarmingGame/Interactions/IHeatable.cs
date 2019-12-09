@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame.Interactions.Interactables.Buildings
+namespace GlobalWarmingGame.Interactions
 {
     interface IHeatable
     {

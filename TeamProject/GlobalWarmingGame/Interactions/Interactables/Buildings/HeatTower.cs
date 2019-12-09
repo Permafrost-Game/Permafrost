@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame.Interactions.Interactables.Buildings
+namespace GlobalWarmingGame.Interactions.Interactables
 {
     class HeatTower: InteractableGameObject, IHeatable
     {
-        public Temperature Temperature { get; set; } = new Temperature(50);
+        public Temperature Temperature { get; set; } = new Temperature(100);
         public new Vector2 Position { get; private set; }
         public new Vector2 Size { get; private set; }
         public bool Heating { get; private set; }
