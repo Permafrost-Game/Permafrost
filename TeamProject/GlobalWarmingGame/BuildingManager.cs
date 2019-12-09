@@ -60,18 +60,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             timeUntillBuildingTempCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntillBuildingTempCheck < 0) 
             {
-                foreach (IBuildable buildable in GameObjectManager.Buildable)
+                foreach (IHeatable heatable in GameObjectManager.Buildable)
                 {
-                    float temperature = buildable.Temperature.Value;
-                    Vector2 position = buildable.Position;
-                    Vector2 size = buildable.Size;
-                    GetBuildingArea(position, size, temperature, tileMap);
+                    float temperature = heatable.Temperature.Value;
+                    Vector2 position = heatable.Position;
+                    Vector2 size = heatable.Size;
+                    bool heating = heatable.Heating;
+                    GetBuildingArea(position, size, temperature, heating, tileMap);
                 }
                 timeUntillBuildingTempCheck = timeToBuildingTempCheck;
             }
         }
 
-        public static void GetBuildingArea(Vector2 position, Vector2 size, float temperature, TileMap tileMap)
+        public static void GetBuildingArea(Vector2 position, Vector2 size, float temperature, bool heating, TileMap tileMap)
         {
             float tileWidth = tileMap.Tiles[0, 0].size.X;
             int numberOfTilesX = (int)(size.X / tileWidth);
@@ -81,8 +82,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 for (int x = 0; x < numberOfTilesY; x++)
                 {
                     Tile t = tileMap.Tiles[(int)(position.X / tileWidth + x), (int)(position.Y / tileWidth + y)];
-                    t.Heated = true;
-                    t.temperature.SetTemp(temperature);
+                    t.Heated = heating;
+                    if (heating) 
+                    {
+                        t.temperature.SetTemp(temperature);
+                    }
                 }
             }
         }

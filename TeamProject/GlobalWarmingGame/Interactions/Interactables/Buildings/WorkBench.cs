@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class WorkBench : InteractableGameObject
+    class WorkBench : InteractableGameObject, IBuildable
     {
         private Inventory inventory;
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),

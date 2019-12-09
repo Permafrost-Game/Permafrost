@@ -21,14 +21,14 @@ namespace GlobalWarmingGame
         private static readonly List<IDrawable> _drawable = new List<IDrawable>();
         private static readonly List<IClickable> _clickable = new List<IClickable>();
         private static readonly List<IInteractable> _interactable = new List<IInteractable>();
-        private static readonly List<IBuildable> _buildable = new List<IBuildable>();
+        private static readonly List<IHeatable> _buildable = new List<IHeatable>();
 
         public static List<GameObject> Objects { get => _objects.ToList(); }
         public static List<IUpdatable> Updatable { get => _updatable.ToList(); }
         public static List<IDrawable> Drawable { get => _drawable.ToList(); }
         public static List<IClickable> Clickable { get => _clickable.ToList(); }
         public static List<IInteractable> Interactable { get => _interactable.ToList(); }
-        public static List<IBuildable> Buildable { get => _buildable.ToList(); }
+        public static List<IHeatable> Buildable { get => _buildable.ToList(); }
 
         /// <summary>
         /// Adds a GameObject
@@ -50,7 +50,7 @@ namespace GlobalWarmingGame
             if (gameObject is IInteractable i)
                 _interactable.Add(i);
 
-            if (gameObject is IBuildable b)
+            if (gameObject is IHeatable b)
                 _buildable.Add(b);
 
         }
@@ -75,7 +75,7 @@ namespace GlobalWarmingGame
             if (gameObject is IInteractable i)
                 _interactable.Remove(i);
 
-            if (gameObject is IBuildable b)
+            if (gameObject is IHeatable b)
                 _buildable.Remove(b);
         }
 
