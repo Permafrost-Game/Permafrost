@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

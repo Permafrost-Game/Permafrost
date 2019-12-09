@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     interface IBuildable
     {
