@@ -11,7 +11,8 @@ using System.Collections.Generic;
 namespace GlobalWarmingGame
 {
     /// <summary>
-    /// This class allows for the navigation of sprites through across the TileMap
+    /// This class allows for the navigation of sprites through across the TileMap<br/>
+    /// This class is obsolete see <see cref="IPathFindable"/> and <see cref="PathFindingHelper"/>
     /// </summary>
     [Obsolete]
     public abstract class PathFindable : Sprite, IUpdatable, IClickable

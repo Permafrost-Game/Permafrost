@@ -12,11 +12,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Rabbit : PassiveAnimal
     {
-        private static readonly RandomAI RabbitAI = new RandomAI(32f, 24f);
+        private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 
         public Rabbit(Vector2 position, Texture2D[][] textureSet) : base
         (
-            position, "Rabbit", textureSet, 10f, RabbitAI, 10f
+            position, "Rabbit", textureSet, 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
         {
 

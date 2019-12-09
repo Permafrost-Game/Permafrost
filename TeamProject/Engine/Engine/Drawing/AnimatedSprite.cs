@@ -27,7 +27,7 @@ namespace Engine.Drawing
         protected bool isAnimated;
 
         /// <summary>
-        /// The first dimension of <see cref="AnimatedSprite.textureSet"/> that is active
+        /// The Index of the outter array in <see cref="AnimatedSprite.textureSet"/> that is active
         /// </summary>
         protected int TextureGroupIndex
         {
@@ -35,7 +35,7 @@ namespace Engine.Drawing
             set
             {
                 currentTextureGroupIndex = value;
-                currentTextureIndex = 0;
+                //currentTextureIndex = 0;
                 //timeUntilNextFrame = timeToNextFrame;
             }
         }

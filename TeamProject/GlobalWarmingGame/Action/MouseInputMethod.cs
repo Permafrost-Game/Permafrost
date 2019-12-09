@@ -77,7 +77,7 @@ namespace GlobalWarmingGame.Action
                 };
                 moveMenuItem.Selected += (s, a) =>
                 {
-                    currentInstruction.ActiveMember.AddGoal(clickPos);
+                    currentInstruction.ActiveMember.Goals.Enqueue(clickPos);
                 };
 
                 verticalMenu.Items.Add(moveMenuItem);

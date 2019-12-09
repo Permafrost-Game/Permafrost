@@ -6,6 +6,7 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
@@ -20,7 +21,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         protected RandomAI ai;
 
-        public PassiveAnimal(Vector2 position, string tag, Texture2D[][] textureSet, float speed, RandomAI ai, float frameTime = 10f) : base
+        public PassiveAnimal(Vector2 position, string tag, Texture2D[][] textureSet, float speed, RandomAI ai, float frameTime = 100f) : base
         (
             position: position,
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
@@ -35,8 +36,40 @@ namespace GlobalWarmingGame.Interactions.Interactables
             this.Speed = speed;
             this.ai = ai;
             this.InstructionTypes = new List<InstructionType>();
+            this.Goals = new Queue<Vector2>();
+            this.Path = new Queue<Vector2>();
+            OnGoalComplete(position);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Vector2 position1 = this.Position;
+            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+            base.Update(gameTime);
+
+            Vector2 delta = position1 - this.Position;
+
+            //Math.Atan2(delta.X, delta.Y);
+
+            if (delta.Equals(Vector2.Zero))
+            {
+                isAnimated = false;
+            }
+            else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
+            {
+                isAnimated = true;
+                TextureGroupIndex = 1;
+                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+            else
+            {
+                isAnimated = true;
+                TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
+            }
+
 
         }
+
 
         public void OnGoalComplete(Vector2 completedGoal)
         {
