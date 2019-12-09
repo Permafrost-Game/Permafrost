@@ -24,7 +24,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 5), Mine));
         }
 
-        private void Mine(Colonist colonist)
+        public void Mine(Colonist colonist)
         {
             //Maybe destory the node or allow 3 more mine operations
         }

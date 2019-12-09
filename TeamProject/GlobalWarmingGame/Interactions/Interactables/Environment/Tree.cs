@@ -36,14 +36,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>()
         )
         {
+
             this.textureTree = textureTree;
             this.textureStump = textureStump;
             choppable = true;
-            chop =new InstructionType("chop", "Chop", "Chop for wood", new ResourceItem(new Wood(), 4), Chop);
+            chop =new InstructionType("chop", "Chop", "Chop for wood", new ResourceItem(new Wood(), 5), Chop);
             InstructionTypes.Add(chop);
         }
 
-        private void Chop(Colonist colonist)
+        public void Chop(Colonist colonist)
         {
             //+Wood
             choppable = false;

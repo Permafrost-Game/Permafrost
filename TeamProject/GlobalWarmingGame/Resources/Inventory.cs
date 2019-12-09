@@ -60,6 +60,7 @@ namespace GlobalWarmingGame.ResourceItems
                     Resources[item.Type.ID].Amount -= item.Amount;
                     CurrentLoad -= item.Type.Weight * item.Amount;
                 }
+
                 else
                 {
                     CurrentLoad -= item.Type.Weight * Resources[item.Type.ID].Amount;

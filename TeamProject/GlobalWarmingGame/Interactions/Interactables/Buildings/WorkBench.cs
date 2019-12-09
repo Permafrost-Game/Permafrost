@@ -34,7 +34,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("craft", "Craft", "Craft items", CraftItem));
         }
 
-        private void CraftItem(Colonist colonist)
+        public void CraftItem(Colonist colonist)
         {
             //Open craft menu
             //Force the colonist to wait at the station until job is done
