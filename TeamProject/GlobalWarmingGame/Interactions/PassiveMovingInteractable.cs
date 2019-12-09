@@ -20,8 +20,6 @@ namespace GlobalWarmingGame.Interactions
 
         private float offset;
 
-        private readonly float[] xDirections;
-        private readonly float[] yDirections;
 
         public float Health { get; private set; }
         public List<InstructionType> InstructionTypes { get; }

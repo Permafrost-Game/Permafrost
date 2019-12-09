@@ -20,7 +20,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set
             {
                 _choppable = value;
-                texture = _choppable ? textureTree : textureStump;
+                Texture = _choppable ? textureTree : textureStump;
             }
         }
 

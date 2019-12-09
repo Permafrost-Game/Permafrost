@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
-using Engine.Drawing;
+
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.Interactions;
@@ -33,7 +33,7 @@ namespace GlobalWarmingGame
 
         TileSet tileSet;
         TileMap tileMap;
-        
+
         Camera camera;
 
         MainMenu MainMenu;
@@ -57,7 +57,7 @@ namespace GlobalWarmingGame
         Texture2D farm;
         Texture2D bushH;
         Texture2D bushN;
-        Texture2D rabbit;
+        Texture2D[][] rabbit;
         Texture2D tree;
         Texture2D treeStump;
         Texture2D logo;
@@ -69,7 +69,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,
                 PreferredBackBufferHeight = 768
             };
-            
+
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
@@ -134,7 +134,7 @@ namespace GlobalWarmingGame
                 textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
                 textureSet.Add("6", water);
 
-                
+
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 //                                                  map0/00.csv  //50x50 tilemap
@@ -153,17 +153,7 @@ namespace GlobalWarmingGame
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
-                tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
-                treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
-                logo = Content.Load<Texture2D>(@"logo");
-//start merge
-                Texture2D colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
-                Texture2D farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
-                Texture2D bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
-                Texture2D bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                //Rabbit test code
-                Texture2D[][] rabbit = new Texture2D[][]
+                rabbit = new Texture2D[][]
                 {
                     new Texture2D[]
                     {
@@ -181,23 +171,17 @@ namespace GlobalWarmingGame
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
                     }
                 };
-
-                var c1 = new Colonist(
-                    position: new Vector2(480, 200),
-                    texture: colonist,
-                    inventoryCapacity: 100f);
-
-                selectionManager.CurrentInstruction.ActiveMember = (c1);
-
-                GameObjectManager.Add(c1);
-                //end merge
+                ;
+                tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
+                treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
+                logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { farm };
                 string[] stringArray = new string[] { "Farm" };
 
                 BuildingManager.AddBuilding(0, "No Building");
-                for (int i = 0; i < stringArray.Length; i++) 
-                   BuildingManager.AddBuilding(i+1, stringArray[i], textureArray[i]);
+                for (int i = 0; i < stringArray.Length; i++)
+                    BuildingManager.AddBuilding(i + 1, stringArray[i], textureArray[i]);
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
@@ -207,7 +191,7 @@ namespace GlobalWarmingGame
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(800,800), texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: new Vector2(800, 800), texture: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -307,7 +291,7 @@ namespace GlobalWarmingGame
 
 
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-                spriteBatch.Draw(ambiantLight, new Rectangle(0,0,GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
 
                 GraphicsDevice.SetRenderTarget(null);
@@ -432,7 +416,7 @@ namespace GlobalWarmingGame
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
             }
-                
+
             else
                 MainMenu.Menu.Visible = false;
         }
@@ -446,7 +430,7 @@ namespace GlobalWarmingGame
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
             }
-                    
+
             else
                 PauseMenu.Menu.Visible = false;
         }
@@ -465,7 +449,7 @@ namespace GlobalWarmingGame
             {
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
-            }   
+            }
         }
 
         void ProcessMenuSelection()
@@ -480,7 +464,7 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = new Vector2(1600,1600) - camera.Position;
+            Vector2 position = new Vector2(1600, 1600) - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
@@ -488,7 +472,7 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
                     break;
                 case 1:
-                    GameObjectManager.Add(new Rabbit(position: position, texture: rabbit));
+                    GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));
                     break;
                 case 2:
                     GameObjectManager.Add(new Farm(position: position, texture: farm));
