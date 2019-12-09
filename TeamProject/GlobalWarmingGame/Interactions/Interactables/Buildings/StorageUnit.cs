@@ -9,13 +9,10 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class StorageUnit : InteractableGameObject, IBuildable
+    class StorageUnit : InteractableGameObject
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 8)};
-        public Temperature Temperature { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        Vector2 IBuildable.Position { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        Vector2 IBuildable.Size { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         private Inventory inventory;
         

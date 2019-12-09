@@ -9,14 +9,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class WorkBench : InteractableGameObject, IBuildable
+    class WorkBench : InteractableGameObject
     {
         private Inventory inventory;
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 8)};
-        public Temperature Temperature { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        Vector2 IBuildable.Position { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        Vector2 IBuildable.Size { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         public WorkBench(Vector2 position, Texture2D texture) : base
         (

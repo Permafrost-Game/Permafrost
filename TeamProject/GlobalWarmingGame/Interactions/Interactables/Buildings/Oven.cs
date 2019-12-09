@@ -9,14 +9,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Oven : InteractableGameObject, IUpdatable, IBuildable
+    class Oven : InteractableGameObject, IUpdatable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new MachineParts(), 6),
                                                                                                    new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 2)};
-        public Temperature Temperature { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        Vector2 IBuildable.Position { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        Vector2 IBuildable.Size { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         private InstructionType cook;
         private InstructionType retrieve;

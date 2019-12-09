@@ -66,8 +66,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
 
             graphics.IsFullScreen = false;
@@ -184,9 +184,6 @@ namespace GlobalWarmingGame
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
 
-
-                UpdateBuildingTemperatures();
-
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
                 MainUI = new MainUI();
@@ -217,7 +214,10 @@ namespace GlobalWarmingGame
             {
                 camera.Update(gameTime);
 
+                //Update Temperatures
                 tileMap.Update(gameTime);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, tileMap);
+                UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
@@ -226,8 +226,6 @@ namespace GlobalWarmingGame
                     mouseInputMethod.Update(gameTime);
 
                 MainUI.Update(gameTime);
-
-                UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
@@ -476,35 +474,6 @@ namespace GlobalWarmingGame
             }
         }
 
-        #endregion
-
-        #region Update Building Temperatures
-        private void UpdateBuildingTemperatures()
-        {
-            foreach (IBuildable buildable in GameObjectManager.Buildable)
-            {
-                float temperature = buildable.Temperature.Value;
-                Vector2 position = buildable.Position;
-                Vector2 size = buildable.Size;
-                GetBuildingArea(position, size, temperature);
-            }
-        }
-
-        private void GetBuildingArea(Vector2 position, Vector2 size, float temperature)
-        {
-            float tileWidth = tileMap.Tiles[0, 0].size.X;
-            int numberOfTilesX = (int)(size.X / tileWidth);
-            int numberOfTilesY = (int)(size.Y / tileWidth);
-            for (int y = 0; y < numberOfTilesX; y++)
-            {
-                for (int x = 0; x < numberOfTilesY; x++)
-                {
-                    Tile t = tileMap.Tiles[(int)(position.X / tileWidth + x), (int)(position.Y / tileWidth + y)];
-                    t.Heated = true;
-                    t.temperature.SetTemp(temperature);
-                }
-            }
-        }
         #endregion
     }
 }

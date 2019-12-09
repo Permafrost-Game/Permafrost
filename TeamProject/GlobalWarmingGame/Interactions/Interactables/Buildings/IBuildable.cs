@@ -14,7 +14,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     {
         List<ResourceItem> CraftingCosts { get; }
         Temperature Temperature { get; set; }
-        Vector2 Position { get; set; }
-        Vector2 Size { get; set; }
+        Vector2 Position { get; }
+        Vector2 Size { get; }
     }
 }
