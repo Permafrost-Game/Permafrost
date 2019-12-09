@@ -44,13 +44,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(cook);
         }
 
-        public void CookFood(Colonist colonist)
+        private void CookFood(Colonist colonist)
         {
             //Take raw food from colonist and place in oven
             //Once cooking don't let the colonist add more food
         }
 
-        public void RetrieveFood(Colonist colonist) { 
+        private void RetrieveFood(Colonist colonist) { 
             //Take out cooked food from oven
 
         }

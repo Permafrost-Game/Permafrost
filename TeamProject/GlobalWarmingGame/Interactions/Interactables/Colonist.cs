@@ -76,7 +76,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     Inventory.AddItem(currentInstruction.Type.ResourceItem);
 
                 instructions.Dequeue();
-
             }
         }
 
@@ -93,7 +92,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #region Colonist Temperature Check
         private void TemperatureCheck(GameTime gameTime)
         {
-            //Temperature affecting colonist's health          
+            //Temperature affecting colonist's health
             timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToTemperature < 0f)
             {

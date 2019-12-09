@@ -35,7 +35,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
         }
 
-        public void Store(Colonist colonist)
+        private void Store(Colonist colonist)
         {
             //Open menu to either store or retrieve items
         }
