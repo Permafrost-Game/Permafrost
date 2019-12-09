@@ -14,7 +14,5 @@ namespace GlobalWarmingGame.Interactions
     {
         Temperature Temperature { get; set; }
         bool Heating { get; }
-        Vector2 Position { get; }
-        Vector2 Size { get; }
     }
 }

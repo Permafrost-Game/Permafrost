@@ -16,8 +16,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4), new ResourceItem(new Fibers(), 2) };
         public Temperature Temperature { get; set; } = new Temperature(50);
-        public new Vector2 Position { get; private set; }
-        public new Vector2 Size { get; private set; }
         public bool Heating { get; private set; }
 
         public CampFire(Vector2 position, Texture2D texture) : base
@@ -32,8 +30,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            Position = position;
-            Size = new Vector2(texture.Width, texture.Height);
             Heating = true;
             InstructionTypes.Add(new InstructionType("fuel", "Fuel", "Fuel campfire", Fuel));
         }

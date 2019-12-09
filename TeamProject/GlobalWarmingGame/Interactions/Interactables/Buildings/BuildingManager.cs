@@ -1,4 +1,5 @@
-﻿using Engine.TileGrid;
+﻿using Engine;
+using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -63,8 +64,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 foreach (IHeatable heatable in GameObjectManager.Buildable)
                 {
                     float temperature = heatable.Temperature.Value;
-                    Vector2 position = heatable.Position;
-                    Vector2 size = heatable.Size;
+                    Vector2 position = ((GameObject)heatable).Position;
+                    Vector2 size = ((GameObject)heatable).Size;
                     bool heating = heatable.Heating;
                     GetBuildingArea(position, size, temperature, heating, tileMap);
                 }
