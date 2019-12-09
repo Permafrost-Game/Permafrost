@@ -7,13 +7,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Oven : InteractableGameObject, IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new MachineParts(), 6),
                                                                                                    new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 2)};
+
         private InstructionType cook;
         private InstructionType retrieve;
         private Inventory inventory;

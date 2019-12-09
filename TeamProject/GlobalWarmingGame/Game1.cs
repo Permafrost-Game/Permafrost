@@ -6,9 +6,9 @@ using Engine.Lighting;
 using Engine.TileGrid;
 
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Resources;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -19,6 +19,8 @@ using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Menus;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Environment;
+using GlobalWarmingGame.Interactions.Interactables.Animals;
 
 namespace GlobalWarmingGame
 {
@@ -33,7 +35,7 @@ namespace GlobalWarmingGame
 
         TileSet tileSet;
         TileMap tileMap;
-        
+
         Camera camera;
 
         MainMenu MainMenu;
@@ -69,7 +71,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferWidth = 1024,
                 PreferredBackBufferHeight = 768
             };
-            
+
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
@@ -134,7 +136,7 @@ namespace GlobalWarmingGame
                 textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
                 textureSet.Add("6", water);
 
-                
+
 
                 tileSet = new TileSet(textureSet, new Vector2(16));
                 //                                                  map0/00.csv  //50x50 tilemap
@@ -162,8 +164,8 @@ namespace GlobalWarmingGame
                 string[] stringArray = new string[] { "Farm" };
 
                 BuildingManager.AddBuilding(0, "No Building");
-                for (int i = 0; i < stringArray.Length; i++) 
-                   BuildingManager.AddBuilding(i+1, stringArray[i], textureArray[i]);
+                for (int i = 0; i < stringArray.Length; i++)
+                    BuildingManager.AddBuilding(i + 1, stringArray[i], textureArray[i]);
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
@@ -173,7 +175,7 @@ namespace GlobalWarmingGame
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(800,800), texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: new Vector2(800, 800), texture: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -210,7 +212,10 @@ namespace GlobalWarmingGame
             {
                 camera.Update(gameTime);
 
+                //Update Temperatures
                 tileMap.Update(gameTime);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, tileMap);
+                UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
@@ -219,8 +224,6 @@ namespace GlobalWarmingGame
                     mouseInputMethod.Update(gameTime);
 
                 MainUI.Update(gameTime);
-
-                UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
@@ -273,7 +276,7 @@ namespace GlobalWarmingGame
 
 
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-                spriteBatch.Draw(ambiantLight, new Rectangle(0,0,GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
 
                 GraphicsDevice.SetRenderTarget(null);
@@ -365,6 +368,7 @@ namespace GlobalWarmingGame
         }
         #endregion
 
+        #region Main Menu and Pause Menu
         void PauseGame()
         {
             currentKeyboardState = Keyboard.GetState();
@@ -398,7 +402,7 @@ namespace GlobalWarmingGame
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
             }
-                
+
             else
                 MainMenu.Menu.Visible = false;
         }
@@ -412,7 +416,7 @@ namespace GlobalWarmingGame
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
             }
-                    
+
             else
                 PauseMenu.Menu.Visible = false;
         }
@@ -431,7 +435,7 @@ namespace GlobalWarmingGame
             {
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
-            }   
+            }
         }
 
         void ProcessMenuSelection()
@@ -467,5 +471,7 @@ namespace GlobalWarmingGame
                     break;
             }
         }
+
+        #endregion
     }
 }
