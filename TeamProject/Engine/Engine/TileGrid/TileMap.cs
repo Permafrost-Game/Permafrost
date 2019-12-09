@@ -120,7 +120,7 @@ namespace Engine.TileGrid
                 adjTiles.Add(GetTileAtPosition(v));
             }
             
-            if ((tile.Position.X + tileSize) < Tiles.GetLength(0)* tileSize)
+            if ((tile.Position.X + tileSize) < Tiles.GetLength(0) * tileSize)
             {
 
                 v = new Vector2((tile.Position.X + tileSize), tile.Position.Y);
@@ -136,7 +136,7 @@ namespace Engine.TileGrid
 
             }
 
-            if ((tile.Position.Y + tileSize) < Tiles.GetLength(0)* tileSize)
+            if ((tile.Position.Y + tileSize) < Tiles.GetLength(0) * tileSize)
             {
 
                 v = new Vector2(tile.Position.X, (tile.Position.Y + tileSize));

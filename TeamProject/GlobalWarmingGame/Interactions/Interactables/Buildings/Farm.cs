@@ -8,12 +8,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Farm : InteractableGameObject, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 5)};
-
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
         private InstructionType plant;
         private InstructionType harvest;
         private bool growing;
@@ -55,7 +54,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public void Update(GameTime gameTime)
         {
             //Grow crops over time
-            if (growing == true) 
+            if (growing == true)
             {
                 timeUntilGrown -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (timeUntilGrown < 0f)

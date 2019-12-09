@@ -1,14 +1,15 @@
 ﻿
+using Engine;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
     class CoalNode : InteractableGameObject
-    {        
+    {
         public CoalNode(Vector2 position, Texture2D texture) : base
         (
             position: position,

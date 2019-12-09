@@ -6,9 +6,9 @@ using Engine.Lighting;
 using Engine.TileGrid;
 
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Resources;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -19,6 +19,8 @@ using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Menus;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Environment;
+using GlobalWarmingGame.Interactions.Interactables.Animals;
 
 namespace GlobalWarmingGame
 {
@@ -228,7 +230,10 @@ namespace GlobalWarmingGame
             {
                 camera.Update(gameTime);
 
+                //Update Temperatures
                 tileMap.Update(gameTime);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, tileMap);
+                UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
@@ -237,8 +242,6 @@ namespace GlobalWarmingGame
                     mouseInputMethod.Update(gameTime);
 
                 MainUI.Update(gameTime);
-
-                UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory();
 
@@ -383,6 +386,7 @@ namespace GlobalWarmingGame
         }
         #endregion
 
+        #region Main Menu and Pause Menu
         void PauseGame()
         {
             currentKeyboardState = Keyboard.GetState();
@@ -485,5 +489,7 @@ namespace GlobalWarmingGame
                     break;
             }
         }
+
+        #endregion
     }
 }
