@@ -10,7 +10,8 @@ using System.Collections.Generic;
 namespace GlobalWarmingGame.Interactions
 {
     /// <summary>
-    /// This class describes an interactable object
+    /// This class describes an interactable 
+    /// This class is now obsolete See <see cref="IInteractable"/>
     /// </summary>
     [Obsolete]
     class InteractableGameObject : Sprite, IInteractable
