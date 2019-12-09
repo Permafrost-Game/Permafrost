@@ -47,7 +47,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(forrage);
         }
 
-        public void Forrage(Colonist colonist)
+        private void Forrage(Colonist colonist)
         {
             //This is tempory and should be replaced by the resource system
             if(IsHarvestable)

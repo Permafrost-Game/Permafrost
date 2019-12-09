@@ -34,7 +34,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", ForgeItem));
         }
 
-        public void ForgeItem(Colonist colonist)
+        private void ForgeItem(Colonist colonist)
         {
             //Open craft menu
             //Force the colonist to wait at the station until job is done

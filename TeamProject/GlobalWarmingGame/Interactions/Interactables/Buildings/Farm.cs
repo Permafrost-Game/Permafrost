@@ -5,6 +5,7 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
@@ -42,14 +43,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(plant);
         }
 
-        public void Harvest(Colonist colonist)
+        private void Harvest(Colonist colonist)
         {
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }
 
-        public void Plant(Colonist colonist)
+        private void Plant(Colonist colonist)
         {
             //Plant wheat seeds
             InstructionTypes.Remove(plant);
@@ -59,7 +60,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public void Update(GameTime gameTime)
         {
             //Grow crops over time
-            if (growing == true) 
+            if (growing == true)
             {
                 timeUntilGrown -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (timeUntilGrown < 0f)

@@ -12,6 +12,7 @@ using Engine;
 using Microsoft.Xna.Framework.Graphics;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Action;
 
 namespace GlobalWarmingGame.Menus
 {
@@ -19,8 +20,8 @@ namespace GlobalWarmingGame.Menus
     {
         public Panel TopPanel { get; private set; }
         public Panel BottomPanel { get; private set; }
-
-        string[] buildings = new string[10];
+        public DropDown BuildMenu { get; private set; }
+        public DropDown SpawnMenu { get; private set; }
 
         Label foodLabel;
 
@@ -35,18 +36,19 @@ namespace GlobalWarmingGame.Menus
                 Opacity = 192
             };
 
-            DropDown buildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
+            BuildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
             {
                 DefaultText = "Buildings",
                 AutoSetListHeight = true
             };
-            TopPanel.AddChild(buildMenu);
-            
-            for (int i = 0; i < buildings.Length; i++)
+            TopPanel.AddChild(BuildMenu);
+
+            SpawnMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(250, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
             {
-                buildings[i] = "Building " + (i + 1);
-                buildMenu.AddItem(buildings[i]);
-            }
+                DefaultText = "Spawn",
+                AutoSetListHeight = true
+            };
+            TopPanel.AddChild(SpawnMenu);
 
             Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false);
             TopPanel.AddChild(foodIcon);
