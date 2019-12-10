@@ -53,7 +53,6 @@ namespace GlobalWarmingGame.Resources
                     switch (item.Type.ID)
                     {
                         case "food":
-                            TotalFood += item.Amount;
                             mainUI.ItemSlots[0].IconType = IconType.Apple;
                             mainUI.ItemLabels[0].Text = item.Amount.ToString();
                             break;
@@ -76,6 +75,15 @@ namespace GlobalWarmingGame.Resources
                 ColonistInventories.Clear();
 
                 BuildCollectiveInventory(mainUI);
+
+                foreach (Inventory inventory in ColonistInventories)
+                {
+                    if (inventory.Resources.ContainsKey("food"))
+                    {
+                        ResourceItem food = inventory.Resources["food"];
+                        TotalFood += food.Amount;
+                    }
+                }
 
                 timeUntilUpdate = timeBetweenUpdate;
             }

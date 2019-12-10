@@ -449,7 +449,7 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = new Vector2(1600,1600) - camera.Position;
+            Vector2 position = tileMap.GetTileAtPosition(new Vector2(1600, 1600) - camera.Position).Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
