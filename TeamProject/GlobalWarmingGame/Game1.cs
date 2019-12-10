@@ -69,8 +69,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
             };
             
             graphics.IsFullScreen = false;

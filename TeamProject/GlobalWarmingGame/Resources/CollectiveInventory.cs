@@ -16,20 +16,37 @@ namespace GlobalWarmingGame.Resources
     {
         List<GameObject> Colonists { get; set; }
         public List<Inventory> ColonistInventories { get; set; }
-        public List<ResourceItem> CollectiveResources { get; set; }
+        public Dictionary<string, ResourceItem> CollectiveResources { get; set; }
         public float CollectiveCapacity { get; set; }
         public float CollectiveCurrentLoad { get; set; }
         public int TotalFood { get; set; }
 
+        readonly float timeBetweenUpdate = 500f;
         float timeUntilUpdate;
-        float timeBetweenUpdate = 500f;
-
+        
         public CollectiveInventory(MainUI mainUI)
         {
             Colonists = new List<GameObject>();
             ColonistInventories = new List<Inventory>();
+            CollectiveResources = new Dictionary<string, ResourceItem>();
 
             BuildCollectiveInventory(mainUI);
+        }
+
+        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI)
+        {
+            timeUntilUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (timeUntilUpdate <= 0f)
+            {
+                Colonists.Clear();
+                ColonistInventories.Clear();
+                CollectiveResources.Clear();
+
+                BuildCollectiveInventory(mainUI);
+
+                timeUntilUpdate = timeBetweenUpdate;
+            }
         }
 
         void BuildCollectiveInventory(MainUI mainUI)
@@ -47,49 +64,36 @@ namespace GlobalWarmingGame.Resources
             {
                 CollectiveCapacity += inventory.Capacity;
                 CollectiveCurrentLoad += inventory.CurrentLoad;
-
+                
                 foreach (ResourceItem item in inventory.Resources.Values)
                 {
-                    switch (item.Type.ID)
-                    {
-                        case "food":
-                            mainUI.ItemSlots[0].IconType = IconType.Apple;
-                            mainUI.ItemLabels[0].Text = item.Amount.ToString();
-                            break;
-                        case "wood":
-                            mainUI.ItemSlots[1].IconType = IconType.Bone;
-                            mainUI.ItemLabels[1].Text = item.Amount.ToString();
-                            break;
-                        case "stone":
-                            mainUI.ItemSlots[1].IconType = IconType.Diamond;
-                            mainUI.ItemLabels[1].Text = item.Amount.ToString();
-                            break;
-                    }
+                    if (CollectiveResources.ContainsKey(item.Type.ID))
+                        CollectiveResources[item.Type.ID].Amount += item.Amount;
+
+                    else
+                        CollectiveResources.Add(item.Type.ID, item);   
                 }
             }
-        }
 
-        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI)
-        {
-            timeUntilUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (timeUntilUpdate <= 0f)
+            foreach (ResourceItem item in CollectiveResources.Values)
             {
-                Colonists.Clear();
-                ColonistInventories.Clear();
-
-                BuildCollectiveInventory(mainUI);
-
-                foreach (Inventory inventory in ColonistInventories)
+                switch (item.Type.ID)
                 {
-                    if (inventory.Resources.ContainsKey("food"))
-                    {
-                        ResourceItem food = inventory.Resources["food"];
-                        TotalFood += food.Amount;
-                    }
-                }
+                    case "food":
+                        mainUI.ItemSlots[0].IconType = IconType.Apple;
+                        mainUI.ItemLabels[0].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
 
-                timeUntilUpdate = timeBetweenUpdate;
+                    case "wood":
+                        mainUI.ItemSlots[1].IconType = IconType.Bone;
+                        mainUI.ItemLabels[1].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
+
+                    case "stone":
+                        mainUI.ItemSlots[2].IconType = IconType.Diamond;
+                        mainUI.ItemLabels[2].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
+                }
             }
         }
     }
