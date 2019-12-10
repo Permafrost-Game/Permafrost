@@ -9,12 +9,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using GlobalWarmingGame.Interactions.Interactables;
+using Engine.Drawing;
+using Engine.PathFinding;
 
 namespace GlobalWarmingGame.Interactions.Enemies
 {
     //add animated sprite instead of aggressive movement
     //add random movement using randomAI class
-    class Enemy : AggressiveMovement, IUpdatable
+    class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
         List<GameObject> colonists;
         GameTime duration;
@@ -25,25 +27,37 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public float attackRange { get; set; }
         public string enemyTag { get; set; }
         private double attackSpeed { get; set; }
+
+        public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
+        public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
+        public Queue<Vector2> Path { get; set; }  = new Queue<Vector2>();
+        public float Speed { get; set; }
+
         Combat c;
 
-        public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D texture) : base
+        public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
+            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
             tag: tag,
             depth: 0.9f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>(),
-            speed: 5f
+            textureSet: textureSet,
+            frameTime: 100f
+            
+           
         )
         {
+            //generic stats:
+            Speed = 0.2f;
+
+
+
             InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, EnemyAttacked));
 
-            colonists = GameObjectManager.GetObjectsByTag("Colonist");
             
+
             c = new Combat();
             this.attackRange = aRange;
             this.Health = maxHp;
@@ -53,6 +67,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
+        private void EnemyAttacked(Colonist colonist)
+        {
+            EnemyAttacked();
+        }
 
         public void SetEnemyDead(){
             GameObjectManager.Remove(this);
@@ -63,11 +81,12 @@ namespace GlobalWarmingGame.Interactions.Enemies
             colonists.Remove(target);
             targetFound = false;
             target = null;
-            base.goals.Clear();
+            Goals.Clear();
         }
 
-        private void EnemyAttacked(Colonist colonist)
+        private void EnemyAttacked()
         {
+            colonists = GameObjectManager.GetObjectsByTag("Colonist");
             targetFound = false;
             for (int i = 0; i < colonists.Count; i++)
             {
@@ -79,7 +98,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
             if (targetFound == false)
             {
-                base.goals.Clear();
+                Goals.Clear();
             }
             else
             {
@@ -99,7 +118,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             //Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)
             toEndCost = Math.Sqrt((enemy.X - attacker.X) * (enemy.X - attacker.X) + (enemy.Y - attacker.Y) * (enemy.Y - attacker.Y));
 
-            if (toEndCost < 100)
+            if (toEndCost < 200)
             {
                 return true;
             }
@@ -110,24 +129,24 @@ namespace GlobalWarmingGame.Interactions.Enemies
         private void ChaseColonist(){
             if (InAggroRange(target.Position))
             {
-                base.goals.Clear();
-                base.AddGoal(target.Position);
+               Goals.Clear();
+                Goals.Enqueue(target.Position);
             }
             else
             {
-                base.goals.Clear();
+               Goals.Clear();
             }
         }
 
         //change random movement
-        protected override void OnGoalComplete(Vector2 completedGoal){
+        public  void OnGoalComplete(Vector2 completedGoal){
             Random rnd = new Random();
             Vector2 v = new Vector2
             {
                 X = rnd.Next(500, 600),
                 Y = rnd.Next(500, 600)
             };
-            base.AddGoal(v);
+            Goals.Enqueue(v);
         }
 
         
@@ -136,8 +155,36 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         public override void Update(GameTime gameTime){
+            Vector2 position1 = this.Position;
+            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             base.Update(gameTime);
-            //EnemyAttacked();
+
+            Vector2 delta = position1 - this.Position;
+
+            //Math.Atan2(delta.X, delta.Y);
+
+            if (delta.Equals(Vector2.Zero))
+            {
+                isAnimated = false;
+            }
+            else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
+            {
+                isAnimated = true;
+                TextureGroupIndex = 1;
+                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+            else
+            {
+                isAnimated = true;
+                TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
+            }
+
+
+
+
+
+
+            EnemyAttacked();
             if (target != null && targetFound == true)
             {
                  c.intializeCombat((Colonist)target, this,gameTime);
@@ -153,10 +200,12 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
             else
             {
-                base.goals.Clear();
-                base.AddGoal(this.Position);
+                Goals.Clear();
+                Goals.Enqueue(this.Position);
             }
         }
+
+      
     }
 }
 

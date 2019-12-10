@@ -64,8 +64,8 @@ namespace GlobalWarmingGame
         Texture2D tree;
         Texture2D treeStump;
         Texture2D logo;
-         Texture2D bear;
-         Texture2D robot;
+         Texture2D[][] bear;
+         Texture2D[][] robot;
 
         public Game1()
         {
@@ -158,8 +158,45 @@ namespace GlobalWarmingGame
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                bear = this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0");
-                robot = this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0");
+                bear = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite7")
+                        
+
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite3")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite5"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite6")
+            
+                    }
+                };
+
+                robot = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+
+                    },
+                     new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+
+                    },
+                      new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+
+                    }
+                    };
                 rabbit = new Texture2D[][]
                 {
                     new Texture2D[]
@@ -178,7 +215,7 @@ namespace GlobalWarmingGame
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
                     }
                 };
-                ;
+                
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
                 logo = Content.Load<Texture2D>(@"logo");
@@ -218,7 +255,7 @@ namespace GlobalWarmingGame
                     aPower: 1, // Attack Power
                     maxHp: 969, // Health
                     position: new Vector2(580, 580),
-                    texture: bear
+                    textureSet: bear
                 ));
                 GameObjectManager.Add(new Enemy(
                     tag: "Robot",
@@ -227,7 +264,7 @@ namespace GlobalWarmingGame
                     aPower: 0, // Attack Power (0 = Going to be random)
                     maxHp: 3000, // Health
                     position: new Vector2(600, 630),
-                    texture: robot
+                    textureSet: robot
                 ));
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(tileMap.Size); };
