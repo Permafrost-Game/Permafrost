@@ -55,7 +55,7 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
-        Texture2D colonist;
+        Texture2D[][] colonist;
         Texture2D farm;
         Texture2D bushH;
         Texture2D bushN;
@@ -151,7 +151,13 @@ namespace GlobalWarmingGame
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
+                colonist = new Texture2D[][] 
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    }
+                };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
@@ -193,7 +199,7 @@ namespace GlobalWarmingGame
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: tileMap.Size * tileMap.Tiles[0,0].size / 2, texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: tileMap.Size * tileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -473,7 +479,7 @@ namespace GlobalWarmingGame
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
                 case 0:
-                    GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
+                    GameObjectManager.Add(new Colonist(position: position, textureSet: colonist, inventoryCapacity: 100f));
                     break;
                 case 1:
                     GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));
