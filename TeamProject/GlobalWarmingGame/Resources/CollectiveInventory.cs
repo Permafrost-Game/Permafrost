@@ -71,7 +71,7 @@ namespace GlobalWarmingGame.Resources
                         CollectiveResources[item.Type.ID].Amount += item.Amount;
 
                     else
-                        CollectiveResources.Add(item.Type.ID, item);
+                        CollectiveResources.Add(item.Type.ID, item.Clone()); 
                 }
             }
 
