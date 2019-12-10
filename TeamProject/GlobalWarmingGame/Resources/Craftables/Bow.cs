@@ -1,5 +1,6 @@
 ﻿using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
+using GlobalWarmingGame.Resources.ResourceTypes;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame
+namespace GlobalWarmingGame.Resources.Craftables
 {
     public class Bow : ResourceType, ICraftable
     {

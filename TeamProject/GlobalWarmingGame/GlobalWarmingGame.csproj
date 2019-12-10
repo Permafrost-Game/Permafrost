@@ -79,6 +79,7 @@
     <Compile Include="Resources\Craftables\Backpack.cs" />
     <Compile Include="Resources\Craftables\Bow.cs" />
     <Compile Include="Resources\Craftables\Hoe.cs" />
+    <Compile Include="Resources\Craftables\BasicRifle.cs" />
     <Compile Include="Resources\Craftables\Pickaxe.cs" />
     <Compile Include="Resources\Craftables\Axe.cs" />
     <Compile Include="Resources\Craftables\Cloth.cs" />

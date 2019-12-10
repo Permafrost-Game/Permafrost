@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame.Resources
+namespace GlobalWarmingGame.Resources.Craftables
 {
     interface ICraftable
     {
