@@ -23,7 +23,7 @@ namespace GlobalWarmingGame.Resources
 
         readonly float timeBetweenUpdate = 500f;
         float timeUntilUpdate;
-        
+
         public CollectiveInventory(MainUI mainUI)
         {
             Colonists = new List<GameObject>();
@@ -64,14 +64,14 @@ namespace GlobalWarmingGame.Resources
             {
                 CollectiveCapacity += inventory.Capacity;
                 CollectiveCurrentLoad += inventory.CurrentLoad;
-                
+
                 foreach (ResourceItem item in inventory.Resources.Values)
                 {
                     if (CollectiveResources.ContainsKey(item.Type.ID))
                         CollectiveResources[item.Type.ID].Amount += item.Amount;
 
                     else
-                        CollectiveResources.Add(item.Type.ID, item);   
+                        CollectiveResources.Add(item.Type.ID, item);
                 }
             }
 
