@@ -90,13 +90,41 @@ namespace GlobalWarmingGame.Action
 
                     if (objectClicked is IInteractable)
                     {
-                        foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
+                        if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
                         {
-                            Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
+                            {
+                                Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                                button2.ButtonParagraph.Scale = 0.5f;
+                                Menu.AddChild(button2);
+                                button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Menu.Visible = false; };
+                            }
+                        }
+
+                        else
+                        {
+                            Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                             button2.ButtonParagraph.Scale = 0.5f;
                             Menu.AddChild(button2);
-                            button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Menu.Visible = false; };
-                        }
+                            Label craftingMenu = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 50));
+
+                            Button instructionButton1 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton3 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton4 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton5 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton6 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton7 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            Button instructionButton8 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+
+                            button2.OnClick = (Entity btn) => 
+                            {
+                                Menu.Visible = false;
+                                craftingMenu.Scale = 0.7f;
+                                Menu.AddChild(craftingMenu);
+                                UpdateInstruction(, (IInteractable)objectClicked);     
+                            };
+                        }           
                     }
 
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
