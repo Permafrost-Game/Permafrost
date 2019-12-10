@@ -53,6 +53,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
+
         public void SetEnemyDead(){
             GameObjectManager.Remove(this);
             
@@ -65,7 +66,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
             base.goals.Clear();
         }
 
-        public void EnemyAttacked(){
+        private void EnemyAttacked(Colonist colonist)
+        {
             targetFound = false;
             for (int i = 0; i < colonists.Count; i++)
             {
@@ -135,7 +137,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         public override void Update(GameTime gameTime){
             base.Update(gameTime);
-            EnemyAttacked();
+            //EnemyAttacked();
             if (target != null && targetFound == true)
             {
                  c.intializeCombat((Colonist)target, this,gameTime);
