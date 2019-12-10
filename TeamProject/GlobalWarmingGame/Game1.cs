@@ -67,11 +67,11 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
             
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -190,7 +190,7 @@ namespace GlobalWarmingGame
 
                 CollectiveInventory = new CollectiveInventory(MainUI);
 
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(tileMap.Size); };
+                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
             }
         }
 
@@ -223,7 +223,7 @@ namespace GlobalWarmingGame
 
                 UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory(MainUI);
+                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
                 MainUI.UpdateFoodCounter(CollectiveInventory);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
@@ -333,6 +333,7 @@ namespace GlobalWarmingGame
 
                 foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
                     drawable.Draw(spriteBatch);
+
                 spriteBatch.End();
             }
 

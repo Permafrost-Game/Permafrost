@@ -21,6 +21,9 @@ namespace GlobalWarmingGame.Resources
         public float CollectiveCurrentLoad { get; set; }
         public int TotalFood { get; set; }
 
+        float timeUntilUpdate;
+        float timeBetweenUpdate = 500f;
+
         public CollectiveInventory(MainUI mainUI)
         {
             Colonists = new List<GameObject>();
@@ -63,12 +66,19 @@ namespace GlobalWarmingGame.Resources
             }
         }
 
-        public void UpdateCollectiveInventory(MainUI mainUI)
+        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI)
         {
-            Colonists.Clear();
-            ColonistInventories.Clear();
-            
-            BuildCollectiveInventory(mainUI);
+            timeUntilUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (timeUntilUpdate <= 0f)
+            {
+                Colonists.Clear();
+                ColonistInventories.Clear();
+
+                BuildCollectiveInventory(mainUI);
+
+                timeUntilUpdate = timeBetweenUpdate;
+            }
         }
     }
 }
