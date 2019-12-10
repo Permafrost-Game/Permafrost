@@ -61,8 +61,8 @@ namespace GlobalWarmingGame.Resources
                             mainUI.ItemLabels[1].Text = item.Amount.ToString();
                             break;
                         case "stone":
-                            mainUI.ItemSlots[1].IconType = IconType.Diamond;
-                            mainUI.ItemLabels[1].Text = item.Amount.ToString();
+                            mainUI.ItemSlots[2].IconType = IconType.Diamond;
+                            mainUI.ItemLabels[2].Text = item.Amount.ToString();
                             break;
                     }
                 }
