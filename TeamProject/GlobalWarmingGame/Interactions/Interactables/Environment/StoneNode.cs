@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 5), Mine));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 4), Mine));
         }
 
         private void Mine(Colonist colonist)

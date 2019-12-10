@@ -8,24 +8,24 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class CoalNode : InteractableGameObject
+    class TallGrass : InteractableGameObject
     {        
-        public CoalNode(Vector2 position, Texture2D texture) : base
+        public TallGrass(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "CoalNode",
+            tag: "TallGrass",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", new ResourceItem(new Coal(), 4), Mine));
+            InstructionTypes.Add(new InstructionType("trim", "Trim grass", "Trim grass", new ResourceItem(new Fibers(), 4), Trim));
         }
 
-        private void Mine(Colonist colonist)
+        private void Trim(Colonist colonist)
         {
             //Maybe destory the node or allow 3 more mine operations
         }

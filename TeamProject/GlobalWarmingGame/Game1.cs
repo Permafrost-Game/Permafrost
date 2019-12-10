@@ -58,6 +58,7 @@ namespace GlobalWarmingGame
         Texture2D farm;
         Texture2D workBench;
         Texture2D stoneNode;
+        Texture2D tallGrass;
         Texture2D bushH;
         Texture2D bushN;
         Texture2D rabbit;
@@ -161,6 +162,7 @@ namespace GlobalWarmingGame
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
                 workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
                 stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stonenode");
+                tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
                 logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { farm, workBench };
@@ -182,7 +184,7 @@ namespace GlobalWarmingGame
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[7];
+                string[] spawnables = new string[8];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
@@ -190,6 +192,7 @@ namespace GlobalWarmingGame
                 spawnables[4] = "Bush";
                 spawnables[5] = "WorkBench";
                 spawnables[6] = "Stone";
+                spawnables[7] = "TallGrass";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -480,6 +483,9 @@ namespace GlobalWarmingGame
                     break;
                 case 6:
                     GameObjectManager.Add(new StoneNode(position: position, texture: stoneNode));
+                    break;
+                case 7:
+                    GameObjectManager.Add(new TallGrass(position: position, texture: tallGrass));
                     break;
             }
         }
