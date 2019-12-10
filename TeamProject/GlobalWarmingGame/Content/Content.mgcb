@@ -5039,7 +5039,7 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/tree/tree.png
 
-#begin textures/tiles/main_tileset/dirt.png
+#begin textures/tiles/main_tileset/Grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5049,9 +5049,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/dirt.png
+/build:textures/tiles/main_tileset/Grass.png
 
-#begin textures/tiles/main_tileset/error.png
+#begin textures/tiles/main_tileset/Snow.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5061,9 +5061,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/error.png
+/build:textures/tiles/main_tileset/Snow.png
 
-#begin textures/tiles/main_tileset/grass.png
+#begin textures/tiles/main_tileset/Stone.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5073,9 +5073,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/grass.png
+/build:textures/tiles/main_tileset/Stone.png
 
-#begin textures/tiles/main_tileset/snow.png
+#begin textures/tiles/main_tileset/Tundra.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5085,9 +5085,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/snow.png
+/build:textures/tiles/main_tileset/Tundra.png
 
-#begin textures/tiles/main_tileset/stone.png
+#begin textures/tiles/main_tileset/Tundra2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5097,9 +5097,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/stone.png
+/build:textures/tiles/main_tileset/Tundra2.png
 
-#begin textures/tiles/main_tileset/water.png
+#begin textures/tiles/main_tileset/Water.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5109,5 +5109,65 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/water.png
+/build:textures/tiles/main_tileset/Water.png
+
+#begin textures/tiles/old_tileset/dirt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/dirt.png
+
+#begin textures/tiles/old_tileset/error.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/error.png
+
+#begin textures/tiles/old_tileset/grass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/grass.png
+
+#begin textures/tiles/old_tileset/snow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/snow.png
+
+#begin textures/tiles/old_tileset/stone.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/stone.png
 
