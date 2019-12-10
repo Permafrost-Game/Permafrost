@@ -16,7 +16,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
                                                                                                    new ResourceItem(new Wood(), 2)};
         private InstructionType cook;
         private InstructionType retrieve;
-        private Inventory inventory;
 
         private bool cooking;
         private float timeUntilCooked;
@@ -34,7 +33,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            inventory = new Inventory(10);
             cook = new InstructionType("cook", "Cook", "Cook food", CookFood);
             retrieve = new InstructionType("retrieve", "Retrieve", "Retrieve food", RetrieveFood);
             InstructionTypes.Add(cook);

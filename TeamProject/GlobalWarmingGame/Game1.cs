@@ -56,6 +56,7 @@ namespace GlobalWarmingGame
 
         Texture2D colonist;
         Texture2D farm;
+        Texture2D workBenchTexture;
         Texture2D bushH;
         Texture2D bushN;
         Texture2D rabbit;
@@ -157,6 +158,7 @@ namespace GlobalWarmingGame
                 rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
+                workBenchTexture = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
                 logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { farm };
@@ -177,6 +179,9 @@ namespace GlobalWarmingGame
                 var c1 = new Colonist(position: new Vector2(800,800), texture: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
+
+                WorkBench workBench = new WorkBench(position: new Vector2(600, 600), texture: workBenchTexture);
+                GameObjectManager.Add(workBench);
 
                 string[] spawnables = new string[5];
                 spawnables[0] = "Colonist";
@@ -368,6 +373,7 @@ namespace GlobalWarmingGame
         }
         #endregion
 
+        #region Menus
         void PauseGame()
         {
             currentKeyboardState = Keyboard.GetState();
@@ -470,5 +476,6 @@ namespace GlobalWarmingGame
                     break;
             }
         }
+        #endregion
     }
 }

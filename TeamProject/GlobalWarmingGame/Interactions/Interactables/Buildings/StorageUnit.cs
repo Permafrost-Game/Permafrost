@@ -27,7 +27,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            inventory = new Inventory(100);
+            inventory = new Inventory(100f);
             InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
         }
 

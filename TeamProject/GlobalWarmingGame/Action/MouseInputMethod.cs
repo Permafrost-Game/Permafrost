@@ -104,7 +104,7 @@ namespace GlobalWarmingGame.Action
                     Menu.AddChild(button3);
                     button3.OnClick = (Entity btn) => { Menu.Visible = false; };
 
-                    if (buildingSelected) 
+                    if (buildingSelected)
                     {
                         Button button4 = new Button("Build Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                         button4.ButtonParagraph.Scale = 0.5f;
@@ -113,24 +113,40 @@ namespace GlobalWarmingGame.Action
                         {
                             if (objectClicked == null && tileClicked.Walkable)
                             {
-                                PlaceBuilding(tileClicked);
+                                PlaceBuildingHelper(tileClicked);
                             }
 
                             Menu.Visible = false;
                         };
                     }
                 }
-            }   
+            }
         }
 
-        void PlaceBuilding(Tile tileClicked) 
+        void PlaceBuildingHelper(Tile tileClicked)
+        {
+            Building buildingDetails = BuildingManager.GetBuilding(buildingId);
+            List<ResourceItem> buildingCosts = new List<ResourceItem>();
+
+            //TODO make an abstract building class to reduce repeated code
+            switch (buildingId)
+            {
+                case (0):
+                    Farm building = new Farm(tileClicked.Position, buildingDetails.Texture);
+                    buildingCosts = building.CraftingCosts;
+
+                    if (TryPlaceBuilding(buildingCosts))
+                    {
+                        GameObjectManager.Add(building);
+                    }
+                    break;
+            }
+        }
+
+        bool TryPlaceBuilding(List<ResourceItem> buildingCosts)
         {
             Colonist colonist = currentInstruction.ActiveMember;
-            Building buildingDetails = BuildingManager.GetBuilding(buildingId);
-            Farm building = new Farm(tileClicked.Position, buildingDetails.Texture);
-            List<ResourceItem> buildingCosts = building.CraftingCosts;
             bool build = true;
-
             foreach (ResourceItem resource in buildingCosts)
             {
                 if (!colonist.Inventory.RemoveItem(resource))
@@ -138,11 +154,7 @@ namespace GlobalWarmingGame.Action
                     build = false;
                 }
             }
-
-            if (build)
-            {
-                GameObjectManager.Add(building);
-            }
+            return build;
         }
 
         void PopulateBuildMenu()
@@ -150,7 +162,7 @@ namespace GlobalWarmingGame.Action
             string[] buildings = BuildingManager.GetBuildingStrings();
 
             for (int i = 0; i < buildings.Length; i++)
-                mainUI.BuildMenu.AddItem(buildings[i]);            
+                mainUI.BuildMenu.AddItem(buildings[i]);
 
             mainUI.BuildMenu.OnValueChange = (Entity e) =>
             {
