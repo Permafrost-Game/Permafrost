@@ -192,8 +192,9 @@ namespace GlobalWarmingGame.Action
 
             hovering = false;
 
-            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-                Menu.Visible = false;
+            if (Menu != null && Menu.Visible)
+                if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+                    Menu.Visible = false;
 
             previousMouseState = currentMouseState;
         }

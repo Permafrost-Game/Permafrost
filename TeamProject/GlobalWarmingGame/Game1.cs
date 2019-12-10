@@ -39,6 +39,7 @@ namespace GlobalWarmingGame
         MainMenu MainMenu;
         PauseMenu PauseMenu;
         MainUI MainUI;
+        CollectiveInventory CollectiveInventory;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
@@ -187,6 +188,8 @@ namespace GlobalWarmingGame
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
 
+                CollectiveInventory = new CollectiveInventory(MainUI);
+
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(tileMap.Size); };
             }
         }
@@ -218,11 +221,10 @@ namespace GlobalWarmingGame
                 foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
                     mouseInputMethod.Update(gameTime);
 
-                MainUI.Update(gameTime);
-
                 UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory();
+                CollectiveInventory.UpdateCollectiveInventory(MainUI);
+                MainUI.UpdateFoodCounter(CollectiveInventory);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);

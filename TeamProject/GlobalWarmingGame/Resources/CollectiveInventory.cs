@@ -1,5 +1,7 @@
 ﻿using Engine;
+using GeonBit.UI.Entities;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Menus;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using System;
@@ -10,24 +12,24 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
-    static class CollectiveInventory
+    class CollectiveInventory
     {
-        static List<GameObject> Colonists { get; set; }
-        public static List<Inventory> ColonistInventories { get; set; }
+        List<GameObject> Colonists { get; set; }
+        public List<Inventory> ColonistInventories { get; set; }
+        public List<ResourceItem> CollectiveResources { get; set; }
+        public float CollectiveCapacity { get; set; }
+        public float CollectiveCurrentLoad { get; set; }
+        public int TotalFood { get; set; }
 
-        public static float CollectiveCapacity { get; set; }
-        public static float CollectiveCurrentLoad { get; set; }
-        public static int TotalFood { get; set; }
-
-        static CollectiveInventory()
+        public CollectiveInventory(MainUI mainUI)
         {
             Colonists = new List<GameObject>();
             ColonistInventories = new List<Inventory>();
 
-            BuildCollectiveInventory();
+            BuildCollectiveInventory(mainUI);
         }
 
-        public static void BuildCollectiveInventory()
+        void BuildCollectiveInventory(MainUI mainUI)
         {
             TotalFood = 0;
             CollectiveCapacity = 0f;
@@ -42,24 +44,31 @@ namespace GlobalWarmingGame.Resources
             {
                 CollectiveCapacity += inventory.Capacity;
                 CollectiveCurrentLoad += inventory.CurrentLoad;
+
+                foreach (ResourceItem item in inventory.Resources.Values)
+                {
+                    switch (item.Type.ID)
+                    {
+                        case "food":
+                            TotalFood += item.Amount;
+                            mainUI.ItemSlots[0].IconType = IconType.Apple;
+                            mainUI.ItemLabels[0].Text = item.Amount.ToString();
+                            break;
+                        case "wood":
+                            mainUI.ItemSlots[1].IconType = IconType.Bone;
+                            mainUI.ItemLabels[1].Text = item.Amount.ToString();
+                            break;
+                    }
+                }
             }
         }
 
-        public static void UpdateCollectiveInventory()
+        public void UpdateCollectiveInventory(MainUI mainUI)
         {
             Colonists.Clear();
             ColonistInventories.Clear();
             
-            BuildCollectiveInventory();
-
-            foreach (Inventory inventory in ColonistInventories)
-            {
-                if (inventory.Resources.ContainsKey("food"))
-                {
-                    ResourceItem food = inventory.Resources["food"];
-                    TotalFood += food.Amount;
-                }
-            }
+            BuildCollectiveInventory(mainUI);
         }
     }
 }

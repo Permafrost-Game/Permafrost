@@ -22,10 +22,11 @@ namespace GlobalWarmingGame.Menus
         public Panel BottomPanel { get; private set; }
         public DropDown BuildMenu { get; private set; }
         public DropDown SpawnMenu { get; private set; }
-
+        public Icon[] ItemSlots { get; set; }
+        public Label[] ItemLabels { get; set; }
+        
         Label foodLabel;
-
-        Icon[] itemSlots = new Icon[24];
+        
         bool open;
 
         public MainUI()
@@ -52,6 +53,7 @@ namespace GlobalWarmingGame.Menus
 
             Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false);
             TopPanel.AddChild(foodIcon);
+
             foodLabel = new Label("Food Counter", Anchor.CenterRight, null, new Vector2(75,0));
             TopPanel.AddChild(foodLabel);
 
@@ -72,14 +74,18 @@ namespace GlobalWarmingGame.Menus
                 Visible = open
             };
             BottomPanel.AddChild(collectiveInventory);
-            
 
             collectiveInventoryButton.OnClick = (Entity btn) => { open = !open; collectiveInventory.Visible = open; };
 
-            for (int i = 0; i < itemSlots.Length; i++)
+            ItemSlots = new Icon[24];
+            ItemLabels = new Label[ItemSlots.Length];
+            for (int i = 0; i < ItemSlots.Length; i++)
             {
-                itemSlots[i] = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
-                collectiveInventory.AddChild(itemSlots[i]);
+                ItemSlots[i] = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
+                collectiveInventory.AddChild(ItemSlots[i]);
+
+                ItemLabels[i] = new Label("0", Anchor.TopLeft, null, new Vector2(7.9f,-20));
+                ItemSlots[i].AddChild(ItemLabels[i]);
             }
 
             UserInterface.Active.AddEntity(BottomPanel);
@@ -88,9 +94,9 @@ namespace GlobalWarmingGame.Menus
             BottomPanel.Visible = false;
         }
 
-        public void Update(GameTime gameTime)
+        public void UpdateFoodCounter(CollectiveInventory collectiveInventory)
         {
-            foodLabel.Text = CollectiveInventory.TotalFood.ToString();
+            foodLabel.Text = collectiveInventory.TotalFood.ToString();
         }
     }
 }
