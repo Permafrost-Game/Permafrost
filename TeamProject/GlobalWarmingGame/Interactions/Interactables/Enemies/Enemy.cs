@@ -34,6 +34,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public float Speed { get; set; }
 
         Combat c;
+        public Boolean attacking=false;
+    
+        private bool isInCombat=false;
 
         public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
@@ -106,6 +109,25 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
         }
 
+        public void animateAttack() {
+          
+            
+                if (this.Tag == "Robot")
+                {
+                    isAnimated = true;
+                    this.TextureGroupIndex = 3;
+                }
+                
+                
+            
+        }
+        public void setAttacking(Boolean b) {
+            attacking = b;
+        }
+        public void setInCombat(Boolean b)
+        {
+            isInCombat = b;
+        }
         private bool InAggroRange(Vector2 aggressor)
         {
             //Cost from this node to another node
@@ -162,24 +184,42 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Vector2 delta = position1 - this.Position;
 
             //Math.Atan2(delta.X, delta.Y);
+            if (isInCombat)
+            {
+                if (attacking)
+                {
 
-            if (delta.Equals(Vector2.Zero))
-            {
-                isAnimated = false;
-            }
-            else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
-            {
-                isAnimated = true;
-                TextureGroupIndex = 1;
-                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    animateAttack();
+
+                }
+                else if (!attacking)
+                {
+                    isAnimated = true;
+                    TextureGroupIndex = 0;
+                }
             }
             else
             {
-                isAnimated = true;
-                TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
+                if (delta.Equals(Vector2.Zero))
+                {
+                    isAnimated = false;
+                }
+                else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
+                {
+                    isAnimated = true;
+                    TextureGroupIndex = 1;
+                    SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                }
+                else
+                {
+                    isAnimated = true;
+                    TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
+
+                }
             }
+            
 
-
+           
 
 
 
@@ -188,15 +228,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
             if (target != null && targetFound == true)
             {
                  c.intializeCombat((Colonist)target, this,gameTime);
-               // this.attackSpeed = this.attackSpeed - gameTime.ElapsedGameTime.TotalMilliseconds;
-
-              //  if (this.attackSpeed <= 0)
-              //  {
-                    c.PerformCombat();
-                   
-                    
-                    
-               // }
+               
+                 c.PerformCombat();
+            
             }
             else
             {

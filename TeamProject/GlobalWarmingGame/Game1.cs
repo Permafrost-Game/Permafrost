@@ -189,11 +189,18 @@ namespace GlobalWarmingGame
                      new Texture2D[]
                     {
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+                        
 
                     },
                       new Texture2D[]
                     {
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+
+                    },
+                     new Texture2D[]
+                    {
+                        
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/robotAttacking")
 
                     }
                     };
@@ -239,12 +246,13 @@ namespace GlobalWarmingGame
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[5];
+                string[] spawnables = new string[6];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
+                spawnables[5] = "Robot";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -259,13 +267,22 @@ namespace GlobalWarmingGame
                 ));
                 GameObjectManager.Add(new Enemy(
                     tag: "Robot",
-                    aSpeed: 10000, // Attack Speed
+                    aSpeed: 5000, // Attack Speed
                     aRange: 25, // Agro Range
                     aPower: 0, // Attack Power (0 = Going to be random)
                     maxHp: 3000, // Health
-                    position: new Vector2(600, 630),
+                    position: new Vector2(200, 200),
                     textureSet: robot
                 ));
+                GameObjectManager.Add(new Enemy(
+                   tag: "Robot",
+                   aSpeed: 5000, // Attack Speed
+                   aRange: 25, // Agro Range
+                   aPower: 0, // Attack Power (0 = Going to be random)
+                   maxHp: 3000, // Health
+                   position: new Vector2(300, 300),
+                   textureSet: robot
+               ));
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(tileMap.Size); };
             }
@@ -546,6 +563,17 @@ namespace GlobalWarmingGame
                     break;
                 case 4:
                     GameObjectManager.Add(new Bush(position: position, harvestable: bushH, harvested: bushN));
+                    break;
+                case 5:
+                    GameObjectManager.Add(new Enemy(
+                    tag: "Robot",
+                    aSpeed: 5000, // Attack Speed
+                    aRange: 25, // Agro Range
+                    aPower: 0, // Attack Power (0 = Going to be random)
+                    maxHp: 3000, // Health
+                    position:position,
+                    textureSet: robot
+                ));
                     break;
             }
         }

@@ -41,20 +41,24 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 enemy.AttackPower = rnd.Next(250, 450); // Set random Attack Power for the `Robot` enemy, between 250 and 450, before actually running the attacking code
             }
 
-
+           
 
             if (EnemyAttackSpeedControl())
             {
+                enemy.setAttacking(true);
                 colonist.Health = colonist.Health - enemy.AttackPower;
 
             }
-
+            
+            
+            
 
 
             if (colonist.Health <= 0) {
                 colonist.setDead();
                 enemy.ResetEnemyTarget();
-
+                enemy.setAttacking(false);
+                enemy.setInCombat(false);
                 enemy = null;
                 colonist = null;
             }
@@ -78,10 +82,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         private Boolean EnemyAttackSpeedControl()
         {
+           
             EnemytimeToAttack =EnemytimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
 
             Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
-
+            if (EnemytimeToAttack > 500 & EnemytimeToAttack < 600) {
+                enemy.setAttacking(false);
+            }
+           
             if (EnemytimeToAttack >= enemy.getAttackSpeed())
             {
                 EnemytimeToAttack = 0 ;
@@ -113,17 +121,22 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
         
         public void PerformCombat() {
-            
+            enemy.setInCombat(false);
             if (colonist != null && enemy != null)
             {
+
+                
                 if (colonist.attackRange >= DistanceBetweenCombatants() & enemy.Health > 0 & colonist.Health > 0)
                 {
+                    enemy.setInCombat(true);
                     ColonistAttack();
                 }
                 if (colonist != null && enemy != null)
                 {
+                   
                     if (enemy.attackRange >= DistanceBetweenCombatants() & colonist.Health > 0 & enemy.Health > 0)
                     {
+                        enemy.setInCombat(true);
                         EnemyAttack();
                     }
                 }
