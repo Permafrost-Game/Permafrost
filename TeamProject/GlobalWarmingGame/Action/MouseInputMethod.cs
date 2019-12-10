@@ -99,9 +99,30 @@ namespace GlobalWarmingGame.Action
                             button2.OnClick = (Entity btn) => { UpdateInstruction(instructionType, (IInteractable)objectClicked); Menu.Visible = false; };
 
                         }
+                        Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        button2.ButtonParagraph.Scale = 0.5f;
+                        Menu.AddChild(button2);
+                        Label craftingMenu = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 50));
+
+                        Button instructionButton1 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton3 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton4 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton5 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton6 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton7 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                        Button instructionButton8 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+
+                        button2.OnClick = (Entity btn) =>
+                        {
+                            Menu.Visible = false;
+                            craftingMenu.Scale = 0.7f;
+                            Menu.AddChild(craftingMenu);
+                            UpdateInstruction(, (IInteractable)objectClicked);
+                        };
                         foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
                         {
-                        
+
                         }
                     }
 
@@ -237,4 +258,3 @@ namespace GlobalWarmingGame.Action
         }
     }
 }
-
