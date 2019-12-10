@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame
+namespace GlobalWarmingGame.Resources.ResourceTypes
 {
     public class Stone : ResourceType
     {

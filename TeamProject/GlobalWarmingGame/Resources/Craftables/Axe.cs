@@ -1,4 +1,5 @@
 ﻿using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources.ResourceTypes;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame
+namespace GlobalWarmingGame.Resources.Craftables
 {
     public class Axe : ResourceType, ICraftable
     {
