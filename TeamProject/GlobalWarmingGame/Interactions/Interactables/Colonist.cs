@@ -7,6 +7,7 @@ using Engine;
 using GlobalWarmingGame;
 using Engine.TileGrid;
 using GlobalWarmingGame.ResourceItems;
+using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
@@ -17,12 +18,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public Inventory Inventory { get; }
         private Queue<Instruction> instructions;
 
+        public float Health { get; set; }
+        public int attackSpeed { get; set; }
         public string Name { get; private set; }
-        public float Health { get; private set; }
+        public float AttackPower { get; set; }
+        public float attackRange { get; set; }
         public Temperature Temperature { get; set; } = new Temperature(38);
         private readonly float CoreBodyTemperature = 38;
         public int UpperComfortRange { get; private set; } = 40;
         public int LowerComfortRange { get; private set; } = 15;
+
+        public Boolean colonistDead = false;
+
 
         private static readonly float Base_Consumption_Rate = 60000f;
         private float timeUntillFoodTick;
@@ -43,7 +50,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             speed: 0.5f
         )
         {
-            Health = 10f;
+            attackRange = 30;
+            AttackPower = 3;
+            Health = 1000f;
+            attackSpeed = 1000;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;
@@ -55,6 +65,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 new InstructionType("select", "Select Colonist", "Selects this colonist")
             };
+        }
+
+        internal void setDead()
+        {
+            this.Rotation = 1.5f;
+            colonistDead = true;
+
+            #region Start 2 Seconds Delay for 'Animation'
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o => {
+                GameObjectManager.Remove(this);
+            });
+            #endregion
         }
 
         public void AddInstruction(Instruction instruction)
@@ -78,16 +100,24 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Dequeue();
             }
         }
+        
+        public Boolean isColonistDead() {
+            return colonistDead;
+        }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
             if (goals.Count == 0 && instructions.Count > 0)
+            {
                 AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
 
-            TemperatureCheck(gameTime);
-            HungerCheck(gameTime);
+                TemperatureCheck(gameTime);
+                HungerCheck(gameTime);
+            }
         }
+
 
         #region Colonist Temperature Check
         private void TemperatureCheck(GameTime gameTime)
@@ -107,65 +137,63 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Colonist Hunger Check
         private void HungerCheck(GameTime gameTime)
-        {
-            //Temperature affecting food
-            timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
+            {
+                //Temperature affecting food
+                timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
 
-            if (foodFormula <= 0.25)
-            {
-                foodFormula = 0.25;
-            }
-
-            // foodFormula is a multiplier on the timeUntillFoodTick
-            if ((timeUntillFoodTick * foodFormula) < 0)
-            {
-                FoodTick();
-                timeUntillFoodTick = Base_Consumption_Rate;
-            }
-        }
-        private void FoodTick()
-        {
-            //If colonist doesn't have food on them, they are starving -1 health
-            ResourceItem food = new ResourceItem(new Food(), 1);
-            if (!Inventory.RemoveItem(food))
-            {
-                Health -= 1;
-            }
-            else
-            {
-                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
-            }
-        }
-        #endregion
-
-        #region Update Temperature
-        public void UpdateTemp(float tileTemp, GameTime gameTime)
-        {
-            //Adjust the colonist's temperature based on the tile they are over
-            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperatureUpdate < 0f)
-            {
-                if (tileTemp > CoreBodyTemperature)
+                if (foodFormula <= 0.25)
                 {
-                    Temperature.Value = Temperature.Value + (tileTemp / 10);
-                    //Colonist's temperature should be able to be greater than the tile they are over
-                    Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                    //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    foodFormula = 0.25;
+                }
+
+                // foodFormula is a multiplier on the timeUntillFoodTick
+                if ((timeUntillFoodTick * foodFormula) < 0)
+                {
+                    FoodTick();
+                    timeUntillFoodTick = Base_Consumption_Rate;
+                }
+            }
+            private void FoodTick()
+            {
+                //If colonist doesn't have food on them, they are starving -1 health
+                ResourceItem food = new ResourceItem(new Food(), 1);
+                if (!Inventory.RemoveItem(food))
+                {
+                    Health -= 1;
                 }
                 else
                 {
-                    Temperature.Value = Temperature.Value - 1;
-                    //Colonist's temperature should be able to be lower than the tile they are over
-                    Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                    //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
                 }
-                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
+            #endregion
+
+            #region Update Temperature
+            public void UpdateTemp(float tileTemp, GameTime gameTime)
+            {
+                //Adjust the colonist's temperature based on the tile they are over
+                timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (timeToTemperatureUpdate < 0f)
+                {
+                    if (tileTemp > CoreBodyTemperature)
+                    {
+                        Temperature.Value = Temperature.Value + (tileTemp / 10);
+                        //Colonist's temperature should be able to be greater than the tile they are over
+                        Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
+                        //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    }
+                    else
+                    {
+                        Temperature.Value = Temperature.Value - 1;
+                        //Colonist's temperature should be able to be lower than the tile they are over
+                        Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
+                        //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    }
+                    timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+                }
+            }
+            #endregion
+
         }
-        #endregion
-
     }
-}
-
-
