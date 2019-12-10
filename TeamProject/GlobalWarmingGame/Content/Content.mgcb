@@ -4847,6 +4847,30 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/animals/colonist/sprite0.png
 
+#begin textures/interactables/animals/colonist/sprite1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/sprite1.png
+
+#begin textures/interactables/animals/colonist/sprite2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/sprite2.png
+
 #begin textures/interactables/animals/rabbit/sprite0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5086,6 +5110,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/tiles/main_tileset/Tundra.png
+
+#begin textures/tiles/main_tileset/Tundra1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/main_tileset/Tundra1.png
 
 #begin textures/tiles/main_tileset/Tundra2.png
 /importer:TextureImporter

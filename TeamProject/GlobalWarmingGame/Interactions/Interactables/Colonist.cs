@@ -81,7 +81,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
+            Vector2 position1 = this.Position;
+            //this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             base.Update(gameTime);
+
+            Vector2 delta = position1 - this.Position;
+
+            if (Math.Abs(delta.X) > Math.Abs(delta.Y))
+            {
+                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+
             if (goals.Count == 0 && instructions.Count > 0)
                 AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
 

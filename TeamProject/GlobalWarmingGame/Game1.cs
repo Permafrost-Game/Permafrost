@@ -130,7 +130,7 @@ namespace GlobalWarmingGame
                 water.Name = "Non-Walkable";
 
                 textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
                 textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
                 textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
                 textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
