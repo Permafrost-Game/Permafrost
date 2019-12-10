@@ -59,7 +59,7 @@ namespace GlobalWarmingGame
         Texture2D farm;
         Texture2D bushH;
         Texture2D bushN;
-        Texture2D rabbit;
+        Texture2D[][] rabbit;
         Texture2D tree;
         Texture2D treeStump;
         Texture2D logo;
@@ -155,7 +155,25 @@ namespace GlobalWarmingGame
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+                rabbit = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite0"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite2")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite4")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
+                    }
+                };
+                ;
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
                 logo = Content.Load<Texture2D>(@"logo");
@@ -332,7 +350,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
                     drawable.Draw(spriteBatch);
                 spriteBatch.End();
             }
@@ -359,7 +377,7 @@ namespace GlobalWarmingGame
                         transformMatrix: transform
                     );
 
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+            foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
             {
                 drawable.Draw(spriteBatch);
             }
@@ -450,7 +468,7 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = new Vector2(1600,1600) - camera.Position;
+            Vector2 position = new Vector2(1600, 1600) - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
@@ -458,7 +476,7 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
                     break;
                 case 1:
-                    GameObjectManager.Add(new Rabbit(position: position, texture: rabbit));
+                    GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));
                     break;
                 case 2:
                     GameObjectManager.Add(new Farm(position: position, texture: farm));

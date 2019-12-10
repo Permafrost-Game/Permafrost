@@ -1,4 +1,4 @@
-﻿namespace Engine
+﻿namespace Engine.Drawing
 {
     public interface IDrawable
     {

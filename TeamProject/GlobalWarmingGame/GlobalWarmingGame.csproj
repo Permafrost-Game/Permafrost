@@ -69,6 +69,7 @@
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Action\MouseInputMethod.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
+    <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
     <Compile Include="Menus\MainMenu.cs" />

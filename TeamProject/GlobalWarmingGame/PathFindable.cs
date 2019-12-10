@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.PathFinding;
 using Engine.TileGrid;
+using Engine.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,14 +11,17 @@ using System.Collections.Generic;
 namespace GlobalWarmingGame
 {
     /// <summary>
-    /// This class allows for the navigation of sprites through across the TileMap
+    /// This class allows for the navigation of sprites through across the TileMap<br/>
+    /// This class is obsolete see <see cref="IPathFindable"/> and <see cref="PathFindingHelper"/>
     /// </summary>
+    [Obsolete]
     public abstract class PathFindable : Sprite, IUpdatable, IClickable
     {
         protected float speed;
         protected Queue<Vector2> goals;
         private Queue<Vector2> path;
 
+        
         public PathFindable(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, float speed) :
             base(position, size, rotation, rotationOrigin, tag, depth, texture)
         {

@@ -24,7 +24,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             set
             {
                 _isHarvestable = value;
-                 texture = _isHarvestable ? textureHarvestable : textureHarvested;
+                 Texture = _isHarvestable ? textureHarvestable : textureHarvested;
             }
         }
 
