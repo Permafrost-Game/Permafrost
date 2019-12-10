@@ -90,12 +90,18 @@ namespace GlobalWarmingGame.Action
 
                     if (objectClicked is IInteractable)
                     {
-                        foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
+                        if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
                         {
-                            Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            InstructionType instructionType = ((IInteractable)objectClicked).InstructionTypes.ToArray()[0];
+                            Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                             button2.ButtonParagraph.Scale = 0.5f;
                             Menu.AddChild(button2);
-                            button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Menu.Visible = false; };
+                            button2.OnClick = (Entity btn) => { UpdateInstruction(instructionType, (IInteractable)objectClicked); Menu.Visible = false; };
+
+                        }
+                        foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
+                        {
+                        
                         }
                     }
 
