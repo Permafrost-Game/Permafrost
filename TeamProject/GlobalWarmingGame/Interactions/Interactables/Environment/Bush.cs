@@ -41,7 +41,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>()
         )
         {
-            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 1), Forrage);
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 2), Forrage);
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
