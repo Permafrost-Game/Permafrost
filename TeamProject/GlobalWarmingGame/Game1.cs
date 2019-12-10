@@ -55,7 +55,7 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
-        Texture2D colonist;
+        Texture2D[][] colonist;
         Texture2D farm;
         Texture2D bushH;
         Texture2D bushN;
@@ -68,8 +68,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
 
             graphics.IsFullScreen = false;
@@ -129,29 +129,35 @@ namespace GlobalWarmingGame
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/dirt"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/grass"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/snow"));
-                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
+                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
+                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
+                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
+                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
                 textureSet.Add("6", water);
 
 
 
-                tileSet = new TileSet(textureSet, new Vector2(16));
+                tileSet = new TileSet(textureSet, new Vector2(32f));
                 //                                                  map0/00.csv  //50x50 tilemap
                 //                                                  map1/00.csv  //100x100 tilemap
-                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/01.csv", tileSet);
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
+                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * tileMap.Tiles[0, 0].size);
             }
 
             //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
+                colonist = new Texture2D[][] 
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    }
+                };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
@@ -193,7 +199,7 @@ namespace GlobalWarmingGame
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(800, 800), texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: tileMap.Size * tileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -468,12 +474,12 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = new Vector2(1600, 1600) - camera.Position;
+            Vector2 position = tileMap.Size * tileMap.Tiles[0, 0].size - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
                 case 0:
-                    GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
+                    GameObjectManager.Add(new Colonist(position: position, textureSet: colonist, inventoryCapacity: 100f));
                     break;
                 case 1:
                     GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));
