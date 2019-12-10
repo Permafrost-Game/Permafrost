@@ -7,6 +7,7 @@ using Engine;
 using GlobalWarmingGame;
 using Engine.TileGrid;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources.ResourceTypes;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {

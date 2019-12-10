@@ -12,7 +12,7 @@ namespace GlobalWarmingGame.Resources.Craftables
 {
     public class BasicRifle : ResourceType, ICraftable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 8), new ResourceItem(new Fibers(), 2),
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 8), new ResourceItem(new Leather(), 2),
                                                                                                    new ResourceItem(new MachineParts(), 4) };
 
         public BasicRifle() : base("basicRifle", "BasicRifle", "A basic rifle", 10f/*, texture*/)
