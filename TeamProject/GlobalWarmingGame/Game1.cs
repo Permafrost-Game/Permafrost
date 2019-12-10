@@ -56,7 +56,8 @@ namespace GlobalWarmingGame
 
         Texture2D colonist;
         Texture2D farm;
-        Texture2D workBenchTexture;
+        Texture2D workBench;
+        Texture2D stoneNode;
         Texture2D bushH;
         Texture2D bushN;
         Texture2D rabbit;
@@ -72,7 +73,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferHeight = 1080
             };
             
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -158,11 +159,12 @@ namespace GlobalWarmingGame
                 rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
-                workBenchTexture = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
+                workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
+                stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stonenode");
                 logo = Content.Load<Texture2D>(@"logo");
 
-                Texture2D[] textureArray = new Texture2D[] { farm };
-                string[] stringArray = new string[] { "Farm" };
+                Texture2D[] textureArray = new Texture2D[] { farm, workBench };
+                string[] stringArray = new string[] { "Farm", "WorkBench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
                 for (int i = 0; i < stringArray.Length; i++) 
@@ -180,15 +182,14 @@ namespace GlobalWarmingGame
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                WorkBench workBench = new WorkBench(position: new Vector2(600, 600), texture: workBenchTexture);
-                GameObjectManager.Add(workBench);
-
-                string[] spawnables = new string[5];
+                string[] spawnables = new string[7];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
+                spawnables[5] = "WorkBench";
+                spawnables[6] = "Stone";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -473,6 +474,12 @@ namespace GlobalWarmingGame
                     break;
                 case 4:
                     GameObjectManager.Add(new Bush(position: position, harvestable: bushH, harvested: bushN));
+                    break;
+                case 5:
+                    GameObjectManager.Add(new WorkBench(position: position, texture: workBench));
+                    break;
+                case 6:
+                    GameObjectManager.Add(new StoneNode(position: position, texture: stoneNode));
                     break;
             }
         }

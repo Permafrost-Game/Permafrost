@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 8)};
-        private Inventory inventory;
+        private readonly Inventory inventory;
         
         public StorageUnit(Vector2 position, Texture2D texture) : base
         (
@@ -35,5 +35,16 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             //Open menu to either store or retrieve items
         }
+
+        public void StoreItem(ResourceItem item) 
+        {
+            inventory.AddItem(item);
+        }
+
+        public ResourceItem RetrieveItem(string itemTypeID)
+        {
+            return inventory.Resources[itemTypeID];
+        }
+
     }
 }

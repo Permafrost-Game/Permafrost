@@ -60,6 +60,10 @@ namespace GlobalWarmingGame.Resources
                             mainUI.ItemSlots[1].IconType = IconType.Bone;
                             mainUI.ItemLabels[1].Text = item.Amount.ToString();
                             break;
+                        case "stone":
+                            mainUI.ItemSlots[1].IconType = IconType.Diamond;
+                            mainUI.ItemLabels[1].Text = item.Amount.ToString();
+                            break;
                     }
                 }
             }

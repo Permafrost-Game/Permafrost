@@ -12,7 +12,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     class Farm : InteractableGameObject, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 5)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
 
         private InstructionType plant;
         private InstructionType harvest;

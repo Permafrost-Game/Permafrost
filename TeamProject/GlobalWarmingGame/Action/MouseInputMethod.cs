@@ -131,28 +131,43 @@ namespace GlobalWarmingGame.Action
             //TODO make an abstract building class to reduce repeated code
             switch (buildingId)
             {
-                case (0):
-                    Farm building = new Farm(tileClicked.Position, buildingDetails.Texture);
-                    buildingCosts = building.CraftingCosts;
+                case (1):
+                    Farm farm = new Farm(tileClicked.Position, buildingDetails.Texture);
+                    buildingCosts = farm.CraftingCosts;
 
-                    if (TryPlaceBuilding(buildingCosts))
+                    if (CanColonistBuild(buildingCosts))
                     {
-                        GameObjectManager.Add(building);
+                        //Colonist colonist = currentInstruction.ActiveMember;
+                        //colonist.AddGoal(tileClicked.Position);
+                        GameObjectManager.Add(farm);
+                    }
+                    break;
+
+                case (2):
+                    WorkBench workBench = new WorkBench(tileClicked.Position, buildingDetails.Texture);
+                    buildingCosts = workBench.CraftingCosts;
+
+                    if (CanColonistBuild(buildingCosts))
+                    {
+                        GameObjectManager.Add(workBench);
                     }
                     break;
             }
         }
 
-        bool TryPlaceBuilding(List<ResourceItem> buildingCosts)
+        bool CanColonistBuild(List<ResourceItem> buildingCosts)
         {
             Colonist colonist = currentInstruction.ActiveMember;
-            bool build = true;
-            foreach (ResourceItem resource in buildingCosts)
+            bool build = false;
+
+            if (colonist.Inventory.CheckContainsList(buildingCosts))
             {
-                if (!colonist.Inventory.RemoveItem(resource))
+                foreach (ResourceItem item in buildingCosts)
                 {
-                    build = false;
+                    colonist.Inventory.RemoveItem(item);
+                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
+                build = true;
             }
             return build;
         }
@@ -175,6 +190,10 @@ namespace GlobalWarmingGame.Action
                     case 1:
                         buildingSelected = true;
                         buildingId = 1;
+                        break;
+                    case 2:
+                        buildingSelected = true;
+                        buildingId = 2;
                         break;
                 }
             };
