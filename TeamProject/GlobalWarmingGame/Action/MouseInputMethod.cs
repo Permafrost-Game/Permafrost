@@ -68,7 +68,7 @@ namespace GlobalWarmingGame.Action
                 {
                     if (Menu != null && Menu.Visible == true)
                         Menu.Visible = false;
-                    
+
                     if (CraftingMenu != null && CraftingMenu.Visible == true)
                         CraftingMenu.Visible = false;
 
@@ -90,9 +90,11 @@ namespace GlobalWarmingGame.Action
                             currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
 
                         Menu.Visible = false;
-                        CraftingMenu.Visible = false;
+                        if (CraftingMenu != null) CraftingMenu.Visible = false;
+
                     };
 
+                 
                     if (objectClicked is IInteractable)
                     {
                         if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
@@ -115,6 +117,7 @@ namespace GlobalWarmingGame.Action
                             button2.OnClick = (Entity btn) =>
                             {
                                 CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
+                                CraftingMenu.AdjustHeightAutomatically = true;
                                 UserInterface.Active.AddEntity(CraftingMenu);
 
                                 Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
@@ -122,24 +125,26 @@ namespace GlobalWarmingGame.Action
                                 CraftingMenu.AddChild(craftingMenuLabel);
                                 
                                 Menu.Visible = false;
+
+                                int counter = 0;
+                                foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
+                                {
+                                    Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                                    instructionButton.ButtonParagraph.Scale = 0.5f;
+                                    CraftingMenu.AddChild(instructionButton);
+
+                                    instructionButton.OnClick = (Entity e) =>
+                                    {
+                                        CraftingMenu.Visible = false;
+                                        Menu.Visible = false;
+                                        UpdateInstruction(instruction, (IInteractable)objectClicked);
+                                    };
+
+                                    counter++;
+                                }
                             };
 
-                            int counter = 0;
-                            foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
-                            {
-                                Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
-                                //instructionButton.ButtonParagraph.Scale = 0.5f;
-                                CraftingMenu.AddChild(instructionButton);
-
-                                instructionButton.OnClick = (Entity btn) =>
-                                {
-                                    CraftingMenu.Visible = false;
-                                    Menu.Visible = false;
-                                    UpdateInstruction(instruction, (IInteractable)objectClicked);
-                                };
-
-                                counter++;
-                            }
+                            
                         }
                     }
 
