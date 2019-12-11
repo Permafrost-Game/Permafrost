@@ -9,7 +9,7 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using IDrawable = Engine.IDrawable;
+using IDrawable = Engine.Drawing.IDrawable;
 using Zone = PermaFrost.Zone;
 
 namespace GlobalWarmingGame
@@ -39,7 +39,7 @@ namespace GlobalWarmingGame
 
         public static string MapPath(Vector2 pos)
         {
-            return string.Format(@"Content/maps/map1/{0},{1}.csv", pos.X, pos.Y);
+            return string.Format(@"Content/maps/map1/{0}{1}.csv", pos.X, pos.Y);
         }
 
         static TileMap LoadMap(Vector2 pos)
@@ -119,7 +119,6 @@ namespace GlobalWarmingGame
         public static List<IDrawable> Drawable { get => zone.Drawables.ToList(); }
         public static List<IClickable> Clickable { get => zone.Clickables.ToList(); }
         public static List<IInteractable> Interactable { get => zone.Interactables.ToList(); }
-        public static List<IHeatable> Buildable { get => _buildable.ToList(); }
 
         /// <summary>
         /// Adds a GameObject
@@ -139,7 +138,6 @@ namespace GlobalWarmingGame
                 zone.Clickables.Add(c);
 
             if (gameObject is IInteractable i)
-                zone.Interactables.Add(i);
                 zone.Interactables.Add(i);
         }
 
@@ -161,7 +159,6 @@ namespace GlobalWarmingGame
                 zone.Clickables.Remove(c);
 
             if (gameObject is IInteractable i)
-                zone.Interactables.Remove(i);
                 zone.Interactables.Remove(i);
         }
 
