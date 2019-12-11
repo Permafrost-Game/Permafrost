@@ -214,7 +214,10 @@ namespace GlobalWarmingGame
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
 
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size); };
+                MainUI.SpawnMenu.OnValueChange = (Entity e) => {
+                    ProcessSpawnables();
+                    //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
+                };
             }
         }
 
