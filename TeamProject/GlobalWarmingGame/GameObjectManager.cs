@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using IDrawable = Engine.Drawing.IDrawable;
 using Zone = PermaFrost.Zone;
+using Engine.PathFinding;
+using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame
 {
@@ -24,6 +26,7 @@ namespace GlobalWarmingGame
         readonly static IDictionary<Vector2, Zone> zoneTable;
         static Zone zone;
         static TileSet tileSet;
+        public static Camera Camera { get; set; }
 
         public static TileMap ZoneMap { get => zone.tileMap; }
 
@@ -88,26 +91,50 @@ namespace GlobalWarmingGame
 
                 for (int i = 0; i < colonists.Count; i++)
                 {
+                    Colonist colonist = (Colonist)colonists[i];
+                    colonist.Goals.Clear();
+                    colonist.Path.Clear();
+
                     if (direction.X == 1 || direction.X == -1)
                     {
                         float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (tileSet.textureSize.X);
                         float y = (ZoneMap.Size.Y / 2) * (tileSet.textureSize.Y)
-                            + (i * colonists[i].Size.Y) + (i * tileSet.textureSize.Y)
-                            - ((colonists.Count / 2) * colonists[i].Size.Y);
+                            + (i * colonist.Size.Y) + (i * tileSet.textureSize.Y)
+                            - ((colonists.Count / 2) * colonist.Size.Y);
 
-                        colonists[i].Position = new Vector2(x, y);
+                        colonist.Position = new Vector2(x, y);
                     }
                     else if (direction.Y == -1 || direction.Y == 1)
                     {
                         float x = (ZoneMap.Size.X / 2) * (tileSet.textureSize.X)
-                            + (i * colonists[i].Size.X) + (i * tileSet.textureSize.X)
-                            - ((colonists.Count / 2) * colonists[i].Size.X);
+                            + (i * colonist.Size.X) + (i * tileSet.textureSize.X)
+                            - ((colonists.Count / 2) * colonist.Size.X);
                         float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (tileSet.textureSize.Y) : 0;
 
-                        colonists[i].Position = new Vector2(x, y);
+                        colonist.Position = new Vector2(x, y);
                     }
 
-                    GameObjectManager.Add(colonists[i]);
+                    GameObjectManager.Add(colonist);
+                }
+
+                if (direction.X == 1)
+                {
+                    Camera.Position = new Vector2(ZoneMap.Size.X * tileSet.textureSize.X, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
+                }
+
+                else if (direction.X == -1)
+                {
+                    Camera.Position = new Vector2(0, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
+                }
+
+                else if (direction.Y == -1)
+                {
+                    Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, 0);
+                } 
+
+                else if (direction.Y == 1)
+                {
+                    Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, ZoneMap.Size.Y * tileSet.textureSize.Y);
                 }
 
                 ZoneManager.CurrentZone.TileMap = ZoneMap;

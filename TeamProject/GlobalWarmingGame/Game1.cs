@@ -146,6 +146,8 @@ namespace GlobalWarmingGame
 
                 ZoneManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size);
+
+                GameObjectManager.Camera = camera;
             }
 
             //CREATING GAME OBJECTS
