@@ -203,6 +203,8 @@ namespace GlobalWarmingGame.Action
                     }
                     break;
             }
+
+            mainUI.BuildMenu.SelectedIndex = 0;
         }
 
         bool CanColonistBuild(List<ResourceItem> buildingCosts)

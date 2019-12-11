@@ -23,7 +23,7 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 namespace GlobalWarmingGame
 {
     /// <summary>
-    /// This class is the main class for the games implemntation.
+    /// This class is the main class for the games implementation.
     /// </summary>
     public class Game1 : Game
     {
@@ -488,6 +488,8 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add(new TallGrass(position: position, texture: tallGrass));
                     break;
             }
+
+            MainUI.SpawnMenu.DontKeepSelection = true;
         }
         #endregion
     }
