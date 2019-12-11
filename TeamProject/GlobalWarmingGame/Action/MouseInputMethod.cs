@@ -75,6 +75,10 @@ namespace GlobalWarmingGame.Action
                     Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
                     UserInterface.Active.AddEntity(Menu);
 
+                    CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
+                    CraftingMenu.AdjustHeightAutomatically = true;
+                    UserInterface.Active.AddEntity(CraftingMenu);
+
                     Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
                     label.Scale = 0.7f;
                     Menu.AddChild(label);
@@ -90,8 +94,7 @@ namespace GlobalWarmingGame.Action
                             currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
 
                         Menu.Visible = false;
-                        if (CraftingMenu != null) CraftingMenu.Visible = false;
-
+                        CraftingMenu.Visible = false;
                     };
 
                  
@@ -115,16 +118,13 @@ namespace GlobalWarmingGame.Action
                             Menu.AddChild(button2);
 
                             button2.OnClick = (Entity btn) =>
-                            {
-                                CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
-                                CraftingMenu.AdjustHeightAutomatically = true;
-                                UserInterface.Active.AddEntity(CraftingMenu);
-
+                            {                    
                                 Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
                                 craftingMenuLabel.Scale = 0.7f;
                                 CraftingMenu.AddChild(craftingMenuLabel);
                                 
                                 Menu.Visible = false;
+                                CraftingMenu.Visible = true;
 
                                 int counter = 0;
                                 foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
@@ -166,6 +166,7 @@ namespace GlobalWarmingGame.Action
                             }
 
                             Menu.Visible = false;
+                            CraftingMenu.Visible = false;
                         };
                     }
                 }
