@@ -34,7 +34,7 @@ namespace GlobalWarmingGame
         SelectionManager selectionManager;
 
         TileSet tileSet;
-        TileMap tileMap;
+        // TileMap tileMap;
 
         Camera camera;
 
@@ -141,10 +141,13 @@ namespace GlobalWarmingGame
                 tileSet = new TileSet(textureSet, new Vector2(32f));
                 //                                                  map0/00.csv  //50x50 tilemap
                 //                                                  map1/00.csv  //100x100 tilemap
-                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/01.csv", tileSet);
+                //tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                GameObjectManager.Init(tileSet);
 
-                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * tileMap.Tiles[0, 0].size);
+                ZoneManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size);
+
+                GameObjectManager.Camera = camera;
             }
 
             //CREATING GAME OBJECTS
@@ -195,11 +198,11 @@ namespace GlobalWarmingGame
                 PauseMenu = new PauseMenu();
                 MainUI = new MainUI();
 
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction, MainUI));
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, ZoneManager.CurrentZone.TileMap, selectionManager.CurrentInstruction, MainUI));
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: tileMap.Size * tileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -213,7 +216,10 @@ namespace GlobalWarmingGame
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
 
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(tileMap.Size); };
+                MainUI.SpawnMenu.OnValueChange = (Entity e) => {
+                    ProcessSpawnables();
+                    //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
+                };
             }
         }
 
@@ -236,9 +242,8 @@ namespace GlobalWarmingGame
             {
                 camera.Update(gameTime);
 
-                //Update Temperatures
-                tileMap.Update(gameTime);
-                BuildingManager.UpdateBuildingTemperatures(gameTime, tileMap);
+                GameObjectManager.ZoneMap.Update(gameTime);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, ZoneManager.CurrentZone.TileMap);
                 UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
@@ -256,6 +261,28 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
+
+            if (gameState == GameState.playing)
+            {
+                if (CheckKeyPress(Keys.I))
+                    GameObjectManager.MoveZone(new Vector2(0, -1));
+                else if (CheckKeyPress(Keys.K))
+                    GameObjectManager.MoveZone(new Vector2(0, 1));
+                else if (CheckKeyPress(Keys.L))
+                    GameObjectManager.MoveZone(new Vector2(1, 0));
+                else if (CheckKeyPress(Keys.J))
+                    GameObjectManager.MoveZone(new Vector2(-1, 0));
+            }
+
+            //if (gameState == GameState.playing)
+            //{
+            //    if (currentKeyboardState.IsKeyUp(Keys.Escape) && previousKeyboardState.IsKeyDown(Keys.Escape))
+            //        ShowPauseMenu();
+            //}
+
+            //peformanceMonitor.Update(gameTime);
+
+            previousKeyboardState = currentKeyboardState;
         }
 
         #region Update Colonists Temperatures
@@ -264,7 +291,7 @@ namespace GlobalWarmingGame
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
             {
-                float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
                 colonist.UpdateTemp(tileTemp, gameTime);
                 //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
@@ -319,7 +346,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                tileMap.Draw(spriteBatch);
+                GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                 spriteBatch.End();
             }
@@ -406,15 +433,12 @@ namespace GlobalWarmingGame
                     gameState = GameState.playing;
             }
 
-            previousKeyboardState = currentKeyboardState;
+            //previousKeyboardState = currentKeyboardState;
         }
 
         bool CheckKeyPress(Keys key)
         {
-            if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
-                return true;
-
-            return false;
+            return previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
         }
 
         void ShowMainMenu()
@@ -474,7 +498,7 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = tileMap.Size * tileMap.Tiles[0, 0].size - camera.Position;
+            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {

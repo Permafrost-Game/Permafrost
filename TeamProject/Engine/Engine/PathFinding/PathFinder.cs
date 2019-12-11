@@ -8,14 +8,14 @@ namespace Engine.PathFinding
 {
     public static class PathFinder
     {
-        private static readonly TileMap tileMap = ZoneManager.CurrentZone.TileMap;
+        private static TileMap TileMap { get => ZoneManager.CurrentZone.TileMap; }
         private static Dictionary<Tile, TileCosts> openDictionary;
         private static Dictionary<Tile, TileCosts> closedDictionary;
 
         public static Queue<Vector2> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
         {
-            Tile startT = tileMap.GetTileAtPosition(start);
-            Tile goalT = tileMap.GetTileAtPosition(goal);
+            Tile startT = TileMap.GetTileAtPosition(start);
+            Tile goalT = TileMap.GetTileAtPosition(goal);
             return Find(startT, goalT, canPassObstacles);
         }
 
@@ -130,7 +130,7 @@ namespace Engine.PathFinding
 
                 Vector2 position = new Vector2((current.Position.X + xDirections[i]), (current.Position.Y + yDirections[i]));
 
-                Tile tile = tileMap.GetTileAtPosition(position);
+                Tile tile = TileMap.GetTileAtPosition(position);
 
                 //TileFinder will only return null if the tile is not passable or outside of the tilemap
                 if (tile != null)

@@ -61,7 +61,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             timeUntillBuildingTempCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntillBuildingTempCheck < 0) 
             {
-                foreach (IHeatable heatable in GameObjectManager.Buildable)
+                foreach (IHeatable heatable in GameObjectManager.Filter<IHeatable>())
                 {
                     float temperature = heatable.Temperature.Value;
                     Vector2 position = ((GameObject)heatable).Position;
