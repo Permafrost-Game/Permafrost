@@ -51,23 +51,64 @@ namespace GlobalWarmingGame
             zone.tileMap = LoadMap(zonePos);
         }
 
-        public static void MoveZone(Vector2 direction)
+        public static bool isZone(Vector2 direction)
         {
             Vector2 newZonePos = zonePos + direction;
 
-            if (zoneTable.ContainsKey(newZonePos))
-            {
-                zonePos = newZonePos;
-                zone = zoneTable[zonePos];
-            }
+            return zoneTable.ContainsKey(newZonePos) || File.Exists(MapPath(newZonePos));
+        }
 
-            else if (File.Exists(MapPath(newZonePos)))
+        public static void MoveZone(Vector2 direction)
+        {
+            if (isZone(direction))
             {
-                zoneTable.Add(newZonePos, new Zone());
-                zoneTable[newZonePos].tileMap = LoadMap(newZonePos);
+                List<GameObject> colonists = GameObjectManager.GetObjectsByTag("Colonist");
 
-                zonePos = newZonePos;
-                zone = zoneTable[zonePos];
+                foreach (GameObject colonist in colonists)
+                    GameObjectManager.Remove(colonist);
+
+                Vector2 newZonePos = zonePos + direction;
+
+                if (zoneTable.ContainsKey(newZonePos))
+                {
+                    zonePos = newZonePos;
+                    zone = zoneTable[zonePos];
+                }
+
+                else if (File.Exists(MapPath(newZonePos)))
+                {
+                    zoneTable.Add(newZonePos, new Zone());
+                    zoneTable[newZonePos].tileMap = LoadMap(newZonePos);
+
+                    zonePos = newZonePos;
+                    zone = zoneTable[zonePos];
+                }
+
+                for (int i = 0; i < colonists.Count; i++)
+                {
+                    if (direction.X == 1 || direction.X == -1)
+                    {
+                        float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (tileSet.textureSize.X);
+                        float y = (ZoneMap.Size.Y / 2) * (tileSet.textureSize.Y)
+                            + (i * colonists[i].Size.Y) + (i * tileSet.textureSize.Y)
+                            - ((colonists.Count / 2) * colonists[i].Size.Y);
+
+                        colonists[i].Position = new Vector2(x, y);
+                    }
+                    else if (direction.Y == -1 || direction.Y == 1)
+                    {
+                        float x = (ZoneMap.Size.X / 2) * (tileSet.textureSize.X)
+                            + (i * colonists[i].Size.X) + (i * tileSet.textureSize.X)
+                            - ((colonists.Count / 2) * colonists[i].Size.X);
+                        float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (tileSet.textureSize.Y) : 0;
+
+                        colonists[i].Position = new Vector2(x, y);
+                    }
+
+                    GameObjectManager.Add(colonists[i]);
+                }
+
+                ZoneManager.CurrentZone.TileMap = ZoneMap;
             }
         }
 

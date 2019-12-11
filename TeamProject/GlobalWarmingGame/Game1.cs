@@ -225,9 +225,9 @@ namespace GlobalWarmingGame
             if (!isPaused && isPlaying)
             {
                 if (currentKeyboardState.IsKeyUp(Keys.I) && previousKeyboardState.IsKeyDown(Keys.I))
-                    GameObjectManager.MoveZone(new Vector2(0, 1));
-                else if (currentKeyboardState.IsKeyUp(Keys.K) && previousKeyboardState.IsKeyDown(Keys.K))
                     GameObjectManager.MoveZone(new Vector2(0, -1));
+                else if (currentKeyboardState.IsKeyUp(Keys.K) && previousKeyboardState.IsKeyDown(Keys.K))
+                    GameObjectManager.MoveZone(new Vector2(0, 1));
                 else if (currentKeyboardState.IsKeyUp(Keys.L) && previousKeyboardState.IsKeyDown(Keys.L))
                     GameObjectManager.MoveZone(new Vector2(1, 0));
                 else if (currentKeyboardState.IsKeyUp(Keys.J) && previousKeyboardState.IsKeyDown(Keys.J))
