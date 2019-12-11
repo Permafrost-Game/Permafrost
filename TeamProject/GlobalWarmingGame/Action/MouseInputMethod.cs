@@ -115,12 +115,13 @@ namespace GlobalWarmingGame.Action
                         {
                             Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                             button2.ButtonParagraph.Scale = 0.5f;
+                            button2.Padding = Vector2.Zero;
                             Menu.AddChild(button2);
 
                             button2.OnClick = (Entity btn) =>
                             {                    
                                 Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
-                                craftingMenuLabel.Scale = 0.7f;
+                                craftingMenuLabel.Scale = 0.75f;
                                 CraftingMenu.AddChild(craftingMenuLabel);
                                 
                                 Menu.Visible = false;
@@ -130,6 +131,7 @@ namespace GlobalWarmingGame.Action
                                 foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
                                 {
                                     Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                                    instructionButton.Padding = Vector2.Zero;
                                     instructionButton.ButtonParagraph.Scale = 0.5f;
                                     CraftingMenu.AddChild(instructionButton);
 
@@ -143,8 +145,6 @@ namespace GlobalWarmingGame.Action
                                     counter++;
                                 }
                             };
-
-                            
                         }
                     }
 

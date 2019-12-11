@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame.Menus
 {
@@ -24,9 +25,11 @@ namespace GlobalWarmingGame.Menus
         public DropDown SpawnMenu { get; private set; }
         public Icon[] ItemSlots { get; set; }
         public Label[] ItemLabels { get; set; }
+        public ProgressBar[] HealthBars { get; set; }
         
         Label foodLabel;
-        
+        GameObject[] colonists;
+
         bool open;
 
         public MainUI()
@@ -94,8 +97,19 @@ namespace GlobalWarmingGame.Menus
             BottomPanel.Visible = false;
         }
 
-        public void UpdateFoodCounter(CollectiveInventory collectiveInventory)
+        public void UpdateMainUI(CollectiveInventory collectiveInventory)
         {
+            colonists = GameObjectManager.GetObjectsByTag("Colonist").ToArray();
+            HealthBars = new ProgressBar[colonists.Length];
+            for (int i = 0; i < HealthBars.Length; i++)
+            {
+                Colonist colonist = (Colonist)colonists[i];
+                HealthBars[i] = new ProgressBar(0, (uint)colonist.MaxHealth, new Vector2(200,30), Anchor.CenterRight, new Vector2(0, 100 + 35 * i));
+                TopPanel.AddChild(HealthBars[i]);
+
+                HealthBars[i].Value = (int)colonist.Health;
+            }
+
             foodLabel.Text = collectiveInventory.TotalFood.ToString();
         }
     }

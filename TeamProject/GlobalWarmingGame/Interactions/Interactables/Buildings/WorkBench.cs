@@ -35,10 +35,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InstructionTypes.Add(new InstructionType("craftbow", "Bow", "Craft bow", CraftBow));
             InstructionTypes.Add(new InstructionType("crafthoe", "Hoe", "Craft hoe", CraftHoe));
             InstructionTypes.Add(new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", CraftPickaxe));
-            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic rifle", "Craft basic rifle", CraftBasicRifle));
+            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", CraftBasicRifle));
         }
 
-        //TODO Make the teir one crafting items be children of a common parent which can be used to reduce code.
+        //TODO Make the tier one crafting items be children of a common parent which can be used to reduce code.
 
         private void CraftCloth(Colonist colonist)
         {
@@ -55,7 +55,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else
             {
-                Console.WriteLine("failed");
+                Console.WriteLine("failed");                                            //ADD UI HERE
             }
         }
 

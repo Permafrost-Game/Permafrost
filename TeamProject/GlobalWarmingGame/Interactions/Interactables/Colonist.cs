@@ -19,7 +19,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private Queue<Instruction> instructions;
 
         public string Name { get; private set; }
-        public float Health { get; private set; }
+        public float MaxHealth { get; private set; }
+        public float Health { get; set; }
         public Temperature Temperature { get; set; } = new Temperature(38);
         private readonly float CoreBodyTemperature = 38;
         public int UpperComfortRange { get; private set; } = 40;
@@ -44,7 +45,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             speed: 0.5f
         )
         {
-            Health = 10f;
+            MaxHealth = 10f;
+            Health = MaxHealth;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;

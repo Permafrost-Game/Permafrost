@@ -190,9 +190,9 @@ namespace GlobalWarmingGame
                 spawnables[2] = "Farm";
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
-                spawnables[5] = "WorkBench";
+                spawnables[5] = "Workbench";
                 spawnables[6] = "Stone";
-                spawnables[7] = "TallGrass";
+                spawnables[7] = "Tall Grass";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -233,7 +233,7 @@ namespace GlobalWarmingGame
                 UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
-                MainUI.UpdateFoodCounter(CollectiveInventory);
+                MainUI.UpdateMainUI(CollectiveInventory);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
