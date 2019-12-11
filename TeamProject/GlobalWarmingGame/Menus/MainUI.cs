@@ -103,7 +103,6 @@ namespace GlobalWarmingGame.Menus
         public void UpdateMainUI(CollectiveInventory collectiveInventory, GameTime gameTime)
         {
             timeUnitlHealthUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            Console.WriteLine(timeUnitlHealthUpdate);
             if (timeUnitlHealthUpdate < 0f) 
             {
                 colonists = GameObjectManager.GetObjectsByTag("Colonist").ToArray();
