@@ -99,30 +99,36 @@ namespace GlobalWarmingGame.Action
                             button2.OnClick = (Entity btn) => { UpdateInstruction(instructionType, (IInteractable)objectClicked); Menu.Visible = false; };
 
                         }
-                        Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        button2.ButtonParagraph.Scale = 0.5f;
-                        Menu.AddChild(button2);
-                        Label craftingMenu = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 50));
-
-                        Button instructionButton1 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton3 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton4 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton5 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton6 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton7 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        Button instructionButton8 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-
-                        button2.OnClick = (Entity btn) =>
+                        else
                         {
-                            Menu.Visible = false;
-                            craftingMenu.Scale = 0.7f;
+                            Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                            button2.ButtonParagraph.Scale = 0.5f;
+                            Menu.AddChild(button2);
+
+                            //Label craftingMenu = new Label("", Anchor.);
+                            Label craftingMenu = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
+
                             Menu.AddChild(craftingMenu);
-                            UpdateInstruction(, (IInteractable)objectClicked);
-                        };
-                        foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
-                        {
+                            craftingMenu.Visible = false;
 
+                            button2.OnClick = (Entity btn) =>
+                            {
+                                craftingMenu.Scale = 0.7f;
+                                craftingMenu.Visible = true;
+                                label.Visible = false;
+                            };
+
+                            for (int i = 0; i < ((IInteractable)objectClicked).InstructionTypes.Count-1; i++)
+                            {                                
+                                Button instructionButton = new Button(((IInteractable)objectClicked).InstructionTypes.ToArray()[i].Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (i+1)*30));
+                                instructionButton.ButtonParagraph.Scale = 0.5f;
+                                craftingMenu.AddChild(instructionButton);
+                                instructionButton.OnClick = (Entity btn) =>
+                                {
+                                    Menu.Visible = false; 
+                                    UpdateInstruction(((IInteractable)objectClicked).InstructionTypes.ToArray()[i], (IInteractable)objectClicked);
+                                };
+                            }
                         }
                     }
 
