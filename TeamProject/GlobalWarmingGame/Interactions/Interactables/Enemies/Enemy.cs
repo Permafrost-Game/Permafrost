@@ -27,6 +27,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public float attackRange { get; set; }
         public string enemyTag { get; set; }
         private double attackSpeed { get; set; }
+        private float xdifference;
+        private float ydifference;
 
         public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
@@ -37,6 +39,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public Boolean attacking=false;
     
         private bool isInCombat=false;
+        private bool flipped;
 
         public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
@@ -59,7 +62,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
             InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, EnemyAttacked));
 
-            
+            if (this.Tag == "Robot") { xdifference = 0; ydifference = -10; } else if(this.Tag=="Bear"){ xdifference=(this.Size.X/4); ydifference = -(this.Size.Y / 3); }
+
 
             c = new Combat();
             this.attackRange = aRange;
@@ -110,13 +114,17 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         public void animateAttack() {
-          
-            
-                if (this.Tag == "Robot")
-                {
-                    isAnimated = true;
-                    this.TextureGroupIndex = 3;
-                }
+
+
+            if (this.Tag == "Robot")
+            {
+                isAnimated = true;
+                this.TextureGroupIndex = 3;
+            }
+            else if (this.Tag == "Bear") {
+                isAnimated = true;
+                this.TextureGroupIndex = 3;
+            }
                 
                 
             
@@ -152,7 +160,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
             if (InAggroRange(target.Position))
             {
                Goals.Clear();
-                Goals.Enqueue(target.Position);
+
+               
+                Vector2 fakePosition = new Vector2(target.Position.X+xdifference, target.Position.Y+ydifference);
+                Goals.Enqueue(fakePosition);
             }
             else
             {
@@ -186,16 +197,21 @@ namespace GlobalWarmingGame.Interactions.Enemies
             //Math.Atan2(delta.X, delta.Y);
             if (isInCombat)
             {
+                if (flipped)
+                {
+                    SpriteEffect = SpriteEffects.FlipHorizontally;
+                }
                 if (attacking)
                 {
-
+                   
                     animateAttack();
 
                 }
                 else if (!attacking)
                 {
                     isAnimated = true;
-                    TextureGroupIndex = 0;
+                    TextureGroupIndex = 1;
+                   
                 }
             }
             else
@@ -206,9 +222,11 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 }
                 else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
                 {
+
                     isAnimated = true;
                     TextureGroupIndex = 1;
                     SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    flipped = true;
                 }
                 else
                 {

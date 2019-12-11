@@ -162,7 +162,7 @@ namespace GlobalWarmingGame
                 {
                     new Texture2D[]
                     {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite7")
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite4")
                         
 
                     },
@@ -176,6 +176,16 @@ namespace GlobalWarmingGame
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite5"),
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite6")
             
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
+                       // this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0")
+
+
+                    
+
+
                     }
                 };
 
@@ -268,7 +278,7 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Enemy(
                     tag: "Bear",
                     aSpeed: 1000, // Attack Speed
-                    aRange: 30, // Agro Range
+                    aRange: 60, // Agro Range
                     aPower: 1, // Attack Power
                     maxHp: 969, // Health
                     position: new Vector2(580, 580),
@@ -277,7 +287,7 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Enemy(
                     tag: "Robot",
                     aSpeed: 5000, // Attack Speed
-                    aRange: 25, // Agro Range
+                    aRange: 60, // Agro Range
                     aPower: 0, // Attack Power (0 = Going to be random)
                     maxHp: 3000, // Health
                     position: new Vector2(200, 200),
@@ -286,7 +296,7 @@ namespace GlobalWarmingGame
                 GameObjectManager.Add(new Enemy(
                    tag: "Robot",
                    aSpeed: 5000, // Attack Speed
-                   aRange: 25, // Agro Range
+                   aRange: 60, // Agro Range
                    aPower: 0, // Attack Power (0 = Going to be random)
                    maxHp: 3000, // Health
                    position: new Vector2(300, 300),

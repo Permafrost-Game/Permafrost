@@ -50,8 +50,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             speed: 0.5f
         )
         {
-            attackRange = 30;
-            AttackPower = 3;
+            attackRange = 60;
+            AttackPower = 5;
             Health = 1000f;
             attackSpeed = 1000;
             Inventory = new Inventory(inventoryCapacity);
