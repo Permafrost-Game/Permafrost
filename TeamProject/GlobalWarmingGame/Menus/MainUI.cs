@@ -30,6 +30,9 @@ namespace GlobalWarmingGame.Menus
         Label foodLabel;
         GameObject[] colonists;
 
+        private float timeToHealthUpdate = 500f;
+        private float timeUnitlHealthUpdate;
+
         bool open;
 
         public MainUI()
@@ -97,20 +100,26 @@ namespace GlobalWarmingGame.Menus
             BottomPanel.Visible = false;
         }
 
-        public void UpdateMainUI(CollectiveInventory collectiveInventory)
+        public void UpdateMainUI(CollectiveInventory collectiveInventory, GameTime gameTime)
         {
-            colonists = GameObjectManager.GetObjectsByTag("Colonist").ToArray();
-            HealthBars = new ProgressBar[colonists.Length];
-            for (int i = 0; i < HealthBars.Length; i++)
+            timeUnitlHealthUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            Console.WriteLine(timeUnitlHealthUpdate);
+            if (timeUnitlHealthUpdate < 0f) 
             {
-                Colonist colonist = (Colonist)colonists[i];
-                HealthBars[i] = new ProgressBar(0, (uint)colonist.MaxHealth, new Vector2(200,30), Anchor.CenterRight, new Vector2(0, 100 + 35 * i));
-                TopPanel.AddChild(HealthBars[i]);
+                colonists = GameObjectManager.GetObjectsByTag("Colonist").ToArray();
+                HealthBars = new ProgressBar[colonists.Length];
+                for (int i = 0; i < HealthBars.Length; i++)
+                {
+                    Colonist colonist = (Colonist)colonists[i];
+                    HealthBars[i] = new ProgressBar(0, (uint)colonist.MaxHealth, new Vector2(200, 30), Anchor.CenterRight, new Vector2(0, 100 + 35 * i));
+                    TopPanel.AddChild(HealthBars[i]);
 
-                HealthBars[i].Value = (int)colonist.Health;
+                    HealthBars[i].Value = (int)colonist.Health;
+                }
+
+                foodLabel.Text = collectiveInventory.TotalFood.ToString();
+                timeUnitlHealthUpdate = timeToHealthUpdate;
             }
-
-            foodLabel.Text = collectiveInventory.TotalFood.ToString();
         }
     }
 }

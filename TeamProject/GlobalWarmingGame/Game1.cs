@@ -233,7 +233,7 @@ namespace GlobalWarmingGame
                 UpdateColonistTemperatures(gameTime);
 
                 CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
-                MainUI.UpdateMainUI(CollectiveInventory);
+                MainUI.UpdateMainUI(CollectiveInventory, gameTime);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
