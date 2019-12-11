@@ -188,8 +188,16 @@ namespace GlobalWarmingGame
                     },
                      new Texture2D[]
                     {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
-                        
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite4"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite5"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite6"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite7"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite8"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite9")
+
 
                     },
                       new Texture2D[]
@@ -200,7 +208,8 @@ namespace GlobalWarmingGame
                      new Texture2D[]
                     {
                         
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/robotAttacking")
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot2")
 
                     }
                     };
