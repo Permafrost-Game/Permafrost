@@ -38,6 +38,7 @@ namespace GlobalWarmingGame.Action
         bool hovering;
 
         public Panel Menu { get; private set; }
+        public Panel CraftingMenu { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the class
@@ -67,6 +68,9 @@ namespace GlobalWarmingGame.Action
                 {
                     if (Menu != null && Menu.Visible == true)
                         Menu.Visible = false;
+                    
+                    if (CraftingMenu != null && CraftingMenu.Visible == true)
+                        CraftingMenu.Visible = false;
 
                     Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
                     UserInterface.Active.AddEntity(Menu);
@@ -86,6 +90,7 @@ namespace GlobalWarmingGame.Action
                             currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
 
                         Menu.Visible = false;
+                        CraftingMenu.Visible = false;
                     };
 
                     if (objectClicked is IInteractable)
@@ -93,41 +98,47 @@ namespace GlobalWarmingGame.Action
                         if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
                         {
                             InstructionType instructionType = ((IInteractable)objectClicked).InstructionTypes.ToArray()[0];
+
                             Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                             button2.ButtonParagraph.Scale = 0.5f;
                             Menu.AddChild(button2);
-                            button2.OnClick = (Entity btn) => { UpdateInstruction(instructionType, (IInteractable)objectClicked); Menu.Visible = false; };
 
+                            button2.OnClick = (Entity btn) => { UpdateInstruction(instructionType, (IInteractable)objectClicked); Menu.Visible = false; };
                         }
+
                         else
                         {
                             Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                             button2.ButtonParagraph.Scale = 0.5f;
                             Menu.AddChild(button2);
 
-                            //Label craftingMenu = new Label("", Anchor.);
-                            Label craftingMenu = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
-
-                            Menu.AddChild(craftingMenu);
-                            craftingMenu.Visible = false;
-
                             button2.OnClick = (Entity btn) =>
                             {
-                                craftingMenu.Scale = 0.7f;
-                                craftingMenu.Visible = true;
-                                label.Visible = false;
+                                CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
+                                UserInterface.Active.AddEntity(CraftingMenu);
+
+                                Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
+                                craftingMenuLabel.Scale = 0.7f;
+                                CraftingMenu.AddChild(craftingMenuLabel);
+                                
+                                Menu.Visible = false;
                             };
 
-                            for (int i = 0; i < ((IInteractable)objectClicked).InstructionTypes.Count-1; i++)
-                            {                                
-                                Button instructionButton = new Button(((IInteractable)objectClicked).InstructionTypes.ToArray()[i].Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (i+1)*30));
-                                instructionButton.ButtonParagraph.Scale = 0.5f;
-                                craftingMenu.AddChild(instructionButton);
+                            int counter = 0;
+                            foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
+                            {
+                                Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                                //instructionButton.ButtonParagraph.Scale = 0.5f;
+                                CraftingMenu.AddChild(instructionButton);
+
                                 instructionButton.OnClick = (Entity btn) =>
                                 {
-                                    Menu.Visible = false; 
-                                    UpdateInstruction(((IInteractable)objectClicked).InstructionTypes.ToArray()[i], (IInteractable)objectClicked);
+                                    CraftingMenu.Visible = false;
+                                    Menu.Visible = false;
+                                    UpdateInstruction(instruction, (IInteractable)objectClicked);
                                 };
+
+                                counter++;
                             }
                         }
                     }
@@ -135,7 +146,7 @@ namespace GlobalWarmingGame.Action
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
                     button3.ButtonParagraph.Scale = 0.5f;
                     Menu.AddChild(button3);
-                    button3.OnClick = (Entity btn) => { Menu.Visible = false; };
+                    button3.OnClick = (Entity btn) => { Menu.Visible = false; CraftingMenu.Visible = false; };
 
                     if (buildingSelected)
                     {
@@ -259,6 +270,10 @@ namespace GlobalWarmingGame.Action
             if (Menu != null && Menu.Visible)
                 if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
                     Menu.Visible = false;
+
+            if (CraftingMenu != null && CraftingMenu.Visible)
+                if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+                    CraftingMenu.Visible = false;
 
             previousMouseState = currentMouseState;
         }
