@@ -28,14 +28,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("craftcloth", "Craft cloth", "Craft cloth", CraftCloth));
-            InstructionTypes.Add(new InstructionType("craftaxe", "Craft axe", "Craft axe", CraftAxe));
-            InstructionTypes.Add(new InstructionType("craftbackpack", "Craft backpack", "Craft backpack", CraftBackPack));
-            InstructionTypes.Add(new InstructionType("craftcoat", "Craft coat", "Craft coat", CraftCoat));
-            InstructionTypes.Add(new InstructionType("craftbow", "Craft bow", "Craft bow", CraftBow));
-            InstructionTypes.Add(new InstructionType("crafthoe", "Craft hoe", "Craft hoe", CraftHoe));
-            InstructionTypes.Add(new InstructionType("craftpickaxe", "Craft pickaxe", "Craft pickaxe", CraftPickaxe));
-            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Craft basic rifle", "Craft basic rifle", CraftBasicRifle));
+            InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", CraftCloth));
+            InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", CraftAxe));
+            InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", CraftBackPack));
+            InstructionTypes.Add(new InstructionType("craftcoat", "Coat", "Craft coat", CraftCoat));
+            InstructionTypes.Add(new InstructionType("craftbow", "Bow", "Craft bow", CraftBow));
+            InstructionTypes.Add(new InstructionType("crafthoe", "Hoe", "Craft hoe", CraftHoe));
+            InstructionTypes.Add(new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", CraftPickaxe));
+            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic rifle", "Craft basic rifle", CraftBasicRifle));
         }
 
         //TODO Make the teir one crafting items be children of a common parent which can be used to reduce code.

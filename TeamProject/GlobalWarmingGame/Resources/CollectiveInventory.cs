@@ -93,6 +93,11 @@ namespace GlobalWarmingGame.Resources
                         mainUI.ItemSlots[2].IconType = IconType.Diamond;
                         mainUI.ItemLabels[2].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
+
+                    case "fibers":
+                        mainUI.ItemSlots[3].IconType = IconType.Cubes;
+                        mainUI.ItemLabels[3].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
                 }
             }
         }
