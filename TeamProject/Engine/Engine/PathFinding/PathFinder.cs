@@ -25,10 +25,10 @@ namespace Engine.PathFinding
         /// <returns> Queue<Vector2> from the start tile to the end tile </returns>
         public static Queue<Vector2> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {
-            if (start == null) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is null");
-            if (goal == null) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is null");
-            if (!start.Walkable) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is not walkable");
-            if (!goal.Walkable) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is not walkable");
+            if (start == null) throw new PathFindingPathException(start,    $"Start Tile: \"{start}\" is null");
+            if (goal == null) throw new PathFindingPathException(goal,      $"Goal Tile: \"{goal  }\" is null");
+            if (!start.Walkable) throw new PathFindingPathException(start,  $"Start Tile: \"{start}\" is not walkable");
+            if (!goal.Walkable) throw new PathFindingPathException(goal,    $"Goal Tile: \"{goal  }\" is not walkable");
 
             openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, DistanceCalculator(start, goal)) } };
             closedDictionary = new Dictionary<Tile, TileCosts>();

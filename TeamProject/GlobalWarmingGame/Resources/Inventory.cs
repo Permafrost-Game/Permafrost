@@ -8,8 +8,7 @@ namespace GlobalWarmingGame.ResourceItems
 {
     public class Inventory
     {
-        Dictionary<string, ResourceItem> Resources { get; set; }
-
+        public Dictionary<string, ResourceItem> Resources { get; set; }
         public float Capacity { get; set; }
         public float CurrentLoad { get; set; }
         public bool IsFull { get; set; }
@@ -29,6 +28,8 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns></returns>
         public bool AddItem(ResourceItem item)
         {
+            item = item.Clone();
+
             CheckWeightLimit();
 
             if (!IsFull)
@@ -59,7 +60,6 @@ namespace GlobalWarmingGame.ResourceItems
                     Resources[item.Type.ID].Amount -= item.Amount;
                     CurrentLoad -= item.Type.Weight * item.Amount;
                 }
-
                 else
                 {
                     CurrentLoad -= item.Type.Weight * Resources[item.Type.ID].Amount;

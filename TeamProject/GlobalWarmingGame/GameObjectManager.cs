@@ -1,9 +1,11 @@
 ﻿using Engine;
 using Engine.TileGrid;
+using Engine.Drawing;
 using GlobalWarmingGame.Interactions;
 using Microsoft.Xna.Framework;
 using PermaFrost;
 using System.Collections;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -117,6 +119,7 @@ namespace GlobalWarmingGame
         public static List<IDrawable> Drawable { get => zone.Drawables.ToList(); }
         public static List<IClickable> Clickable { get => zone.Clickables.ToList(); }
         public static List<IInteractable> Interactable { get => zone.Interactables.ToList(); }
+        public static List<IHeatable> Buildable { get => _buildable.ToList(); }
 
         /// <summary>
         /// Adds a GameObject
@@ -136,6 +139,7 @@ namespace GlobalWarmingGame
                 zone.Clickables.Add(c);
 
             if (gameObject is IInteractable i)
+                zone.Interactables.Add(i);
                 zone.Interactables.Add(i);
         }
 
@@ -157,6 +161,7 @@ namespace GlobalWarmingGame
                 zone.Clickables.Remove(c);
 
             if (gameObject is IInteractable i)
+                zone.Interactables.Remove(i);
                 zone.Interactables.Remove(i);
         }
 

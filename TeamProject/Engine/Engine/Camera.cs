@@ -42,7 +42,7 @@ namespace Engine
         private void ResetCamera()
         {
             this.Position = ClampSize / 2;
-            this.MovementSpeed = 0.5f;
+            this.MovementSpeed = 1f;
             this.ZoomSpeed = 0.1f;
             this.Zoom = 2.0f;
         }

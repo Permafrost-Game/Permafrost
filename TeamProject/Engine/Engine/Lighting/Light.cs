@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Engine.Lighting
 {
-    public class Light : GameObject, Engine.IDrawable
+    public class Light : GameObject, Engine.Drawing.IDrawable
     {
         public Color Color { get; set; }
         public RenderTarget2D RenderTarget { get; private set; }

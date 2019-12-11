@@ -1,15 +1,19 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
 {
     /// <summary>
-    /// This class describes an interactable object
+    /// This class describes an interactable 
+    /// This class is now obsolete See <see cref="IInteractable"/>
     /// </summary>
+    [Obsolete]
     class InteractableGameObject : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }

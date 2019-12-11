@@ -1,16 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine;
+using Engine.Drawing;
+using Engine.PathFinding;
+using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using GlobalWarmingGame.Action;
-using Engine;
-using GlobalWarmingGame;
-using Engine.TileGrid;
-using GlobalWarmingGame.ResourceItems;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Colonist : PathFindable, IInteractable, IUpdatable
+    class Colonist : AnimatedSprite, IPathFindable, IInteractable, IUpdatable
     {
 
         public List<InstructionType> InstructionTypes { get; }
@@ -31,19 +31,27 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
 
-        public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
+        #region IPathFindable
+        public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
+        public Queue<Vector2> Path { get; set ; } = new Queue<Vector2>();
+        public float Speed { get; set; }
+        #endregion
+
+
+        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
+            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0,0),
+            rotationOrigin: new Vector2(0, 0),
             tag: "Colonist",
             depth: 1f,
-            texture: texture,
-            speed: 0.5f
+            textureSet: textureSet,
+            frameTime: 100f
         )
         {
             Health = 10f;
+            Speed = 0.5f;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;
@@ -62,15 +70,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions.Enqueue(instruction);
         }
 
-        protected override void OnGoalComplete(Vector2 completedGoal)
-        {     
+        public void OnGoalComplete(Vector2 completedGoal)
+        {
             if (instructions.Count > 0 &&
                 //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
                 completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
                 instructions.Count != 0)
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Act();
+                currentInstruction.Type.Act(this);
 
                 if (currentInstruction.Type.ResourceItem != null)
                     Inventory.AddItem(currentInstruction.Type.ResourceItem);
@@ -81,10 +89,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
+            Vector2 position1 = this.Position;
+            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             base.Update(gameTime);
 
-            if(goals.Count == 0 && instructions.Count > 0 )
-                AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
+            Vector2 delta = position1 - this.Position;
+
+            if (Math.Abs(delta.X) > Math.Abs(delta.Y))
+            {
+                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+
+            if (Goals.Count == 0 && instructions.Count > 0)
+                Goals.Enqueue(((GameObject)instructions.Peek().PassiveMember).Position);
 
             TemperatureCheck(gameTime);
             HungerCheck(gameTime);
@@ -93,7 +110,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #region Colonist Temperature Check
         private void TemperatureCheck(GameTime gameTime)
         {
-            //Temperature affecting colonist's health          
+            //Temperature affecting colonist's health
             timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToTemperature < 0f)
             {
@@ -107,7 +124,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
         #region Colonist Hunger Check
-        private void HungerCheck(GameTime gameTime) 
+        private void HungerCheck(GameTime gameTime)
         {
             //Temperature affecting food
             timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -135,7 +152,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else
             {
-                ((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
+                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
             }
         }
         #endregion
@@ -145,26 +162,28 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             //Adjust the colonist's temperature based on the tile they are over
             timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperatureUpdate < 0f) 
+            if (timeToTemperatureUpdate < 0f)
             {
                 if (tileTemp > CoreBodyTemperature)
                 {
                     Temperature.Value = Temperature.Value + (tileTemp / 10);
                     //Colonist's temperature should be able to be greater than the tile they are over
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                    //Console.Out.WriteLine("Greater"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 else
                 {
                     Temperature.Value = Temperature.Value - 1;
                     //Colonist's temperature should be able to be lower than the tile they are over
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                    //Console.Out.WriteLine("Lower"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                    //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
         #endregion
-               
+
     }
 }
+
+
