@@ -58,6 +58,7 @@ namespace GlobalWarmingGame
         Texture2D ambiantLight;
 
         Texture2D[][] colonist;
+        Texture2D[][] campFire;
         Dictionary<String, Texture2D> icons;
 
         Texture2D stone;
@@ -187,6 +188,22 @@ namespace GlobalWarmingGame
                     }
 
                 };
+                campFire = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_1")
+                    },
+                     new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_4"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_5")
+                    }
+
+                };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
@@ -272,7 +289,7 @@ namespace GlobalWarmingGame
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
                 workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
-                stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stonenode");
+                stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0");
                 tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
                 axe = this.Content.Load<Texture2D>(@"textures/icons/axe");
                 pickaxe = this.Content.Load<Texture2D>(@"textures/icons/pickaxe");
@@ -310,7 +327,7 @@ namespace GlobalWarmingGame
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[10];
+                string[] spawnables = new string[11];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
@@ -321,6 +338,7 @@ namespace GlobalWarmingGame
                 spawnables[7] = "Tall Grass";
                 spawnables[8] = "Robot";
                 spawnables[9] = "Polar Bear";
+                spawnables[10] = "campFire";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -689,6 +707,9 @@ namespace GlobalWarmingGame
                     textureSet: bear
                 
                 ));
+                    break;
+                case 10:
+                    GameObjectManager.Add(new CampFire(position: position, textureSet: campFire));
                     break;
             }
 
