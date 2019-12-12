@@ -85,7 +85,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             attackRange = 60;
-            AttackPower = 5;
+            AttackPower = 30;
             Health = 1000f;
             attackSpeed = 1000;
 

@@ -58,11 +58,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 colonist.setDead();
                 enemy.ResetEnemyTarget();
                 enemy.setAttacking(false);
+               
+                colonist.inCombat = false;
                 colonist.isAttacking = false;
                 enemy.setInCombat(false);
                 enemy = null;
                 colonist = null;
             }
+           
         }
         private Boolean ColonistAttackSpeedControl() {
             ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -113,9 +116,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 enemy.Health = enemy.Health - colonist.AttackPower;
             }
             Console.WriteLine("Colonist hp: " + colonist.Health + " Enemy hp: " + enemy.Health);
+            
+
+
             if (enemy.Health <= 0)
             {
                 enemy.SetEnemyDead();
+                colonist.inCombat = false;
+                colonist.isAttacking = false;
                 enemy = null;
                 colonist = null;
             }
@@ -150,8 +158,13 @@ namespace GlobalWarmingGame.Interactions.Enemies
                         enemy.setInCombat(true);
                         EnemyAttack();
                     }
+                    else
+                    {
+                        colonist.inCombat = false;
+                    }
                 }
                 
+
             }
            
         }

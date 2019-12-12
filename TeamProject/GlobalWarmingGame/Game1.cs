@@ -298,7 +298,7 @@ namespace GlobalWarmingGame
                     aSpeed: 1000, // Attack Speed
                     aRange: 60, // Agro Range
                     aPower: 1, // Attack Power
-                    maxHp: 969, // Health
+                    maxHp: 300, // Health
                     position: new Vector2(1160, 1160),
                     textureSet: bear
                 ));
@@ -307,7 +307,7 @@ namespace GlobalWarmingGame
                     aSpeed: 5000, // Attack Speed
                     aRange: 60, // Agro Range
                     aPower: 0, // Attack Power (0 = Going to be random)
-                    maxHp: 3000, // Health
+                    maxHp: 500, // Health
                     position: new Vector2(500, 500),
                     textureSet: robot
                 ));
@@ -316,7 +316,7 @@ namespace GlobalWarmingGame
                    aSpeed: 5000, // Attack Speed
                    aRange: 60, // Agro Range
                    aPower: 0, // Attack Power (0 = Going to be random)
-                   maxHp: 3000, // Health
+                   maxHp: 500, // Health
                    position: new Vector2(800, 500),
                    textureSet: robot
                ));
@@ -628,7 +628,7 @@ namespace GlobalWarmingGame
                     aSpeed: 5000, // Attack Speed
                     aRange: 25, // Agro Range
                     aPower: 0, // Attack Power (0 = Going to be random)
-                    maxHp: 3000, // Health
+                    maxHp: 800, // Health
                     position:position,
                     textureSet: robot
                 ));
