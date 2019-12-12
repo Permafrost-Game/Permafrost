@@ -91,7 +91,7 @@ namespace GlobalWarmingGame.Menus
                 collectiveInventory.AddChild(ItemSlots[i]);
 
                 ItemLabels[i] = new Label("0", Anchor.TopLeft, null, new Vector2(7.9f,-20));
-                ItemSlots[i].AddChild(ItemLabels[i]);
+                ItemSlots[i].AddChild(ItemLabels[i]);                
             }
 
             UserInterface.Active.AddEntity(BottomPanel);

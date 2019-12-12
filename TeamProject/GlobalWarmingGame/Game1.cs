@@ -54,6 +54,13 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
+        Dictionary<String, Texture2D> icons;
+
+        Texture2D stone;
+        Texture2D apple;
+        Texture2D wood;
+        Texture2D fibers;
+
         Texture2D colonist;
         Texture2D farm;
         Texture2D workBench;
@@ -163,9 +170,15 @@ namespace GlobalWarmingGame
                 workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
                 stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stonenode");
                 tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
+                stone = this.Content.Load<Texture2D>(@"textures/icons/stone");
+                wood = this.Content.Load<Texture2D>(@"textures/icons/wood");
+                fibers = this.Content.Load<Texture2D>(@"textures/icons/fibers");
+                apple = this.Content.Load<Texture2D>(@"textures/icons/apple");
                 logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { farm, workBench };
+                Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple };
+                string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food" };
                 string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
@@ -197,7 +210,12 @@ namespace GlobalWarmingGame
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
 
-                CollectiveInventory = new CollectiveInventory(MainUI);
+                icons = new Dictionary<string, Texture2D>(6);
+
+                for (int i = 0; i < iconStringArray.Length; i++)
+                    icons.Add(iconStringArray[i], iconTextureArray[i]);
+                    
+                CollectiveInventory = new CollectiveInventory(MainUI, icons);
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
             }
@@ -232,7 +250,7 @@ namespace GlobalWarmingGame
 
                 UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
+                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI, icons);
                 MainUI.UpdateMainUI(CollectiveInventory, gameTime);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)

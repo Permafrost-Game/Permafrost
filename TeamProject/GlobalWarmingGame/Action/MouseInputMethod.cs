@@ -42,12 +42,12 @@ namespace GlobalWarmingGame.Action
         public Panel CraftingMenu { get; private set; }
         public Panel ResourceNotification { get; private set; }
 
-    /// <summary>
-    /// Creates a new instance of the class
-    /// </summary>
-    /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
-    /// <param name="currentInstruction">The current instruction</param>
-    public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction, MainUI mainUI)
+        /// <summary>
+        /// Creates a new instance of the class
+        /// </summary>
+        /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
+        /// <param name="currentInstruction">The current instruction</param>
+        public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction, MainUI mainUI)
         {
             this.camera = camera;
             this.tileMap = tileMap;
@@ -108,71 +108,73 @@ namespace GlobalWarmingGame.Action
                         ResourceNotification.Visible = false;
                     };
 
-                 
                     if (objectClicked is IInteractable)
                     {
-                        if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
+                        if (((IInteractable)objectClicked).InstructionTypes.Count != 0)
                         {
-                            InstructionType instructionType = ((IInteractable)objectClicked).InstructionTypes.ToArray()[0];
+                            if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
+                            {
+                                InstructionType instructionType = ((IInteractable)objectClicked).InstructionTypes.ToArray()[0];
 
-                            Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                            button2.ButtonParagraph.Scale = 0.5f;
-                            Menu.AddChild(button2);
+                                Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                                button2.ButtonParagraph.Scale = 0.5f;
+                                Menu.AddChild(button2);
 
-                            button2.OnClick = (Entity btn) => 
-                            { 
-                                UpdateInstruction(instructionType, (IInteractable)objectClicked); 
-                                Menu.Visible = false;
-                                CraftingMenu.Visible = false;
-                                ResourceNotification.Visible = false;
-                            };
-                        }
-
-                        else
-                        {
-                            Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                            button2.ButtonParagraph.Scale = 0.5f;
-                            button2.Padding = Vector2.Zero;
-                            Menu.AddChild(button2);
-
-                            button2.OnClick = (Entity btn) =>
-                            {                    
-                                Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
-                                craftingMenuLabel.Scale = 0.75f;
-                                CraftingMenu.AddChild(craftingMenuLabel);
-                                
-                                Menu.Visible = false;
-                                CraftingMenu.Visible = true;
-                                ResourceNotification.Visible = false;
-
-                                int counter = 0;
-                                foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
+                                button2.OnClick = (Entity btn) =>
                                 {
-                                    Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
-                                    instructionButton.Padding = Vector2.Zero;
-                                    instructionButton.ButtonParagraph.Scale = 0.5f;
-                                    CraftingMenu.AddChild(instructionButton);
+                                    UpdateInstruction(instructionType, (IInteractable)objectClicked);
+                                    Menu.Visible = false;
+                                    CraftingMenu.Visible = false;
+                                    ResourceNotification.Visible = false;
+                                };
+                            }
 
-                                    instructionButton.OnClick = (Entity e) =>
+                            else
+                            {
+                                Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                                button2.ButtonParagraph.Scale = 0.5f;
+                                button2.Padding = Vector2.Zero;
+                                Menu.AddChild(button2);
+
+                                button2.OnClick = (Entity btn) =>
+                                {
+                                    Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
+                                    craftingMenuLabel.Scale = 0.75f;
+                                    CraftingMenu.AddChild(craftingMenuLabel);
+
+                                    Menu.Visible = false;
+                                    CraftingMenu.Visible = true;
+                                    ResourceNotification.Visible = false;
+
+                                    int counter = 0;
+                                    foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
                                     {
-                                        CraftingMenu.Visible = false;
-                                        Menu.Visible = false;
+                                        Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                                        instructionButton.Padding = Vector2.Zero;
+                                        instructionButton.ButtonParagraph.Scale = 0.5f;
+                                        CraftingMenu.AddChild(instructionButton);
 
-                                        UpdateInstruction(instruction, (IInteractable)objectClicked);
-                                    };
+                                        instructionButton.OnClick = (Entity e) =>
+                                        {
+                                            CraftingMenu.Visible = false;
+                                            Menu.Visible = false;
 
-                                    counter++;
-                                }
-                            };
-                        }
+                                            UpdateInstruction(instruction, (IInteractable)objectClicked);
+                                        };
+
+                                        counter++;
+                                    }
+                                };
+                            }
+                        }                       
                     }
 
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
                     button3.ButtonParagraph.Scale = 0.5f;
                     Menu.AddChild(button3);
-                    button3.OnClick = (Entity btn) => 
-                    { 
-                        Menu.Visible = false; 
+                    button3.OnClick = (Entity btn) =>
+                    {
+                        Menu.Visible = false;
                         CraftingMenu.Visible = false;
                         ResourceNotification.Visible = false;
                     };
@@ -239,7 +241,7 @@ namespace GlobalWarmingGame.Action
             if (colonist.Inventory.CheckContainsList(buildingCosts))
             {
                 foreach (ResourceItem item in buildingCosts)
-                    colonist.Inventory.RemoveItem(item);  
+                    colonist.Inventory.RemoveItem(item);
 
                 build = true;
                 ResourceNotification.Visible = false;

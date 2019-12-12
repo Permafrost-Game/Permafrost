@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Menus;
@@ -25,16 +26,16 @@ namespace GlobalWarmingGame.Resources
         readonly float timeBetweenUpdate = 500f;
         float timeUntilUpdate;
 
-        public CollectiveInventory(MainUI mainUI)
+        public CollectiveInventory(MainUI mainUI, Dictionary<String, Texture2D> icons)
         {
             Colonists = new List<GameObject>();
             ColonistInventories = new List<Inventory>();
             CollectiveResources = new Dictionary<string, ResourceItem>();
 
-            BuildCollectiveInventory(mainUI);
+            BuildCollectiveInventory(mainUI, icons);
         }
 
-        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI)
+        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI, Dictionary<String, Texture2D> icons)
         {
             timeUntilUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -44,13 +45,13 @@ namespace GlobalWarmingGame.Resources
                 ColonistInventories.Clear();
                 CollectiveResources.Clear();
 
-                BuildCollectiveInventory(mainUI);
+                BuildCollectiveInventory(mainUI, icons);
 
                 timeUntilUpdate = timeBetweenUpdate;
             }
         }
 
-        void BuildCollectiveInventory(MainUI mainUI, Texture2D[] icons)
+        void BuildCollectiveInventory(MainUI mainUI, Dictionary<String, Texture2D> icons)
         {
             TotalFood = 0;
             CollectiveCapacity = 0f;
@@ -81,22 +82,22 @@ namespace GlobalWarmingGame.Resources
                 switch (item.Type.ID)
                 {
                     case "food":
-                        mainUI.ItemSlots[0].IconType = IconType.Apple;
+                        mainUI.ItemSlots[0].Texture = icons[item.Type.ID];
                         mainUI.ItemLabels[0].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "wood":
-                        mainUI.ItemSlots[1].IconType = IconType.Bone;
+                        mainUI.ItemSlots[1].Texture = icons[item.Type.ID];
                         mainUI.ItemLabels[1].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "stone":
-                        mainUI.ItemSlots[2].IconType = IconType.Diamond;
+                        mainUI.ItemSlots[2].Texture = icons[item.Type.ID];
                         mainUI.ItemLabels[2].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "fibers":
-                        mainUI.ItemSlots[3].IconType = IconType.Cubes;
+                        mainUI.ItemSlots[3].Texture = icons[item.Type.ID];
                         mainUI.ItemLabels[3].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                 }
