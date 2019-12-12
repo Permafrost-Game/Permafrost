@@ -7,6 +7,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using GlobalWarmingGame.Action;
+using Engine;
+using GlobalWarmingGame;
+using Engine.TileGrid;
+using GlobalWarmingGame.ResourceItems;
+using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
@@ -17,12 +23,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public Inventory Inventory { get; }
         private Queue<Instruction> instructions;
 
+        public float Health { get; set; }
+        public int attackSpeed { get; set; }
         public string Name { get; private set; }
-        public float Health { get; private set; }
+        public float AttackPower { get; set; }
+        public float attackRange { get; set; }
         public Temperature Temperature { get; set; } = new Temperature(38);
         private readonly float CoreBodyTemperature = 38;
         public int UpperComfortRange { get; private set; } = 40;
         public int LowerComfortRange { get; private set; } = 15;
+
+        public Boolean colonistDead = false;
+
 
         private static readonly float Base_Consumption_Rate = 60000f;
         private float timeUntillFoodTick;
@@ -30,10 +42,32 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeToTemperature;
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
+        private bool _inCombat  = false;
+        public bool inCombat
+        {
+            get { return _isAttacking; }
+            set
+            {
+                _inCombat = value;
+                if (value == false)
+                {
+                    TextureGroupIndex = 0;
+                }
+            }
+        }
+        private bool _isAttacking  = false;
+        public bool isAttacking {
+            get { return _isAttacking; }
+            set { _isAttacking = value;
+                SpriteEffect = SpriteEffects.None;
+                TextureGroupIndex = _isAttacking ? 1 : 0;
+
+            }
+        }
 
         #region IPathFindable
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
-        public Queue<Vector2> Path { get; set ; } = new Queue<Vector2>();
+        public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
         public float Speed { get; set; }
         #endregion
 
@@ -50,7 +84,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             frameTime: 100f
         )
         {
-            Health = 10f;
+            attackRange = 60;
+            AttackPower = 30;
+            Health = 1000f;
+            attackSpeed = 1000;
+
             Speed = 0.5f;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
@@ -63,6 +101,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 new InstructionType("select", "Select Colonist", "Selects this colonist")
             };
+        }
+
+        internal void setDead()
+        {
+            this.Rotation = 1.5f;
+            colonistDead = true;
+
+            #region Start 2 Seconds Delay for 'Animation'
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            {
+                GameObjectManager.Remove(this);
+            });
+            #endregion
         }
 
         public void AddInstruction(Instruction instruction)
@@ -87,6 +138,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+        public Boolean isColonistDead()
+        {
+            return colonistDead;
+        }
+
         public override void Update(GameTime gameTime)
         {
             Vector2 position1 = this.Position;
@@ -106,6 +162,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             TemperatureCheck(gameTime);
             HungerCheck(gameTime);
         }
+
+
 
         #region Colonist Temperature Check
         private void TemperatureCheck(GameTime gameTime)
@@ -185,5 +243,4 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
     }
 }
-
 

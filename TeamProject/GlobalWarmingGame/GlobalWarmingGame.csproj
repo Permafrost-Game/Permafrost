@@ -53,6 +53,9 @@
     <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\AggressiveMovement.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\StoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
