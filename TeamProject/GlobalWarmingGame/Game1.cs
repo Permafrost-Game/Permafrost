@@ -283,13 +283,14 @@ namespace GlobalWarmingGame
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[6];
+                string[] spawnables = new string[7];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
                 spawnables[5] = "Robot";
+                spawnables[6] = "Polar Bear";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -626,11 +627,23 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add(new Enemy(
                     tag: "Robot",
                     aSpeed: 5000, // Attack Speed
-                    aRange: 25, // Agro Range
+                    aRange: 60, // Agro Range
                     aPower: 0, // Attack Power (0 = Going to be random)
                     maxHp: 800, // Health
                     position:position,
                     textureSet: robot
+                ));
+                    break;
+                case 6:
+                    GameObjectManager.Add(new Enemy(
+                    tag: "Bear",
+                    aSpeed: 1000, // Attack Speed
+                    aRange: 60, // Agro Range
+                    aPower: 3, // Attack Power
+                    maxHp: 300, // Health
+                    position: position,
+                    textureSet: bear
+                
                 ));
                     break;
             }
