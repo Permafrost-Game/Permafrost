@@ -30,6 +30,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             colonist = col;
             this.enemy = enemy;
             gameTime = g;
+            
         }
 
         private void EnemyAttack()
