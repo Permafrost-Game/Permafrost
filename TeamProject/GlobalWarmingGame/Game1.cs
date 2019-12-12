@@ -187,7 +187,13 @@ namespace GlobalWarmingGame
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
-                MainUI = new MainUI();
+
+                icons = new Dictionary<string, Texture2D>(6);
+
+                for (int i = 0; i < iconStringArray.Length; i++)
+                    icons.Add(iconStringArray[i], iconTextureArray[i]);
+
+                MainUI = new MainUI(icons);
 
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction, MainUI));
 
@@ -210,11 +216,6 @@ namespace GlobalWarmingGame
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
 
-                icons = new Dictionary<string, Texture2D>(6);
-
-                for (int i = 0; i < iconStringArray.Length; i++)
-                    icons.Add(iconStringArray[i], iconTextureArray[i]);
-                    
                 CollectiveInventory = new CollectiveInventory(MainUI, icons);
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };

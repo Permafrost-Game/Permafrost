@@ -22,6 +22,9 @@ namespace GlobalWarmingGame.Resources
         public float CollectiveCapacity { get; set; }
         public float CollectiveCurrentLoad { get; set; }
         public int TotalFood { get; set; }
+        public int TotalWood { get; set; }
+        public int TotalStone { get; set; }
+        public int TotalFibers { get; set; }
 
         readonly float timeBetweenUpdate = 500f;
         float timeUntilUpdate;
@@ -102,6 +105,18 @@ namespace GlobalWarmingGame.Resources
                         break;
                 }
             }
+
+            if (CollectiveResources.ContainsKey("food"))
+                TotalFood = CollectiveResources["food"].Amount;
+
+            if (CollectiveResources.ContainsKey("wood"))
+                TotalWood = CollectiveResources["wood"].Amount;
+
+            if (CollectiveResources.ContainsKey("stone"))
+                TotalStone = CollectiveResources["stone"].Amount;
+
+            if (CollectiveResources.ContainsKey("fibers"))
+                TotalFibers = CollectiveResources["fibers"].Amount;
         }
     }
 }

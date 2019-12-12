@@ -95,6 +95,7 @@ namespace GlobalWarmingGame.Action
 
                     Button button1 = new Button("Move Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25));
                     button1.ButtonParagraph.Scale = 0.5f;
+                    button1.Padding = Vector2.Zero;
                     Menu.AddChild(button1);
                     button1.OnClick = (Entity btn) =>
                     {
@@ -118,6 +119,7 @@ namespace GlobalWarmingGame.Action
 
                                 Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                                 button2.ButtonParagraph.Scale = 0.5f;
+                                button2.Padding = Vector2.Zero;
                                 Menu.AddChild(button2);
 
                                 button2.OnClick = (Entity btn) =>
@@ -171,6 +173,7 @@ namespace GlobalWarmingGame.Action
 
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
                     button3.ButtonParagraph.Scale = 0.5f;
+                    button3.Padding = Vector2.Zero;
                     Menu.AddChild(button3);
                     button3.OnClick = (Entity btn) =>
                     {
@@ -183,6 +186,7 @@ namespace GlobalWarmingGame.Action
                     {
                         Button button4 = new Button("Build Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                         button4.ButtonParagraph.Scale = 0.5f;
+                        button4.Padding = Vector2.Zero;
                         Menu.AddChild(button4);
                         button4.OnClick = (Entity btn) =>
                         {

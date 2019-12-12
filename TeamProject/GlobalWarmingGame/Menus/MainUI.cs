@@ -28,6 +28,9 @@ namespace GlobalWarmingGame.Menus
         public ProgressBar[] HealthBars { get; set; }
         
         Label foodLabel;
+        Label woodLabel;
+        Label stoneLabel;
+        Label fibersLabel;
         GameObject[] colonists;
 
         private float timeToHealthUpdate = 500f;
@@ -35,7 +38,7 @@ namespace GlobalWarmingGame.Menus
 
         bool open;
 
-        public MainUI()
+        public MainUI(Dictionary<string, Texture2D> icons)
         {
             //Top Panel
             TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -57,11 +60,33 @@ namespace GlobalWarmingGame.Menus
             };
             TopPanel.AddChild(SpawnMenu);
 
-            Icon foodIcon = new Icon(IconType.Apple, Anchor.CenterRight, 1f, false);
+            Icon foodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false);
+            foodIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(foodIcon);
+            foodIcon.Texture = icons["food"];
+            foodLabel = new Label("Food Counter", Anchor.CenterRight, null, new Vector2(15, -7));
+            foodIcon.AddChild(foodLabel);
 
-            foodLabel = new Label("Food Counter", Anchor.CenterRight, null, new Vector2(75,0));
-            TopPanel.AddChild(foodLabel);
+            Icon woodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(80, 0));
+            woodIcon.Size = new Vector2(32f, 32f);
+            TopPanel.AddChild(woodIcon);
+            woodIcon.Texture = icons["wood"];
+            woodLabel = new Label("Wood Counter", Anchor.CenterRight, null, new Vector2(15, -7));
+            woodIcon.AddChild(woodLabel);
+
+            Icon stoneIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(160, 0));
+            stoneIcon.Size = new Vector2(32f, 32f);
+            TopPanel.AddChild(stoneIcon);
+            stoneIcon.Texture = icons["stone"];
+            stoneLabel = new Label("Stone Counter", Anchor.CenterRight, null, new Vector2(15, -7));
+            stoneIcon.AddChild(stoneLabel);
+
+            Icon fibersIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(240, 0));
+            fibersIcon.Size = new Vector2(32f, 32f);
+            TopPanel.AddChild(fibersIcon);
+            fibersIcon.Texture = icons["fibers"];
+            fibersLabel = new Label("Fibers Counter", Anchor.CenterRight, null, new Vector2(15, -7));
+            fibersIcon.AddChild(fibersLabel);
 
             UserInterface.Active.AddEntity(TopPanel);
 
@@ -111,12 +136,17 @@ namespace GlobalWarmingGame.Menus
                 {
                     Colonist colonist = (Colonist)colonists[i];
                     HealthBars[i] = new ProgressBar(0, (uint)colonist.MaxHealth, new Vector2(200, 30), Anchor.CenterRight, new Vector2(0, 100 + 35 * i));
+                    HealthBars[i].ClickThrough = true;
                     TopPanel.AddChild(HealthBars[i]);
 
                     HealthBars[i].Value = (int)colonist.Health;
                 }
 
                 foodLabel.Text = collectiveInventory.TotalFood.ToString();
+                woodLabel.Text = collectiveInventory.TotalWood.ToString();
+                stoneLabel.Text = collectiveInventory.TotalStone.ToString();
+                fibersLabel.Text = collectiveInventory.TotalFibers.ToString();
+
                 timeUnitlHealthUpdate = timeToHealthUpdate;
             }
         }
