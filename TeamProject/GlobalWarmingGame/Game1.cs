@@ -35,7 +35,7 @@ namespace GlobalWarmingGame
         SelectionManager selectionManager;
 
         TileSet tileSet;
-        TileMap tileMap;
+        // TileMap tileMap;
 
         Camera camera;
 
@@ -56,7 +56,7 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
-        Texture2D colonist;
+        Texture2D[][] colonist;
         Texture2D farm;
         Texture2D bushH;
         Texture2D bushN;
@@ -71,8 +71,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
 
             graphics.IsFullScreen = false;
@@ -132,29 +132,38 @@ namespace GlobalWarmingGame
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/dirt"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/grass"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/snow"));
-                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
+                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
+                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
+                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
+                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
                 textureSet.Add("6", water);
 
 
 
-                tileSet = new TileSet(textureSet, new Vector2(16));
+                tileSet = new TileSet(textureSet, new Vector2(32f));
                 //                                                  map0/00.csv  //50x50 tilemap
                 //                                                  map1/00.csv  //100x100 tilemap
-                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                //tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                GameObjectManager.Init(tileSet);
 
-                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
+                ZoneManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size);
+
+                GameObjectManager.Camera = camera;
             }
 
             //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
+                colonist = new Texture2D[][] 
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    }
+                };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
@@ -257,11 +266,11 @@ namespace GlobalWarmingGame
                 PauseMenu = new PauseMenu();
                 MainUI = new MainUI();
 
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction, MainUI));
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, ZoneManager.CurrentZone.TileMap, selectionManager.CurrentInstruction, MainUI));
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(800, 800), texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
@@ -303,7 +312,10 @@ namespace GlobalWarmingGame
                    textureSet: robot
                ));
 
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); Console.WriteLine(tileMap.Size); };
+                MainUI.SpawnMenu.OnValueChange = (Entity e) => {
+                    ProcessSpawnables();
+                    //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
+                };
             }
         }
 
@@ -326,9 +338,8 @@ namespace GlobalWarmingGame
             {
                 camera.Update(gameTime);
 
-                //Update Temperatures
-                tileMap.Update(gameTime);
-                BuildingManager.UpdateBuildingTemperatures(gameTime, tileMap);
+                GameObjectManager.ZoneMap.Update(gameTime);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, ZoneManager.CurrentZone.TileMap);
                 UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
@@ -346,6 +357,28 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
+
+            if (gameState == GameState.playing)
+            {
+                if (CheckKeyPress(Keys.I))
+                    GameObjectManager.MoveZone(new Vector2(0, -1));
+                else if (CheckKeyPress(Keys.K))
+                    GameObjectManager.MoveZone(new Vector2(0, 1));
+                else if (CheckKeyPress(Keys.L))
+                    GameObjectManager.MoveZone(new Vector2(1, 0));
+                else if (CheckKeyPress(Keys.J))
+                    GameObjectManager.MoveZone(new Vector2(-1, 0));
+            }
+
+            //if (gameState == GameState.playing)
+            //{
+            //    if (currentKeyboardState.IsKeyUp(Keys.Escape) && previousKeyboardState.IsKeyDown(Keys.Escape))
+            //        ShowPauseMenu();
+            //}
+
+            //peformanceMonitor.Update(gameTime);
+
+            previousKeyboardState = currentKeyboardState;
         }
 
         #region Update Colonists Temperatures
@@ -354,7 +387,7 @@ namespace GlobalWarmingGame
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
             {
-                float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
                 colonist.UpdateTemp(tileTemp, gameTime);
                 //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
@@ -409,7 +442,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                tileMap.Draw(spriteBatch);
+                GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                 spriteBatch.End();
             }
@@ -496,15 +529,12 @@ namespace GlobalWarmingGame
                     gameState = GameState.playing;
             }
 
-            previousKeyboardState = currentKeyboardState;
+            //previousKeyboardState = currentKeyboardState;
         }
 
         bool CheckKeyPress(Keys key)
         {
-            if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
-                return true;
-
-            return false;
+            return previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
         }
 
         void ShowMainMenu()
@@ -564,12 +594,12 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = new Vector2(1600, 1600) - camera.Position;
+            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
                 case 0:
-                    GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
+                    GameObjectManager.Add(new Colonist(position: position, textureSet: colonist, inventoryCapacity: 100f));
                     break;
                 case 1:
                     GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));

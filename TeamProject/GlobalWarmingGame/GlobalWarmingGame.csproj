@@ -40,8 +40,9 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Action\Instruction.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Resources\ResourceTypes\Coal.cs" />
     <Compile Include="Resources\ResourceTypes\Wood.cs" />
     <Compile Include="Resources\ResourceTypes\Stone.cs" />
+    <Compile Include="Zone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

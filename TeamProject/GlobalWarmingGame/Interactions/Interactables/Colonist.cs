@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine;
+using Engine.Drawing;
+using Engine.PathFinding;
+using GlobalWarmingGame.Action;
+using GlobalWarmingGame.ResourceItems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -11,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Colonist : PathFindable, IInteractable, IUpdatable
+    class Colonist : AnimatedSprite, IPathFindable, IInteractable, IUpdatable
     {
 
         public List<InstructionType> InstructionTypes { get; }
@@ -38,22 +43,31 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
 
-        public Colonist(Vector2 position, Texture2D texture, float inventoryCapacity) : base
+        #region IPathFindable
+        public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
+        public Queue<Vector2> Path { get; set ; } = new Queue<Vector2>();
+        public float Speed { get; set; }
+        #endregion
+
+
+        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
+            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
             tag: "Colonist",
             depth: 1f,
-            texture: texture,
-            speed: 0.5f
+            textureSet: textureSet,
+            frameTime: 100f
         )
         {
             attackRange = 60;
             AttackPower = 5;
             Health = 1000f;
             attackSpeed = 1000;
+
+            Speed = 0.5f;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;
@@ -84,7 +98,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions.Enqueue(instruction);
         }
 
-        protected override void OnGoalComplete(Vector2 completedGoal)
+        public void OnGoalComplete(Vector2 completedGoal)
         {
             if (instructions.Count > 0 &&
                 //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
@@ -107,11 +121,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
+            Vector2 position1 = this.Position;
+            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             base.Update(gameTime);
 
-            if (goals.Count == 0 && instructions.Count > 0)
+            Vector2 delta = position1 - this.Position;
+
+            if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                AddGoal(((GameObject)instructions.Peek().PassiveMember).Position);
+                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+
+            if (Goals.Count == 0 && instructions.Count > 0)
+                Goals.Enqueue(((GameObject)instructions.Peek().PassiveMember).Position);
 
                 TemperatureCheck(gameTime);
                 HungerCheck(gameTime);

@@ -1,6 +1,7 @@
 ﻿using Engine.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Engine.TileGrid
 {
@@ -30,7 +31,15 @@ namespace Engine.TileGrid
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
+            //spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
+            spriteBatch.Draw(
+                texture,
+                new Rectangle(base.Position.ToPoint(), size.ToPoint()),
+                new Rectangle(
+                    new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
+                    size.ToPoint()),
+                Color.White
+                );
         }
 
         ///<summary>Equality testing</summary>
