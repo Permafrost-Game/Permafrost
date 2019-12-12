@@ -26,6 +26,27 @@
 /processorParam:DebugMode=Auto
 /build:GeonBit.UI/themes/editor/effects/silhouette.fx
 
+#begin GeonBit.UI/themes/editor/fonts/AnonymousPro-Bold.ttf
+/copy:GeonBit.UI/themes/editor/fonts/AnonymousPro-Bold.ttf
+
+#begin GeonBit.UI/themes/editor/fonts/AnonymousPro-Italic.ttf
+/copy:GeonBit.UI/themes/editor/fonts/AnonymousPro-Italic.ttf
+
+#begin GeonBit.UI/themes/editor/fonts/AnonymousPro-Regular.ttf
+/copy:GeonBit.UI/themes/editor/fonts/AnonymousPro-Regular.ttf
+
+#begin GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+/copy:GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+
+#begin GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Bold.ttf
+/copy:GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Bold.ttf
+
+#begin GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Oblique.ttf
+/copy:GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Oblique.ttf
+
+#begin GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Roman.ttf
+/copy:GeonBit.UI/themes/editor/fonts/Bitstream Vera Sans Mono Roman.ttf
+
 #begin GeonBit.UI/themes/editor/fonts/Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -1611,6 +1632,27 @@
 /processorParam:DebugMode=Auto
 /build:GeonBit.UI/themes/hd/effects/silhouette.fx
 
+#begin GeonBit.UI/themes/hd/fonts/AnonymousPro-Bold.ttf
+/copy:GeonBit.UI/themes/hd/fonts/AnonymousPro-Bold.ttf
+
+#begin GeonBit.UI/themes/hd/fonts/AnonymousPro-Italic.ttf
+/copy:GeonBit.UI/themes/hd/fonts/AnonymousPro-Italic.ttf
+
+#begin GeonBit.UI/themes/hd/fonts/AnonymousPro-Regular.ttf
+/copy:GeonBit.UI/themes/hd/fonts/AnonymousPro-Regular.ttf
+
+#begin GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+/copy:GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+
+#begin GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Bold.ttf
+/copy:GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Bold.ttf
+
+#begin GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Oblique.ttf
+/copy:GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Oblique.ttf
+
+#begin GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Roman.ttf
+/copy:GeonBit.UI/themes/hd/fonts/Bitstream Vera Sans Mono Roman.ttf
+
 #begin GeonBit.UI/themes/hd/fonts/Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -3195,6 +3237,27 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:GeonBit.UI/themes/lowres/effects/silhouette.fx
+
+#begin GeonBit.UI/themes/lowres/fonts/AnonymousPro-Bold.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/AnonymousPro-Bold.ttf
+
+#begin GeonBit.UI/themes/lowres/fonts/AnonymousPro-Italic.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/AnonymousPro-Italic.ttf
+
+#begin GeonBit.UI/themes/lowres/fonts/AnonymousPro-Regular.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/AnonymousPro-Regular.ttf
+
+#begin GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+
+#begin GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Bold.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Bold.ttf
+
+#begin GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Oblique.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Oblique.ttf
+
+#begin GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Roman.ttf
+/copy:GeonBit.UI/themes/lowres/fonts/Bitstream Vera Sans Mono Roman.ttf
 
 #begin GeonBit.UI/themes/lowres/fonts/Bold.spritefont
 /importer:FontDescriptionImporter
@@ -4835,6 +4898,102 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
+#begin textures/icons/apple.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/apple.png
+
+#begin textures/icons/axe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/axe.png
+
+#begin textures/icons/coal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/coal.png
+
+#begin textures/icons/fibers.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/fibers.png
+
+#begin textures/icons/hoe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/hoe.png
+
+#begin textures/icons/pickaxe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/pickaxe.png
+
+#begin textures/icons/stone.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/stone.png
+
+#begin textures/icons/wood.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/wood.png
+
 #begin textures/interactables/animals/bear/attackingBear.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5002,6 +5161,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/animals/colonist/sprite0.png
+
+#begin textures/interactables/animals/colonist/sprite1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/sprite1.png
+
+#begin textures/interactables/animals/colonist/sprite2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/sprite2.png
 
 #begin textures/interactables/animals/rabbit2/sprite0.png
 /importer:TextureImporter
@@ -5255,6 +5438,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
 
+#begin textures/interactables/buildings/workbench.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/workbench.png
+
 #begin textures/interactables/environment/berry_bush/sprite0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5278,6 +5473,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/berry_bush/sprite1.png
+
+#begin textures/interactables/environment/grass/tallgrass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/grass/tallgrass.png
+
+#begin textures/interactables/environment/stone/stonenode.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/stone/stonenode.png
 
 #begin textures/interactables/environment/tree/snowtree.png
 /importer:TextureImporter
@@ -5327,7 +5546,7 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/tree/tree.png
 
-#begin textures/tiles/main_tileset/Grass.png
+#begin textures/tiles/main_tileset/grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5337,9 +5556,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/Grass.png
+/build:textures/tiles/main_tileset/grass.png
 
-#begin textures/tiles/main_tileset/Snow.png
+#begin textures/tiles/main_tileset/snow.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5349,7 +5568,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:textures/tiles/main_tileset/Snow.png
+/build:textures/tiles/main_tileset/snow.png
 
 #begin textures/tiles/main_tileset/stone.png
 /importer:TextureImporter
@@ -5446,4 +5665,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/tiles/old_tileset/grass.png
+
+#begin textures/tiles/old_tileset/snow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/snow.png
+
+#begin textures/tiles/old_tileset/stone.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/old_tileset/stone.png
 

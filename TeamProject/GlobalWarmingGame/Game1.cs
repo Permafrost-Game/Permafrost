@@ -85,11 +85,11 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1280,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
 
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -213,11 +213,6 @@ namespace GlobalWarmingGame
                     {
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
                        // this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0")
-
-
-                    
-
-
                     }
                 };
 
