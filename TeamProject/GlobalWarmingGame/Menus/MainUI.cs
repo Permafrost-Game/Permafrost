@@ -25,7 +25,8 @@ namespace GlobalWarmingGame.Menus
         public DropDown SpawnMenu { get; private set; }
         public Icon[] ItemSlots { get; set; }
         public Label[] ItemLabels { get; set; }
-        public ProgressBar[] HealthBars { get; set; }
+        public Panel HealthPanel { get; private set; }
+        public ProgressBar[] HealthBars { get; private set; }
         
         Label foodLabel;
         Label woodLabel;
@@ -88,6 +89,9 @@ namespace GlobalWarmingGame.Menus
             fibersLabel = new Label("Fibers Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             fibersIcon.AddChild(fibersLabel);
 
+            HealthPanel = new Panel(Vector2.Zero, PanelSkin.None);
+            TopPanel.AddChild(HealthPanel);
+
             UserInterface.Active.AddEntity(TopPanel);
 
             //Bottom Panel
@@ -130,6 +134,8 @@ namespace GlobalWarmingGame.Menus
             timeUnitlHealthUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUnitlHealthUpdate < 0f) 
             {
+                HealthPanel.ClearChildren();
+
                 colonists = GameObjectManager.GetObjectsByTag("Colonist").ToArray();
                 HealthBars = new ProgressBar[colonists.Length];
                 for (int i = 0; i < HealthBars.Length; i++)
@@ -137,7 +143,7 @@ namespace GlobalWarmingGame.Menus
                     Colonist colonist = (Colonist)colonists[i];
                     HealthBars[i] = new ProgressBar(0, (uint)colonist.MaxHealth, new Vector2(200, 30), Anchor.CenterRight, new Vector2(0, 100 + 35 * i));
                     HealthBars[i].ClickThrough = true;
-                    TopPanel.AddChild(HealthBars[i]);
+                    HealthPanel.AddChild(HealthBars[i]);
 
                     HealthBars[i].Value = (int)colonist.Health;
                 }
