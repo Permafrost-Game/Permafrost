@@ -4,6 +4,7 @@ using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Menus;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace GlobalWarmingGame.Resources
             }
         }
 
-        void BuildCollectiveInventory(MainUI mainUI)
+        void BuildCollectiveInventory(MainUI mainUI, Texture2D[] icons)
         {
             TotalFood = 0;
             CollectiveCapacity = 0f;
