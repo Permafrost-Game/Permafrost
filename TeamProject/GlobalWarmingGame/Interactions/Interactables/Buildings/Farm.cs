@@ -1,8 +1,8 @@
-﻿
-using Engine;
+﻿using Engine;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources.ResourceTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,6 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     class Farm : InteractableGameObject, IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
+
         private InstructionType plant;
         private InstructionType harvest;
         private bool growing;

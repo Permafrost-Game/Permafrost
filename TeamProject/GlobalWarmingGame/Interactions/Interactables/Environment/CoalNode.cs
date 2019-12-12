@@ -2,6 +2,7 @@
 using Engine;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources.ResourceTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", new ResourceItem(new Coal(), 5), Mine));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", new ResourceItem(new Coal(), 4), Mine));
         }
 
         private void Mine(Colonist colonist)

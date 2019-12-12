@@ -26,7 +26,7 @@ using GlobalWarmingGame.Interactions.Enemies;
 namespace GlobalWarmingGame
 {
     /// <summary>
-    /// This class is the main class for the games implemntation.
+    /// This class is the main class for the games implementation.
     /// </summary>
     public class Game1 : Game
     {
@@ -42,6 +42,7 @@ namespace GlobalWarmingGame
         MainMenu MainMenu;
         PauseMenu PauseMenu;
         MainUI MainUI;
+        CollectiveInventory CollectiveInventory;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
@@ -57,7 +58,20 @@ namespace GlobalWarmingGame
         Texture2D ambiantLight;
 
         Texture2D[][] colonist;
+        Dictionary<String, Texture2D> icons;
+
+        Texture2D stone;
+        Texture2D apple;
+        Texture2D wood;
+        Texture2D fibers;
+
+        Texture2D axe;
+        Texture2D pickaxe;
+        Texture2D hoe;
         Texture2D farm;
+        Texture2D workBench;
+        Texture2D stoneNode;
+        Texture2D tallGrass;
         Texture2D bushH;
         Texture2D bushN;
         Texture2D[][] rabbit;
@@ -71,11 +85,11 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1280,
-                PreferredBackBufferHeight = 768
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
             };
 
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -199,11 +213,6 @@ namespace GlobalWarmingGame
                     {
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
                        // this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0")
-
-
-                    
-
-
                     }
                 };
 
@@ -262,10 +271,22 @@ namespace GlobalWarmingGame
                 
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
+                workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
+                stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stonenode");
+                tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
+                axe = this.Content.Load<Texture2D>(@"textures/icons/axe");
+                pickaxe = this.Content.Load<Texture2D>(@"textures/icons/pickaxe");
+                hoe = this.Content.Load<Texture2D>(@"textures/icons/hoe");
+                stone = this.Content.Load<Texture2D>(@"textures/icons/stone");
+                wood = this.Content.Load<Texture2D>(@"textures/icons/wood");
+                fibers = this.Content.Load<Texture2D>(@"textures/icons/fibers");
+                apple = this.Content.Load<Texture2D>(@"textures/icons/apple");
                 logo = Content.Load<Texture2D>(@"logo");
 
-                Texture2D[] textureArray = new Texture2D[] { farm };
-                string[] stringArray = new string[] { "Farm" };
+                Texture2D[] textureArray = new Texture2D[] { farm, workBench };
+                Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple, axe, pickaxe, hoe };
+                string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food", "axe", "pickaxe", "hoe" };
+                string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
                 for (int i = 0; i < stringArray.Length; i++)
@@ -273,7 +294,13 @@ namespace GlobalWarmingGame
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
-                MainUI = new MainUI();
+
+                icons = new Dictionary<string, Texture2D>(6);
+
+                for (int i = 0; i < iconStringArray.Length; i++)
+                    icons.Add(iconStringArray[i], iconTextureArray[i]);
+
+                MainUI = new MainUI(icons);
 
                 selectionManager.InputMethods.Add(new MouseInputMethod(camera, ZoneManager.CurrentZone.TileMap, selectionManager.CurrentInstruction, MainUI));
 
@@ -283,14 +310,17 @@ namespace GlobalWarmingGame
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[7];
+                string[] spawnables = new string[10];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
                 spawnables[3] = "Tree";
                 spawnables[4] = "Bush";
-                spawnables[5] = "Robot";
-                spawnables[6] = "Polar Bear";
+                spawnables[5] = "Workbench";
+                spawnables[6] = "Stone";
+                spawnables[7] = "Tall Grass";
+                spawnables[8] = "Robot";
+                spawnables[9] = "Polar Bear";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
@@ -326,6 +356,9 @@ namespace GlobalWarmingGame
                     ProcessSpawnables();
                     //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
                 };
+                CollectiveInventory = new CollectiveInventory(MainUI, icons);
+
+                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
             }
         }
 
@@ -358,9 +391,10 @@ namespace GlobalWarmingGame
                 foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
                     mouseInputMethod.Update(gameTime);
 
-                MainUI.Update(gameTime);
+                UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory();
+                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI, icons);
+                MainUI.UpdateMainUI(CollectiveInventory, gameTime);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
                 //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
@@ -491,6 +525,7 @@ namespace GlobalWarmingGame
 
                 foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
                     drawable.Draw(spriteBatch);
+
                 spriteBatch.End();
             }
 
@@ -525,7 +560,7 @@ namespace GlobalWarmingGame
         }
         #endregion
 
-        #region Main Menu and Pause Menu
+        #region Menus
         void PauseGame()
         {
             currentKeyboardState = Keyboard.GetState();
@@ -624,6 +659,15 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add(new Bush(position: position, harvestable: bushH, harvested: bushN));
                     break;
                 case 5:
+                    GameObjectManager.Add(new WorkBench(position: position, texture: workBench));
+                    break;
+                case 6:
+                    GameObjectManager.Add(new StoneNode(position: position, texture: stoneNode));
+                    break;
+                case 7:
+                    GameObjectManager.Add(new TallGrass(position: position, texture: tallGrass));
+                    break;
+                case 8:
                     GameObjectManager.Add(new Enemy(
                     tag: "Robot",
                     aSpeed: 5000, // Attack Speed
@@ -634,7 +678,7 @@ namespace GlobalWarmingGame
                     textureSet: robot
                 ));
                     break;
-                case 6:
+                case 9:
                     GameObjectManager.Add(new Enemy(
                     tag: "Bear",
                     aSpeed: 1000, // Attack Speed
@@ -647,6 +691,8 @@ namespace GlobalWarmingGame
                 ));
                     break;
             }
+
+            MainUI.SpawnMenu.DontKeepSelection = true;
         }
 
         #endregion

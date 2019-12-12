@@ -1,8 +1,8 @@
-﻿
-using Engine;
+﻿using Engine;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources.ResourceTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -17,7 +17,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private InstructionType cook;
         private InstructionType retrieve;
-        private Inventory inventory;
 
         private bool cooking;
         private float timeUntilCooked;
@@ -35,7 +34,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            inventory = new Inventory(10);
             cook = new InstructionType("cook", "Cook", "Cook food", CookFood);
             retrieve = new InstructionType("retrieve", "Retrieve", "Retrieve food", RetrieveFood);
             InstructionTypes.Add(cook);

@@ -6,26 +6,26 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables.Environment
+namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class StoneNode : InteractableGameObject
+    class TallGrass : InteractableGameObject
     {        
-        public StoneNode(Vector2 position, Texture2D texture) : base
+        public TallGrass(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             rotationOrigin: new Vector2(0, 0),
-            tag: "StoneNode",
+            tag: "TallGrass",
             depth: 0.7f,
             texture: texture,
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 4), Mine));
+            InstructionTypes.Add(new InstructionType("trim", "Trim grass", "Trim grass", new ResourceItem(new Fibers(), 4), Trim));
         }
 
-        private void Mine(Colonist colonist)
+        private void Trim(Colonist colonist)
         {
             //Maybe destory the node or allow 3 more mine operations
         }

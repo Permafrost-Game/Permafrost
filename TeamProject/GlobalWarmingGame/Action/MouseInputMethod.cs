@@ -28,6 +28,7 @@ namespace GlobalWarmingGame.Action
         Instruction currentInstruction;
 
         MainUI mainUI;
+        GameTime time;
 
         MouseState currentMouseState;
         MouseState previousMouseState;
@@ -38,6 +39,8 @@ namespace GlobalWarmingGame.Action
         bool hovering;
 
         public Panel Menu { get; private set; }
+        public Panel CraftingMenu { get; private set; }
+        public Panel ResourceNotification { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the class
@@ -68,8 +71,23 @@ namespace GlobalWarmingGame.Action
                     if (Menu != null && Menu.Visible == true)
                         Menu.Visible = false;
 
+                    if (CraftingMenu != null && CraftingMenu.Visible == true)
+                        CraftingMenu.Visible = false;
+
+                    if (ResourceNotification != null && ResourceNotification.Visible == true)
+                        ResourceNotification.Visible = false;
+
                     Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
                     UserInterface.Active.AddEntity(Menu);
+
+                    CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
+                    CraftingMenu.AdjustHeightAutomatically = true;
+                    UserInterface.Active.AddEntity(CraftingMenu);
+
+                    ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 125));
+                    ResourceNotification.Padding = Vector2.Zero;
+                    ResourceNotification.Visible = false;
+                    UserInterface.Active.AddEntity(ResourceNotification);
 
                     Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
                     label.Scale = 0.7f;
@@ -77,6 +95,7 @@ namespace GlobalWarmingGame.Action
 
                     Button button1 = new Button("Move Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25));
                     button1.ButtonParagraph.Scale = 0.5f;
+                    button1.Padding = Vector2.Zero;
                     Menu.AddChild(button1);
                     button1.OnClick = (Entity btn) =>
                     {
@@ -86,63 +105,161 @@ namespace GlobalWarmingGame.Action
                             currentInstruction.ActiveMember.Goals.Enqueue(tileClicked.Position);
 
                         Menu.Visible = false;
+                        CraftingMenu.Visible = false;
+                        ResourceNotification.Visible = false;
                     };
 
                     if (objectClicked is IInteractable)
                     {
-                        foreach (InstructionType t in ((IInteractable)objectClicked).InstructionTypes)
+                        if (((IInteractable)objectClicked).InstructionTypes.Count != 0)
                         {
-                            Button button2 = new Button(t.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                            button2.ButtonParagraph.Scale = 0.5f;
-                            Menu.AddChild(button2);
-                            button2.OnClick = (Entity btn) => { UpdateInstruction(t, (IInteractable)objectClicked); Menu.Visible = false; };
-                        }
+                            if (((IInteractable)objectClicked).InstructionTypes.Count == 1)
+                            {
+                                InstructionType instructionType = ((IInteractable)objectClicked).InstructionTypes.ToArray()[0];
+
+                                Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                                button2.ButtonParagraph.Scale = 0.5f;
+                                button2.Padding = Vector2.Zero;
+                                Menu.AddChild(button2);
+
+                                button2.OnClick = (Entity btn) =>
+                                {
+                                    UpdateInstruction(instructionType, (IInteractable)objectClicked);
+                                    Menu.Visible = false;
+                                    CraftingMenu.Visible = false;
+                                    ResourceNotification.Visible = false;
+                                };
+                            }
+
+                            else
+                            {
+                                Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
+                                button2.ButtonParagraph.Scale = 0.5f;
+                                button2.Padding = Vector2.Zero;
+                                Menu.AddChild(button2);
+
+                                button2.OnClick = (Entity btn) =>
+                                {
+                                    Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
+                                    craftingMenuLabel.Scale = 0.75f;
+                                    CraftingMenu.AddChild(craftingMenuLabel);
+
+                                    Menu.Visible = false;
+                                    CraftingMenu.Visible = true;
+                                    ResourceNotification.Visible = false;
+
+                                    int counter = 0;
+                                    foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
+                                    {
+                                        Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                                        instructionButton.Padding = Vector2.Zero;
+                                        instructionButton.ButtonParagraph.Scale = 0.5f;
+                                        CraftingMenu.AddChild(instructionButton);
+
+                                        instructionButton.OnClick = (Entity e) =>
+                                        {
+                                            CraftingMenu.Visible = false;
+                                            Menu.Visible = false;
+
+                                            UpdateInstruction(instruction, (IInteractable)objectClicked);
+                                        };
+
+                                        counter++;
+                                    }
+                                };
+                            }
+                        }                       
                     }
 
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
                     button3.ButtonParagraph.Scale = 0.5f;
+                    button3.Padding = Vector2.Zero;
                     Menu.AddChild(button3);
-                    button3.OnClick = (Entity btn) => { Menu.Visible = false; };
+                    button3.OnClick = (Entity btn) =>
+                    {
+                        Menu.Visible = false;
+                        CraftingMenu.Visible = false;
+                        ResourceNotification.Visible = false;
+                    };
 
                     if (buildingSelected)
                     {
                         Button button4 = new Button("Build Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
                         button4.ButtonParagraph.Scale = 0.5f;
+                        button4.Padding = Vector2.Zero;
                         Menu.AddChild(button4);
                         button4.OnClick = (Entity btn) =>
                         {
                             if (objectClicked == null && tileClicked.Walkable)
                             {
-                                PlaceBuilding(tileClicked);
+                                PlaceBuildingHelper(tileClicked);
                             }
 
                             Menu.Visible = false;
+                            CraftingMenu.Visible = false;
                         };
                     }
                 }
             }
         }
 
-        void PlaceBuilding(Tile tileClicked)
+        void PlaceBuildingHelper(Tile tileClicked)
+        {
+            Building buildingDetails = BuildingManager.GetBuilding(buildingId);
+            List<ResourceItem> buildingCosts = new List<ResourceItem>();
+
+            //TODO make an abstract building class to reduce repeated code
+            switch (buildingId)
+            {
+                case (1):
+                    Farm farm = new Farm(tileClicked.Position, buildingDetails.Texture);
+                    buildingCosts = farm.CraftingCosts;
+
+                    if (CanColonistBuild(buildingCosts))
+                    {
+                        //Colonist colonist = currentInstruction.ActiveMember;
+                        //colonist.AddGoal(tileClicked.Position);
+                        GameObjectManager.Add(farm);
+                    }
+                    break;
+
+                case (2):
+                    WorkBench workBench = new WorkBench(tileClicked.Position, buildingDetails.Texture);
+                    buildingCosts = workBench.CraftingCosts;
+
+                    if (CanColonistBuild(buildingCosts))
+                    {
+                        GameObjectManager.Add(workBench);
+                    }
+                    break;
+            }
+
+            mainUI.BuildMenu.SelectedIndex = 0;
+        }
+
+        bool CanColonistBuild(List<ResourceItem> buildingCosts)
         {
             Colonist colonist = currentInstruction.ActiveMember;
-            Building buildingDetails = BuildingManager.GetBuilding(buildingId);
-            Farm building = new Farm(tileClicked.Position, buildingDetails.Texture);
-            List<ResourceItem> buildingCosts = building.CraftingCosts;
-            bool build = true;
+            bool build = false;
 
-            foreach (ResourceItem resource in buildingCosts)
+            if (colonist.Inventory.CheckContainsList(buildingCosts))
             {
-                if (!colonist.Inventory.RemoveItem(resource))
-                {
-                    build = false;
-                }
+                foreach (ResourceItem item in buildingCosts)
+                    colonist.Inventory.RemoveItem(item);
+
+                build = true;
+                ResourceNotification.Visible = false;
             }
 
-            if (build)
+            else
             {
-                GameObjectManager.Add(building);
+                Label label = new Label("Not Enough Resources", Anchor.Center);
+                ResourceNotification.AddChild(label);
+
+                ResourceNotification.Visible = true;
             }
+
+            return build;
         }
 
         void PopulateBuildMenu()
@@ -163,6 +280,10 @@ namespace GlobalWarmingGame.Action
                     case 1:
                         buildingSelected = true;
                         buildingId = 1;
+                        break;
+                    case 2:
+                        buildingSelected = true;
+                        buildingId = 2;
                         break;
                 }
             };
@@ -193,7 +314,16 @@ namespace GlobalWarmingGame.Action
             hovering = false;
 
             if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-                Menu.Visible = false;
+            {
+                if (Menu != null && Menu.Visible)
+                    Menu.Visible = false;
+
+                if (CraftingMenu != null && CraftingMenu.Visible)
+                    CraftingMenu.Visible = false;
+
+                if (ResourceNotification != null && ResourceNotification.Visible)
+                    ResourceNotification.Visible = false;
+            }
 
             previousMouseState = currentMouseState;
         }

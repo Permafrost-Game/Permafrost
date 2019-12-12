@@ -13,6 +13,7 @@ using GlobalWarmingGame;
 using Engine.TileGrid;
 using GlobalWarmingGame.ResourceItems;
 using System.Threading.Tasks;
+using GlobalWarmingGame.Resources.ResourceTypes;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
@@ -28,6 +29,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public string Name { get; private set; }
         public float AttackPower { get; set; }
         public float attackRange { get; set; }
+        public float MaxHealth { get; private set; }
         public Temperature Temperature { get; set; } = new Temperature(38);
         private readonly float CoreBodyTemperature = 38;
         public int UpperComfortRange { get; private set; } = 40;
@@ -86,10 +88,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             attackRange = 60;
             AttackPower = 30;
-            Health = 1000f;
             attackSpeed = 1000;
 
             Speed = 0.5f;
+            MaxHealth = 10f;
+            Health = MaxHealth;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = Base_Consumption_Rate;
@@ -236,6 +239,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
                     //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
+
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }

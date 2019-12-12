@@ -39,7 +39,7 @@ namespace GlobalWarmingGame.ResourceItems
 
                 else
                     Resources.Add(item.Type.ID, item);
-                    
+
                 CurrentLoad += item.Type.Weight * item.Amount;
             }
 
@@ -53,23 +53,27 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns>If the remove was sucsessful</returns>
         public bool RemoveItem(ResourceItem item)
         {
-            if(CheckContains(item))
+            if (CheckContains(item))
             {
-                if (Resources[item.Type.ID].Amount >= item.Amount)
+                if (Resources[item.Type.ID].Amount > item.Amount)
                 {
                     Resources[item.Type.ID].Amount -= item.Amount;
                     CurrentLoad -= item.Type.Weight * item.Amount;
                 }
-                else
+                else if (Resources[item.Type.ID].Amount == item.Amount)
                 {
                     CurrentLoad -= item.Type.Weight * Resources[item.Type.ID].Amount;
                     Resources.Remove(item.Type.ID);
-                }  
+                }
+                else
+                {
+                    return false;
+                }
 
                 return true;
-            } 
-            
-         return false;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -83,6 +87,23 @@ namespace GlobalWarmingGame.ResourceItems
         }
 
         /// <summary>
+        /// Returns true if the inventory contains all the specified ResourceItems in a list
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool CheckContainsList(List<ResourceItem> items)
+        {
+            foreach (ResourceItem item in items)
+            {
+                if (!CheckContains(item))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Checks if the inventory has reacher maximum capicity and sets isFull accordingly
         /// </summary>
         /// <returns></returns>
@@ -92,7 +113,7 @@ namespace GlobalWarmingGame.ResourceItems
                 IsFull = false;
             else
                 IsFull = true;
-            
+
             return IsFull;
         }
     }

@@ -2,6 +2,7 @@
 using Engine;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources.ResourceTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             instructionTypes: new List<InstructionType>()
         )
         {
-            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 1), Forrage);
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 2), Forrage);
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
