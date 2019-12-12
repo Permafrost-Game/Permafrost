@@ -62,7 +62,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
             InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, EnemyAttacked));
 
-            if (this.Tag == "Robot") { xdifference = 0; ydifference = -10; } else if(this.Tag=="Bear"){ xdifference=(this.Size.X/4); ydifference = -(this.Size.Y / 3); }
+            if (this.Tag == "Robot") { xdifference = 19; ydifference = 16; } else if(this.Tag=="Bear"){ xdifference=16; ydifference = -15; }
 
 
             c = new Combat();
@@ -122,8 +122,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 this.TextureGroupIndex = 3;
             }
             else if (this.Tag == "Bear") {
+
                 isAnimated = true;
                 this.TextureGroupIndex = 3;
+                
             }
                 
                 

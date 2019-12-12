@@ -71,8 +71,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 768
             };
 
             graphics.IsFullScreen = false;
@@ -162,7 +162,16 @@ namespace GlobalWarmingGame
                     new Texture2D[]
                     {
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    },
+                     new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist4"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist5")
                     }
+
                 };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
@@ -290,7 +299,7 @@ namespace GlobalWarmingGame
                     aRange: 60, // Agro Range
                     aPower: 1, // Attack Power
                     maxHp: 969, // Health
-                    position: new Vector2(580, 580),
+                    position: new Vector2(1160, 1160),
                     textureSet: bear
                 ));
                 GameObjectManager.Add(new Enemy(
@@ -299,7 +308,7 @@ namespace GlobalWarmingGame
                     aRange: 60, // Agro Range
                     aPower: 0, // Attack Power (0 = Going to be random)
                     maxHp: 3000, // Health
-                    position: new Vector2(200, 200),
+                    position: new Vector2(500, 500),
                     textureSet: robot
                 ));
                 GameObjectManager.Add(new Enemy(
@@ -308,7 +317,7 @@ namespace GlobalWarmingGame
                    aRange: 60, // Agro Range
                    aPower: 0, // Attack Power (0 = Going to be random)
                    maxHp: 3000, // Health
-                   position: new Vector2(300, 300),
+                   position: new Vector2(800, 500),
                    textureSet: robot
                ));
 

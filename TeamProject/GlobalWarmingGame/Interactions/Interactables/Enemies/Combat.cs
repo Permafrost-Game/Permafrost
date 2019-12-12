@@ -54,10 +54,11 @@ namespace GlobalWarmingGame.Interactions.Enemies
             
 
 
-            if (colonist.Health <= 0) {
+            if (colonist.Health <= 0 || enemy.Health<=0) {
                 colonist.setDead();
                 enemy.ResetEnemyTarget();
                 enemy.setAttacking(false);
+                colonist.isAttacking = false;
                 enemy.setInCombat(false);
                 enemy = null;
                 colonist = null;
@@ -67,7 +68,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
             ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
 
             Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
-
+            if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
+            {
+                colonist.isAttacking = false;
+            }
             if (ColonistimeToAttack >= colonist.attackSpeed)
             {
                 ColonistimeToAttack = 0;
@@ -105,6 +109,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         private void ColonistAttack() {
             if (ColonistAttackSpeedControl())
             {
+                colonist.isAttacking = true;
                 enemy.Health = enemy.Health - colonist.AttackPower;
             }
             Console.WriteLine("Colonist hp: " + colonist.Health + " Enemy hp: " + enemy.Health);
@@ -122,20 +127,26 @@ namespace GlobalWarmingGame.Interactions.Enemies
         
         public void PerformCombat() {
             enemy.setInCombat(false);
+           
             if (colonist != null && enemy != null)
             {
 
-                
+
                 if (colonist.attackRange >= DistanceBetweenCombatants() & enemy.Health > 0 & colonist.Health > 0)
                 {
+                    colonist.inCombat = true;
                     enemy.setInCombat(true);
                     ColonistAttack();
+                }
+                else {
+                    colonist.inCombat = false;
                 }
                 if (colonist != null && enemy != null)
                 {
                    
                     if (enemy.attackRange >= DistanceBetweenCombatants() & colonist.Health > 0 & enemy.Health > 0)
                     {
+                        colonist.inCombat = true;
                         enemy.setInCombat(true);
                         EnemyAttack();
                     }
