@@ -62,6 +62,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 colonist.inCombat = false;
                 colonist.isAttacking = false;
                 enemy.setInCombat(false);
+                GameObjectManager.Remove(colonist);
                 enemy = null;
                 colonist = null;
             }
