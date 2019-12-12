@@ -93,7 +93,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             attackSpeed = 1000;
 
             Speed = 0.5f;
-            MaxHealth = 10f;
+            MaxHealth = 100f;
             Health = MaxHealth;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
@@ -191,7 +191,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
                 {
-                    Health -= 1;
+                    //Health -= 1;
                 }
                 timeToTemperature = timeUntillTemperature;
             }
@@ -209,7 +209,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 foodFormula = 0.25;
             }
-
+            //TODO uncomment
             // foodFormula is a multiplier on the timeUntillFoodTick
             if ((timeUntillFoodTick * foodFormula) < 0)
             {
@@ -223,7 +223,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             ResourceItem food = new ResourceItem(new Food(), 1);
             if (!Inventory.RemoveItem(food))
             {
-                Health -= 1;
+                //TODO uncomment
+                //Health -= 1;
             }
             else
             {

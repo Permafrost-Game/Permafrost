@@ -28,6 +28,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private void Mine(Colonist colonist)
         {
             //Maybe destory the node or allow 3 more mine operations
+            GameObjectManager.Remove(this);
         }
     }
 }

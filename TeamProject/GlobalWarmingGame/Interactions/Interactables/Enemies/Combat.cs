@@ -39,7 +39,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             var rnd = new Random(DateTime.Now.Millisecond);
             if (enemy.enemyTag == "Robot")
             {
-                enemy.AttackPower = rnd.Next(250, 450); // Set random Attack Power for the `Robot` enemy, between 250 and 450, before actually running the attacking code
+                enemy.AttackPower = rnd.Next(25, 50); // Set random Attack Power for the `Robot` enemy, between 250 and 450, before actually running the attacking code
             }
 
            
