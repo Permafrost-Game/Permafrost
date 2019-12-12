@@ -1,4 +1,7 @@
 ﻿
+using Engine;
+using GeonBit.UI;
+using GeonBit.UI.Entities;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -6,15 +9,18 @@ using GlobalWarmingGame.Resources.Craftables;
 using GlobalWarmingGame.Resources.ResourceTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class WorkBench : InteractableGameObject, IBuildable
+    class WorkBench : InteractableGameObject, IBuildable, IUpdatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
-                                                                                                   new ResourceItem(new Wood(), 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4), new ResourceItem(new Wood(), 8)};
+        public Panel ResourceNotification { get; set; }
+        MouseState currentMouseState;
+        MouseState previousMouseState;
 
         public WorkBench(Vector2 position, Texture2D texture) : base
         (
@@ -28,6 +34,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
+            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100));
+            ResourceNotification.Padding = Vector2.Zero;
+            ResourceNotification.Visible = false;
+
+            UserInterface.Active.AddEntity(ResourceNotification);
+
+            Label label = new Label("Not Enough Resources", Anchor.Center);
+            ResourceNotification.AddChild(label);
+
             InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", CraftCloth));
             InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", CraftAxe));
             InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", CraftBackPack));
@@ -53,9 +68,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added cloth" + " cloth: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(cloth, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");                                            //ADD UI HERE
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -72,9 +88,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added axe" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(axe, 1));                
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -91,9 +108,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added backpack" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(backpack, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -110,9 +128,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added coat" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(coat, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -129,9 +148,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added bow" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(bow, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -148,9 +168,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added hoe" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(hoe, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -167,9 +188,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added pickaxe" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(pickaxe, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
         }
 
@@ -186,10 +208,24 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 Console.WriteLine("Added BasicRifle" + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(basicRifle, 1));
             }
+
             else
             {
-                Console.WriteLine("failed");
+                ResourceNotification.Visible = true;
             }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            currentMouseState = Mouse.GetState();
+
+            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+            {
+                if (ResourceNotification != null && ResourceNotification.Visible)
+                    ResourceNotification.Visible = false;
+            }
+
+            previousMouseState = currentMouseState;
         }
     }
 }

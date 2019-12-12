@@ -28,6 +28,7 @@ namespace GlobalWarmingGame.Action
         Instruction currentInstruction;
 
         MainUI mainUI;
+        GameTime time;
 
         MouseState currentMouseState;
         MouseState previousMouseState;
@@ -39,13 +40,14 @@ namespace GlobalWarmingGame.Action
 
         public Panel Menu { get; private set; }
         public Panel CraftingMenu { get; private set; }
+        public Panel ResourceNotification { get; private set; }
 
-        /// <summary>
-        /// Creates a new instance of the class
-        /// </summary>
-        /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
-        /// <param name="currentInstruction">The current instruction</param>
-        public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction, MainUI mainUI)
+    /// <summary>
+    /// Creates a new instance of the class
+    /// </summary>
+    /// <param name="camera">The current camera view, required for translating MouseState point into game world Vector2s</param>
+    /// <param name="currentInstruction">The current instruction</param>
+    public MouseInputMethod(Camera camera, TileMap tileMap, Instruction currentInstruction, MainUI mainUI)
         {
             this.camera = camera;
             this.tileMap = tileMap;
@@ -72,12 +74,20 @@ namespace GlobalWarmingGame.Action
                     if (CraftingMenu != null && CraftingMenu.Visible == true)
                         CraftingMenu.Visible = false;
 
+                    if (ResourceNotification != null && ResourceNotification.Visible == true)
+                        ResourceNotification.Visible = false;
+
                     Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
                     UserInterface.Active.AddEntity(Menu);
 
                     CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
                     CraftingMenu.AdjustHeightAutomatically = true;
                     UserInterface.Active.AddEntity(CraftingMenu);
+
+                    ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 125));
+                    ResourceNotification.Padding = Vector2.Zero;
+                    ResourceNotification.Visible = false;
+                    UserInterface.Active.AddEntity(ResourceNotification);
 
                     Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
                     label.Scale = 0.7f;
@@ -95,6 +105,7 @@ namespace GlobalWarmingGame.Action
 
                         Menu.Visible = false;
                         CraftingMenu.Visible = false;
+                        ResourceNotification.Visible = false;
                     };
 
                  
@@ -108,7 +119,13 @@ namespace GlobalWarmingGame.Action
                             button2.ButtonParagraph.Scale = 0.5f;
                             Menu.AddChild(button2);
 
-                            button2.OnClick = (Entity btn) => { UpdateInstruction(instructionType, (IInteractable)objectClicked); Menu.Visible = false; };
+                            button2.OnClick = (Entity btn) => 
+                            { 
+                                UpdateInstruction(instructionType, (IInteractable)objectClicked); 
+                                Menu.Visible = false;
+                                CraftingMenu.Visible = false;
+                                ResourceNotification.Visible = false;
+                            };
                         }
 
                         else
@@ -126,6 +143,7 @@ namespace GlobalWarmingGame.Action
                                 
                                 Menu.Visible = false;
                                 CraftingMenu.Visible = true;
+                                ResourceNotification.Visible = false;
 
                                 int counter = 0;
                                 foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
@@ -139,6 +157,7 @@ namespace GlobalWarmingGame.Action
                                     {
                                         CraftingMenu.Visible = false;
                                         Menu.Visible = false;
+
                                         UpdateInstruction(instruction, (IInteractable)objectClicked);
                                     };
 
@@ -151,7 +170,12 @@ namespace GlobalWarmingGame.Action
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
                     button3.ButtonParagraph.Scale = 0.5f;
                     Menu.AddChild(button3);
-                    button3.OnClick = (Entity btn) => { Menu.Visible = false; CraftingMenu.Visible = false; };
+                    button3.OnClick = (Entity btn) => 
+                    { 
+                        Menu.Visible = false; 
+                        CraftingMenu.Visible = false;
+                        ResourceNotification.Visible = false;
+                    };
 
                     if (buildingSelected)
                     {
@@ -215,12 +239,20 @@ namespace GlobalWarmingGame.Action
             if (colonist.Inventory.CheckContainsList(buildingCosts))
             {
                 foreach (ResourceItem item in buildingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
+                    colonist.Inventory.RemoveItem(item);  
+
                 build = true;
+                ResourceNotification.Visible = false;
             }
+
+            else
+            {
+                Label label = new Label("Not Enough Resources", Anchor.Center);
+                ResourceNotification.AddChild(label);
+
+                ResourceNotification.Visible = true;
+            }
+
             return build;
         }
 
@@ -275,13 +307,17 @@ namespace GlobalWarmingGame.Action
 
             hovering = false;
 
-            if (Menu != null && Menu.Visible)
-                if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+            {
+                if (Menu != null && Menu.Visible)
                     Menu.Visible = false;
 
-            if (CraftingMenu != null && CraftingMenu.Visible)
-                if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
+                if (CraftingMenu != null && CraftingMenu.Visible)
                     CraftingMenu.Visible = false;
+
+                if (ResourceNotification != null && ResourceNotification.Visible)
+                    ResourceNotification.Visible = false;
+            }
 
             previousMouseState = currentMouseState;
         }

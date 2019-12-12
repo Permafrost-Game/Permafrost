@@ -163,6 +163,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
                     //Console.Out.WriteLine("Lower"+Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
+
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }

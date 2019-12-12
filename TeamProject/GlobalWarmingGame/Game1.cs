@@ -166,7 +166,7 @@ namespace GlobalWarmingGame
                 logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { farm, workBench };
-                string[] stringArray = new string[] { "Farm", "WorkBench" };
+                string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
                 for (int i = 0; i < stringArray.Length; i++) 
