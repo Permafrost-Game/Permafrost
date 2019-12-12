@@ -73,6 +73,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftAxe(Colonist colonist)
@@ -93,6 +94,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftBackPack(Colonist colonist)
@@ -113,6 +115,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftCoat(Colonist colonist)
@@ -133,6 +136,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftBow(Colonist colonist)
@@ -153,6 +157,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftHoe(Colonist colonist)
@@ -173,6 +178,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftPickaxe(Colonist colonist)
@@ -193,6 +199,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         private void CraftBasicRifle(Colonist colonist)
@@ -213,6 +220,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResourceNotification.Visible = true;
             }
+            colonist.Goals.Clear();
         }
 
         public void Update(GameTime gameTime)

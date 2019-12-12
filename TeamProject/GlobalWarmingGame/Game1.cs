@@ -175,7 +175,8 @@ namespace GlobalWarmingGame
                 {
                     new Texture2D[]
                     {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0"),
+                       
                     },
                      new Texture2D[]
                     {
@@ -184,8 +185,11 @@ namespace GlobalWarmingGame
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist3"),
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist4"),
                         this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist5")
+                    },
+                    new Texture2D[]{
+                     this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite1"),
+                       this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
                     }
-
                 };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");

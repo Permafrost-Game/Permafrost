@@ -55,12 +55,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 {
                     TextureGroupIndex = 0;
                 }
+                
             }
         }
         private bool _isAttacking  = false;
         public bool isAttacking {
             get { return _isAttacking; }
             set { _isAttacking = value;
+                isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
                 TextureGroupIndex = _isAttacking ? 1 : 0;
 
@@ -154,9 +156,21 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             Vector2 delta = position1 - this.Position;
 
-            if (Math.Abs(delta.X) > Math.Abs(delta.Y))
+           
+            if (delta.Equals(Vector2.Zero))
             {
+                if (!isAttacking)
+                {
+                    isAnimated = false;
+                }
+            }
+            else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
+            {
+
+                isAnimated = true;
+                TextureGroupIndex = 2;
                 SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                
             }
 
             if (Goals.Count == 0 && instructions.Count > 0)
