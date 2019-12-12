@@ -91,7 +91,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             attackSpeed = 1000;
 
             Speed = 0.5f;
-            MaxHealth = 10f;
+            MaxHealth = 100f;
             Health = MaxHealth;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
