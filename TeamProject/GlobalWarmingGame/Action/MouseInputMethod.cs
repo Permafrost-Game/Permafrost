@@ -100,9 +100,9 @@ namespace GlobalWarmingGame.Action
                     button1.OnClick = (Entity btn) =>
                     {
                         if (objectClicked != null)
-                            currentInstruction.ActiveMember.AddGoal(objectClicked.Position);
+                            currentInstruction.ActiveMember.Goals.Enqueue(objectClicked.Position);
                         else
-                            currentInstruction.ActiveMember.AddGoal(tileClicked.Position);
+                            currentInstruction.ActiveMember.Goals.Enqueue(tileClicked.Position);
 
                         Menu.Visible = false;
                         CraftingMenu.Visible = false;

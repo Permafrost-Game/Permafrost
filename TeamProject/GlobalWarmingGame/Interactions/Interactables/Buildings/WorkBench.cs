@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class WorkBench : InteractableGameObject, IBuildable, IUpdatable
     {

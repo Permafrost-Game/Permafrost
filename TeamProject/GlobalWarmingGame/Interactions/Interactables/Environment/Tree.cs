@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
     class Tree : InteractableGameObject
     {
@@ -20,7 +20,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set
             {
                 _choppable = value;
-                texture = _choppable ? textureTree : textureStump;
+                Texture = _choppable ? textureTree : textureStump;
             }
         }
 

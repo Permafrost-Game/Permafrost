@@ -6,9 +6,9 @@ using Engine.Lighting;
 using Engine.TileGrid;
 
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Resources;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -19,6 +19,9 @@ using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Menus;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Environment;
+using GlobalWarmingGame.Interactions.Interactables.Animals;
+using GlobalWarmingGame.Interactions.Enemies;
 
 namespace GlobalWarmingGame
 {
@@ -32,8 +35,8 @@ namespace GlobalWarmingGame
         SelectionManager selectionManager;
 
         TileSet tileSet;
-        TileMap tileMap;
-        
+        // TileMap tileMap;
+
         Camera camera;
 
         MainMenu MainMenu;
@@ -54,6 +57,7 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
+        Texture2D[][] colonist;
         Dictionary<String, Texture2D> icons;
 
         Texture2D stone;
@@ -64,27 +68,27 @@ namespace GlobalWarmingGame
         Texture2D axe;
         Texture2D pickaxe;
         Texture2D hoe;
-
-        Texture2D colonist;
         Texture2D farm;
         Texture2D workBench;
         Texture2D stoneNode;
         Texture2D tallGrass;
         Texture2D bushH;
         Texture2D bushN;
-        Texture2D rabbit;
+        Texture2D[][] rabbit;
         Texture2D tree;
         Texture2D treeStump;
         Texture2D logo;
+         Texture2D[][] bear;
+         Texture2D[][] robot;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 768
             };
-            
+
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
@@ -142,33 +146,134 @@ namespace GlobalWarmingGame
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/dirt"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/grass"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/snow"));
-                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/stone"));
+                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
+                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
+                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
+                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
+                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
                 textureSet.Add("6", water);
 
-                
 
-                tileSet = new TileSet(textureSet, new Vector2(16));
+
+                tileSet = new TileSet(textureSet, new Vector2(32f));
                 //                                                  map0/00.csv  //50x50 tilemap
                 //                                                  map1/00.csv  //100x100 tilemap
-                tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                //tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
+                GameObjectManager.Init(tileSet);
 
-                ZoneManager.CurrentZone = new Zone() { TileMap = tileMap };
-                camera = new Camera(GraphicsDevice.Viewport, tileMap.Size * 16f);
+                ZoneManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size);
+
+                GameObjectManager.Camera = camera;
             }
 
             //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                colonist = this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0");
+                colonist = new Texture2D[][] 
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    },
+                     new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist4"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist5")
+                    }
+
+                };
                 farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
                 bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
                 bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                rabbit = this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit/sprite0");
+                bear = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite4")
+                        
+
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite3")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite5"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite6")
+            
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
+                       // this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0")
+
+
+                    
+
+
+                    }
+                };
+
+                robot = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+
+                    },
+                     new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite2"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite4"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite5"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite6"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite7"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite8"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite9")
+
+
+                    },
+                      new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+
+                    },
+                     new Texture2D[]
+                    {
+                        
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot2")
+
+                    }
+                    };
+                rabbit = new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite0"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite1"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite2")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite3"),
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite4")
+                    },
+                    new Texture2D[]
+                    {
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
+                    }
+                };
+                
                 tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
                 treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
                 workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
@@ -189,8 +294,8 @@ namespace GlobalWarmingGame
                 string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
-                for (int i = 0; i < stringArray.Length; i++) 
-                   BuildingManager.AddBuilding(i+1, stringArray[i], textureArray[i]);
+                for (int i = 0; i < stringArray.Length; i++)
+                    BuildingManager.AddBuilding(i + 1, stringArray[i], textureArray[i]);
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
@@ -202,15 +307,15 @@ namespace GlobalWarmingGame
 
                 MainUI = new MainUI(icons);
 
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, tileMap, selectionManager.CurrentInstruction, MainUI));
+                selectionManager.InputMethods.Add(new MouseInputMethod(camera, ZoneManager.CurrentZone.TileMap, selectionManager.CurrentInstruction, MainUI));
 
                 ProcessMenuSelection();
 
-                var c1 = new Colonist(position: new Vector2(800,800), texture: colonist, inventoryCapacity: 100f);
+                var c1 = new Colonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
                 selectionManager.CurrentInstruction.ActiveMember = c1;
                 GameObjectManager.Add(c1);
 
-                string[] spawnables = new string[8];
+                string[] spawnables = new string[10];
                 spawnables[0] = "Colonist";
                 spawnables[1] = "Rabbit";
                 spawnables[2] = "Farm";
@@ -219,10 +324,43 @@ namespace GlobalWarmingGame
                 spawnables[5] = "Workbench";
                 spawnables[6] = "Stone";
                 spawnables[7] = "Tall Grass";
+                spawnables[8] = "Robot";
+                spawnables[9] = "Polar Bear";
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
+                GameObjectManager.Add(new Enemy(
+                    tag: "Bear",
+                    aSpeed: 1000, // Attack Speed
+                    aRange: 60, // Agro Range
+                    aPower: 1, // Attack Power
+                    maxHp: 300, // Health
+                    position: new Vector2(1160, 1160),
+                    textureSet: bear
+                ));
+                GameObjectManager.Add(new Enemy(
+                    tag: "Robot",
+                    aSpeed: 5000, // Attack Speed
+                    aRange: 60, // Agro Range
+                    aPower: 0, // Attack Power (0 = Going to be random)
+                    maxHp: 500, // Health
+                    position: new Vector2(500, 500),
+                    textureSet: robot
+                ));
+                GameObjectManager.Add(new Enemy(
+                   tag: "Robot",
+                   aSpeed: 5000, // Attack Speed
+                   aRange: 60, // Agro Range
+                   aPower: 0, // Attack Power (0 = Going to be random)
+                   maxHp: 500, // Health
+                   position: new Vector2(800, 500),
+                   textureSet: robot
+               ));
 
+                MainUI.SpawnMenu.OnValueChange = (Entity e) => {
+                    ProcessSpawnables();
+                    //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
+                };
                 CollectiveInventory = new CollectiveInventory(MainUI, icons);
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
@@ -248,7 +386,9 @@ namespace GlobalWarmingGame
             {
                 camera.Update(gameTime);
 
-                tileMap.Update(gameTime);
+                GameObjectManager.ZoneMap.Update(gameTime);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, ZoneManager.CurrentZone.TileMap);
+                UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
@@ -266,6 +406,28 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
+
+            if (gameState == GameState.playing)
+            {
+                if (CheckKeyPress(Keys.I))
+                    GameObjectManager.MoveZone(new Vector2(0, -1));
+                else if (CheckKeyPress(Keys.K))
+                    GameObjectManager.MoveZone(new Vector2(0, 1));
+                else if (CheckKeyPress(Keys.L))
+                    GameObjectManager.MoveZone(new Vector2(1, 0));
+                else if (CheckKeyPress(Keys.J))
+                    GameObjectManager.MoveZone(new Vector2(-1, 0));
+            }
+
+            //if (gameState == GameState.playing)
+            //{
+            //    if (currentKeyboardState.IsKeyUp(Keys.Escape) && previousKeyboardState.IsKeyDown(Keys.Escape))
+            //        ShowPauseMenu();
+            //}
+
+            //peformanceMonitor.Update(gameTime);
+
+            previousKeyboardState = currentKeyboardState;
         }
 
         #region Update Colonists Temperatures
@@ -274,7 +436,7 @@ namespace GlobalWarmingGame
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
             {
-                float tileTemp = tileMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
                 colonist.UpdateTemp(tileTemp, gameTime);
                 //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
@@ -310,7 +472,7 @@ namespace GlobalWarmingGame
 
 
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-                spriteBatch.Draw(ambiantLight, new Rectangle(0,0,GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                 spriteBatch.End();
 
                 GraphicsDevice.SetRenderTarget(null);
@@ -329,7 +491,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                tileMap.Draw(spriteBatch);
+                GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                 spriteBatch.End();
             }
@@ -366,7 +528,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+                foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
                     drawable.Draw(spriteBatch);
 
                 spriteBatch.End();
@@ -394,7 +556,7 @@ namespace GlobalWarmingGame
                         transformMatrix: transform
                     );
 
-            foreach (Engine.IDrawable drawable in GameObjectManager.Drawable)
+            foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
             {
                 drawable.Draw(spriteBatch);
             }
@@ -417,15 +579,12 @@ namespace GlobalWarmingGame
                     gameState = GameState.playing;
             }
 
-            previousKeyboardState = currentKeyboardState;
+            //previousKeyboardState = currentKeyboardState;
         }
 
         bool CheckKeyPress(Keys key)
         {
-            if (previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key))
-                return true;
-
-            return false;
+            return previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
         }
 
         void ShowMainMenu()
@@ -437,7 +596,7 @@ namespace GlobalWarmingGame
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
             }
-                
+
             else
                 MainMenu.Menu.Visible = false;
         }
@@ -451,7 +610,7 @@ namespace GlobalWarmingGame
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
             }
-                    
+
             else
                 PauseMenu.Menu.Visible = false;
         }
@@ -470,7 +629,7 @@ namespace GlobalWarmingGame
             {
                 MainUI.TopPanel.Visible = false;
                 MainUI.BottomPanel.Visible = false;
-            }   
+            }
         }
 
         void ProcessMenuSelection()
@@ -485,15 +644,15 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = tileMap.GetTileAtPosition(new Vector2(1600, 1600) - camera.Position).Position;
+            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
                 case 0:
-                    GameObjectManager.Add(new Colonist(position: position, texture: colonist, inventoryCapacity: 100f));
+                    GameObjectManager.Add(new Colonist(position: position, textureSet: colonist, inventoryCapacity: 100f));
                     break;
                 case 1:
-                    GameObjectManager.Add(new Rabbit(position: position, texture: rabbit));
+                    GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));
                     break;
                 case 2:
                     GameObjectManager.Add(new Farm(position: position, texture: farm));
@@ -513,10 +672,34 @@ namespace GlobalWarmingGame
                 case 7:
                     GameObjectManager.Add(new TallGrass(position: position, texture: tallGrass));
                     break;
+                case 8:
+                    GameObjectManager.Add(new Enemy(
+                    tag: "Robot",
+                    aSpeed: 5000, // Attack Speed
+                    aRange: 60, // Agro Range
+                    aPower: 0, // Attack Power (0 = Going to be random)
+                    maxHp: 800, // Health
+                    position:position,
+                    textureSet: robot
+                ));
+                    break;
+                case 9:
+                    GameObjectManager.Add(new Enemy(
+                    tag: "Bear",
+                    aSpeed: 1000, // Attack Speed
+                    aRange: 60, // Agro Range
+                    aPower: 3, // Attack Power
+                    maxHp: 300, // Health
+                    position: position,
+                    textureSet: bear
+                
+                ));
+                    break;
             }
 
             MainUI.SpawnMenu.DontKeepSelection = true;
         }
+
         #endregion
     }
 }

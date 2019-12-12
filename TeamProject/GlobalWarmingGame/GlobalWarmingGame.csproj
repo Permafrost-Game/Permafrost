@@ -40,17 +40,24 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\AggressiveMovement.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\StoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
@@ -68,6 +75,8 @@
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Action\MouseInputMethod.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
+    <Compile Include="Interactions\PassiveAnimal.cs" />
+    <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\MainUI.cs" />
@@ -95,6 +104,7 @@
     <Compile Include="Resources\ResourceTypes\Coal.cs" />
     <Compile Include="Resources\ResourceTypes\Wood.cs" />
     <Compile Include="Resources\ResourceTypes\Stone.cs" />
+    <Compile Include="Zone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -758,7 +768,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

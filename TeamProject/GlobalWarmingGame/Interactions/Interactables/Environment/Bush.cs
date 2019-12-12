@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
     class Bush : InteractableGameObject, IUpdatable
     {
@@ -25,7 +25,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set
             {
                 _isHarvestable = value;
-                 texture = _isHarvestable ? textureHarvestable : textureHarvested;
+                 Texture = _isHarvestable ? textureHarvestable : textureHarvested;
             }
         }
 

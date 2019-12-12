@@ -8,14 +8,14 @@ namespace Engine.PathFinding
 {
     public static class PathFinder
     {
-        private static readonly TileMap tileMap = ZoneManager.CurrentZone.TileMap;
+        private static TileMap TileMap { get => ZoneManager.CurrentZone.TileMap; }
         private static Dictionary<Tile, TileCosts> openDictionary;
         private static Dictionary<Tile, TileCosts> closedDictionary;
 
         public static Queue<Vector2> Find(Vector2 start, Vector2 goal, bool canPassObstacles)
         {
-            Tile startT = tileMap.GetTileAtPosition(start);
-            Tile goalT = tileMap.GetTileAtPosition(goal);
+            Tile startT = TileMap.GetTileAtPosition(start);
+            Tile goalT = TileMap.GetTileAtPosition(goal);
             return Find(startT, goalT, canPassObstacles);
         }
 
@@ -25,10 +25,10 @@ namespace Engine.PathFinding
         /// <returns> Queue<Vector2> from the start tile to the end tile </returns>
         public static Queue<Vector2> Find(Tile start, Tile goal, bool canPassOverObstacles)
         {
-            if (start == null) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is null");
-            if (goal == null) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is null");
-            if (!start.Walkable) throw new PathFindingPathException(start, $"Start Tile: \"{start}\" is not walkable");
-            if (!goal.Walkable) throw new PathFindingPathException(goal, $"Goal Tile: \"{goal}\" is not walkable");
+            if (start == null) throw new PathFindingPathException(start,    $"Start Tile: \"{start}\" is null");
+            if (goal == null) throw new PathFindingPathException(goal,      $"Goal Tile: \"{goal  }\" is null");
+            if (!start.Walkable) throw new PathFindingPathException(start,  $"Start Tile: \"{start}\" is not walkable");
+            if (!goal.Walkable) throw new PathFindingPathException(goal,    $"Goal Tile: \"{goal  }\" is not walkable");
 
             openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, DistanceCalculator(start, goal)) } };
             closedDictionary = new Dictionary<Tile, TileCosts>();
@@ -130,7 +130,7 @@ namespace Engine.PathFinding
 
                 Vector2 position = new Vector2((current.Position.X + xDirections[i]), (current.Position.Y + yDirections[i]));
 
-                Tile tile = tileMap.GetTileAtPosition(position);
+                Tile tile = TileMap.GetTileAtPosition(position);
 
                 //TileFinder will only return null if the tile is not passable or outside of the tilemap
                 if (tile != null)
