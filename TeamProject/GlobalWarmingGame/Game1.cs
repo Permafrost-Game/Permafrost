@@ -350,7 +350,7 @@ namespace GlobalWarmingGame
                     tag: "Bear",
                     aSpeed: 1000, // Attack Speed
                     aRange: 60, // Agro Range
-                    aPower: 1, // Attack Power
+                    aPower: 10, // Attack Power
                     maxHp: 300, // Health
                     position: new Vector2(1160, 1160),
                     textureSet: bear
