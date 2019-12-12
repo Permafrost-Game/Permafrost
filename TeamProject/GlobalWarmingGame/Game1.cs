@@ -61,6 +61,10 @@ namespace GlobalWarmingGame
         Texture2D wood;
         Texture2D fibers;
 
+        Texture2D axe;
+        Texture2D pickaxe;
+        Texture2D hoe;
+
         Texture2D colonist;
         Texture2D farm;
         Texture2D workBench;
@@ -170,6 +174,9 @@ namespace GlobalWarmingGame
                 workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
                 stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stonenode");
                 tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
+                axe = this.Content.Load<Texture2D>(@"textures/icons/axe");
+                pickaxe = this.Content.Load<Texture2D>(@"textures/icons/pickaxe");
+                hoe = this.Content.Load<Texture2D>(@"textures/icons/hoe");
                 stone = this.Content.Load<Texture2D>(@"textures/icons/stone");
                 wood = this.Content.Load<Texture2D>(@"textures/icons/wood");
                 fibers = this.Content.Load<Texture2D>(@"textures/icons/fibers");
@@ -177,8 +184,8 @@ namespace GlobalWarmingGame
                 logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { farm, workBench };
-                Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple };
-                string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food" };
+                Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple, axe, pickaxe, hoe };
+                string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food", "axe", "pickaxe", "hoe" };
                 string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");

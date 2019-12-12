@@ -103,6 +103,18 @@ namespace GlobalWarmingGame.Resources
                         mainUI.ItemSlots[3].Texture = icons[item.Type.ID];
                         mainUI.ItemLabels[3].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
+                    case "axe":
+                        mainUI.ItemSlots[4].Texture = icons[item.Type.ID];
+                        mainUI.ItemLabels[4].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
+                    case "pickaxe":
+                        mainUI.ItemSlots[5].Texture = icons[item.Type.ID];
+                        mainUI.ItemLabels[5].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
+                    case "hoe":
+                        mainUI.ItemSlots[6].Texture = icons[item.Type.ID];
+                        mainUI.ItemLabels[6].Text = CollectiveResources[item.Type.ID].Amount.ToString();
+                        break;
                 }
             }
 
