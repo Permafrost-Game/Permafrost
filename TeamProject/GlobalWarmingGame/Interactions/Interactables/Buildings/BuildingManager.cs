@@ -51,7 +51,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             return buildings; 
         }
 
-        private static void Build(Colonist colonist) 
+        private static void Build(IInstructionFollower follower) 
         {                    
         }
 

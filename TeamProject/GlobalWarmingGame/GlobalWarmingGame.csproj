@@ -45,13 +45,16 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Action\IInstructionFollower.cs" />
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
+    <Compile Include="Action\SelectionInputMethod.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
+    <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
     <Compile Include="Interactions\Interactables\Enemies\AggressiveMovement.cs" />
@@ -66,10 +69,9 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
-    <Compile Include="Action\SelectionInputMethod.cs" />
+    <Compile Include="UI\Controller.cs" />
     <Compile Include="Action\SelectionManager.cs" />
     <Compile Include="Interactions\InteractableGameObject.cs" />
-    <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Action\MouseInputMethod.cs" />
@@ -77,9 +79,9 @@
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
-    <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Menus\MainUI.cs" />
-    <Compile Include="Menus\PauseMenu.cs" />
+    <Compile Include="UI\Menus\MainMenu.cs" />
+    <Compile Include="UI\Menus\MainUI.cs" />
+    <Compile Include="UI\Menus\PauseMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathFindable.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Resources\ResourceTypes\Coal.cs" />
     <Compile Include="Resources\ResourceTypes\Wood.cs" />
     <Compile Include="Resources\ResourceTypes\Stone.cs" />
+    <Compile Include="UI\View.cs" />
     <Compile Include="Zone.cs" />
   </ItemGroup>
   <ItemGroup>

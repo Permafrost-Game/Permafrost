@@ -22,11 +22,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructionTypes: new List<InstructionType>() { }
         )
         {
-            InstructionTypes.Add(new InstructionType("trim", "Trim grass", "Trim grass", new ResourceItem(new Fibers(), 4), Trim));
+            InstructionTypes.Add(new InstructionType("trim", "Trim grass", "Trim grass", Trim));
         }
 
-        private void Trim(Colonist colonist)
+        private void Trim(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Fibers(), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

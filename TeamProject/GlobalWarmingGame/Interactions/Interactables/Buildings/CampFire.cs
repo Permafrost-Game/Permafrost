@@ -41,7 +41,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             };
         }
 
-        private void Fuel(Colonist colonist)
+        private void Fuel(IInstructionFollower follower)
         {
         }
     }

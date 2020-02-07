@@ -74,7 +74,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
-        private void EnemyAttacked(Colonist colonist)
+        private void EnemyAttacked(IInstructionFollower follower)
         {
             EnemyAttacked();
         }

@@ -17,7 +17,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.Menus;
+using GlobalWarmingGame.UI.Menus;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using GlobalWarmingGame.Interactions.Interactables.Animals;

@@ -1,4 +1,5 @@
-﻿using GlobalWarmingGame.Interactions.Interactables;
+﻿using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.ResourceItems;
 
 namespace GlobalWarmingGame.Action
@@ -11,10 +12,13 @@ namespace GlobalWarmingGame.Action
         public string ID { get; }
         public string Name { get; }
         public string Description { get; }
-        public ResourceItem ResourceItem { get; }
 
-        public delegate void Action(Colonist colonist);
-        private readonly Action action;
+        public delegate void OnStart(IInstructionFollower follower);
+        private readonly OnStart onStart;
+
+        public delegate void OnComplete(IInstructionFollower follower);
+        private readonly OnComplete onComplete;
+
 
         /// <summary>
         /// 
@@ -22,30 +26,26 @@ namespace GlobalWarmingGame.Action
         /// <param name="id">Unique ID</param>
         /// <param name="name">Display name</param>
         /// <param name="description">Display description</param>
-        /// <param name="action">Method that should be called on <see cref="InstructionType.Act"/></param>
-        public InstructionType(string id, string name, string description, Action action = default)
+        /// <param name="onStart">The method that is called when the instruction has started</param>
+        /// /// <param name="onComplete">The method that is called when the instruction has started</param>
+        public InstructionType(string id, string name, string description, OnStart onStart = default, OnComplete onComplete = default)
         {
-            ID = id;
-            Name = name;
-            Description = description;
+            this.ID = id;
+            this.Name = name;
+            this.Description = description;
 
-            this.action = action;
-        }
-
-        public InstructionType(string id, string name, string description, ResourceItem resourceItem, Action action = default)
-        {
-            ID = id;
-            Name = name;
-            Description = description;
-            ResourceItem = resourceItem;
-
-            this.action = action;
+            this.onStart = onStart;
+            this.onComplete = onComplete;
         }
         
-        public void Act(Colonist colonist)
+        public void Start(IInstructionFollower follower)
         {
-            action(colonist);
-        }   
+            onStart(follower);
+        }
+        public void Complete(IInstructionFollower follower)
+        {
+            onComplete(follower);
+        }
     }
 }
 

@@ -33,19 +33,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         )
         {
             plant = new InstructionType("plant", "Plant", "Plant", Plant);
-            harvest = new InstructionType("harvest", "Harvest", "Harvest", new ResourceItem(new Food(), 10), Harvest);
+            harvest = new InstructionType("harvest", "Harvest", "Harvest", Harvest);
             timeUntilGrown = 20000f;
             InstructionTypes.Add(plant);
         }
 
-        private void Harvest(Colonist colonist)
+        private void Harvest(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Food(), 10));
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }
 
-        private void Plant(Colonist colonist)
+        private void Plant(IInstructionFollower follower)
         {
             //Plant wheat seeds
             InstructionTypes.Remove(plant);

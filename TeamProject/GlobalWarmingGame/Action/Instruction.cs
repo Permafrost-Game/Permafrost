@@ -1,6 +1,5 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions;
-using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame.Action
 {
@@ -10,10 +9,10 @@ namespace GlobalWarmingGame.Action
     class Instruction
     {
         public InstructionType Type { get; set; }
-        public Colonist ActiveMember { get; set; }
-        public IInteractable PassiveMember { get; set; }
+        public IInstructionFollower ActiveMember { get; set; }
+        public GameObject PassiveMember { get; set; }
 
-        public Instruction(Colonist activeMember)
+        public Instruction(IInstructionFollower activeMember)
         {
             ActiveMember = activeMember;
         }

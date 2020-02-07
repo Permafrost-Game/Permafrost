@@ -22,12 +22,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         {
 
             this.InstructionTypes.Add(
-                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt)
+                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", Hunt)
             );
         }
 
-        public void Hunt(Colonist colonist)
+        public void Hunt(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Food(), 2));
             GameObjectManager.Remove(this);
         }
 

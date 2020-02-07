@@ -15,7 +15,7 @@ using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
 
-namespace GlobalWarmingGame.Menus
+namespace GlobalWarmingGame.UI.Menus
 {
     class MainUI : Entity
     {

@@ -3,7 +3,7 @@
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 
-namespace GlobalWarmingGame.Menus
+namespace GlobalWarmingGame.UI.Menus
 {
     class PauseMenu : Entity
     {

@@ -55,172 +55,173 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         //TODO Make the tier one crafting items be children of a common parent which can be used to reduce code.
 
-        private void CraftCloth(Colonist colonist)
+        private void CraftCloth(IInstructionFollower follower)
         {
+
             Cloth cloth = new Cloth();
-            if (colonist.Inventory.CheckContainsList(cloth.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(cloth.CraftingCosts))
             {
                 foreach (ResourceItem item in cloth.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added cloth" + " cloth: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(cloth, 1));
+                follower.Inventory.AddItem(new ResourceItem(cloth, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftAxe(Colonist colonist)
+        private void CraftAxe(IInstructionFollower follower)
         {
             Axe axe = new Axe();
-            if (colonist.Inventory.CheckContainsList(axe.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(axe.CraftingCosts))
             {
                 foreach (ResourceItem item in axe.CraftingCosts) 
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added axe" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(axe, 1));                
+                follower.Inventory.AddItem(new ResourceItem(axe, 1));                
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftBackPack(Colonist colonist)
+        private void CraftBackPack(IInstructionFollower follower)
         {
             Backpack backpack = new Backpack();
-            if (colonist.Inventory.CheckContainsList(backpack.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(backpack.CraftingCosts))
             {
                 foreach (ResourceItem item in backpack.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added backpack" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(backpack, 1));
+                follower.Inventory.AddItem(new ResourceItem(backpack, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftCoat(Colonist colonist)
+        private void CraftCoat(IInstructionFollower follower)
         {
             Coat coat = new Coat();
-            if (colonist.Inventory.CheckContainsList(coat.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(coat.CraftingCosts))
             {
                 foreach (ResourceItem item in coat.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added coat" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(coat, 1));
+                follower.Inventory.AddItem(new ResourceItem(coat, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftBow(Colonist colonist)
+        private void CraftBow(IInstructionFollower follower)
         {
             Bow bow = new Bow();
-            if (colonist.Inventory.CheckContainsList(bow.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(bow.CraftingCosts))
             {
                 foreach (ResourceItem item in bow.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added bow" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(bow, 1));
+                follower.Inventory.AddItem(new ResourceItem(bow, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftHoe(Colonist colonist)
+        private void CraftHoe(IInstructionFollower follower)
         {
             Hoe hoe = new Hoe();
-            if (colonist.Inventory.CheckContainsList(hoe.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(hoe.CraftingCosts))
             {
                 foreach (ResourceItem item in hoe.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added hoe" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(hoe, 1));
+                follower.Inventory.AddItem(new ResourceItem(hoe, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftPickaxe(Colonist colonist)
+        private void CraftPickaxe(IInstructionFollower follower)
         {
             Pickaxe pickaxe = new Pickaxe();
-            if (colonist.Inventory.CheckContainsList(pickaxe.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(pickaxe.CraftingCosts))
             {
                 foreach (ResourceItem item in pickaxe.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added pickaxe" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(pickaxe, 1));
+                follower.Inventory.AddItem(new ResourceItem(pickaxe, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
-        private void CraftBasicRifle(Colonist colonist)
+        private void CraftBasicRifle(IInstructionFollower follower)
         {
             BasicRifle basicRifle = new BasicRifle();
-            if (colonist.Inventory.CheckContainsList(basicRifle.CraftingCosts))
+            if (follower.Inventory.CheckContainsList(basicRifle.CraftingCosts))
             {
                 foreach (ResourceItem item in basicRifle.CraftingCosts)
                 {
-                    colonist.Inventory.RemoveItem(item);
+                    follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added BasicRifle" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(basicRifle, 1));
+                follower.Inventory.AddItem(new ResourceItem(basicRifle, 1));
             }
 
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
         public void Update(GameTime gameTime)
