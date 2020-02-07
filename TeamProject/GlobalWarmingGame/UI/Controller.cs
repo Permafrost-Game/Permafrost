@@ -5,42 +5,72 @@ using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Collections; 
 using System.Linq;
 
 namespace GlobalWarmingGame.UI
 {
     class Controller : IUpdatable
     {
-        View view;
+        
+        private View view;
 
-        Instruction currentInstruction;
+        private Colonist selectedColonist;
 
         private Camera camera;
-        private TileMap tileMap;
 
         private MouseState currentMouseState;
         private MouseState previousMouseState;
 
-        public Controller(Camera camera, TileMap tileMap)
+        private static readonly InstructionType WALK_INSTRUCTION_TYPE = new InstructionType("walk", "Walk", "Walk here");
+
+        public Controller(Camera camera)
         {
             this.camera = camera;
-            this.tileMap = tileMap;
         }
 
         private void OnClick()
         {
             Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
             GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
-            Tile tileClicked = tileMap.GetTileAtPosition(positionClicked);
 
-            if (tileClicked != null)
+            if(objectClicked != null)
             {
-                //TODO view
-
+                List<Instruction> options = GerateOptions(objectClicked, selectedColonist);
+                if (options != null)
+                {
+                    view.CreateInstructionMenu(currentMouseState.Position, options);
+                }
             }
+            
         }
 
-        
+        /// <summary>
+        /// Takes an input GameObject 
+        /// </summary>
+        /// <param name="objectClicked">the object that was </param>
+        /// <returns></returns>
+        private static List<Instruction> GerateOptions(GameObject objectClicked, Colonist colonist)
+        {
+            List<Instruction> options = new List<Instruction>();
+            if (objectClicked is IInteractable)
+            {
+                foreach( InstructionType type in ((IInteractable)objectClicked).InstructionTypes)
+                {
+                    options.Add(new Instruction(type, colonist, objectClicked));
+                }
+                    
+            }
+            options.Add(new Instruction(WALK_INSTRUCTION_TYPE, colonist, objectClicked));
+
+            return options;
+        }
+
+
+
+
 
 
         public void Update(GameTime gameTime)

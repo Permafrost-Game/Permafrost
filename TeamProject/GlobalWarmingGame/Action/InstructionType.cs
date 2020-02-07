@@ -7,7 +7,7 @@ namespace GlobalWarmingGame.Action
     /// <summary>
     /// This class descrives a class of Instruction
     /// </summary>
-    class InstructionType
+    public class InstructionType
     {
         public string ID { get; }
         public string Name { get; }
