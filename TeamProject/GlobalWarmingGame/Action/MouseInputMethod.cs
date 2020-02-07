@@ -53,8 +53,6 @@ namespace GlobalWarmingGame.Action
             this.camera = camera;
             this.tileMap = tileMap;
             this.currentInstruction = currentInstruction;
-            this.mainUI = mainUI;
-            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
 
             PopulateBuildMenu();
         }
@@ -69,45 +67,12 @@ namespace GlobalWarmingGame.Action
 
                 if (tileClicked != null)
                 {
-                    if (Menu != null && Menu.Visible == true)
-                        Menu.Visible = false;
-
-                    if (CraftingMenu != null && CraftingMenu.Visible == true)
-                        CraftingMenu.Visible = false;
-
-                    if (ResourceNotification != null && ResourceNotification.Visible == true)
-                        ResourceNotification.Visible = false;
-
-                    Menu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(currentMouseState.X, currentMouseState.Y));
-                    UserInterface.Active.AddEntity(Menu);
-
-                    CraftingMenu = new Panel(new Vector2(150, 200), PanelSkin.Default, Anchor.TopLeft, new Vector2(Menu.Offset.X, Menu.Offset.Y));
-                    CraftingMenu.AdjustHeightAutomatically = true;
-                    UserInterface.Active.AddEntity(CraftingMenu);
-
-                    ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 125));
-                    ResourceNotification.Padding = Vector2.Zero;
-                    ResourceNotification.Visible = false;
-                    UserInterface.Active.AddEntity(ResourceNotification);
-
-                    Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
-                    label.Scale = 0.7f;
-                    Menu.AddChild(label);
-
-                    Button button1 = new Button("Move Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25));
-                    button1.ButtonParagraph.Scale = 0.5f;
-                    button1.Padding = Vector2.Zero;
-                    Menu.AddChild(button1);
                     button1.OnClick = (Entity btn) =>
                     {
                         if (objectClicked != null)
                             ((Colonist)currentInstruction.ActiveMember).Goals.Enqueue(objectClicked.Position);
                         else
                             ((Colonist)currentInstruction.ActiveMember).Goals.Enqueue(tileClicked.Position);
-
-                        Menu.Visible = false;
-                        CraftingMenu.Visible = false;
-                        ResourceNotification.Visible = false;
                     };
 
                     if (objectClicked is IInteractable)
@@ -118,46 +83,20 @@ namespace GlobalWarmingGame.Action
                             {
                                 InstructionType instructionType = ((IInteractable)objectClicked).InstructionTypes.ToArray()[0];
 
-                                Button button2 = new Button(instructionType.Name, ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                                button2.ButtonParagraph.Scale = 0.5f;
-                                button2.Padding = Vector2.Zero;
-                                Menu.AddChild(button2);
-
                                 button2.OnClick = (Entity btn) =>
                                 {
                                     currentInstruction.PassiveMember = objectClicked;
                                     UpdateInstruction(instructionType, (IInteractable)objectClicked);
-                                    Menu.Visible = false;
-                                    CraftingMenu.Visible = false;
-                                    ResourceNotification.Visible = false;
                                 };
                             }
 
                             else
                             {
-                                Button button2 = new Button("Craft Items", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                                button2.ButtonParagraph.Scale = 0.5f;
-                                button2.Padding = Vector2.Zero;
-                                Menu.AddChild(button2);
-
                                 button2.OnClick = (Entity btn) =>
                                 {
-                                    Label craftingMenuLabel = new Label("Choose Item", Anchor.TopCenter, new Vector2(500, 500));
-                                    craftingMenuLabel.Scale = 0.75f;
-                                    CraftingMenu.AddChild(craftingMenuLabel);
-
-                                    Menu.Visible = false;
-                                    CraftingMenu.Visible = true;
-                                    ResourceNotification.Visible = false;
-
                                     int counter = 0;
                                     foreach (InstructionType instruction in ((IInteractable)objectClicked).InstructionTypes)
                                     {
-                                        Button instructionButton = new Button(instruction.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
-                                        instructionButton.Padding = Vector2.Zero;
-                                        instructionButton.ButtonParagraph.Scale = 0.5f;
-                                        CraftingMenu.AddChild(instructionButton);
-
                                         instructionButton.OnClick = (Entity e) =>
                                         {
                                             CraftingMenu.Visible = false;
@@ -173,32 +112,14 @@ namespace GlobalWarmingGame.Action
                         }
                     }
 
-                    Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
-                    button3.ButtonParagraph.Scale = 0.5f;
-                    button3.Padding = Vector2.Zero;
-                    Menu.AddChild(button3);
-                    button3.OnClick = (Entity btn) =>
-                    {
-                        Menu.Visible = false;
-                        CraftingMenu.Visible = false;
-                        ResourceNotification.Visible = false;
-                    };
-
                     if (buildingSelected)
                     {
-                        Button button4 = new Button("Build Here", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 30));
-                        button4.ButtonParagraph.Scale = 0.5f;
-                        button4.Padding = Vector2.Zero;
-                        Menu.AddChild(button4);
                         button4.OnClick = (Entity btn) =>
                         {
                             if (objectClicked == null && tileClicked.Walkable)
                             {
                                 PlaceBuildingHelper(tileClicked);
                             }
-
-                            Menu.Visible = false;
-                            CraftingMenu.Visible = false;
                         };
                     }
                 }
@@ -315,18 +236,6 @@ namespace GlobalWarmingGame.Action
                 OnClick();
 
             hovering = false;
-
-            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-            {
-                if (Menu != null && Menu.Visible)
-                    Menu.Visible = false;
-
-                if (CraftingMenu != null && CraftingMenu.Visible)
-                    CraftingMenu.Visible = false;
-
-                if (ResourceNotification != null && ResourceNotification.Visible)
-                    ResourceNotification.Visible = false;
-            }
 
             previousMouseState = currentMouseState;
         }
