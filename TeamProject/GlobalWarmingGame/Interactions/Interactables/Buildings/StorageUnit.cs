@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -10,10 +11,13 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class StorageUnit : InteractableGameObject, IBuildable
+    class StorageUnit : Sprite, IInteractable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 8)};
+
+        public List<InstructionType> InstructionTypes { get; }
+
         private readonly Inventory inventory;
         
         public StorageUnit(Vector2 position, Texture2D texture) : base
@@ -24,10 +28,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "StorageUnit",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
+            InstructionTypes = new List<InstructionType>();
             inventory = new Inventory(100f);
             InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
         }

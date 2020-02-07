@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources.ResourceTypes;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Tree : InteractableGameObject
+    class Tree : Sprite, IInteractable
     {
         private bool _choppable;
         private InstructionType chop;
@@ -24,6 +25,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             }
         }
 
+        public List<InstructionType> InstructionTypes { get; }
+
         public Tree(Vector2 position, Texture2D textureTree, Texture2D textureStump) : base
         (
             position: position,
@@ -32,10 +35,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             rotationOrigin: new Vector2(0, 0),
             tag: "Tree",
             depth: 0.7f,
-            texture: textureTree,
-            instructionTypes: new List<InstructionType>()
+            texture: textureTree
         )
         {
+            InstructionTypes = new List<InstructionType>();
             this.textureTree = textureTree;
             this.textureStump = textureStump;
             choppable = true;
