@@ -7,11 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using GlobalWarmingGame.Action;
-using Engine;
-using GlobalWarmingGame;
-using Engine.TileGrid;
-using GlobalWarmingGame.ResourceItems;
 using System.Threading.Tasks;
 using GlobalWarmingGame.Resources.ResourceTypes;
 
