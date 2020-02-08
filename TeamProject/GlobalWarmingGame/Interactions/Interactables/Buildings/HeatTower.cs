@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
@@ -11,10 +12,12 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class HeatTower: InteractableGameObject, IHeatable
+    class HeatTower: Sprite, IInteractable, IHeatable
     {
         public Temperature Temperature { get; set; } = new Temperature(100);
         public bool Heating { get; private set; }
+
+        public List<InstructionType> InstructionTypes { get; }
 
         public HeatTower(Vector2 position, Texture2D texture) : base
         (
@@ -24,10 +27,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "HeatTower",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
+            InstructionTypes = new List<InstructionType>();
             Heating = true;
             //InstructionTypes.Add(new InstructionType("fuel", "Fuel", "Fuel tower", Fuel));
         }

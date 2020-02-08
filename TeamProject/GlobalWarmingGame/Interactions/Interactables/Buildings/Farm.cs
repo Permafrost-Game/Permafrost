@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -10,9 +11,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class Farm : InteractableGameObject, IUpdatable, IBuildable
+    class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
+
+        public List<InstructionType> InstructionTypes { get; }
 
         private InstructionType plant;
         private InstructionType harvest;
@@ -28,10 +31,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "Farm",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
+            InstructionTypes = new List<InstructionType>();
             plant = new InstructionType("plant", "Plant", "Plant", Plant);
             harvest = new InstructionType("harvest", "Harvest", "Harvest", Harvest);
             timeUntilGrown = 20000f;

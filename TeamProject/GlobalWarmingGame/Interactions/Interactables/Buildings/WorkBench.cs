@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Action;
@@ -15,10 +16,13 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class WorkBench : InteractableGameObject, IBuildable, IUpdatable
+    class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4), new ResourceItem(new Wood(), 8)};
         public Panel ResourceNotification { get; set; }
+
+        public List<InstructionType> InstructionTypes { get; }
+
         MouseState currentMouseState;
         MouseState previousMouseState;
 
@@ -30,10 +34,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "WorkBench",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
+            InstructionTypes = new List<InstructionType>();
+
             ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100));
             ResourceNotification.Padding = Vector2.Zero;
             ResourceNotification.Visible = false;

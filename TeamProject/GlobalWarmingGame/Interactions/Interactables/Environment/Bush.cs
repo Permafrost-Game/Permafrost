@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources.ResourceTypes;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Bush : InteractableGameObject, IUpdatable
+    class Bush : Sprite, IInteractable, IUpdatable
     {
         private InstructionType forrage;
         private bool _isHarvestable;
@@ -29,6 +30,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             }
         }
 
+        public List<InstructionType> InstructionTypes { get; }
+
         public Bush(Vector2 position, Texture2D harvestable, Texture2D harvested) : base
         (
             position: position,
@@ -37,10 +40,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             rotationOrigin: new Vector2(0, 0),
             tag: "Bush",
             depth: 0.7f,
-            texture: harvestable,
-            instructionTypes: new List<InstructionType>()
+            texture: harvestable
         )
         {
+            InstructionTypes = new List<InstructionType>();
             forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", Forrage);
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;

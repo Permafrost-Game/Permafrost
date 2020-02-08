@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -9,18 +10,20 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class Oven : InteractableGameObject, IUpdatable, IBuildable
+    class Oven : Sprite, IInteractable, IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new MachineParts(), 6),
                                                                                                    new ResourceItem(new Stone(), 4),
                                                                                                    new ResourceItem(new Wood(), 2)};
 
-        private InstructionType cook;
-        private InstructionType retrieve;
+        public List<InstructionType> InstructionTypes { get; }
 
-        private bool cooking;
-        private float timeUntilCooked;
-        private float cockTime = 10000f;
+        //private InstructionType cook;
+        //private InstructionType retrieve;
+
+        //private bool cooking;
+        //private float timeUntilCooked;
+        //private float cockTime = 10000f;
 
         public Oven(Vector2 position, Texture2D texture) : base
         (
@@ -30,13 +33,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "Oven",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
-            cook = new InstructionType("cook", "Cook", "Cook food", CookFood);
-            retrieve = new InstructionType("retrieve", "Retrieve", "Retrieve food", RetrieveFood);
-            InstructionTypes.Add(cook);
+            InstructionTypes = new List<InstructionType>();
+            //cook = new InstructionType("cook", "Cook", "Cook food", CookFood);
+            //retrieve = new InstructionType("retrieve", "Retrieve", "Retrieve food", RetrieveFood);
+            //InstructionTypes.Add(cook);
         }
 
         private void CookFood(IInstructionFollower follower)
@@ -53,7 +56,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public void Update(GameTime gameTime)
         {
             //Use game time to cook the food.
-            throw new System.NotImplementedException();
+
         }
     }
 }

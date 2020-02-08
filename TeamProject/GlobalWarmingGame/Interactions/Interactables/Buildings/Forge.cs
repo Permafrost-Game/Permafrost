@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -10,10 +11,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class Forge : InteractableGameObject, IBuildable
+    class Forge : Sprite, IInteractable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new MachineParts(), 10),
                                                                                                    new ResourceItem(new Stone(), 6) };
+        public List<InstructionType> InstructionTypes { get; }
 
         public Forge(Vector2 position, Texture2D texture) : base
         (
@@ -23,10 +25,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "Forge",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
+            InstructionTypes = new List<InstructionType>();
             InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", ForgeItem));
         }
 

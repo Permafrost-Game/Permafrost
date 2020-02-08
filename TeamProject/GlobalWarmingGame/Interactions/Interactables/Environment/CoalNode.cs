@@ -1,5 +1,6 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources.ResourceTypes;
@@ -9,8 +10,10 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class CoalNode : InteractableGameObject
+    class CoalNode : Sprite, IInteractable
     {
+        public List<InstructionType> InstructionTypes { get; }
+
         public CoalNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
@@ -19,10 +22,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             rotationOrigin: new Vector2(0, 0),
             tag: "CoalNode",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
+            InstructionTypes = new List<InstructionType>();
             InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", Mine));
         }
 
