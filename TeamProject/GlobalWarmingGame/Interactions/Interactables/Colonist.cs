@@ -19,7 +19,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public List<InstructionType> InstructionTypes { get; }
         private Queue<Instruction> instructions;
         public Inventory Inventory { get; }
-        
+
         #endregion
 
         #region Combat
@@ -75,7 +75,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
         #endregion
-       
+
         #region PathFinding
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
         public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
@@ -109,10 +109,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeToTemperatureUpdate = timeUntilTemperatureUpdate;
 
             instructions = new Queue<Instruction>();
-            InstructionTypes = new List<InstructionType>
-            {
-                new InstructionType("select", "Select Colonist", "Selects this colonist")
-            };
+            InstructionTypes = new List<InstructionType>();
+            
         }
 
         internal void setDead()
@@ -133,7 +131,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions.Enqueue(instruction);
         }
 
-     
+
 
         public void OnGoalComplete(Vector2 completedGoal)
         {
@@ -144,10 +142,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 Instruction currentInstruction = instructions.Peek();
                 currentInstruction.Type.Start(this);
-            
+
                 //if (currentInstruction.Type.ResourceItem != null)
                 //    Inventory.AddItem(currentInstruction.Type.ResourceItem);
-            
+
                 instructions.Dequeue();
             }
         }
@@ -272,4 +270,3 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
     }
 }
-

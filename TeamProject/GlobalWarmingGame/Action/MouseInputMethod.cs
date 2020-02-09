@@ -56,6 +56,7 @@ namespace GlobalWarmingGame.Action
             this.mainUI = mainUI;
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
 
+
             PopulateBuildMenu();
         }
 

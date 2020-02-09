@@ -71,7 +71,6 @@
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="UI\Controller.cs" />
     <Compile Include="Action\SelectionManager.cs" />
-    <Compile Include="Interactions\InteractableGameObject.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Action\MouseInputMethod.cs" />
@@ -79,6 +78,7 @@
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
+    <Compile Include="UI\InstructionEvent.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />

@@ -22,6 +22,7 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.UI;
 
 namespace GlobalWarmingGame
 {
@@ -32,7 +33,8 @@ namespace GlobalWarmingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        SelectionManager selectionManager;
+        //SelectionManager selectionManager;
+        Controller controller;
 
         TileSet tileSet;
         // TileMap tileMap;
@@ -90,7 +92,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferHeight = 1080
             };
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -101,9 +103,7 @@ namespace GlobalWarmingGame
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, "hd");
-
-            selectionManager = new SelectionManager();
-
+            
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
@@ -141,7 +141,6 @@ namespace GlobalWarmingGame
 
             //LOADING TILEMAP AND ZONES
             {
-                //TODO textures should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
@@ -232,8 +231,7 @@ namespace GlobalWarmingGame
                     },
                     new Texture2D[]
                     {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
-                       // this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0")
+                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear")
                     }
                 };
 
@@ -323,12 +321,12 @@ namespace GlobalWarmingGame
 
                 MainUI = new MainUI(icons);
 
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, ZoneManager.CurrentZone.TileMap, selectionManager.CurrentInstruction, MainUI));
+                controller = new Controller(camera);
 
                 ProcessMenuSelection();
 
                 var c1 = new Colonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
-                selectionManager.CurrentInstruction.ActiveMember = c1;
+                Controller.SelectedColonist = c1;
                 GameObjectManager.Add(c1);
 
                 string[] spawnables = new string[11];
@@ -410,8 +408,7 @@ namespace GlobalWarmingGame
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
-                foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
-                    mouseInputMethod.Update(gameTime);
+                controller.Update(gameTime);
 
                 UpdateColonistTemperatures(gameTime);
 
