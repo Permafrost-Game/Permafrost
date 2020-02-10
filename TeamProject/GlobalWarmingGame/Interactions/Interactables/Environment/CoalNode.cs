@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         )
         {
             InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", Mine));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", onStart: Mine));
         }
 
         private void Mine(IInstructionFollower follower)

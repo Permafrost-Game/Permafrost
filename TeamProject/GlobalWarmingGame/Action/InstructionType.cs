@@ -12,6 +12,7 @@ namespace GlobalWarmingGame.Action
         public string ID { get; }
         public string Name { get; }
         public string Description { get; }
+        public int Priority { get; }
 
         public delegate void OnStart(IInstructionFollower follower);
         private readonly OnStart onStart;
@@ -25,11 +26,12 @@ namespace GlobalWarmingGame.Action
         /// <param name="description">Display description</param>
         /// <param name="onStart">The method that is called when the instruction has started</param>
         /// /// <param name="onComplete">The method that is called when the instruction has started</param>
-        public InstructionType(string id, string name, string description, OnStart onStart = default)
+        public InstructionType(string id, string name, string description, int priority = 0, OnStart onStart = default)
         {
             this.ID = id;
             this.Name = name;
             this.Description = description;
+            this.Priority = priority;
 
             this.onStart = onStart;
         }

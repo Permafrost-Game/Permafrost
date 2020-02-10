@@ -35,8 +35,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         )
         {
             InstructionTypes = new List<InstructionType>();
-            plant = new InstructionType("plant", "Plant", "Plant", Plant);
-            harvest = new InstructionType("harvest", "Harvest", "Harvest", Harvest);
+            plant = new InstructionType("plant", "Plant", "Plant", onStart: Plant);
+            harvest = new InstructionType("harvest", "Harvest", "Harvest", onStart: Harvest);
             timeUntilGrown = 20000f;
             InstructionTypes.Add(plant);
         }

@@ -33,7 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             InstructionTypes = new List<InstructionType>();
             inventory = new Inventory(100f);
-            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
+            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", onStart: Store));
         }
 
         private void Store(IInstructionFollower follower)

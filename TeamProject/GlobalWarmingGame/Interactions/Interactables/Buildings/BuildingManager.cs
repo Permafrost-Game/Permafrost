@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public static void AddBuilding(int id, string stringID, Texture2D texture = null) 
         {
-            InstructionType instructionType = new InstructionType(stringID, "Build", "Build " + stringID, Build);
+            InstructionType instructionType = new InstructionType(stringID, "Build", "Build " + stringID, onStart: Build);
             Building b = new Building(id, stringID, instructionType, texture);
             Buildings.Add(b);
         }
@@ -75,7 +75,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public static void GetBuildingArea(Vector2 position, Vector2 size, float temperature, bool heating, TileMap tileMap)
         {
-            float tileWidth = tileMap.Tiles[0, 0].size.X;
+            float tileWidth = tileMap.Tiles[0, 0].Size.X;
             int numberOfTilesX = (int)(size.X / tileWidth);
             int numberOfTilesY = (int)(size.Y / tileWidth);
             for (int y = 0; y < numberOfTilesX; y++)
