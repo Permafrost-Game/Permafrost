@@ -178,7 +178,7 @@ namespace GlobalWarmingGame
         }
         public static CampFire MakeCampfire(Vector2 position)
         {
-            return new CampFire(position, textureSet["campfire"]); 
+            return new CampFire(position, textureSet["campFire"]); 
         }
         public static Enemy MakeRobot(Vector2 position)
         {
