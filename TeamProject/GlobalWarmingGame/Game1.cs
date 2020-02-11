@@ -293,14 +293,10 @@ namespace GlobalWarmingGame
                 workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
                 stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0");
                 tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
-                axe = this.Content.Load<Texture2D>(@"textures/icons/axe");
-                pickaxe = this.Content.Load<Texture2D>(@"textures/icons/pickaxe");
-                hoe = this.Content.Load<Texture2D>(@"textures/icons/hoe");
-                stone = this.Content.Load<Texture2D>(@"textures/icons/stone");
-                wood = this.Content.Load<Texture2D>(@"textures/icons/wood");
-                fibers = this.Content.Load<Texture2D>(@"textures/icons/fibers");
-                apple = this.Content.Load<Texture2D>(@"textures/icons/apple");
-                logo = Content.Load<Texture2D>(@"logo");
+
+                logo = this.Content.Load<Texture2D>(@"logo");
+
+                ResourceTypeFactory.LoadContent(Content);
 
                 Texture2D[] textureArray = new Texture2D[] { farm, workBench };
                 Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple, axe, pickaxe, hoe };
@@ -319,7 +315,7 @@ namespace GlobalWarmingGame
                 for (int i = 0; i < iconStringArray.Length; i++)
                     icons.Add(iconStringArray[i], iconTextureArray[i]);
 
-                MainUI = new MainUI(icons);
+                MainUI = new MainUI();
 
                 controller = new Controller(camera);
 
@@ -376,7 +372,7 @@ namespace GlobalWarmingGame
                     ProcessSpawnables();
                     //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
                 };
-                CollectiveInventory = new CollectiveInventory(MainUI, icons);
+                CollectiveInventory = new CollectiveInventory(MainUI);
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
             }

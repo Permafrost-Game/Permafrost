@@ -1,5 +1,4 @@
 ﻿using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework.Graphics;
 using System;

@@ -2,7 +2,7 @@
 using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void Chop(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(new Wood(), 4));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 4));
             choppable = false;
             InstructionTypes.Remove(chop);
         }

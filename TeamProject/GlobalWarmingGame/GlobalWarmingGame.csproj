@@ -69,6 +69,7 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
+    <Compile Include="Resources\ResourceFactory.cs" />
     <Compile Include="UI\Controller.cs" />
     <Compile Include="Action\SelectionManager.cs" />
     <Compile Include="Game1.cs" />
@@ -98,13 +99,6 @@
     <Compile Include="Resources\Inventory.cs" />
     <Compile Include="Resources\ResourceItem.cs" />
     <Compile Include="Resources\ResourceType.cs" />
-    <Compile Include="Resources\ResourceTypes\Fibers.cs" />
-    <Compile Include="Resources\ResourceTypes\Leather.cs" />
-    <Compile Include="Resources\ResourceTypes\Food.cs" />
-    <Compile Include="Resources\ResourceTypes\MachineParts.cs" />
-    <Compile Include="Resources\ResourceTypes\Coal.cs" />
-    <Compile Include="Resources\ResourceTypes\Wood.cs" />
-    <Compile Include="Resources\ResourceTypes\Stone.cs" />
     <Compile Include="UI\View.cs" />
     <Compile Include="Zone.cs" />
   </ItemGroup>

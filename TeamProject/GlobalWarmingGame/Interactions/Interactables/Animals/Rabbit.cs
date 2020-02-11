@@ -4,7 +4,7 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public void Hunt(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(new Food(), 2));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.food), 2));
             GameObjectManager.Remove(this);
         }
 

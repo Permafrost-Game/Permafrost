@@ -3,7 +3,7 @@ using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 4)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -43,7 +43,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Harvest(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(new Food(), 10));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.food), 10));
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
