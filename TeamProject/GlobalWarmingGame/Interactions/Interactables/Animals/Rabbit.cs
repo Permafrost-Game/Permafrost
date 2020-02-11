@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
-    class Rabbit : PassiveAnimal
+    public class Rabbit : PassiveAnimal
     {
         private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 

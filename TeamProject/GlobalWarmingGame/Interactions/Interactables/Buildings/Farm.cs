@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class Farm : Sprite, IInteractable, IUpdatable, IBuildable
+    public class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
 

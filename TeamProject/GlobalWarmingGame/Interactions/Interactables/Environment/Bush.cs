@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Bush : Sprite, IInteractable, IUpdatable
+    public class Bush : Sprite, IInteractable, IUpdatable
     {
         private InstructionType forrage;
         private bool _isHarvestable;

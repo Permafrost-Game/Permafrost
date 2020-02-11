@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class TallGrass : Sprite, IInteractable
+    public class TallGrass : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable
     {
         #region Instruction
 
@@ -83,7 +83,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
 
-        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity) : base
+        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity = 100) : base
         (
             position: position,
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),

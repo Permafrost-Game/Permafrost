@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
+    public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4), new ResourceItem(new Wood(), 8)};
         public Panel ResourceNotification { get; set; }
