@@ -38,7 +38,7 @@ namespace GlobalWarmingGame.Resources
             BuildCollectiveInventory(mainUI);
         }
 
-        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI, Dictionary<String, Texture2D> icons)
+        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI)
         {
             timeUntilUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -104,15 +104,15 @@ namespace GlobalWarmingGame.Resources
                         mainUI.ItemLabels[3].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "axe":
-                        mainUI.ItemSlots[4].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[4].Texture = ResourceTypeFactory.MakeCraftable(Craft.axe).Texture;
                         mainUI.ItemLabels[4].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "pickaxe":
-                        mainUI.ItemSlots[5].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[5].Texture = ResourceTypeFactory.MakeCraftable(Craft.pickaxe).Texture;
                         mainUI.ItemLabels[5].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "hoe":
-                        mainUI.ItemSlots[6].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[6].Texture = ResourceTypeFactory.MakeCraftable(Craft.hoe).Texture;
                         mainUI.ItemLabels[6].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                 }

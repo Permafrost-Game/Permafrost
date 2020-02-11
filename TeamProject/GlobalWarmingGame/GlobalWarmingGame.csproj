@@ -69,7 +69,8 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
-    <Compile Include="Resources\ResourceFactory.cs" />
+    <Compile Include="Resources\CraftableType.cs" />
+    <Compile Include="Resources\ResourceTypeFactory.cs" />
     <Compile Include="UI\Controller.cs" />
     <Compile Include="Action\SelectionManager.cs" />
     <Compile Include="Game1.cs" />
@@ -87,15 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathFindable.cs" />
     <Compile Include="Resources\CollectiveInventory.cs" />
-    <Compile Include="Resources\Craftables\Coat.cs" />
-    <Compile Include="Resources\Craftables\Backpack.cs" />
-    <Compile Include="Resources\Craftables\Bow.cs" />
-    <Compile Include="Resources\Craftables\Hoe.cs" />
-    <Compile Include="Resources\Craftables\BasicRifle.cs" />
-    <Compile Include="Resources\Craftables\Pickaxe.cs" />
-    <Compile Include="Resources\Craftables\Axe.cs" />
-    <Compile Include="Resources\Craftables\Cloth.cs" />
-    <Compile Include="Resources\Craftables\ICraftable.cs" />
+    <Compile Include="Resources\ICraftable.cs" />
     <Compile Include="Resources\Inventory.cs" />
     <Compile Include="Resources\ResourceItem.cs" />
     <Compile Include="Resources\ResourceType.cs" />

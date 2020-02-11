@@ -61,16 +61,6 @@ namespace GlobalWarmingGame
 
         Texture2D[][] colonist;
         Texture2D[][] campFire;
-        Dictionary<String, Texture2D> icons;
-
-        Texture2D stone;
-        Texture2D apple;
-        Texture2D wood;
-        Texture2D fibers;
-
-        Texture2D axe;
-        Texture2D pickaxe;
-        Texture2D hoe;
         Texture2D farm;
         Texture2D workBench;
         Texture2D stoneNode;
@@ -299,8 +289,6 @@ namespace GlobalWarmingGame
                 ResourceTypeFactory.LoadContent(Content);
 
                 Texture2D[] textureArray = new Texture2D[] { farm, workBench };
-                Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple, axe, pickaxe, hoe };
-                string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food", "axe", "pickaxe", "hoe" };
                 string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
@@ -309,11 +297,6 @@ namespace GlobalWarmingGame
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
-
-                icons = new Dictionary<string, Texture2D>(6);
-
-                for (int i = 0; i < iconStringArray.Length; i++)
-                    icons.Add(iconStringArray[i], iconTextureArray[i]);
 
                 MainUI = new MainUI();
 
@@ -408,7 +391,7 @@ namespace GlobalWarmingGame
 
                 UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI, icons);
+                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
                 MainUI.UpdateMainUI(CollectiveInventory, gameTime);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
