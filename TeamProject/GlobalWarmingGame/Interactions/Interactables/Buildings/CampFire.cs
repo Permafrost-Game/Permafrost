@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
+    public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 2), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.fibers), 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);

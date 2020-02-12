@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class StoneNode : Sprite, IInteractable
+    public class StoneNode : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
 

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Tree : Sprite, IInteractable
+    public class Tree : Sprite, IInteractable
     {
         private bool _choppable;
         private InstructionType chop;
