@@ -71,11 +71,6 @@ namespace GlobalWarmingGame
         Texture2D hoe;
 
         Texture2D workBench;
-        Texture2D stoneNode;
-        Texture2D tallGrass;
-  
-        Texture2D tree;
-        Texture2D treeStump;
         Texture2D logo;
        
 
@@ -126,8 +121,8 @@ namespace GlobalWarmingGame
                 lightObjects = new List<Light>() //This code will be replaced
                 {
                     //new Light(Vector2.Zero,         GraphicsDevice, 128f, new Color(201,226,255,32), "Light" ),
-                    new Light(new Vector2(256,224), GraphicsDevice, 256f, new Color(255,0  ,0  ,255), "Light" ),
-                    new Light(new Vector2(224,512), GraphicsDevice, 256f, new Color(0,0  ,255  ,255), "Light" )
+                    //new Light(new Vector2(256,224), GraphicsDevice, 256f, new Color(255,0  ,0  ,255), "Light" ),
+                    //new Light(new Vector2(224,512), GraphicsDevice, 256f, new Color(0,0  ,255  ,255), "Light" )
                 };
 
                 screenShadows = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -136,17 +131,17 @@ namespace GlobalWarmingGame
 
             //LOADING TILEMAP AND ZONES
             {
-                var textureSet = new Dictionary<string, Texture2D>();
+                var textureSet = new Dictionary<int, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
                 water.Name = "Non-Walkable";
 
-                textureSet.Add("1", this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
-                textureSet.Add("2", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
-                textureSet.Add("3", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
-                textureSet.Add("4", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
-                textureSet.Add("5", this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
-                textureSet.Add("6", water);
+                textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
+                textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
+                textureSet.Add(2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
+                textureSet.Add(3, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
+                textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
+                textureSet.Add(5, water);
 
 
 
@@ -220,12 +215,6 @@ namespace GlobalWarmingGame
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
-
-                GameObjectManager.Add(InteractablesFactory.MakeBear(new Vector2(1160, 1160)));
-           
-                GameObjectManager.Add(InteractablesFactory.MakeRobot(new Vector2(500, 500)));
-
-                GameObjectManager.Add(InteractablesFactory.MakeRobot(new Vector2(800, 500))); 
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => {
                     ProcessSpawnables();

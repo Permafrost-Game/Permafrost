@@ -20,12 +20,12 @@ namespace Engine.TileGrid
         private readonly int tag = -1;
         public bool Walkable { get; }
 
-        public Tile(Texture2D texture, Vector2 Position, Vector2 size, bool Walkable) : base(Position, size)
+        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
         {
-            this.Position = Position;
+            this.Position = position;
             this.texture = texture;
             this.size = size;
-            this.Walkable = Walkable;
+            this.Walkable = walkable;
             temperature = new Temperature(ZoneManager.GlobalTemperature);
         }
 

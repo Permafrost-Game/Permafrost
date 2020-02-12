@@ -47,7 +47,8 @@ namespace GlobalWarmingGame
 
         static TileMap LoadMap(Vector2 pos)
         {
-            return TileMapParser.parseTileMap(MapPath(pos), tileSet);
+            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: 255, scale: 0.005f, xOffset: 0, yOffset: 0, width: 100, height: 100, tileSet);
         }
 
         public static void Init(TileSet ts)

@@ -33,6 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SimplexNoise, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimplexNoise.2.0.0\lib\net45\SimplexNoise.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -62,6 +65,7 @@
     <Compile Include="Drawing\Sprite.cs" />
     <Compile Include="PathFinding\PathFinder.cs" />
     <Compile Include="Temperature.cs" />
+    <Compile Include="TileGrid\TileMapGenerator.cs" />
     <Compile Include="TileGrid\Tile.cs" />
     <Compile Include="TileGrid\TileMap.cs" />
     <Compile Include="TileGrid\TileMapParser.cs" />
@@ -69,6 +73,9 @@
     <Compile Include="PathFinding\TileCosts.cs" />
     <Compile Include="Zone.cs" />
     <Compile Include="ZoneManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
