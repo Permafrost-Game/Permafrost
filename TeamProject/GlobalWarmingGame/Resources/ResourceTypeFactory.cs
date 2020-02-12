@@ -109,46 +109,35 @@ namespace GlobalWarmingGame.Resources
 
         public static ResourceType MakeResource(Resource resource)
         {
-            if (resources.ContainsKey(resource))
-            {
-                return resources[resource];
-            }
-
-            return null;
+            return resources[resource];
         }
 
-        public static CraftableType MakeCraftable(Craftable craft)
+        public static CraftableType MakeCraftable(Craftable craftable)
         {
-            if (craftables.ContainsKey(craft))
-            {
-                return craftables[craft];
-            }
-
-            return null;
+            return craftables[craftable];
         }
     }
+}
 
-    public enum Craftable
-    {
-        axe,
-        backpack,
-        basicRifle,
-        bow,
-        cloth,
-        coat,
-        hoe,
-        pickaxe
-    }
+public enum Craftable
+{
+    axe,
+    backpack,
+    basicRifle,
+    bow,
+    cloth,
+    coat,
+    hoe,
+    pickaxe
+}
 
-    public enum Resource
-    {
-        stone, 
-        wood,
-        fibers,
-        food,
-        coal,
-        leather,
-        machineParts
-    }
-
+public enum Resource
+{
+    stone,
+    wood,
+    fibers,
+    food,
+    coal,
+    leather,
+    machineParts
 }
