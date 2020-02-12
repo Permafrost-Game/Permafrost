@@ -3,7 +3,7 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -223,7 +223,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void FoodTick()
         {
             //If colonist doesn't have food on them, they are starving -1 health
-            ResourceItem food = new ResourceItem(new Food(), 1);
+            ResourceItem food = new ResourceItem(ResourceTypeFactory.MakeResource(Resource.food), 1);
             if (!Inventory.RemoveItem(food))
             {
                 //TODO uncomment

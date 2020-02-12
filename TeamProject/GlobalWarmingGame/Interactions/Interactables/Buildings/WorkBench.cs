@@ -6,8 +6,7 @@ using GeonBit.UI.Entities;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.Craftables;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4), new ResourceItem(new Wood(), 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.stone), 4), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 8)};
         public Panel ResourceNotification { get; set; }
 
         public List<InstructionType> InstructionTypes { get; }
@@ -62,8 +61,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftCloth(IInstructionFollower follower)
         {
-
-            Cloth cloth = new Cloth();
+            CraftableType cloth = ResourceTypeFactory.MakeCraftable(Craftable.cloth);
             if (follower.Inventory.CheckContainsList(cloth.CraftingCosts))
             {
                 foreach (ResourceItem item in cloth.CraftingCosts)
@@ -84,7 +82,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftAxe(IInstructionFollower follower)
         {
-            Axe axe = new Axe();
+            CraftableType axe = ResourceTypeFactory.MakeCraftable(Craftable.axe);
             if (follower.Inventory.CheckContainsList(axe.CraftingCosts))
             {
                 foreach (ResourceItem item in axe.CraftingCosts) 
@@ -105,7 +103,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftBackPack(IInstructionFollower follower)
         {
-            Backpack backpack = new Backpack();
+            CraftableType backpack = ResourceTypeFactory.MakeCraftable(Craftable.backpack);
             if (follower.Inventory.CheckContainsList(backpack.CraftingCosts))
             {
                 foreach (ResourceItem item in backpack.CraftingCosts)
@@ -126,7 +124,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftCoat(IInstructionFollower follower)
         {
-            Coat coat = new Coat();
+            CraftableType coat = ResourceTypeFactory.MakeCraftable(Craftable.coat);
             if (follower.Inventory.CheckContainsList(coat.CraftingCosts))
             {
                 foreach (ResourceItem item in coat.CraftingCosts)
@@ -147,7 +145,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftBow(IInstructionFollower follower)
         {
-            Bow bow = new Bow();
+            CraftableType bow = ResourceTypeFactory.MakeCraftable(Craftable.bow);
             if (follower.Inventory.CheckContainsList(bow.CraftingCosts))
             {
                 foreach (ResourceItem item in bow.CraftingCosts)
@@ -168,7 +166,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftHoe(IInstructionFollower follower)
         {
-            Hoe hoe = new Hoe();
+            CraftableType hoe = ResourceTypeFactory.MakeCraftable(Craftable.hoe);
             if (follower.Inventory.CheckContainsList(hoe.CraftingCosts))
             {
                 foreach (ResourceItem item in hoe.CraftingCosts)
@@ -189,7 +187,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftPickaxe(IInstructionFollower follower)
         {
-            Pickaxe pickaxe = new Pickaxe();
+            CraftableType pickaxe = ResourceTypeFactory.MakeCraftable(Craftable.pickaxe);
             if (follower.Inventory.CheckContainsList(pickaxe.CraftingCosts))
             {
                 foreach (ResourceItem item in pickaxe.CraftingCosts)
@@ -210,7 +208,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftBasicRifle(IInstructionFollower follower)
         {
-            BasicRifle basicRifle = new BasicRifle();
+            CraftableType basicRifle = ResourceTypeFactory.MakeCraftable(Craftable.basicRifle);
             if (follower.Inventory.CheckContainsList(basicRifle.CraftingCosts))
             {
                 foreach (ResourceItem item in basicRifle.CraftingCosts)
