@@ -158,7 +158,7 @@ namespace GlobalWarmingGame
         }
         public static Bush MakeBush(Vector2 position)
         {
-            return new Bush(position, textures["BushH"], textures["BushN"]);
+            return new Bush(position, textures["bushH"], textures["bushN"]);
         }
         public static Tree MakeTree(Vector2 position)
         {
