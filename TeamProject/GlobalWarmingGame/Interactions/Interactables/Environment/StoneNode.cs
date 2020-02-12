@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class StoneNode : Sprite, IInteractable
+    public class StoneNode : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
 
@@ -25,11 +25,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         )
         {
             InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 4), Mine));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
         }
 
-        private void Mine(Colonist colonist)
+        private void Mine(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Stone(), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

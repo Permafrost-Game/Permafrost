@@ -2,7 +2,7 @@
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Menus;
+using GlobalWarmingGame.UI.Menus;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

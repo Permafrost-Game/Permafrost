@@ -17,11 +17,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.Menus;
+using GlobalWarmingGame.UI.Menus;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.UI;
 
 namespace GlobalWarmingGame
 {
@@ -32,7 +33,8 @@ namespace GlobalWarmingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        SelectionManager selectionManager;
+        //SelectionManager selectionManager;
+        Controller controller;
 
         TileSet tileSet;
         // TileMap tileMap;
@@ -57,8 +59,6 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
 
-        Texture2D[][] colonist;
-        Texture2D[][] campFire;
         Dictionary<String, Texture2D> icons;
 
         Texture2D stone;
@@ -69,18 +69,15 @@ namespace GlobalWarmingGame
         Texture2D axe;
         Texture2D pickaxe;
         Texture2D hoe;
-        Texture2D farm;
+
         Texture2D workBench;
         Texture2D stoneNode;
         Texture2D tallGrass;
-        Texture2D bushH;
-        Texture2D bushN;
-        Texture2D[][] rabbit;
+  
         Texture2D tree;
         Texture2D treeStump;
         Texture2D logo;
-         Texture2D[][] bear;
-         Texture2D[][] robot;
+       
 
         public Game1()
         {
@@ -90,7 +87,7 @@ namespace GlobalWarmingGame
                 PreferredBackBufferHeight = 1080
             };
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -101,9 +98,7 @@ namespace GlobalWarmingGame
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, "hd");
-
-            selectionManager = new SelectionManager();
-
+            
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
@@ -141,7 +136,6 @@ namespace GlobalWarmingGame
 
             //LOADING TILEMAP AND ZONES
             {
-                //TODO textures should be loaded from a file
                 var textureSet = new Dictionary<string, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
@@ -172,129 +166,9 @@ namespace GlobalWarmingGame
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                colonist = new Texture2D[][] 
-                {
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0"),
-                       
-                    },
-                     new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist1"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist2"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist3"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist4"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist5")
-                    },
-                    new Texture2D[]{
-                     this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite1"),
-                       this.Content.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
-                    }
-                };
-                campFire = new Texture2D[][]
-                {
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_1")
-                    },
-                     new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_1"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_2"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_3"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_4"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_5")
-                    }
-
-                };
-                farm = this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0");
-                bushH = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0");
-                bushN = this.Content.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1");
-                bear = new Texture2D[][]
-                {
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite4")
-                        
-
-                    },
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite2"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite3")
-                    },
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite5"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite6")
-            
-                    },
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
-                       // this.Content.Load<Texture2D>(@"textures/interactables/animals/bear/sprite0")
-                    }
-                };
-
-                robot = new Texture2D[][]
-                {
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
-
-                    },
-                     new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite1"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite2"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite3"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite4"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite5"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite6"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite7"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite8"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite9")
-
-
-                    },
-                      new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
-
-                    },
-                     new Texture2D[]
-                    {
-                        
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot1"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot2")
-
-                    }
-                    };
-                rabbit = new Texture2D[][]
-                {
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite0"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite1"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite2")
-                    },
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite3"),
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite4")
-                    },
-                    new Texture2D[]
-                    {
-                        this.Content.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
-                    }
-                };
+                InteractablesFactory.LoadContent(Content); 
                 
-                tree = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0");
-                treeStump = this.Content.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2");
-                workBench = this.Content.Load<Texture2D>(@"textures/interactables/buildings/workbench");
-                stoneNode = this.Content.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0");
-                tallGrass = this.Content.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass");
+               
                 axe = this.Content.Load<Texture2D>(@"textures/icons/axe");
                 pickaxe = this.Content.Load<Texture2D>(@"textures/icons/pickaxe");
                 hoe = this.Content.Load<Texture2D>(@"textures/icons/hoe");
@@ -304,7 +178,7 @@ namespace GlobalWarmingGame
                 apple = this.Content.Load<Texture2D>(@"textures/icons/apple");
                 logo = Content.Load<Texture2D>(@"logo");
 
-                Texture2D[] textureArray = new Texture2D[] { farm, workBench };
+                Texture2D[] textureArray = new Texture2D[] { this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"), workBench };
                 Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple, axe, pickaxe, hoe };
                 string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food", "axe", "pickaxe", "hoe" };
                 string[] stringArray = new string[] { "Farm", "Workbench" };
@@ -323,12 +197,12 @@ namespace GlobalWarmingGame
 
                 MainUI = new MainUI(icons);
 
-                selectionManager.InputMethods.Add(new MouseInputMethod(camera, ZoneManager.CurrentZone.TileMap, selectionManager.CurrentInstruction, MainUI));
+                controller = new Controller(camera);
 
                 ProcessMenuSelection();
-
-                var c1 = new Colonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0,0].size / 2, textureSet: colonist, inventoryCapacity: 100f);
-                selectionManager.CurrentInstruction.ActiveMember = c1;
+                var c1 = InteractablesFactory.MakeColonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size / 2); 
+                
+                Controller.SelectedColonist = c1;
                 GameObjectManager.Add(c1);
 
                 string[] spawnables = new string[11];
@@ -346,33 +220,12 @@ namespace GlobalWarmingGame
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
-                GameObjectManager.Add(new Enemy(
-                    tag: "Bear",
-                    aSpeed: 1000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 10, // Attack Power
-                    maxHp: 300, // Health
-                    position: new Vector2(1160, 1160),
-                    textureSet: bear
-                ));
-                GameObjectManager.Add(new Enemy(
-                    tag: "Robot",
-                    aSpeed: 5000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 0, // Attack Power (0 = Going to be random)
-                    maxHp: 500, // Health
-                    position: new Vector2(500, 500),
-                    textureSet: robot
-                ));
-                GameObjectManager.Add(new Enemy(
-                   tag: "Robot",
-                   aSpeed: 5000, // Attack Speed
-                   aRange: 60, // Agro Range
-                   aPower: 0, // Attack Power (0 = Going to be random)
-                   maxHp: 500, // Health
-                   position: new Vector2(800, 500),
-                   textureSet: robot
-               ));
+
+                GameObjectManager.Add(InteractablesFactory.MakeBear(new Vector2(1160, 1160)));
+           
+                GameObjectManager.Add(InteractablesFactory.MakeRobot(new Vector2(500, 500)));
+
+                GameObjectManager.Add(InteractablesFactory.MakeRobot(new Vector2(800, 500))); 
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => {
                     ProcessSpawnables();
@@ -410,8 +263,7 @@ namespace GlobalWarmingGame
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
-                foreach (MouseInputMethod mouseInputMethod in selectionManager.InputMethods)
-                    mouseInputMethod.Update(gameTime);
+                controller.Update(gameTime);
 
                 UpdateColonistTemperatures(gameTime);
 
@@ -666,54 +518,38 @@ namespace GlobalWarmingGame
             switch (MainUI.SpawnMenu.SelectedIndex)
             {
                 case 0:
-                    GameObjectManager.Add(new Colonist(position: position, textureSet: colonist, inventoryCapacity: 100f));
+
+                    GameObjectManager.Add(InteractablesFactory.MakeColonist(position));
                     break;
                 case 1:
-                    GameObjectManager.Add(new Rabbit(position: position, textureSet: rabbit));
+                    GameObjectManager.Add(InteractablesFactory.MakeRabbit(position));
                     break;
                 case 2:
-                    GameObjectManager.Add(new Farm(position: position, texture: farm));
+                    GameObjectManager.Add(InteractablesFactory.MakeFarm(position));
                     break;
                 case 3:
-                    GameObjectManager.Add(new Tree(position: position, textureTree: tree, textureStump: treeStump));
+                    GameObjectManager.Add(InteractablesFactory.MakeTree(position));
                     break;
                 case 4:
-                    GameObjectManager.Add(new Bush(position: position, harvestable: bushH, harvested: bushN));
+                    GameObjectManager.Add(InteractablesFactory.MakeBush(position));
                     break;
                 case 5:
-                    GameObjectManager.Add(new WorkBench(position: position, texture: workBench));
+                    GameObjectManager.Add(InteractablesFactory.MakeWorkBench(position));
                     break;
                 case 6:
-                    GameObjectManager.Add(new StoneNode(position: position, texture: stoneNode));
+                    GameObjectManager.Add(InteractablesFactory.MakeStoneNode(position));
                     break;
                 case 7:
-                    GameObjectManager.Add(new TallGrass(position: position, texture: tallGrass));
+                    GameObjectManager.Add(InteractablesFactory.MakeTallGrass(position));
                     break;
                 case 8:
-                    GameObjectManager.Add(new Enemy(
-                    tag: "Robot",
-                    aSpeed: 5000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 0, // Attack Power (0 = Going to be random)
-                    maxHp: 800, // Health
-                    position:position,
-                    textureSet: robot
-                ));
+                    GameObjectManager.Add(InteractablesFactory.MakeRobot(position));
                     break;
                 case 9:
-                    GameObjectManager.Add(new Enemy(
-                    tag: "Bear",
-                    aSpeed: 1000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 10, // Attack Power
-                    maxHp: 300, // Health
-                    position: position,
-                    textureSet: bear
-                
-                ));
+                    GameObjectManager.Add(InteractablesFactory.MakeBear(position));
                     break;
                 case 10:
-                    GameObjectManager.Add(new CampFire(position: position, textureSet: campFire));
+                    GameObjectManager.Add(InteractablesFactory.MakeCampfire(position));
                     break;
             }
 

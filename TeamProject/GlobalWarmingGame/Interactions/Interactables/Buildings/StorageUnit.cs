@@ -33,10 +33,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             InstructionTypes = new List<InstructionType>();
             inventory = new Inventory(100f);
-            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", Store));
+            InstructionTypes.Add(new InstructionType("store", "Store", "Store items", onStart: Store));
         }
 
-        private void Store(Colonist colonist)
+        private void Store(IInstructionFollower follower)
         {
             //Open menu to either store or retrieve items
         }

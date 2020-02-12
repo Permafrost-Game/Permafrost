@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Engine;
-using GlobalWarmingGame.Action;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using GlobalWarmingGame.Interactions.Interactables;
+﻿using Engine;
 using Engine.Drawing;
 using Engine.PathFinding;
+using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Enemies
 {
     //add animated sprite instead of aggressive movement
     //add random movement using randomAI class
-    class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
+    public class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
         List<GameObject> colonists;
         GameTime duration;
@@ -60,7 +57,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
 
 
-            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, EnemyAttacked));
+            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onStart: EnemyAttacked));
 
             if (this.Tag == "Robot") { xdifference = 19; ydifference = 16; } else if(this.Tag=="Bear"){ xdifference=16; ydifference = -15; }
 
@@ -74,7 +71,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
-        private void EnemyAttacked(Colonist colonist)
+        private void EnemyAttacked(IInstructionFollower follower)
         {
             EnemyAttacked();
         }

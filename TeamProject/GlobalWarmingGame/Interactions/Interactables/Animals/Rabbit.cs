@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
-    class Rabbit : PassiveAnimal
+    public class Rabbit : PassiveAnimal
     {
         private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 
@@ -22,12 +22,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         {
 
             this.InstructionTypes.Add(
-                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", new ResourceItem(new Food(), 2), Hunt)
+                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onStart: Hunt)
             );
         }
 
-        public void Hunt(Colonist colonist)
+        public void Hunt(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Food(), 2));
             GameObjectManager.Remove(this);
         }
 

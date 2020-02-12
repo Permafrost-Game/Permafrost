@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.Entities;
 using GeonBit.UI;
 
-namespace GlobalWarmingGame.Menus
+namespace GlobalWarmingGame.UI.Menus
 {
     class MainMenu : Entity
     {

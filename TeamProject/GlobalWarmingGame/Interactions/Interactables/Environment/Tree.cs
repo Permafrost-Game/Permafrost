@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Tree : Sprite, IInteractable
+    public class Tree : Sprite, IInteractable
     {
         private bool _choppable;
         private InstructionType chop;
@@ -42,13 +42,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             this.textureTree = textureTree;
             this.textureStump = textureStump;
             choppable = true;
-            chop =new InstructionType("chop", "Chop", "Chop for wood", new ResourceItem(new Wood(), 4), Chop);
+            chop =new InstructionType("chop", "Chop", "Chop for wood", onStart: Chop);
             InstructionTypes.Add(chop);
         }
 
-        private void Chop(Colonist colonist)
+        private void Chop(IInstructionFollower follower)
         {
-            //+Wood
+            follower.Inventory.AddItem(new ResourceItem(new Wood(), 4));
             choppable = false;
             InstructionTypes.Remove(chop);
         }

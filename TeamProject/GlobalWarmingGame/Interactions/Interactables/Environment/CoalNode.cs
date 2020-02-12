@@ -26,11 +26,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         )
         {
             InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", new ResourceItem(new Coal(), 4), Mine));
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine coal", onStart: Mine));
         }
 
-        private void Mine(Colonist colonist)
+        private void Mine(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Coal(), 4));
             //Maybe destory the node or allow 3 more mine operations
         }
     }

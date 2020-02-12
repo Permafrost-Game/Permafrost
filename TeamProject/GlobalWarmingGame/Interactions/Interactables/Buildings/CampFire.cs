@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
+    public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 2), new ResourceItem(new Fibers(), 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);
@@ -37,11 +37,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             TextureGroupIndex = 1;
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("fuel", "Fuel", "Fuel campfire", Fuel)
+                new InstructionType("fuel", "Fuel", "Fuel campfire", onStart: Fuel)
             };
         }
 
-        private void Fuel(Colonist colonist)
+        private void Fuel(IInstructionFollower follower)
         {
         }
     }

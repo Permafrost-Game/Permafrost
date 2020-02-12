@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Bush : Sprite, IInteractable, IUpdatable
+    public class Bush : Sprite, IInteractable, IUpdatable
     {
         private InstructionType forrage;
         private bool _isHarvestable;
@@ -44,17 +44,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         )
         {
             InstructionTypes = new List<InstructionType>();
-            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", new ResourceItem(new Food(), 2), Forrage);
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onStart: Forrage);
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
             InstructionTypes.Add(forrage);
         }
 
-        private void Forrage(Colonist colonist)
+        private void Forrage(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(new Food(), 2));
             //This is tempory and should be replaced by the resource system
-            if(IsHarvestable)
+            if (IsHarvestable)
             {
                 IsHarvestable = false;
                 InstructionTypes.Remove(forrage);
