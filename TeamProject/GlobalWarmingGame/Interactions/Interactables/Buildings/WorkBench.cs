@@ -61,165 +61,57 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftCloth(IInstructionFollower follower)
         {
-            CraftableType cloth = ResourceTypeFactory.MakeCraftable(Craftable.cloth);
-            if (follower.Inventory.CheckContainsList(cloth.CraftingCosts))
-            {
-                foreach (ResourceItem item in cloth.CraftingCosts)
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added cloth" + " cloth: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(cloth, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.cloth);
         }
 
         private void CraftAxe(IInstructionFollower follower)
         {
-            CraftableType axe = ResourceTypeFactory.MakeCraftable(Craftable.axe);
-            if (follower.Inventory.CheckContainsList(axe.CraftingCosts))
-            {
-                foreach (ResourceItem item in axe.CraftingCosts) 
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added axe" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(axe, 1));                
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.axe);
         }
 
         private void CraftBackPack(IInstructionFollower follower)
         {
-            CraftableType backpack = ResourceTypeFactory.MakeCraftable(Craftable.backpack);
-            if (follower.Inventory.CheckContainsList(backpack.CraftingCosts))
-            {
-                foreach (ResourceItem item in backpack.CraftingCosts)
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added backpack" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(backpack, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.backpack);
         }
 
         private void CraftCoat(IInstructionFollower follower)
         {
-            CraftableType coat = ResourceTypeFactory.MakeCraftable(Craftable.coat);
-            if (follower.Inventory.CheckContainsList(coat.CraftingCosts))
-            {
-                foreach (ResourceItem item in coat.CraftingCosts)
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added coat" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(coat, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.coat);
         }
 
         private void CraftBow(IInstructionFollower follower)
         {
-            CraftableType bow = ResourceTypeFactory.MakeCraftable(Craftable.bow);
-            if (follower.Inventory.CheckContainsList(bow.CraftingCosts))
-            {
-                foreach (ResourceItem item in bow.CraftingCosts)
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added bow" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(bow, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.bow);
         }
 
         private void CraftHoe(IInstructionFollower follower)
         {
-            CraftableType hoe = ResourceTypeFactory.MakeCraftable(Craftable.hoe);
-            if (follower.Inventory.CheckContainsList(hoe.CraftingCosts))
-            {
-                foreach (ResourceItem item in hoe.CraftingCosts)
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added hoe" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(hoe, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.hoe);
         }
 
         private void CraftPickaxe(IInstructionFollower follower)
         {
-            CraftableType pickaxe = ResourceTypeFactory.MakeCraftable(Craftable.pickaxe);
-            if (follower.Inventory.CheckContainsList(pickaxe.CraftingCosts))
-            {
-                foreach (ResourceItem item in pickaxe.CraftingCosts)
-                {
-                    follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added pickaxe" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(pickaxe, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            //follower.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.pickaxe);
         }
 
         private void CraftBasicRifle(IInstructionFollower follower)
         {
-            CraftableType basicRifle = ResourceTypeFactory.MakeCraftable(Craftable.basicRifle);
-            if (follower.Inventory.CheckContainsList(basicRifle.CraftingCosts))
+            WorkBenchCrafter(follower, Craftable.basicRifle);
+        }
+
+        private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)
+        {
+            CraftableType craftable = ResourceTypeFactory.MakeCraftable(craftableEnum);
+            if (follower.Inventory.CheckContainsList(craftable.CraftingCosts))
             {
-                foreach (ResourceItem item in basicRifle.CraftingCosts)
+                foreach (ResourceItem item in craftable.CraftingCosts)
                 {
                     follower.Inventory.RemoveItem(item);
                     Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 Console.WriteLine("Added BasicRifle" + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(basicRifle, 1));
+                follower.Inventory.AddItem(new ResourceItem(craftable, 1));
             }
-
             else
             {
                 ResourceNotification.Visible = true;
