@@ -4,7 +4,7 @@ using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -13,8 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class StorageUnit : Sprite, IInteractable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4),
-                                                                                                   new ResourceItem(new Wood(), 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.stone), 4),
+                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 8)};
 
         public List<InstructionType> InstructionTypes { get; }
 

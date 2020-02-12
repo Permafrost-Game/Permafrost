@@ -58,24 +58,7 @@ namespace GlobalWarmingGame
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
-
-        Dictionary<String, Texture2D> icons;
-
-        Texture2D stone;
-        Texture2D apple;
-        Texture2D wood;
-        Texture2D fibers;
-
-        Texture2D axe;
-        Texture2D pickaxe;
-        Texture2D hoe;
-
         Texture2D workBench;
-        Texture2D stoneNode;
-        Texture2D tallGrass;
-  
-        Texture2D tree;
-        Texture2D treeStump;
         Texture2D logo;
        
 
@@ -168,19 +151,11 @@ namespace GlobalWarmingGame
 
                 InteractablesFactory.LoadContent(Content); 
                 
+                ResourceTypeFactory.LoadContent(Content);
                
-                axe = this.Content.Load<Texture2D>(@"textures/icons/axe");
-                pickaxe = this.Content.Load<Texture2D>(@"textures/icons/pickaxe");
-                hoe = this.Content.Load<Texture2D>(@"textures/icons/hoe");
-                stone = this.Content.Load<Texture2D>(@"textures/icons/stone");
-                wood = this.Content.Load<Texture2D>(@"textures/icons/wood");
-                fibers = this.Content.Load<Texture2D>(@"textures/icons/fibers");
-                apple = this.Content.Load<Texture2D>(@"textures/icons/apple");
                 logo = Content.Load<Texture2D>(@"logo");
 
                 Texture2D[] textureArray = new Texture2D[] { this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"), workBench };
-                Texture2D[] iconTextureArray = new Texture2D[] { stone, wood, fibers, apple, axe, pickaxe, hoe };
-                string[] iconStringArray = new string[] { "stone", "wood", "fibers", "food", "axe", "pickaxe", "hoe" };
                 string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
@@ -190,12 +165,7 @@ namespace GlobalWarmingGame
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
 
-                icons = new Dictionary<string, Texture2D>(6);
-
-                for (int i = 0; i < iconStringArray.Length; i++)
-                    icons.Add(iconStringArray[i], iconTextureArray[i]);
-
-                MainUI = new MainUI(icons);
+                MainUI = new MainUI();
 
                 controller = new Controller(camera);
 
@@ -231,7 +201,7 @@ namespace GlobalWarmingGame
                     ProcessSpawnables();
                     //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
                 };
-                CollectiveInventory = new CollectiveInventory(MainUI, icons);
+                CollectiveInventory = new CollectiveInventory(MainUI);
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
             }
@@ -267,7 +237,7 @@ namespace GlobalWarmingGame
 
                 UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI, icons);
+                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
                 MainUI.UpdateMainUI(CollectiveInventory, gameTime);
 
                 //Uncomment this line for a light around the cursor (uses the first item in lightObjects)

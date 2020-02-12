@@ -3,7 +3,7 @@ using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,7 +16,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 2), new ResourceItem(new Fibers(), 1) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 2), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.fibers), 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
