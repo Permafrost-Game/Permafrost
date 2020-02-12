@@ -59,11 +59,6 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
         Texture2D workBench;
-        Texture2D stoneNode;
-        Texture2D tallGrass;
-  
-        Texture2D tree;
-        Texture2D treeStump;
         Texture2D logo;
        
 
