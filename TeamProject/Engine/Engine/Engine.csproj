@@ -50,7 +50,6 @@
     <Compile Include="ContentReader.cs" />
     <Compile Include="Drawing\AnimatedSprite.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="IClickable.cs" />
     <Compile Include="IUpdatable.cs" />
     <Compile Include="Lighting\Light.cs" />
     <Compile Include="Lighting\QuadRenderComponent.cs" />
@@ -71,8 +70,6 @@
     <Compile Include="TileGrid\TileMapParser.cs" />
     <Compile Include="TileGrid\TileSet.cs" />
     <Compile Include="PathFinding\TileCosts.cs" />
-    <Compile Include="Zone.cs" />
-    <Compile Include="ZoneManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

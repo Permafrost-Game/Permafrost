@@ -10,7 +10,6 @@ namespace Engine.TileGrid
     /// </summary>
     public class TileMap : Engine.Drawing.IDrawable, IUpdatable
     {
-
         public Tile[,] Tiles { get; }
 
         private float timeToTempTick;
@@ -91,15 +90,15 @@ namespace Engine.TileGrid
                     current.temperature.Value = (sumTemperature / (count));
 
                     //Try to lower/raise the tile temp to the global temp
-                    if (tile.temperature.Value < ZoneManager.GlobalTemperature)
+                    if (tile.temperature.Value < -5/*ZoneManager.GlobalTemperature*/)
                     {
                         float Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
+                        tile.temperature.SetTemp(Temperature + (-5/*ZoneManager.GlobalTemperature*/ - Temperature) / 8);
                     }
-                    else if (tile.temperature.Value > ZoneManager.GlobalTemperature)
+                    else if (tile.temperature.Value > -5/*ZoneManager.GlobalTemperature*/)
                     {
                         float Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (ZoneManager.GlobalTemperature - Temperature) / 8);
+                        tile.temperature.SetTemp(Temperature + (-5/*ZoneManager.GlobalTemperature*/ - Temperature) / 8);
                     }
                     //Console.WriteLine(tile.temperature.Value);
                 }

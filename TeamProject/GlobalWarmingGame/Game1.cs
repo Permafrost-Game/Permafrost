@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Engine;
+﻿using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
-
-using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions;
-using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Resources;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.UI.Menus;
+using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
-using GlobalWarmingGame.Interactions.Interactables.Environment;
-using GlobalWarmingGame.Interactions.Interactables.Animals;
-using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
+using GlobalWarmingGame.UI.Menus;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
@@ -58,7 +47,6 @@ namespace GlobalWarmingGame
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
-        Texture2D workBench;
         Texture2D logo;
        
 
@@ -134,13 +122,10 @@ namespace GlobalWarmingGame
 
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
-                //                                                  map0/00.csv  //50x50 tilemap
-                //                                                  map1/00.csv  //100x100 tilemap
-                //tileMap = TileMapParser.parseTileMap(@"Content/maps/map1/00.csv", tileSet);
                 GameObjectManager.Init(tileSet);
 
-                ZoneManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
-                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size);
+                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size);
 
                 GameObjectManager.Camera = camera;
             }
@@ -155,7 +140,7 @@ namespace GlobalWarmingGame
                
                 logo = Content.Load<Texture2D>(@"logo");
 
-                Texture2D[] textureArray = new Texture2D[] { this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"), workBench };
+                Texture2D[] textureArray = new Texture2D[] { this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"), null};
                 string[] stringArray = new string[] { "Farm", "Workbench" };
 
                 BuildingManager.AddBuilding(0, "No Building");
@@ -170,7 +155,7 @@ namespace GlobalWarmingGame
                 controller = new Controller(camera);
 
                 ProcessMenuSelection();
-                var c1 = InteractablesFactory.MakeColonist(position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size / 2); 
+                var c1 = InteractablesFactory.MakeColonist(position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size / 2); 
                 
                 Controller.SelectedColonist = c1;
                 GameObjectManager.Add(c1);
@@ -221,7 +206,7 @@ namespace GlobalWarmingGame
                 camera.Update(gameTime);
 
                 GameObjectManager.ZoneMap.Update(gameTime);
-                BuildingManager.UpdateBuildingTemperatures(gameTime, ZoneManager.CurrentZone.TileMap);
+                BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
                 UpdateColonistTemperatures(gameTime);
 
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
@@ -233,9 +218,6 @@ namespace GlobalWarmingGame
 
                 CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
                 MainUI.UpdateMainUI(CollectiveInventory, gameTime);
-
-                //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
-                //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
                 base.Update(gameTime);
             }
@@ -252,13 +234,6 @@ namespace GlobalWarmingGame
                     GameObjectManager.MoveZone(new Vector2(-1, 0));
             }
 
-            //if (gameState == GameState.playing)
-            //{
-            //    if (currentKeyboardState.IsKeyUp(Keys.Escape) && previousKeyboardState.IsKeyDown(Keys.Escape))
-            //        ShowPauseMenu();
-            //}
-
-            //peformanceMonitor.Update(gameTime);
 
             previousKeyboardState = currentKeyboardState;
         }
@@ -477,7 +452,7 @@ namespace GlobalWarmingGame
 
         void ProcessSpawnables()
         {
-            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
+            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - camera.Position;
 
             switch (MainUI.SpawnMenu.SelectedIndex)
             {

@@ -26,7 +26,7 @@ namespace Engine.TileGrid
             this.texture = texture;
             this.size = size;
             this.Walkable = walkable;
-            temperature = new Temperature(ZoneManager.GlobalTemperature);
+            temperature = new Temperature(-5/*ZoneManager.GlobalTemperature*/);//TODO fix this
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -140,7 +140,7 @@ namespace GlobalWarmingGame.UI
                     return o;
                 }
             }
-            return ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position.ToVector2());
+            return GameObjectManager.ZoneMap.GetTileAtPosition(position.ToVector2());
         }
 
     }
