@@ -107,9 +107,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 foreach (ResourceItem item in craftable.CraftingCosts)
                 {
                     follower.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
+                    //Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
-                Console.WriteLine("Added BasicRifle" + " amount: " + 1);
+                //Console.WriteLine("Added "+ craftable.ID + " amount: " + 1);
                 follower.Inventory.AddItem(new ResourceItem(craftable, 1));
             }
             else
