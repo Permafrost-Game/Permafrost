@@ -29,7 +29,6 @@ namespace GlobalWarmingGame
 
         public static Zone CurrentZone { get => zoneTable[zonePos]; }
 
-        
         public static Camera Camera { get; set; }
 
         public static TileMap ZoneMap { get; set; }
@@ -51,7 +50,7 @@ namespace GlobalWarmingGame
         static TileMap LoadMap(Vector2 pos)
         {
             //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 1, yOffset: (int)pos.Y * 1, width: 100, height: 100, tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
         }
 
         public static void Init(TileSet ts)
@@ -82,6 +81,7 @@ namespace GlobalWarmingGame
                 if (zoneTable.ContainsKey(newZonePos))
                 {
                     zonePos = newZonePos;
+                    ZoneMap = LoadMap(newZonePos);
                 }
                 else //if (File.Exists(MapPath(newZonePos)))
                 {
