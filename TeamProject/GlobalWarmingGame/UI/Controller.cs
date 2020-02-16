@@ -133,7 +133,7 @@ namespace GlobalWarmingGame.UI
         /// <returns></returns>
         private static GameObject ObjectClicked(Point position)
         {
-            foreach (GameObject o in GameObjectManager.Interactable)
+            foreach (GameObject o in GameObjectManager.Interactables)
             {
                 if (new Rectangle(o.Position.ToPoint(), o.Size.ToPoint()).Contains(position))
                 {

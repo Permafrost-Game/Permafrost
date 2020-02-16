@@ -37,7 +37,7 @@ namespace GlobalWarmingGame
         {
             zoneTable = new Dictionary<Vector2, Zone>
             {
-                { zonePos, new Zone() }
+                { zonePos, Zone.GenerateZone(seed, ZoneMap) }
             };
         }
 
@@ -67,6 +67,14 @@ namespace GlobalWarmingGame
             return zoneTable.ContainsKey(newZonePos);
         }
 
+        private static void SetZone(Vector2 position)
+        {
+            zonePos = position;
+            ZoneMap = LoadMap(position);
+            Updatables = Filter<IUpdatable>();
+            Drawables = Filter<IDrawable>();
+            Interactables = Filter<IInteractable>();
+        }
         public static void MoveZone(Vector2 direction)
         {
             //if (isZone(direction))
@@ -78,18 +86,12 @@ namespace GlobalWarmingGame
 
                 Vector2 newZonePos = zonePos + direction;
 
-                if (zoneTable.ContainsKey(newZonePos))
+                if (! zoneTable.ContainsKey(newZonePos))
                 {
-                    zonePos = newZonePos;
-                    ZoneMap = LoadMap(newZonePos);
+                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, ZoneMap));                   
                 }
-                else //if (File.Exists(MapPath(newZonePos)))
-                {
-                    zoneTable.Add(newZonePos, new Zone());
-                    ZoneMap = LoadMap(newZonePos);
 
-                    zonePos = newZonePos;
-                }
+                SetZone(newZonePos);
 
                 for (int i = 0; i < colonists.Count(); i++)
                 {
@@ -143,9 +145,9 @@ namespace GlobalWarmingGame
         }
 
         public static List<GameObject> Objects { get => CurrentZone.GameObjects.ToList(); }
-        public static List<IUpdatable> Updatable { get => CurrentZone.Updatables.ToList(); }
-        public static List<IDrawable> Drawable { get => CurrentZone.Drawables.ToList(); }
-        public static List<IInteractable> Interactable { get => CurrentZone.Interactables.ToList(); }
+        public static List<IUpdatable> Updatables { get; private set; } = new List<IUpdatable>();
+        public static List<IDrawable> Drawables { get; private set; } = new List<IDrawable>();
+        public static List<IInteractable> Interactables { get; private set; } = new List<IInteractable>();
 
         /// <summary>
         /// Adds a GameObject
@@ -156,13 +158,13 @@ namespace GlobalWarmingGame
             CurrentZone.GameObjects.Add(gameObject);
 
             if (gameObject is IDrawable d)
-                CurrentZone.Drawables.Add(d);
+                Drawables.Add(d);
 
             if (gameObject is IUpdatable u)
-                CurrentZone.Updatables.Add(u);
+                Updatables.Add(u);
 
             if (gameObject is IInteractable i)
-                CurrentZone.Interactables.Add(i);
+                Interactables.Add(i);
         }
 
         /// <summary>
@@ -174,13 +176,13 @@ namespace GlobalWarmingGame
             CurrentZone.GameObjects.Remove(gameObject);
 
             if (gameObject is IDrawable d)
-                CurrentZone.Drawables.Remove(d);
+                Drawables.Remove(d);
 
             if (gameObject is IUpdatable u)
-                CurrentZone.Updatables.Remove(u);
+                Updatables.Remove(u);
 
             if (gameObject is IInteractable i)
-                CurrentZone.Interactables.Remove(i);
+                Interactables.Remove(i);
         }
 
         /// <summary>
@@ -188,7 +190,7 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> Filter<T>()
+        public static List<T> Filter<T>()
         {
             return CurrentZone.GameObjects.OfType<T>().ToList();
         }

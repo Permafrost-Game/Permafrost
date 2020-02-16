@@ -209,7 +209,7 @@ namespace GlobalWarmingGame
                 BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
                 UpdateColonistTemperatures(gameTime);
 
-                foreach (IUpdatable updatable in GameObjectManager.Updatable)
+                foreach (IUpdatable updatable in GameObjectManager.Updatables)
                     updatable.Update(gameTime);
 
                 controller.Update(gameTime);
@@ -336,7 +336,7 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
+                foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
                     drawable.Draw(spriteBatch);
 
                 spriteBatch.End();
@@ -364,7 +364,7 @@ namespace GlobalWarmingGame
                         transformMatrix: transform
                     );
 
-            foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawable)
+            foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
             {
                 drawable.Draw(spriteBatch);
             }
