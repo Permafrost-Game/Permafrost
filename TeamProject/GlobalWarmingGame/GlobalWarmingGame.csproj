@@ -81,7 +81,7 @@
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
-    <Compile Include="UI\InstructionEvent.cs" />
+    <Compile Include="UI\ButtonHandler.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />

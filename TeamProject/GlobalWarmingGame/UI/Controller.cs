@@ -57,7 +57,7 @@ namespace GlobalWarmingGame.UI
 
                 if (objectClicked != null)
                 {
-                    List<InstructionHandler> options = GerateOptions(objectClicked, SelectedColonist);
+                    List<ButtonHandler> options = GerateOptions(objectClicked, SelectedColonist);
                     if (options != null)
                     {
                         view.CreateInstructionMenu(currentMouseState.Position, options);
@@ -72,22 +72,22 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="objectClicked">the object that was </param>
         /// <returns></returns>
-        private static List<InstructionHandler> GerateOptions(GameObject objectClicked, Colonist colonist)
+        private static List<ButtonHandler<Instruction>> GerateOptions(GameObject objectClicked, Colonist colonist)
         {
-            List<InstructionHandler> options = new List<InstructionHandler>();
-            options.Add(new InstructionHandler(new Instruction(WALK_INSTRUCTION_TYPE, colonist, objectClicked), IssueInstruction));
+            List<ButtonHandler<Instruction>> options = new List<ButtonHandler<Instruction>>();
+            options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, colonist, objectClicked), IssueInstruction));
 
             if(objectClicked is IInteractable)
             {
                 foreach (InstructionType type in ((IInteractable)objectClicked).InstructionTypes)
                 {
-                    options.Add(new InstructionHandler(new Instruction(type, colonist, objectClicked), IssueInstruction));
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(type, colonist, objectClicked), IssueInstruction));
                 }
             }
 
             if (objectClicked is Colonist)
             {
-                options.Add(new InstructionHandler(new Instruction(COLONIST_INSTRUCTION_TYPE, colonist, objectClicked), SelectColonist));
+                options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, colonist, objectClicked), SelectColonist));
             }
 
 

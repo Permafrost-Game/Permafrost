@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.UI
 
         private Panel menu;
 
-        public void CreateInstructionMenu(Point location, List<InstructionHandler> options)
+        public void CreateInstructionMenu(Point location, List<ButtonHandler<T>> options)
         {
             if(menu != null) UserInterface.Active.RemoveEntity(menu);
 
@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.UI
             label.Scale = 0.7f;
             menu.AddChild(label);
             int counter = 0;
-            foreach (InstructionHandler option in options)
+            foreach (ButtonHandler<T> option in options)
             {
                 Button newButton = new Button(option.instruction.Type.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
                 newButton.ButtonParagraph.Scale = 0.5f;
