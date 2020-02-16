@@ -17,27 +17,30 @@ namespace GlobalWarmingGame.UI
 
         private Panel menu;
 
-        public void CreateInstructionMenu(Point location, List<ButtonHandler<T>> options)
+        public void CreateMenu<T>(Point location, List<ButtonHandler<T>> options)
         {
             if(menu != null) UserInterface.Active.RemoveEntity(menu);
 
             menu = new Panel(new Vector2(150, 75 + (options.Count * 30)), PanelSkin.Default, Anchor.TopLeft, location.ToVector2());
             UserInterface.Active.AddEntity(menu);
 
-            Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50));
-            label.Scale = 0.7f;
+            Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50))
+            {
+                Scale = 0.7f
+            };
+
             menu.AddChild(label);
             int counter = 0;
             foreach (ButtonHandler<T> option in options)
             {
-                Button newButton = new Button(option.instruction.Type.Name, ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                Button newButton = new Button(option.Tag.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
                 newButton.ButtonParagraph.Scale = 0.5f;
                 newButton.Padding = Vector2.Zero;
                 menu.AddChild(newButton);
 
                 newButton.OnClick = (Entity btn) =>
                 {
-                    option.action(option.instruction);
+                    option.action(option.Tag);
                     menu.Visible = false;
                 };
                 counter++;

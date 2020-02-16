@@ -57,10 +57,10 @@ namespace GlobalWarmingGame.UI
 
                 if (objectClicked != null)
                 {
-                    List<ButtonHandler> options = GerateOptions(objectClicked, SelectedColonist);
+                    List<ButtonHandler<Instruction>> options = GerateOptions(objectClicked, SelectedColonist);
                     if (options != null)
                     {
-                        view.CreateInstructionMenu(currentMouseState.Position, options);
+                        view.CreateMenu(currentMouseState.Position, options);
                     }
                 }
             }
