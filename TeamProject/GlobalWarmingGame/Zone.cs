@@ -21,21 +21,22 @@ namespace GlobalWarmingGame
             Random rand = new Random(seed);
             foreach (Tile t in tileMap.Tiles)
             {
-                int item = rand.Next(0, 5);
-                switch (item)
-                {
-                    case 0:
-                        GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
-                        break;
-                    case 1:
-                        GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
-                        break;
-                    case 2:
-                        GameObjects.Add(InteractablesFactory.MakeStoneNode(t.Position));
-                        break;
-                    default:
-                        GameObjects.Add(InteractablesFactory.MakeTallGrass(t.Position));
-                        break; 
+                int item = rand.Next(0, 30);
+                if (t.Walkable) {
+                    switch (item)
+                    {
+                        case 0:
+                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                            break;
+                        case 1:
+                            GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
+                            break;
+                        case 2:
+                            GameObjects.Add(InteractablesFactory.MakeStoneNode(t.Position));
+                            break;
+                        default:
+                            break; 
+                    }
                 }
             }
             return new Zone(GameObjects);

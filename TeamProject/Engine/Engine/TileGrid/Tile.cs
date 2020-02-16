@@ -15,7 +15,7 @@ namespace Engine.TileGrid
         public new Vector2 Position { get; }
         public Temperature temperature;
         public bool Heated { get; set; }
-
+        
         ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
         public bool Walkable { get; }

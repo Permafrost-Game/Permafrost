@@ -90,7 +90,8 @@ namespace GlobalWarmingGame
 
                 if (! zoneTable.ContainsKey(newZonePos))
                 {
-                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, ZoneMap));                   
+
+                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, GenerateMap(newZonePos)));                   
                 }
 
                 SetZone(newZonePos);
