@@ -35,10 +35,10 @@ namespace GlobalWarmingGame
 
         static GameObjectManager()
         {
-            zoneTable = new Dictionary<Vector2, Zone>
-            {
-                { zonePos, Zone.GenerateZone(seed, ZoneMap) }
-            };
+            zoneTable = new Dictionary<Vector2, Zone>();
+            Updatables = new List<IUpdatable>();
+            Drawables = new List<IDrawable>();
+            Interactables = new List<IInteractable>();
         }
 
         [Obsolete]
@@ -47,7 +47,7 @@ namespace GlobalWarmingGame
             return string.Format(@"Content/maps/map1/{0}{1}.csv", pos.X, pos.Y);
         }
 
-        static TileMap LoadMap(Vector2 pos)
+        static TileMap GenerateMap(Vector2 pos)
         {
             //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
             return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
@@ -55,12 +55,14 @@ namespace GlobalWarmingGame
 
         public static void Init(TileSet ts)
         {
+            zonePos = Vector2.Zero;
             tileSet = ts;
-            ZoneMap = LoadMap(zonePos);
+            ZoneMap = GenerateMap(zonePos);
             PathFinder.TileMap = ZoneMap;
+            zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap));
         }
 
-        public static bool isZone(Vector2 direction)
+        public static bool IsZone(Vector2 direction)
         {
             Vector2 newZonePos = zonePos + direction;
 
@@ -70,7 +72,7 @@ namespace GlobalWarmingGame
         private static void SetZone(Vector2 position)
         {
             zonePos = position;
-            ZoneMap = LoadMap(position);
+            ZoneMap = GenerateMap(position);
             Updatables = Filter<IUpdatable>();
             Drawables = Filter<IDrawable>();
             Interactables = Filter<IInteractable>();

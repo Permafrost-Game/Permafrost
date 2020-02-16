@@ -119,7 +119,9 @@ namespace GlobalWarmingGame
                 textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
                 textureSet.Add(5, water);
 
+                InteractablesFactory.LoadContent(Content);
 
+                ResourceTypeFactory.LoadContent(Content);
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
                 GameObjectManager.Init(tileSet);
@@ -134,9 +136,7 @@ namespace GlobalWarmingGame
             {
                 //All this code below is for testing and will eventually be replaced.
 
-                InteractablesFactory.LoadContent(Content); 
                 
-                ResourceTypeFactory.LoadContent(Content);
                
                 logo = Content.Load<Texture2D>(@"logo");
 
