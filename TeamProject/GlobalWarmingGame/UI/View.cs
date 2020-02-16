@@ -86,6 +86,8 @@ namespace GlobalWarmingGame.UI
 
                 }
             };
+
+            menu.DontKeepSelection = true;
         }
     }
 }

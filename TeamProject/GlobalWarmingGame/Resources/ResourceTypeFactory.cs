@@ -29,81 +29,81 @@ namespace GlobalWarmingGame.Resources
             ResourceType machineParts = new ResourceType("machineParts", "Machine Parts", "Machine parts", 1f, null); //Needs texture
 
             //Populate resources dictionary
-            resources.Add(Resource.stone, stone);
-            resources.Add(Resource.wood, wood);
-            resources.Add(Resource.fibers, fibers);
-            resources.Add(Resource.food, food);
-            resources.Add(Resource.coal, coal);
-            resources.Add(Resource.leather, leather);
-            resources.Add(Resource.machineParts, machineParts);
+            resources.Add(Resource.Stone, stone);
+            resources.Add(Resource.Wood, wood);
+            resources.Add(Resource.Fibers, fibers);
+            resources.Add(Resource.Food, food);
+            resources.Add(Resource.Coal, coal);
+            resources.Add(Resource.Leather, leather);
+            resources.Add(Resource.MachineParts, machineParts);
 
             //Craftable Type definitions and populate craftables dictionary
             //Axe
             Texture2D axe = contentManger.Load<Texture2D>(@"textures/icons/axe");
-            craftables.Add(Craftable.axe, new CraftableType("axe", "Axe", "An Axe", 5f, axe));
+            craftables.Add(Craftable.Axe, new CraftableType("axe", "Axe", "An Axe", 5f, axe));
             //Hoe
             Texture2D hoe = contentManger.Load<Texture2D>(@"textures/icons/hoe");
-            craftables.Add(Craftable.hoe, new CraftableType("hoe", "Hoe", "A hoe", 5f, hoe));
+            craftables.Add(Craftable.Hoe, new CraftableType("hoe", "Hoe", "A hoe", 5f, hoe));
             //Pickaxe
             Texture2D pickaxe = contentManger.Load<Texture2D>(@"textures/icons/pickaxe");
-            craftables.Add(Craftable.pickaxe, new CraftableType("pickaxe", "Pickaxe", "A Pickaxe", 10f, pickaxe));
+            craftables.Add(Craftable.Pickaxe, new CraftableType("pickaxe", "Pickaxe", "A Pickaxe", 10f, pickaxe));
             //Backpack
-            craftables.Add(Craftable.backpack, new CraftableType("backpack", "Backpack", "A backpack", 2f, null)); //Needs texture
+            craftables.Add(Craftable.Backpack, new CraftableType("backpack", "Backpack", "A backpack", 2f, null)); //Needs texture
             //BasicRifle
-            craftables.Add(Craftable.basicRifle, new CraftableType("basicRifle", "BasicRifle", "A basic rifle", 10f, null)); //Needs texture
+            craftables.Add(Craftable.BasicRifle, new CraftableType("basicRifle", "BasicRifle", "A basic rifle", 10f, null)); //Needs texture
             //Bow
-            craftables.Add(Craftable.bow, new CraftableType("bow", "bow", "A bow with arrows", 5f, null)); //Needs texture
+            craftables.Add(Craftable.Bow, new CraftableType("bow", "bow", "A bow with arrows", 5f, null)); //Needs texture
             //Cloth
-            craftables.Add(Craftable.cloth, new CraftableType("cloth", "Cloth", "A piece of cloth", 1f, null)); //Needs texture
+            craftables.Add(Craftable.Cloth, new CraftableType("cloth", "Cloth", "A piece of cloth", 1f, null)); //Needs texture
             //Coat
-            craftables.Add(Craftable.coat, new CraftableType("coat", "Coat", "A basic coat", 5f, null)); //Needs texture
+            craftables.Add(Craftable.Coat, new CraftableType("coat", "Coat", "A basic coat", 5f, null)); //Needs texture
 
 
             //The crafting costs need to be set after all the resources and craftables types have been created.
             #region Teir 1 crafting costs
             //Axe
-            List<ResourceItem> axeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.wood), 1),
-                                                                                     new ResourceItem(MakeResource(Resource.fibers), 2),
-                                                                                     new ResourceItem(MakeResource(Resource.stone), 1) };
-            craftables[Craftable.axe].CraftingCosts = axeCraftingCosts;
+            List<ResourceItem> axeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 1),
+                                                                                     new ResourceItem(MakeResource(Resource.Fibers), 2),
+                                                                                     new ResourceItem(MakeResource(Resource.Stone), 1) };
+            craftables[Craftable.Axe].CraftingCosts = axeCraftingCosts;
 
             //Hoe
-            List<ResourceItem> hoeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.wood), 1),
-                                                                                     new ResourceItem(MakeResource(Resource.fibers), 2),
-                                                                                     new ResourceItem(MakeResource(Resource.stone), 1) };
-            craftables[Craftable.hoe].CraftingCosts = hoeCraftingCosts;
+            List<ResourceItem> hoeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 1),
+                                                                                     new ResourceItem(MakeResource(Resource.Fibers), 2),
+                                                                                     new ResourceItem(MakeResource(Resource.Stone), 1) };
+            craftables[Craftable.Hoe].CraftingCosts = hoeCraftingCosts;
 
             //Pickaxe
-            List<ResourceItem> pickaxeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.wood), 1),
-                                                                                         new ResourceItem(MakeResource(Resource.fibers), 2),
-                                                                                         new ResourceItem(MakeResource(Resource.stone), 2) };
-            craftables[Craftable.pickaxe].CraftingCosts = pickaxeCraftingCosts;
+            List<ResourceItem> pickaxeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 1),
+                                                                                         new ResourceItem(MakeResource(Resource.Fibers), 2),
+                                                                                         new ResourceItem(MakeResource(Resource.Stone), 2) };
+            craftables[Craftable.Pickaxe].CraftingCosts = pickaxeCraftingCosts;
 
             //Backpack
-            List<ResourceItem> backpackCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeCraftable(Craftable.cloth), 2),
-                                                                                          new ResourceItem(MakeResource(Resource.leather), 5) };
-            craftables[Craftable.backpack].CraftingCosts = backpackCraftingCosts;
+            List<ResourceItem> backpackCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeCraftable(Craftable.Cloth), 2),
+                                                                                          new ResourceItem(MakeResource(Resource.Leather), 5) };
+            craftables[Craftable.Backpack].CraftingCosts = backpackCraftingCosts;
 
             //BasicRifle
-            List<ResourceItem> basicRifleCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.wood), 8),
-                                                                                            new ResourceItem(MakeResource(Resource.leather), 2),
-                                                                                            new ResourceItem(MakeResource(Resource.machineParts), 4) };
-            craftables[Craftable.basicRifle].CraftingCosts = basicRifleCraftingCosts;
+            List<ResourceItem> basicRifleCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 8),
+                                                                                            new ResourceItem(MakeResource(Resource.Leather), 2),
+                                                                                            new ResourceItem(MakeResource(Resource.MachineParts), 4) };
+            craftables[Craftable.BasicRifle].CraftingCosts = basicRifleCraftingCosts;
 
             //Bow
-            List<ResourceItem> bowCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.wood), 4),
-                                                                                     new ResourceItem(MakeResource(Resource.fibers), 6),
-                                                                                     new ResourceItem(MakeResource(Resource.stone), 1) };
-            craftables[Craftable.bow].CraftingCosts = bowCraftingCosts;
+            List<ResourceItem> bowCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 4),
+                                                                                     new ResourceItem(MakeResource(Resource.Fibers), 6),
+                                                                                     new ResourceItem(MakeResource(Resource.Stone), 1) };
+            craftables[Craftable.Bow].CraftingCosts = bowCraftingCosts;
 
             //Cloth
-            List<ResourceItem> clothCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.fibers), 4) };
-            craftables[Craftable.cloth].CraftingCosts = clothCraftingCosts;
+            List<ResourceItem> clothCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Fibers), 4) };
+            craftables[Craftable.Cloth].CraftingCosts = clothCraftingCosts;
 
             //Coat
-            List<ResourceItem> coatCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeCraftable(Craftable.cloth), 4),
-                                                                                      new ResourceItem(MakeResource(Resource.leather), 2) };
-            craftables[Craftable.coat].CraftingCosts = coatCraftingCosts;
+            List<ResourceItem> coatCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeCraftable(Craftable.Cloth), 4),
+                                                                                      new ResourceItem(MakeResource(Resource.Leather), 2) };
+            craftables[Craftable.Coat].CraftingCosts = coatCraftingCosts;
             #endregion
         }
 
@@ -121,23 +121,23 @@ namespace GlobalWarmingGame.Resources
 
 public enum Craftable
 {
-    axe,
-    backpack,
-    basicRifle,
-    bow,
-    cloth,
-    coat,
-    hoe,
-    pickaxe
+    Axe,
+    Backpack,
+    BasicRifle,
+    Bow,
+    Cloth,
+    Coat,
+    Hoe,
+    Pickaxe
 }
 
 public enum Resource
 {
-    stone,
-    wood,
-    fibers,
-    food,
-    coal,
-    leather,
-    machineParts
+    Stone,
+    Wood,
+    Fibers,
+    Food,
+    Coal,
+    Leather,
+    MachineParts
 }

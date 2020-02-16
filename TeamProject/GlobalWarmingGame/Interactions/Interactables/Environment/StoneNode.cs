@@ -30,7 +30,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void Mine(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.stone), 4));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

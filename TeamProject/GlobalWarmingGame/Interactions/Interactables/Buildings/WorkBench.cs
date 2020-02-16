@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.stone), 4), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 8)};
         public Panel ResourceNotification { get; set; }
 
         public List<InstructionType> InstructionTypes { get; }
@@ -61,42 +61,42 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftCloth(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.cloth);
+            WorkBenchCrafter(follower, Craftable.Cloth);
         }
 
         private void CraftAxe(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.axe);
+            WorkBenchCrafter(follower, Craftable.Axe);
         }
 
         private void CraftBackPack(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.backpack);
+            WorkBenchCrafter(follower, Craftable.Backpack);
         }
 
         private void CraftCoat(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.coat);
+            WorkBenchCrafter(follower, Craftable.Coat);
         }
 
         private void CraftBow(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.bow);
+            WorkBenchCrafter(follower, Craftable.Bow);
         }
 
         private void CraftHoe(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.hoe);
+            WorkBenchCrafter(follower, Craftable.Hoe);
         }
 
         private void CraftPickaxe(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.pickaxe);
+            WorkBenchCrafter(follower, Craftable.Pickaxe);
         }
 
         private void CraftBasicRifle(IInstructionFollower follower)
         {
-            WorkBenchCrafter(follower, Craftable.basicRifle);
+            WorkBenchCrafter(follower, Craftable.BasicRifle);
         }
 
         private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)

@@ -147,28 +147,28 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             switch(interactable)
             {
-                case Interactable.Bear:
-                    return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
-                case Interactable.Robot:
-                    return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
-                case Interactable.CampFire:
-                    return new CampFire(position, textureSet["campFire"]);
-                case Interactable.TallGrass:
-                    return new TallGrass(position, textures["tallGrass"]);
-                case Interactable.StoneNode:
-                    return new StoneNode(position, textures["stoneNode"]);
-                case Interactable.WorkBench:
-                    return new WorkBench(position, textures["workBench"]);
-                case Interactable.Tree:
-                    return new Tree(position, textures["tree"], textures["treeStump"]);
-                case Interactable.Bush:
-                    return new Bush(position, textures["bushH"], textures["bushN"]);
-                case Interactable.Rabbit:
-                    return new Rabbit(position, textureSet["rabbit"]);
-                case Interactable.Farm:
-                    return new Farm(position, textures["farm"]);
                 case Interactable.Colonist:
                     return new Colonist(position, textureSet["colonist"]);
+                case Interactable.Farm:
+                    return new Farm(position, textures["farm"]);
+                case Interactable.Rabbit:
+                    return new Rabbit(position, textureSet["rabbit"]);
+                case Interactable.Bush:
+                    return new Bush(position, textures["bushH"], textures["bushN"]);
+                case Interactable.Tree:
+                    return new Tree(position, textures["tree"], textures["treeStump"]);
+                case Interactable.WorkBench:
+                    return new WorkBench(position, textures["workBench"]);
+                case Interactable.StoneNode:
+                    return new StoneNode(position, textures["stoneNode"]);
+                case Interactable.TallGrass:
+                    return new TallGrass(position, textures["tallGrass"]);
+                case Interactable.CampFire:
+                    return new CampFire(position, textureSet["campFire"]);
+                case Interactable.Robot:
+                    return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
+                case Interactable.Bear:
+                    return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
             }

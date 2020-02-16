@@ -53,7 +53,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void Forrage(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.food), 2));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 2));
             //This is tempory and should be replaced by the resource system
             if (IsHarvestable)
             {

@@ -7,6 +7,7 @@ using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI
@@ -44,22 +45,25 @@ namespace GlobalWarmingGame.UI
             view = new View();
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
 
-            view.CreateDropDown("Test", new List<ButtonHandler<string>>
+            view.CreateDropDown("Building", new List<ButtonHandler<string>>
             {
-                new ButtonHandler<string>("Item", testClick )
+                //new ButtonHandler<string>("Item",  )
             });
 
-            view.CreateDropDown("tests", new List<ButtonHandler<string>>
+            List<ButtonHandler<Interactable>> buttonHandlers = new List<ButtonHandler<Interactable>>();
+            foreach (Interactable interactable in Enum.GetValues(typeof (Interactable))) 
             {
-                new ButtonHandler<string>("Item", testClick )
-            });
+                buttonHandlers.Add(new ButtonHandler<Interactable>(interactable, SpawnInteractable));
+            }
+
+            view.CreateDropDown("Spawn", buttonHandlers);
 
         }
 
-
-        private static void testClick(string item)
+        private void SpawnInteractable(Interactable interactable)
         {
-            System.Console.WriteLine(item);
+            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, position));
         }
 
         /// <summary>
@@ -74,7 +78,7 @@ namespace GlobalWarmingGame.UI
 
                 if (objectClicked != null)
                 {
-                    List<ButtonHandler<Instruction>> options = GerateOptions(objectClicked, SelectedColonist);
+                    List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
                     if (options != null)
                     {
                         view.CreateMenu(currentMouseState.Position, options);
@@ -91,7 +95,7 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="objectClicked">the object that was </param>
         /// <returns></returns>
-        private static List<ButtonHandler<Instruction>> GerateOptions(GameObject objectClicked, Colonist colonist)
+        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
         {
             List<ButtonHandler<Instruction>> options = new List<ButtonHandler<Instruction>>();
             options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, colonist, objectClicked), IssueInstruction));

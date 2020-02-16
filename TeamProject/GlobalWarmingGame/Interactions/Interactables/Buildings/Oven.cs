@@ -12,9 +12,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Oven : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.machineParts), 6),
-                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.stone), 4),
-                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 2)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.MachineParts), 6),
+                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4),
+                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 2)};
 
         public List<InstructionType> InstructionTypes { get; }
 
