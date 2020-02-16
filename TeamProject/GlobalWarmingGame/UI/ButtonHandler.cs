@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.UI
 {
-    class InstructionHandler
+    class ButtonHandler<T>
     {
-        public Instruction instruction;
+        public T Tag { get; set; }
 
-        public delegate void Action(Instruction instruction);
+        public delegate void Action(T tag);
 
         public Action action;
 
-        public InstructionHandler(Instruction instruction, Action action)
+        public ButtonHandler(T tag, Action action)
         {
-            this.instruction = instruction;
+            this.Tag = tag;
             this.action = action;
         }
 

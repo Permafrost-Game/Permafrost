@@ -17,6 +17,7 @@ using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame.UI.Menus
 {
+    [Obsolete]
     class MainUI : Entity
     {
         public Panel TopPanel { get; private set; }
