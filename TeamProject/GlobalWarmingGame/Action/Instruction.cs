@@ -50,6 +50,10 @@ namespace GlobalWarmingGame.Action
             return this.Priority.CompareTo(obj.Priority);
         }
 
+        public override string ToString()
+        {
+            return Type.Name;
+        }
 
     }
 }

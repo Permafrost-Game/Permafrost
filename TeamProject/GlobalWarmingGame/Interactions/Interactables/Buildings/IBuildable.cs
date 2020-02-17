@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    interface IBuildable
+    public interface IBuildable
     {
         List<ResourceItem> CraftingCosts { get; }
+
+        void Build();
     }
 }

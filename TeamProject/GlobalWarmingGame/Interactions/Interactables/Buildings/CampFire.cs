@@ -16,7 +16,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 2), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.fibers), 1) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 2), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Fibers), 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
@@ -43,6 +43,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Fuel(IInstructionFollower follower)
         {
+        }
+
+        public void Build()
+        {
+            GameObjectManager.Add(this);
         }
     }
 }

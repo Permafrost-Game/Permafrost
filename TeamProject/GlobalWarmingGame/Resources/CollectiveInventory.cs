@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
+    [Obsolete]
     class CollectiveInventory
     {
         List<GameObject> Colonists { get; set; }
@@ -85,34 +86,34 @@ namespace GlobalWarmingGame.Resources
                 switch (item.Type.ID)
                 {
                     case "food":
-                        mainUI.ItemSlots[0].Texture = ResourceTypeFactory.MakeResource(Resource.food).Texture;
+                        mainUI.ItemSlots[0].Texture = ResourceTypeFactory.MakeResource(Resource.Food).Texture;
                         mainUI.ItemLabels[0].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "wood":
-                        mainUI.ItemSlots[1].Texture = ResourceTypeFactory.MakeResource(Resource.wood).Texture;
+                        mainUI.ItemSlots[1].Texture = ResourceTypeFactory.MakeResource(Resource.Wood).Texture;
                         mainUI.ItemLabels[1].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "stone":
-                        mainUI.ItemSlots[2].Texture = ResourceTypeFactory.MakeResource(Resource.stone).Texture;
+                        mainUI.ItemSlots[2].Texture = ResourceTypeFactory.MakeResource(Resource.Stone).Texture;
                         mainUI.ItemLabels[2].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "fibers":
-                        mainUI.ItemSlots[3].Texture = ResourceTypeFactory.MakeResource(Resource.fibers).Texture;
+                        mainUI.ItemSlots[3].Texture = ResourceTypeFactory.MakeResource(Resource.Fibers).Texture;
                         mainUI.ItemLabels[3].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "axe":
-                        mainUI.ItemSlots[4].Texture = ResourceTypeFactory.MakeCraftable(Craftable.axe).Texture;
+                        mainUI.ItemSlots[4].Texture = ResourceTypeFactory.MakeCraftable(Craftable.Axe).Texture;
                         mainUI.ItemLabels[4].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "pickaxe":
-                        mainUI.ItemSlots[5].Texture = ResourceTypeFactory.MakeCraftable(Craftable.pickaxe).Texture;
+                        mainUI.ItemSlots[5].Texture = ResourceTypeFactory.MakeCraftable(Craftable.Pickaxe).Texture;
                         mainUI.ItemLabels[5].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "hoe":
-                        mainUI.ItemSlots[6].Texture = ResourceTypeFactory.MakeCraftable(Craftable.hoe).Texture;
+                        mainUI.ItemSlots[6].Texture = ResourceTypeFactory.MakeCraftable(Craftable.Hoe).Texture;
                         mainUI.ItemLabels[6].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                 }

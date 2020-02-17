@@ -13,8 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Forge : Sprite, IInteractable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.machineParts), 10),
-                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.stone), 6) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.MachineParts), 10),
+                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 6) };
         public List<InstructionType> InstructionTypes { get; }
 
         public Forge(Vector2 position, Texture2D texture) : base
@@ -36,6 +36,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             //Open craft menu
             //Force the colonist to wait at the station until job is done
+        }
+
+        public void Build()
+        {
+            GameObjectManager.Add(this);
         }
 
         //Other methods for selected crafting recipe
