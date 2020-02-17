@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
+    /// <summary>
+    /// An nice and easy way to create Resource types
+    /// </summary>
     public static class ResourceTypeFactory
     {
         private static Dictionary<Resource, ResourceType> resources;
@@ -107,11 +110,21 @@ namespace GlobalWarmingGame.Resources
             #endregion
         }
 
+        /// <summary>
+        /// Make a Resource Type
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
         public static ResourceType MakeResource(Resource resource)
         {
             return resources[resource];
         }
 
+        /// <summary>
+        /// Make a Craftable Type that extends Resource Type
+        /// </summary>
+        /// <param name="craftable"></param>
+        /// <returns></returns>
         public static CraftableType MakeCraftable(Craftable craftable)
         {
             return craftables[craftable];

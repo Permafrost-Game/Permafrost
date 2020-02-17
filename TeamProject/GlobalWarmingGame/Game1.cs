@@ -57,7 +57,6 @@ namespace GlobalWarmingGame
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
-        Texture2D workBench;
         Texture2D logo;
        
 
@@ -153,13 +152,6 @@ namespace GlobalWarmingGame
                 ResourceTypeFactory.LoadContent(Content);
                
                 logo = Content.Load<Texture2D>(@"logo");
-
-                Texture2D[] textureArray = new Texture2D[] { this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"), workBench };
-                string[] stringArray = new string[] { "Farm", "Workbench" };
-
-                BuildingManager.AddBuilding(0, "No Building");
-                for (int i = 0; i < stringArray.Length; i++)
-                    BuildingManager.AddBuilding(i + 1, stringArray[i], textureArray[i]);
 
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();

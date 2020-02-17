@@ -51,5 +51,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             return inventory.Resources[itemTypeID];
         }
 
+        public void Build(IBuildable storageUnit)
+        {
+            GameObjectManager.Add((GameObject)storageUnit);
+        }
     }
 }

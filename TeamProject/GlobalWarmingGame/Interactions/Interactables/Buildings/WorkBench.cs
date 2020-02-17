@@ -131,5 +131,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
             previousMouseState = currentMouseState;
         }
+
+        public void Build(IBuildable workbench)
+        {
+            GameObjectManager.Add((GameObject)workbench);
+        }
     }
 }

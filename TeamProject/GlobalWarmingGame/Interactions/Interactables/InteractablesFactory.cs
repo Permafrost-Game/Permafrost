@@ -10,6 +10,9 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
+    /// <summary>
+    /// A nice and easy way to create interactables
+    /// </summary>
     public static class InteractablesFactory
     {
         public static Dictionary<string, Texture2D> textures;
@@ -142,7 +145,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
             textures.Add("tallGrass", contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
         }
 
-
+        /// <summary>
+        /// Create an Interable given a Enum and a position
+        /// </summary>
+        /// <param name="interactable"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static IInteractable MakeInteractable(Interactable interactable, Vector2 position)
         {
             switch(interactable)

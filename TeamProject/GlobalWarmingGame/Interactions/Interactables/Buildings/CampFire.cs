@@ -44,5 +44,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         private void Fuel(IInstructionFollower follower)
         {
         }
+
+        public void Build(IBuildable campfire)
+        {
+            GameObjectManager.Add((GameObject)campfire);
+        }
     }
 }

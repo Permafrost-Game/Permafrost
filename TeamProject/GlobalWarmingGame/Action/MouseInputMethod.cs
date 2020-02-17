@@ -195,7 +195,7 @@ namespace GlobalWarmingGame.Action
                         {
                             if (objectClicked == null && tileClicked.Walkable)
                             {
-                                PlaceBuildingHelper(tileClicked);
+                                //PlaceBuildingHelper(tileClicked);
                             }
 
                             Menu.Visible = false;
@@ -206,6 +206,7 @@ namespace GlobalWarmingGame.Action
             }
         }
 
+        /*
         void PlaceBuildingHelper(Tile tileClicked)
         {
             Building buildingDetails = BuildingManager.GetBuilding(buildingId);
@@ -238,7 +239,7 @@ namespace GlobalWarmingGame.Action
             }
 
             mainUI.BuildMenu.SelectedIndex = 0;
-        }
+        }*/
 
         bool CanColonistBuild(List<ResourceItem> buildingCosts)
         {
@@ -267,10 +268,10 @@ namespace GlobalWarmingGame.Action
 
         void PopulateBuildMenu()
         {
-            string[] buildings = BuildingManager.GetBuildingStrings();
+            //string[] buildings = BuildingManager.GetBuildingStrings();
 
-            for (int i = 0; i < buildings.Length; i++)
-                mainUI.BuildMenu.AddItem(buildings[i]);
+            //for (int i = 0; i < buildings.Length; i++)
+            //    mainUI.BuildMenu.AddItem(buildings[i]);
 
             mainUI.BuildMenu.OnValueChange = (Entity e) =>
             {

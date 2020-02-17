@@ -58,5 +58,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             //Use game time to cook the food.
 
         }
+
+        public void Build(IBuildable oven)
+        {
+            GameObjectManager.Add((GameObject)oven);
+        }
     }
 }
