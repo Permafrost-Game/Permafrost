@@ -38,9 +38,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             InstructionTypes = new List<InstructionType>();
 
-            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100));
-            ResourceNotification.Padding = Vector2.Zero;
-            ResourceNotification.Visible = false;
+            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
+            {
+                Padding = Vector2.Zero,
+                Visible = false
+            };
 
             UserInterface.Active.AddEntity(ResourceNotification);
 
@@ -132,9 +134,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             previousMouseState = currentMouseState;
         }
 
-        public void Build(IBuildable workbench)
+        public void Build()
         {
-            GameObjectManager.Add((GameObject)workbench);
+            GameObjectManager.Add(this);
         }
     }
 }

@@ -45,9 +45,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
         }
 
-        public void Build(IBuildable campfire)
+        public void Build()
         {
-            GameObjectManager.Add((GameObject)campfire);
+            GameObjectManager.Add(this);
         }
     }
 }

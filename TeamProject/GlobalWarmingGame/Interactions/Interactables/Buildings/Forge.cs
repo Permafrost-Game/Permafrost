@@ -38,9 +38,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             //Force the colonist to wait at the station until job is done
         }
 
-        public void Build(IBuildable forge)
+        public void Build()
         {
-            GameObjectManager.Add((GameObject)forge);
+            GameObjectManager.Add(this);
         }
 
         //Other methods for selected crafting recipe

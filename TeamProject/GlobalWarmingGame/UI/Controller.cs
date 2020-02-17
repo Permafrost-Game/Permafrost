@@ -169,7 +169,7 @@ namespace GlobalWarmingGame.UI
                 foreach (ResourceItem item in buildingCosts)
                     follower.Inventory.RemoveItem(item);
 
-                building.Build(building);
+                building.Build();
             }
             //Else show notification that the colonist can't craft the building
             constructing = false;

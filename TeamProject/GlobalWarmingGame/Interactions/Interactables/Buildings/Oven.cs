@@ -59,9 +59,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         }
 
-        public void Build(IBuildable oven)
+        public void Build()
         {
-            GameObjectManager.Add((GameObject)oven);
+            GameObjectManager.Add(this);
         }
     }
 }

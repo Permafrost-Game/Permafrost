@@ -11,6 +11,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     {
         List<ResourceItem> CraftingCosts { get; }
 
-        void Build(IBuildable buildable);
+        void Build();
     }
 }

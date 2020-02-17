@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
+    [Obsolete]
     class CollectiveInventory
     {
         List<GameObject> Colonists { get; set; }

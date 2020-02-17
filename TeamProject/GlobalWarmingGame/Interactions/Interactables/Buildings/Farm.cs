@@ -71,9 +71,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
         }
 
-        public void Build(IBuildable farm)
+        public void Build()
         {
-            GameObjectManager.Add((GameObject)farm);
+            GameObjectManager.Add(this);
         }
     }
 }
