@@ -71,26 +71,6 @@ namespace GlobalWarmingGame.UI
         }
 
         /// <summary>
-        /// Delegate method to select the right building
-        /// </summary>
-        /// <param name="buildable"></param>
-        private void SelectBuildable(Interactable interactable)
-        {
-            SelectedBuildable = interactable;
-            constructing = true;
-        }
-
-        /// <summary>
-        /// Delegate method to spawn the right interactable
-        /// </summary>
-        /// <param name="interactable"></param>
-        private void SpawnInteractable(Interactable interactable)
-        {
-            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, position));
-        }
-
-        /// <summary>
         /// Called on a mouse click
         /// </summary>
         private void OnClick()
@@ -153,6 +133,28 @@ namespace GlobalWarmingGame.UI
             return options;
         }
 
+        #region Drop-Down Menu Delegate methods
+        /// <summary>
+        /// Delegate method to select the right building
+        /// </summary>
+        /// <param name="buildable"></param>
+        private void SelectBuildable(Interactable interactable)
+        {
+            SelectedBuildable = interactable;
+            constructing = true;
+        }
+
+        /// <summary>
+        /// Delegate method to spawn the right interactable
+        /// </summary>
+        /// <param name="interactable"></param>
+        private void SpawnInteractable(Interactable interactable)
+        {
+            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
+            //Map the position onto the nearest tile and then get that tiles position
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position).Position));
+        }
+
         /// <summary>
         /// Called when colonist is at the building site and then the building is made visible
         /// </summary>
@@ -172,6 +174,7 @@ namespace GlobalWarmingGame.UI
             //Else show notification that the colonist can't craft the building
             constructing = false;
         }
+        #endregion
 
         /// <summary>
         /// Adds the instruction to the active member of the instruction.
