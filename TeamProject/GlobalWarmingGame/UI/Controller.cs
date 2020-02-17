@@ -1,7 +1,4 @@
 ﻿using Engine;
-using Engine.TileGrid;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
@@ -11,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GlobalWarmingGame.UI
 {
@@ -24,69 +22,31 @@ namespace GlobalWarmingGame.UI
     class Controller : IUpdatable
     {
 
-        private View view;
-
-        /// <summary>The currently selected colonist that instructions will be given</summary>
-        public static Colonist SelectedColonist { get; set; }
-        public static Interactable SelectedBuildable { get; set; }
+        private readonly View view;
 
         /// <summary>Reference to the camera for inverse transforms</summary>
-        private Camera camera;
-
-        /// <summary>Whether the mouse is hovering over a menu</summary>
-        private bool hovering = false;
-
-        private static bool constructing = false;
-        private static IBuildable building;
+        private readonly Camera camera;
 
         private MouseState currentMouseState;
         private MouseState previousMouseState;
-
-        private static readonly InstructionType WALK_INSTRUCTION_TYPE = new InstructionType("walk", "Walk", "Walk here");
-        private static readonly InstructionType COLONIST_INSTRUCTION_TYPE = new InstructionType("selectColonist", "Select", "Selects the colonist");
 
         public Controller(Camera camera)
         {
             this.camera = camera;
             view = new View();
-            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
 
-            //Buildings drop down
-            List<ButtonHandler<Interactable>> BuildingButtonHandlers = new List<ButtonHandler<Interactable>>();
+            AddDropDowns();
 
-            BuildingButtonHandlers.Add(new ButtonHandler<Interactable>(Interactable.CampFire, SelectBuildable));
-            BuildingButtonHandlers.Add(new ButtonHandler<Interactable>(Interactable.Farm, SelectBuildable));
-            BuildingButtonHandlers.Add(new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildable));
-
-            view.CreateDropDown("Building", BuildingButtonHandlers);
-
-            //Spawnables drop down
-            List<ButtonHandler<Interactable>> spawnButtonHandlers = new List<ButtonHandler<Interactable>>();
-            foreach (Interactable interactable in Enum.GetValues(typeof(Interactable)))
-            {
-                spawnButtonHandlers.Add(new ButtonHandler<Interactable>(interactable, SpawnInteractable));
-            }
-
-            view.CreateDropDown("Spawn", spawnButtonHandlers);
         }
 
-        /// <summary>
-        /// Called on a mouse click
-        /// </summary>
-        private void OnClick()
-        {
-            if (!hovering)
-            {
-                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
-                GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
+        #region Instruction Menu
 
-                List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
-                if (options != null)
-                {
-                    view.CreateMenu(currentMouseState.Position, options);
-                }
-            }
-        }
+
+        private static readonly InstructionType WALK_INSTRUCTION_TYPE = new InstructionType("walk", "Walk", "Walk here");
+        private static readonly InstructionType COLONIST_INSTRUCTION_TYPE = new InstructionType("selectColonist", "Select", "Selects the colonist");
+
+        /// <summary>The currently selected colonist that instructions will be given</summary>
+        public static Colonist SelectedColonist { get; set; }
 
         /// <summary>
         /// Takes an input GameObject 
@@ -121,19 +81,65 @@ namespace GlobalWarmingGame.UI
                     building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
                     //If Colonist has the resources build
-                    if (SelectedColonist.Inventory.CheckContainsList(building.CraftingCosts))
+                    if (SelectedColonist.Inventory.ContainsAll(building.CraftingCosts))
                     {
                         InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), onStart: Build);
                         options.Add(new ButtonHandler<Instruction>(new Instruction(construct, colonist, (GameObject)building), IssueInstruction));
                     }
-                    //Else show notification that the colonist can't craft the building
+                    //TODO Else show notification that the colonist can't craft the building
                 }
             }
 
             return options;
         }
 
-        #region Drop-Down Menu Delegate methods
+        /// <summary>
+        /// Adds the instruction to the active member of the instruction.
+        /// </summary>
+        /// <param name="instruction">the instruction to be issued</param>
+        private static void IssueInstruction(Instruction instruction)
+        {
+            instruction.ActiveMember.AddInstruction(instruction, 0);
+        }
+
+        /// <summary>
+        /// Takes the passive member of the instruction and sets that as the active colonist<br>
+        /// This is meant to be used to select a colonist
+        /// </summary>
+        /// <param name="instruction">The instruction that has been selected</param>
+        private static void SelectColonist(Instruction instruction)
+        {
+            SelectedColonist = (Colonist)instruction.PassiveMember;
+        }
+
+
+        #endregion
+
+        #region Drop-Down Menu
+
+        private static bool constructing = false;
+        private static IBuildable building;
+        public static Interactable SelectedBuildable { get; set; }
+
+        /// <summary>
+        /// Adds the Building and Spawn dropdown menus to the view
+        /// </summary>
+        private void AddDropDowns()
+        {
+            //Buildings drop down
+            view.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
+            {
+                new ButtonHandler<Interactable>(Interactable.CampFire,  this.SelectBuildable),
+                new ButtonHandler<Interactable>(Interactable.Farm,      this.SelectBuildable),
+                new ButtonHandler<Interactable>(Interactable.WorkBench, this.SelectBuildable)
+            });
+
+            //Spawnables drop down
+            view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
+                .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractable)).ToList());
+        }
+
+
         /// <summary>
         /// Delegate method to select the right building
         /// </summary>
@@ -164,7 +170,7 @@ namespace GlobalWarmingGame.UI
             List<ResourceItem> buildingCosts = new List<ResourceItem>();
 
             //If Colonist has the resources build
-            if (follower.Inventory.CheckContainsList(buildingCosts))
+            if (follower.Inventory.ContainsAll(buildingCosts))
             {
                 foreach (ResourceItem item in buildingCosts)
                     follower.Inventory.RemoveItem(item);
@@ -176,25 +182,7 @@ namespace GlobalWarmingGame.UI
         }
         #endregion
 
-        /// <summary>
-        /// Adds the instruction to the active member of the instruction.
-        /// </summary>
-        /// <param name="instruction">the instruction to be issued</param>
-        private static void IssueInstruction(Instruction instruction)
-        {
-            instruction.ActiveMember.AddInstruction(instruction, 0);
-        }
-
-        /// <summary>
-        /// Takes the passive member of the instruction and sets that as the active colonist<br>
-        /// This is meant to be used to select a colonist
-        /// </summary>
-        /// <param name="instruction">The instruction that has been selected</param>
-        private static void SelectColonist(Instruction instruction)
-        {
-            SelectedColonist = (Colonist)instruction.PassiveMember;
-        }
-
+        #region Update loop
 
         public void Update(GameTime gameTime)
         {
@@ -204,7 +192,24 @@ namespace GlobalWarmingGame.UI
                 OnClick();
 
             previousMouseState = currentMouseState;
-            hovering = false;
+        }
+
+        /// <summary>
+        /// Called on a mouse click
+        /// </summary>
+        private void OnClick()
+        {
+            if (!view.Hovering)
+            {
+                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
+                GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
+
+                List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
+                if (options != null)
+                {
+                    view.CreateMenu(currentMouseState.Position, options);
+                }
+            }
         }
 
 
@@ -224,6 +229,7 @@ namespace GlobalWarmingGame.UI
             }
             return ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position.ToVector2());
         }
+        #endregion
 
     }
 }

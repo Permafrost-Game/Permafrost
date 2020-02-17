@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public void Hunt(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 2));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             GameObjectManager.Remove(this);
         }
 

@@ -17,7 +17,9 @@ using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame.UI.Menus
 {
-    [Obsolete]
+
+    /*
+     [Obsolete]
     class MainUI : Entity
     {
         public Panel TopPanel { get; private set; }
@@ -65,28 +67,28 @@ namespace GlobalWarmingGame.UI.Menus
             Icon foodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false);
             foodIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(foodIcon);
-            foodIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Food).Texture;
+            foodIcon.Texture = ResourceTypeFactory.GetResource(Resource.Food).Texture;
             foodLabel = new Label("Food Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             foodIcon.AddChild(foodLabel);
 
             Icon woodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(80, 0));
             woodIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(woodIcon);
-            woodIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Wood).Texture;
+            woodIcon.Texture = ResourceTypeFactory.GetResource(Resource.Wood).Texture;
             woodLabel = new Label("Wood Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             woodIcon.AddChild(woodLabel);
 
             Icon stoneIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(160, 0));
             stoneIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(stoneIcon);
-            stoneIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Stone).Texture;
+            stoneIcon.Texture = ResourceTypeFactory.GetResource(Resource.Stone).Texture;
             stoneLabel = new Label("Stone Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             stoneIcon.AddChild(stoneLabel);
 
             Icon fibersIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(240, 0));
             fibersIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(fibersIcon);
-            fibersIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Fibers).Texture;
+            fibersIcon.Texture = ResourceTypeFactory.GetResource(Resource.Fibers).Texture;
             fibersLabel = new Label("Fibers Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             fibersIcon.AddChild(fibersLabel);
 
@@ -157,5 +159,5 @@ namespace GlobalWarmingGame.UI.Menus
                 timeUnitlHealthUpdate = timeToHealthUpdate;
             }
         }
-    }
+    }*/
 }

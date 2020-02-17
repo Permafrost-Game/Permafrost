@@ -14,8 +14,10 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
-    [Obsolete]
-    class CollectiveInventory
+
+    /*
+     [Obsolete]
+     class CollectiveInventory
     {
         List<GameObject> Colonists { get; set; }
         public List<Inventory> ColonistInventories { get; set; }
@@ -131,5 +133,6 @@ namespace GlobalWarmingGame.Resources
             if (CollectiveResources.ContainsKey("fibers"))
                 TotalFibers = CollectiveResources["fibers"].Amount;
         }
-    }
+    }*/
 }
+

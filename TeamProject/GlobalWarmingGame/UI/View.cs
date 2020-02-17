@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using GeonBit.UI;
+﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI
 {
@@ -15,13 +12,18 @@ namespace GlobalWarmingGame.UI
     class View
     {
 
-        private Panel topPanel;
+        private readonly Panel topPanel;
 
         private Panel menu;
 
 
+        public bool Hovering { get; private set; } = false;
+
         public View()
         {
+            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
+            UserInterface.Active.         OnMouseLeave = (Entity e) => { Hovering = false; };
+
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
             {
                 Opacity = 192
@@ -55,6 +57,7 @@ namespace GlobalWarmingGame.UI
                 {
                     option.action(option.Tag);
                     menu.Visible = false;
+                    Hovering = false;
                 };
                 counter++;
             }
@@ -66,10 +69,12 @@ namespace GlobalWarmingGame.UI
             DropDown menu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(250 * topPanel.Children.Count, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
             {
                 DefaultText = label,
-                AutoSetListHeight = true
+                AutoSetListHeight = true,
+                DontKeepSelection = true,
             };
 
-            foreach (ButtonHandler<T> option in options) {
+            foreach (ButtonHandler<T> option in options)
+            {
                 menu.AddItem(option.Tag.ToString());
             }
 
@@ -83,11 +88,9 @@ namespace GlobalWarmingGame.UI
                         option.action(option.Tag);
                         break;
                     }
-
                 }
             };
 
-            menu.DontKeepSelection = true;
         }
     }
 }
