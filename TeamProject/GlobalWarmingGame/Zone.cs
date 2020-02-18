@@ -21,21 +21,43 @@ namespace GlobalWarmingGame
             Random rand = new Random(seed);
             foreach (Tile t in tileMap.Tiles)
             {
-                int item = rand.Next(0, 30);
-                if (t.Walkable) {
-                    switch (item)
+                int item = rand.Next(0, 100);
+                Console.WriteLine(t.type);
+                if (! t.type.Equals("textures/tiles/main_tileset/water")) {
+                    if (t.type.Equals("textures/tiles/main_tileset/Stone"))
                     {
-                        case 0:
-                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
-                            break;
-                        case 1:
-                            GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
-                            break;
-                        case 2:
+                        if (item > 85)
+                        {
                             GameObjects.Add(InteractablesFactory.MakeStoneNode(t.Position));
-                            break;
-                        default:
-                            break; 
+                        }
+                    }
+                    if (t.type.Equals("textures/tiles/main_tileset/Grass"))
+                    {
+                        if (item > 90)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                        }
+                        if (item < 90 && item > 85)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
+                        }
+                        if (item < 10) {
+                            GameObjects.Add(InteractablesFactory.MakeTallGrass(t.Position));
+                        }
+                    }
+                    if (t.type.Equals("textures/tiles/main_tileset/Tundra1"))
+                    {
+                        if (item > 97)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                        }
+                    }
+                    if (t.type.Equals("textures/tiles/main_tileset/Snow"))
+                    {
+                        if (item > 97)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                        }
                     }
                 }
             }

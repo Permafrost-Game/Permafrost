@@ -45,7 +45,7 @@ namespace Engine.TileGrid
 
                         ];
                     //TODO this is test code below - walkable
-                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("Non-Walkable"));
+                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("textures/tiles/main_tileset/water"), texture.Name);
                     
                     
                 }

@@ -110,7 +110,7 @@ namespace GlobalWarmingGame
                 var textureSet = new Dictionary<int, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
-                water.Name = "Non-Walkable";
+                //water.Name = "Non-Walkable";
 
                 textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
                 textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
@@ -125,6 +125,7 @@ namespace GlobalWarmingGame
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
                 GameObjectManager.Init(tileSet);
+
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size);

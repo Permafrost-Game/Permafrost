@@ -10,18 +10,22 @@ namespace Engine.TileGrid
     /// </summary>
     public class Tile : GameObject, Engine.Drawing.IDrawable
     {
+
         private readonly Texture2D texture;
         public Vector2 size { get; }
         public new Vector2 Position { get; }
         public Temperature temperature;
         public bool Heated { get; set; }
         
+        public String type { get; }
         ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
         public bool Walkable { get; }
 
-        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
+        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, String type) : base(position, size)
         {
+            this.type = texture.Name; 
+            
             this.Position = position;
             this.texture = texture;
             this.size = size;
