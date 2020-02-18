@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
     {
         #region Instruction
 

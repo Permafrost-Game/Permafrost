@@ -27,7 +27,7 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns>whether the item can be added</returns>
         public bool AddItem(ResourceItem item)
         {
-            if(CurrentLoad + item.Weight  > Capacity)
+            if(CurrentLoad + item.Weight < Capacity)
             {
                 AddItemUnchecked(item);
                 return true;

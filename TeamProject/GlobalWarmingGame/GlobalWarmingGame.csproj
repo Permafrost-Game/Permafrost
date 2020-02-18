@@ -70,6 +70,7 @@
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="Resources\CraftableType.cs" />
+    <Compile Include="Resources\IStorage.cs" />
     <Compile Include="Resources\ResourceTypeFactory.cs" />
     <Compile Include="UI\Controller.cs" />
     <Compile Include="Game1.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
     <Compile Include="UI\ButtonHandler.cs" />
+    <Compile Include="UI\ItemElement.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />

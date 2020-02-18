@@ -4,6 +4,7 @@ using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -13,30 +14,28 @@ using System.Linq;
 namespace GlobalWarmingGame.UI
 {
     /// <summary>
-    /// The controller class controlls the logic behind the UI<br>
-    /// Communicates with the <see cref="View"/> to display menus<br>
-    /// eg.<br>
-    /// When the user clicks, this class will tell View to create a new menu, view is in charge of the GUI specific logic.<br>
-    /// This class defines what UI needs to exist.
+    /// The controller class controlls the logic behind the UI<br/>
+    /// Communicates with the <see cref="View"/> to display menus<br/>
+    /// eg.<br/>
+    /// When the user clicks, this class will tell View to create a new menu, view is in charge of the GUI specific logic.<br/>
+    /// This class defines what UI needs to exist.<br/>
     /// </summary>
     class Controller : IUpdatable
     {
-
-        private readonly View view;
-
+        
         /// <summary>Reference to the camera for inverse transforms</summary>
         private readonly Camera camera;
 
         private MouseState currentMouseState;
         private MouseState previousMouseState;
 
+        private TimeSpan nextInventoryUpate = new TimeSpan(0L);
+
         public Controller(Camera camera)
         {
             this.camera = camera;
-            view = new View();
 
             AddDropDowns();
-
         }
 
         #region Instruction Menu
@@ -44,6 +43,7 @@ namespace GlobalWarmingGame.UI
 
         private static readonly InstructionType WALK_INSTRUCTION_TYPE = new InstructionType("walk", "Walk", "Walk here");
         private static readonly InstructionType COLONIST_INSTRUCTION_TYPE = new InstructionType("selectColonist", "Select", "Selects the colonist");
+        private static readonly InstructionType VIEW_INVENTORY = new InstructionType("viewInventory", "View Inventory", "Opens the inventory");
 
         /// <summary>The currently selected colonist that instructions will be given</summary>
         public static Colonist SelectedColonist { get; set; }
@@ -53,7 +53,7 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="objectClicked">the object that was </param>
         /// <returns></returns>
-        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
+        private List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
         {
             List<ButtonHandler<Instruction>> options = new List<ButtonHandler<Instruction>>();
 
@@ -73,6 +73,12 @@ namespace GlobalWarmingGame.UI
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, colonist, objectClicked), SelectColonist));
                 }
+
+                if (objectClicked is IStorage)
+                {
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventory));
+                }
+
 
                 //If the colonist is allowed to start constructing a building
                 if (constructing)
@@ -103,6 +109,15 @@ namespace GlobalWarmingGame.UI
         }
 
         /// <summary>
+        /// Adds the instruction to the active member of the instruction.
+        /// </summary>
+        /// <param name="instruction">the instruction to be issued</param>
+        private void ViewInventory(Instruction instruction)
+        {
+            UpdateInventoryMenu(((IStorage)instruction.PassiveMember).Inventory);
+        }
+
+        /// <summary>
         /// Takes the passive member of the instruction and sets that as the active colonist<br>
         /// This is meant to be used to select a colonist
         /// </summary>
@@ -127,7 +142,7 @@ namespace GlobalWarmingGame.UI
         private void AddDropDowns()
         {
             //Buildings drop down
-            view.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
+            View.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
             {
                 new ButtonHandler<Interactable>(Interactable.CampFire,  this.SelectBuildable),
                 new ButtonHandler<Interactable>(Interactable.Farm,      this.SelectBuildable),
@@ -135,7 +150,7 @@ namespace GlobalWarmingGame.UI
             });
 
             //Spawnables drop down
-            view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
+            View.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractable)).ToList());
         }
 
@@ -192,6 +207,12 @@ namespace GlobalWarmingGame.UI
                 OnClick();
 
             previousMouseState = currentMouseState;
+
+            if(nextInventoryUpate <= gameTime.TotalGameTime)
+            {
+
+            }
+
         }
 
         /// <summary>
@@ -199,7 +220,7 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         private void OnClick()
         {
-            if (!view.Hovering)
+            if (!View.Hovering)
             {
                 Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
@@ -207,7 +228,7 @@ namespace GlobalWarmingGame.UI
                 List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
                 if (options != null)
                 {
-                    view.CreateMenu(currentMouseState.Position, options);
+                    View.CreateMenu(currentMouseState.Position, options);
                 }
             }
         }
@@ -230,6 +251,14 @@ namespace GlobalWarmingGame.UI
             return ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position.ToVector2());
         }
         #endregion
+
+
+        internal static void UpdateInventoryMenu(Inventory inventory)
+        {
+            List<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString())).ToList();
+            View.UpdateInventoryMenu(ItemElements);
+
+        }
 
     }
 }
