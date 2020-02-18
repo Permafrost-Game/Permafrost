@@ -4,6 +4,8 @@ using Engine.Drawing;
 using GlobalWarmingGame.Interactions;
 using System.Collections.Generic;
 using System;
+using SimplexNoise;
+
 
 namespace GlobalWarmingGame
 {
@@ -21,42 +23,52 @@ namespace GlobalWarmingGame
             Random rand = new Random(seed);
             foreach (Tile t in tileMap.Tiles)
             {
-                int item = rand.Next(0, 100);
-                Console.WriteLine(t.type);
-                if (! t.type.Equals("textures/tiles/main_tileset/water")) {
+                //int item = rand.Next(0, 100);
+                float value = ((Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 4f) / 255) + (Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 0.1f) / 255)) / 2;
+                if (!t.type.Equals("textures/tiles/main_tileset/water"))
+                {
+
+                    if (t.type.Equals("textures/tiles/main_tileset/Grass"))
+                    {
+                        if (value > 0.80)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                        }
+                        if (value < 0.9 && value > 0.85)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
+                        }
+                        if (value < 0.1)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeTallGrass(t.Position));
+                        }
+                    }
+
                     if (t.type.Equals("textures/tiles/main_tileset/Stone"))
                     {
-                        if (item > 85)
+                        if (value > 0.85)
                         {
                             GameObjects.Add(InteractablesFactory.MakeStoneNode(t.Position));
                         }
                     }
-                    if (t.type.Equals("textures/tiles/main_tileset/Grass"))
-                    {
-                        if (item > 90)
-                        {
-                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
-                        }
-                        if (item < 90 && item > 85)
-                        {
-                            GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
-                        }
-                        if (item < 10) {
-                            GameObjects.Add(InteractablesFactory.MakeTallGrass(t.Position));
-                        }
-                    }
+
                     if (t.type.Equals("textures/tiles/main_tileset/Tundra1"))
                     {
-                        if (item > 97)
+                        if (value > 0.9)
                         {
                             GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
                         }
                     }
                     if (t.type.Equals("textures/tiles/main_tileset/Snow"))
                     {
-                        if (item > 97)
+                        if (value > 0.9)
                         {
                             GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                        }
+
+                        if (rand.Next(0, 10000) == 99)
+                        {
+                            GameObjects.Add(InteractablesFactory.MakeBear(t.Position));
                         }
                     }
                 }

@@ -104,6 +104,9 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="SimplexNoise, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimplexNoise.2.0.0\lib\net45\SimplexNoise.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -753,6 +756,9 @@
     <Content Include="Content\GeonBit.UI\themes\lowres\textures\slider_fancy_md.xml" />
     <Content Include="Content\GeonBit.UI\themes\lowres\textures\white_texture.png" />
     <Content Include="Content\GeonBit.UI\themes\lowres\ThemeData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
