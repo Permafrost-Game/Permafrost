@@ -4934,6 +4934,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/icons/coal.png
 
+#begin textures/icons/colonist.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/colonist.png
+
 #begin textures/icons/fibers.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -8,6 +8,8 @@ namespace GlobalWarmingGame.ResourceItems
 {
     public class Inventory
     {
+        public event EventHandler InventoryChange = delegate { };
+
         public Dictionary<ResourceType, ResourceItem> Resources { get; private set; }
         public float Capacity { get; private set; }
         public float CurrentLoad { get; private set; }
@@ -20,6 +22,7 @@ namespace GlobalWarmingGame.ResourceItems
             CurrentLoad = 0f;
         }
 
+
         /// <summary>
         /// Adds a copy of <paramref name="item"/> to the Inventory if space is available
         /// </summary>
@@ -27,7 +30,7 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns>whether the item can be added</returns>
         public bool AddItem(ResourceItem item)
         {
-            if(CurrentLoad + item.Weight < Capacity)
+            if (CurrentLoad + item.Weight < Capacity)
             {
                 AddItemUnchecked(item);
                 return true;
@@ -54,6 +57,7 @@ namespace GlobalWarmingGame.ResourceItems
             }
                 
             CurrentLoad += item.Weight;
+            InventoryChange.Invoke(this, new EventArgs());
         }
 
 
@@ -65,6 +69,7 @@ namespace GlobalWarmingGame.ResourceItems
                 Resources.Remove(item.ResourceType);
 
             CurrentLoad -= item.Weight;
+            InventoryChange.Invoke(this, new EventArgs());
         }
 
         /// <summary>

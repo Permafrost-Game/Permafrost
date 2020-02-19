@@ -122,7 +122,7 @@ namespace GlobalWarmingGame.UI
         internal static void AddInventory<T>(ButtonHandler<T> buttonHandler, bool visible = false, Texture2D icon = default)
         {
             bool customIcon = icon != default;
-            Icon inventoryButton = new Icon(customIcon ? IconType.None : IconType.Sack, Anchor.AutoInline, 1f, true) ;
+            Icon inventoryButton = new Icon(customIcon ? IconType.None : IconType.Sack, Anchor.BottomLeft, 1f, true, new Vector2(64f * inventories.Count, 0f)) ;
             if(customIcon) inventoryButton.Texture = icon;
 
             bottomPanel.AddChild(inventoryButton);
@@ -131,7 +131,7 @@ namespace GlobalWarmingGame.UI
                 buttonHandler.action(buttonHandler.Tag);
             };
 
-            Panel inventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426))
+            Panel inventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.BottomLeft, new Vector2(-26, 75))
             {
                 Opacity = 192,
                 Visible = visible,
@@ -142,33 +142,44 @@ namespace GlobalWarmingGame.UI
             bottomPanel.AddChild(inventory);
         }
 
-        internal static void UpdateInventoryMenu(int id, List<ItemElement> items)
+        internal static void UpdateInventoryMenu(int id, IEnumerable<ItemElement> items)
         {
-            for (int i = items.Count; i < 24; i++)
-            {
-                items.Add(new ItemElement(null, "0"));
-            }
-
             inventories[id].ClearChildren();
             foreach (ItemElement i in items)
             {
-                Icon slot = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
-                if (i.Texture != null) slot.Texture = i.Texture;
-
-                inventories[id].AddChild(slot);
-                slot.AddChild(new Label(i.Label, Anchor.TopLeft, null, new Vector2(7.9f, -20)));
-
+                inventories[id].AddChild(CreateInventoryElement(i));
             }
 
+            for (int i = inventories[id].Children.Count; i < 24; i++)
+            {
+                inventories[id].AddChild(CreateInventoryElement(new ItemElement(null, "0")));
+            }
         }
 
-        internal static void SetInventoryVisibility(int id, bool visible)
+        private static Entity CreateInventoryElement(ItemElement i)
         {
+            Icon slot = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
+            if (i.Texture != null) slot.Texture = i.Texture;
+
+            
+            slot.AddChild(new Label(i.Label, Anchor.TopLeft, null, new Vector2(7.9f, -20)));
+            return slot;
+        }
+
+
+        internal static void ToggleInventoryMenuVisibility(int id)
+        {
+            bool oldState = inventories[id].Visible;
             foreach (Entity panel in inventories.Values)
             {
                 panel.Visible = false;
             }
-            inventories[id].Visible = visible;
+            inventories[id].Visible = !oldState;
+        }
+
+        internal static void RemoveInventory(int id)
+        {
+            inventories[id].Dispose();
         }
     }
 }

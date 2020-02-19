@@ -162,9 +162,9 @@ namespace GlobalWarmingGame
 
                 //Controller must be created after all starting colonists;
                 controller = new Controller(camera);
-
+                controller.LoadContent(Content);
                 
-                Controller.SelectedColonist = c1;
+                controller.SelectedColonist = c1;
                 
                 ProcessMenuSelection();
 

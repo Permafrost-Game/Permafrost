@@ -6,6 +6,8 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,8 @@ namespace GlobalWarmingGame.UI
     /// </summary>
     class Controller : IUpdatable
     {
+
+        private Texture2D colonistInventoryIcon;
         
         /// <summary>Reference to the camera for inverse transforms</summary>
         private readonly Camera camera;
@@ -29,7 +33,6 @@ namespace GlobalWarmingGame.UI
         private MouseState currentMouseState;
         private MouseState previousMouseState;
 
-        private TimeSpan nextInventoryUpate = new TimeSpan(0L);
         private readonly List<Inventory> openInventories;
 
         public Controller(Camera camera)
@@ -38,10 +41,17 @@ namespace GlobalWarmingGame.UI
             openInventories = new List<Inventory>();
             AddDropDowns();
 
-            UpdateColonists();
-
 
         }
+
+
+        public void LoadContent(ContentManager content)
+        {
+            colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
+            UpdateColonists();
+        }
+
+
 
         public void UpdateColonists()
         {
@@ -52,7 +62,7 @@ namespace GlobalWarmingGame.UI
                     SelectedColonist = colonist;
                 }
 
-                AddInventoryButton(colonist.Inventory);
+                AddInventoryMenu(colonist);
             }
         }
 
@@ -64,7 +74,7 @@ namespace GlobalWarmingGame.UI
         private static readonly InstructionType VIEW_INVENTORY = new InstructionType("viewInventory", "View Inventory", "Opens the inventory");
 
         /// <summary>The currently selected colonist that instructions will be given</summary>
-        public static Colonist SelectedColonist { get; set; }
+        public Colonist SelectedColonist { get; set; }
 
         /// <summary>
         /// Takes an input GameObject 
@@ -90,9 +100,7 @@ namespace GlobalWarmingGame.UI
                 if (objectClicked is Colonist)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, colonist, objectClicked), SelectColonist));
-                }
-
-                if (objectClicked is IStorage)
+                } else if (objectClicked is IStorage)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventory));
                 }
@@ -135,7 +143,7 @@ namespace GlobalWarmingGame.UI
             Inventory inventory = ((IStorage)instruction.PassiveMember).Inventory;
             if (!openInventories.Contains(inventory))
             {
-                AddInventoryButton(inventory);
+                AddInventoryMenu((IStorage)instruction.PassiveMember);
             } else
             {
                 ToggleInventoryVisibility(inventory);
@@ -147,9 +155,10 @@ namespace GlobalWarmingGame.UI
         /// This is meant to be used to select a colonist
         /// </summary>
         /// <param name="instruction">The instruction that has been selected</param>
-        private static void SelectColonist(Instruction instruction)
+        private void SelectColonist(Instruction instruction)
         {
             SelectedColonist = (Colonist)instruction.PassiveMember;
+            ViewInventory(instruction);
         }
 
 
@@ -232,17 +241,6 @@ namespace GlobalWarmingGame.UI
                 OnClick();
 
             previousMouseState = currentMouseState;
-
-            
-
-            if(nextInventoryUpate <= gameTime.TotalGameTime)
-            {
-                foreach (Inventory i in openInventories)
-                {
-                    UpdateInventoryMenu(i);
-                }
-            }
-
         }
 
         /// <summary>
@@ -285,27 +283,47 @@ namespace GlobalWarmingGame.UI
 
         private static void UpdateInventoryMenu(Inventory inventory)
         {
-            List<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString())).ToList();
+            IEnumerable<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString()));
             View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
 
-        private void AddInventoryButton(Inventory inventory)
+        private void AddInventoryMenu(IStorage storage)
         {
-            View.AddInventory(new ButtonHandler<Inventory>(inventory, ToggleInventoryVisibility));
+            if (!openInventories.Contains(storage.Inventory));
+            {
+                Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
+                View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, ToggleInventoryVisibility), icon: icon);
+                openInventories.Add(storage.Inventory);
+                storage.Inventory.InventoryChange += Inventory_InventoryChange;
+                UpdateInventoryMenu(storage.Inventory);
+            }
+        }
+
+        private void RemoveInventoryMenu(Inventory inventory)
+        {
+            if(openInventories.Contains(inventory))
+            {
+                openInventories.Remove(inventory);
+                inventory.InventoryChange -= Inventory_InventoryChange;
+                View.RemoveInventory(inventory.GetHashCode());
+            }
+            
+        }
+
+        /// <summary>
+        /// Event handler for <see cref="Inventory.InventoryChange"/> Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Inventory_InventoryChange(object sender, EventArgs e)
+        {
+            UpdateInventoryMenu((Inventory)sender);
         }
 
         private void ToggleInventoryVisibility(Inventory inventory)
         {
-            if(openInventories.Contains(inventory)) {
-                openInventories.Remove(inventory);
-                View.SetInventoryVisibility(inventory.GetHashCode(), false);
-            } else
-            {
-                openInventories.Add(inventory);
-                View.SetInventoryVisibility(inventory.GetHashCode(), true);
-            }
-        } 
-
+            View.ToggleInventoryMenuVisibility(inventory.GetHashCode());
+        }
 
     }
 }
