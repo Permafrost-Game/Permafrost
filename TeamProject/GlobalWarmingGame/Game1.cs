@@ -156,13 +156,16 @@ namespace GlobalWarmingGame
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
 
-                
-                controller = new Controller(camera);
-
                 Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size / 2);
 
-                Controller.SelectedColonist = c1;
                 GameObjectManager.Add(c1);
+
+                //Controller must be created after all starting colonists;
+                controller = new Controller(camera);
+
+                
+                Controller.SelectedColonist = c1;
+                
                 ProcessMenuSelection();
 
                 /*

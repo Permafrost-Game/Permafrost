@@ -3,6 +3,7 @@ using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +19,7 @@ namespace GlobalWarmingGame.UI
         private static readonly Panel topPanel;
         private static readonly Panel bottomPanel;
         private static Panel menu;
-        private static Panel inventory;
+        private static readonly Dictionary<int, Panel> inventories;
 
         internal static bool Hovering { get; set; } = false;
 
@@ -26,6 +27,8 @@ namespace GlobalWarmingGame.UI
         {
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
             UserInterface.Active.         OnMouseLeave = (Entity e) => { Hovering = false; };
+
+            inventories = new Dictionary<int, Panel>();
 
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -43,21 +46,13 @@ namespace GlobalWarmingGame.UI
                 Visible = true,
             };
 
-            Icon inventoryButton = new Icon(IconType.Sack, Anchor.CenterLeft, 1f, true);
-
-            bottomPanel.AddChild(inventoryButton);
-
-            Panel inventory = CreateInventoryMenu();
-
-            inventoryButton.OnClick = (Entity btn) => { inventory.Visible = !inventory.Visible; };
-
+            //inventories = PrepareInventoryMenu();
 
             UserInterface.Active.AddEntity(bottomPanel);
             #endregion
 
 
         }
-
 
 
         internal static void CreateMenu<T>(Point location, List<ButtonHandler<T>> options)
@@ -123,41 +118,57 @@ namespace GlobalWarmingGame.UI
 
         }
 
-        private static Panel CreateInventoryMenu()
-        {
 
-            inventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426))
-            {
-                Opacity = 192,
-                Visible = true,
+        internal static void AddInventory<T>(ButtonHandler<T> buttonHandler, bool visible = false, Texture2D icon = default)
+        {
+            bool customIcon = icon != default;
+            Icon inventoryButton = new Icon(customIcon ? IconType.None : IconType.Sack, Anchor.AutoInline, 1f, true) ;
+            if(customIcon) inventoryButton.Texture = icon;
+
+            bottomPanel.AddChild(inventoryButton);
+
+            inventoryButton.OnClick = (Entity btn) => {
+                buttonHandler.action(buttonHandler.Tag);
             };
 
-            UpdateInventoryMenu(new List<ItemElement>());
+            Panel inventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426))
+            {
+                Opacity = 192,
+                Visible = visible,
+            };
+
+            inventories.Add(buttonHandler.Tag.GetHashCode(), inventory);
 
             bottomPanel.AddChild(inventory);
-            return inventory;
         }
 
-        internal static void UpdateInventoryMenu(List<ItemElement> items)
+        internal static void UpdateInventoryMenu(int id, List<ItemElement> items)
         {
             for (int i = items.Count; i < 24; i++)
             {
                 items.Add(new ItemElement(null, "0"));
             }
 
-            inventory.ClearChildren();
+            inventories[id].ClearChildren();
             foreach (ItemElement i in items)
             {
                 Icon slot = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
                 if (i.Texture != null) slot.Texture = i.Texture;
 
-                inventory.AddChild(slot);
+                inventories[id].AddChild(slot);
                 slot.AddChild(new Label(i.Label, Anchor.TopLeft, null, new Vector2(7.9f, -20)));
 
             }
 
-            
+        }
 
+        internal static void SetInventoryVisibility(int id, bool visible)
+        {
+            foreach (Entity panel in inventories.Values)
+            {
+                panel.Visible = false;
+            }
+            inventories[id].Visible = visible;
         }
     }
 }

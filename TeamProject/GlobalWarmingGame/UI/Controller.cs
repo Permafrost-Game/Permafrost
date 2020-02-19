@@ -30,12 +30,30 @@ namespace GlobalWarmingGame.UI
         private MouseState previousMouseState;
 
         private TimeSpan nextInventoryUpate = new TimeSpan(0L);
+        private readonly List<Inventory> openInventories;
 
         public Controller(Camera camera)
         {
             this.camera = camera;
-
+            openInventories = new List<Inventory>();
             AddDropDowns();
+
+            UpdateColonists();
+
+
+        }
+
+        public void UpdateColonists()
+        {
+            foreach (Colonist colonist in GameObjectManager.Filter<Colonist>())
+            {
+                if(SelectedColonist == null)
+                {
+                    SelectedColonist = colonist;
+                }
+
+                AddInventoryButton(colonist.Inventory);
+            }
         }
 
         #region Instruction Menu
@@ -114,7 +132,14 @@ namespace GlobalWarmingGame.UI
         /// <param name="instruction">the instruction to be issued</param>
         private void ViewInventory(Instruction instruction)
         {
-            UpdateInventoryMenu(((IStorage)instruction.PassiveMember).Inventory);
+            Inventory inventory = ((IStorage)instruction.PassiveMember).Inventory;
+            if (!openInventories.Contains(inventory))
+            {
+                AddInventoryButton(inventory);
+            } else
+            {
+                ToggleInventoryVisibility(inventory);
+            }
         }
 
         /// <summary>
@@ -208,9 +233,14 @@ namespace GlobalWarmingGame.UI
 
             previousMouseState = currentMouseState;
 
+            
+
             if(nextInventoryUpate <= gameTime.TotalGameTime)
             {
-
+                foreach (Inventory i in openInventories)
+                {
+                    UpdateInventoryMenu(i);
+                }
             }
 
         }
@@ -253,12 +283,29 @@ namespace GlobalWarmingGame.UI
         #endregion
 
 
-        internal static void UpdateInventoryMenu(Inventory inventory)
+        private static void UpdateInventoryMenu(Inventory inventory)
         {
             List<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString())).ToList();
-            View.UpdateInventoryMenu(ItemElements);
-
+            View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
+
+        private void AddInventoryButton(Inventory inventory)
+        {
+            View.AddInventory(new ButtonHandler<Inventory>(inventory, ToggleInventoryVisibility));
+        }
+
+        private void ToggleInventoryVisibility(Inventory inventory)
+        {
+            if(openInventories.Contains(inventory)) {
+                openInventories.Remove(inventory);
+                View.SetInventoryVisibility(inventory.GetHashCode(), false);
+            } else
+            {
+                openInventories.Add(inventory);
+                View.SetInventoryVisibility(inventory.GetHashCode(), true);
+            }
+        } 
+
 
     }
 }
