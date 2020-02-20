@@ -1,10 +1,8 @@
-﻿using Engine;
-using GeonBit.UI;
+﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI
@@ -54,15 +52,29 @@ namespace GlobalWarmingGame.UI
 
         }
 
+        internal static void Initialize(ContentManager content)
+        {
+            //UserInterface.Initialize(content, "hd");
+        }
+
+        internal static void Update(GameTime gameTime)
+        {
+            UserInterface.Active.Update(gameTime);
+        }
+        internal static void Draw(SpriteBatch spriteBatch)
+        {
+            UserInterface.Active.Draw(spriteBatch);
+        }
+
 
         internal static void CreateMenu<T>(Point location, List<ButtonHandler<T>> options)
         {
             if (menu != null) UserInterface.Active.RemoveEntity(menu);
 
-            menu = new Panel(new Vector2(150, 75 + (options.Count * 30)), PanelSkin.Default, Anchor.TopLeft, location.ToVector2());
+            menu = new Panel(new Vector2(150f, 75f + (options.Count * 30f)), PanelSkin.Default, Anchor.TopLeft, location.ToVector2());
             UserInterface.Active.AddEntity(menu);
 
-            Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500, 50))
+            Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500f, 50f))
             {
                 Scale = 0.7f
             };
@@ -71,7 +83,7 @@ namespace GlobalWarmingGame.UI
             int counter = 0;
             foreach (ButtonHandler<T> option in options)
             {
-                Button newButton = new Button(option.Tag.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(125, 25), new Vector2(0, (counter + 1) * 30));
+                Button newButton = new Button(option.Tag.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(125f, 25f), new Vector2(0f, (counter + 1) * 30f));
                 newButton.ButtonParagraph.Scale = 0.5f;
                 newButton.Padding = Vector2.Zero;
                 menu.AddChild(newButton);
@@ -89,7 +101,7 @@ namespace GlobalWarmingGame.UI
 
         internal static void CreateDropDown<T>(string label, List<ButtonHandler<T>> options)
         {
-            DropDown menu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(250 * topPanel.Children.Count, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
+            DropDown menu = new DropDown(new Vector2(225f, 75f), Anchor.CenterLeft, new Vector2(250f * topPanel.Children.Count, 4f), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
             {
                 DefaultText = label,
                 AutoSetListHeight = true,
@@ -131,7 +143,7 @@ namespace GlobalWarmingGame.UI
                 buttonHandler.action(buttonHandler.Tag);
             };
 
-            Panel inventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.BottomLeft, new Vector2(-26, 75))
+            Panel inventory = new Panel(new Vector2(282f, 400f), PanelSkin.Simple, Anchor.BottomLeft, new Vector2(-26f, 75f))
             {
                 Opacity = 192,
                 Visible = visible,
@@ -162,7 +174,7 @@ namespace GlobalWarmingGame.UI
             if (i.Texture != null) slot.Texture = i.Texture;
 
             
-            slot.AddChild(new Label(i.Label, Anchor.TopLeft, null, new Vector2(7.9f, -20)));
+            slot.AddChild(new Label(i.Label, Anchor.TopLeft, null, new Vector2(7.9f, -20f)));
             return slot;
         }
 
@@ -179,7 +191,10 @@ namespace GlobalWarmingGame.UI
 
         internal static void RemoveInventory(int id)
         {
+            bottomPanel.RemoveChild(inventories[id]);
             inventories[id].Dispose();
+            inventories.Remove(id);
+            
         }
     }
 }

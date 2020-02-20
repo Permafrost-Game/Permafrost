@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GeonBit.UI;
 
 namespace GlobalWarmingGame.UI
 {
@@ -22,47 +23,65 @@ namespace GlobalWarmingGame.UI
     /// When the user clicks, this class will tell View to create a new menu, view is in charge of the GUI specific logic.<br/>
     /// This class defines what UI needs to exist.<br/>
     /// </summary>
-    class Controller : IUpdatable
+    static class Controller
     {
 
-        private Texture2D colonistInventoryIcon;
+        private static Texture2D colonistInventoryIcon;
         
-        /// <summary>Reference to the camera for inverse transforms</summary>
-        private readonly Camera camera;
 
-        private MouseState currentMouseState;
-        private MouseState previousMouseState;
+        private static MouseState currentMouseState;
+        private static MouseState previousMouseState;
 
-        private readonly List<Inventory> openInventories;
+        private static readonly List<Inventory> openInventories;
 
-        public Controller(Camera camera)
+        static Controller()
         {
-            this.camera = camera;
             openInventories = new List<Inventory>();
-            AddDropDowns();
-
-
+            
+            GameObjectManager.ObjectAdded += ObjectAddedEvent;
+            GameObjectManager.ObjectRemoved += ObjectRemovedEvent;
         }
 
-
-        public void LoadContent(ContentManager content)
+        public static void LoadContent(ContentManager content)
         {
+            View.Initialize(content);
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
-            UpdateColonists();
+
+            AddDropDowns();
         }
 
 
 
-        public void UpdateColonists()
+        public static void UpdateColonist()
         {
+            openInventories.Clear();
             foreach (Colonist colonist in GameObjectManager.Filter<Colonist>())
             {
-                if(SelectedColonist == null)
+                if (SelectedColonist == null)
                 {
                     SelectedColonist = colonist;
                 }
 
                 AddInventoryMenu(colonist);
+            }
+        }
+        public static void ObjectAddedEvent(object sender, GameObject GameObject)
+        {
+            if(GameObject is Colonist)
+            {
+                if (SelectedColonist == null)
+                {
+                    SelectedColonist = (Colonist)GameObject;
+                }
+                AddInventoryMenu((Colonist) GameObject);
+            }
+        }
+
+        public static void ObjectRemovedEvent(object sender, GameObject GameObject)
+        {
+            if (GameObject is Colonist)
+            {
+                RemoveInventoryMenu((Colonist)GameObject);
             }
         }
 
@@ -74,14 +93,14 @@ namespace GlobalWarmingGame.UI
         private static readonly InstructionType VIEW_INVENTORY = new InstructionType("viewInventory", "View Inventory", "Opens the inventory");
 
         /// <summary>The currently selected colonist that instructions will be given</summary>
-        public Colonist SelectedColonist { get; set; }
+        public static Colonist SelectedColonist { get; set; }
 
         /// <summary>
         /// Takes an input GameObject 
         /// </summary>
         /// <param name="objectClicked">the object that was </param>
         /// <returns></returns>
-        private List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
+        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
         {
             List<ButtonHandler<Instruction>> options = new List<ButtonHandler<Instruction>>();
 
@@ -138,7 +157,7 @@ namespace GlobalWarmingGame.UI
         /// Adds the instruction to the active member of the instruction.
         /// </summary>
         /// <param name="instruction">the instruction to be issued</param>
-        private void ViewInventory(Instruction instruction)
+        private static void ViewInventory(Instruction instruction)
         {
             Inventory inventory = ((IStorage)instruction.PassiveMember).Inventory;
             if (!openInventories.Contains(inventory))
@@ -155,7 +174,7 @@ namespace GlobalWarmingGame.UI
         /// This is meant to be used to select a colonist
         /// </summary>
         /// <param name="instruction">The instruction that has been selected</param>
-        private void SelectColonist(Instruction instruction)
+        private static void SelectColonist(Instruction instruction)
         {
             SelectedColonist = (Colonist)instruction.PassiveMember;
             ViewInventory(instruction);
@@ -169,18 +188,19 @@ namespace GlobalWarmingGame.UI
         private static bool constructing = false;
         private static IBuildable building;
         public static Interactable SelectedBuildable { get; set; }
+        public static Camera Camera { get => GameObjectManager.Camera; }
 
         /// <summary>
         /// Adds the Building and Spawn dropdown menus to the view
         /// </summary>
-        private void AddDropDowns()
+        private static void AddDropDowns()
         {
             //Buildings drop down
             View.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
             {
-                new ButtonHandler<Interactable>(Interactable.CampFire,  this.SelectBuildable),
-                new ButtonHandler<Interactable>(Interactable.Farm,      this.SelectBuildable),
-                new ButtonHandler<Interactable>(Interactable.WorkBench, this.SelectBuildable)
+                new ButtonHandler<Interactable>(Interactable.CampFire,  SelectBuildable),
+                new ButtonHandler<Interactable>(Interactable.Farm,      SelectBuildable),
+                new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildable)
             });
 
             //Spawnables drop down
@@ -193,7 +213,7 @@ namespace GlobalWarmingGame.UI
         /// Delegate method to select the right building
         /// </summary>
         /// <param name="buildable"></param>
-        private void SelectBuildable(Interactable interactable)
+        private static void SelectBuildable(Interactable interactable)
         {
             SelectedBuildable = interactable;
             constructing = true;
@@ -203,9 +223,9 @@ namespace GlobalWarmingGame.UI
         /// Delegate method to spawn the right interactable
         /// </summary>
         /// <param name="interactable"></param>
-        private void SpawnInteractable(Interactable interactable)
+        private static void SpawnInteractable(Interactable interactable)
         {
-            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
+            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - Camera.Position;
             //Map the position onto the nearest tile and then get that tiles position
             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position).Position));
         }
@@ -233,24 +253,31 @@ namespace GlobalWarmingGame.UI
 
         #region Update loop
 
-        public void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
+            View.Update(gameTime);
             currentMouseState = Mouse.GetState();
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
                 OnClick();
 
             previousMouseState = currentMouseState;
+
+        }
+
+        public static void Draw(SpriteBatch spriteBatch)
+        {
+            View.Draw(spriteBatch);
         }
 
         /// <summary>
         /// Called on a mouse click
         /// </summary>
-        private void OnClick()
+        private static void OnClick()
         {
             if (!View.Hovering)
             {
-                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
+                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
                 List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
@@ -287,9 +314,9 @@ namespace GlobalWarmingGame.UI
             View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
 
-        private void AddInventoryMenu(IStorage storage)
+        private static void AddInventoryMenu(IStorage storage)
         {
-            if (!openInventories.Contains(storage.Inventory));
+            if (!openInventories.Contains(storage.Inventory))
             {
                 Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
                 View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, ToggleInventoryVisibility), icon: icon);
@@ -299,13 +326,13 @@ namespace GlobalWarmingGame.UI
             }
         }
 
-        private void RemoveInventoryMenu(Inventory inventory)
+        private static void RemoveInventoryMenu(IStorage storage)
         {
-            if(openInventories.Contains(inventory))
+            if(openInventories.Contains(storage.Inventory))
             {
-                openInventories.Remove(inventory);
-                inventory.InventoryChange -= Inventory_InventoryChange;
-                View.RemoveInventory(inventory.GetHashCode());
+                openInventories.Remove(storage.Inventory);
+                storage.Inventory.InventoryChange -= Inventory_InventoryChange;
+                View.RemoveInventory(storage.Inventory.GetHashCode());
             }
             
         }
@@ -315,12 +342,12 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Inventory_InventoryChange(object sender, EventArgs e)
+        private static void Inventory_InventoryChange(object sender, EventArgs e)
         {
             UpdateInventoryMenu((Inventory)sender);
         }
 
-        private void ToggleInventoryVisibility(Inventory inventory)
+        private static void ToggleInventoryVisibility(Inventory inventory)
         {
             View.ToggleInventoryMenuVisibility(inventory.GetHashCode());
         }

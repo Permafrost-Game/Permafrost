@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Engine;
+﻿using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
-
-using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions;
-using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Resources;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-
 using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.UI.Menus;
+using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
-using GlobalWarmingGame.Interactions.Interactables.Environment;
-using GlobalWarmingGame.Interactions.Interactables.Animals;
-using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
+using GlobalWarmingGame.UI.Menus;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
@@ -33,17 +22,13 @@ namespace GlobalWarmingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        //SelectionManager selectionManager;
-        Controller controller;
 
         TileSet tileSet;
-        // TileMap tileMap;
 
         Camera camera;
 
         MainMenu MainMenu;
         PauseMenu PauseMenu;
-        //CollectiveInventory CollectiveInventory;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
@@ -79,7 +64,7 @@ namespace GlobalWarmingGame
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, "hd");
-            
+
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
@@ -146,6 +131,7 @@ namespace GlobalWarmingGame
             //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
+                Controller.LoadContent(Content);
 
                 InteractablesFactory.LoadContent(Content); 
                 
@@ -160,11 +146,8 @@ namespace GlobalWarmingGame
 
                 GameObjectManager.Add(c1);
 
-                //Controller must be created after all starting colonists;
-                controller = new Controller(camera);
-                controller.LoadContent(Content);
                 
-                controller.SelectedColonist = c1;
+                
                 
                 ProcessMenuSelection();
 
@@ -212,7 +195,6 @@ namespace GlobalWarmingGame
         protected override void Update(GameTime gameTime)
         {
             UserInterface.Active.Update(gameTime);
-
             ShowMainMenu();
             ShowPauseMenu();
             ShowMainUI();
@@ -229,15 +211,10 @@ namespace GlobalWarmingGame
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
-                controller.Update(gameTime);
+                Controller.Update(gameTime);
 
                 UpdateColonistTemperatures(gameTime);
-
-                //CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
                 //MainUI.UpdateMainUI(CollectiveInventory, gameTime);
-
-                //Uncomment this line for a light around the cursor (uses the first item in lightObjects)
-                //lightObjects[0].Position = Vector2.Transform(Mouse.GetState().Position.ToVector2(), camera.InverseTransform);
 
                 base.Update(gameTime);
             }
@@ -369,7 +346,8 @@ namespace GlobalWarmingGame
                 spriteBatch.End();
             }
 
-            UserInterface.Active.Draw(spriteBatch);
+            Controller.Draw(spriteBatch);
+            
 
             base.Draw(gameTime);
         }

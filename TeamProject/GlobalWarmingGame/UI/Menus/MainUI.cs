@@ -17,7 +17,6 @@ using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame.UI.Menus
 {
-
     /*
      [Obsolete]
     class MainUI : Entity
@@ -45,25 +44,25 @@ namespace GlobalWarmingGame.UI.Menus
         public MainUI()
         {
             //Top Panel
-            TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
             {
-                Opacity = 192
-            };
+                TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
+                {
+                    Opacity = 192
+                };
 
-            BuildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
-            {
-                DefaultText = "Buildings",
-                AutoSetListHeight = true
-            };
-            TopPanel.AddChild(BuildMenu);
+                BuildMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(0, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
+                {
+                    DefaultText = "Buildings",
+                    AutoSetListHeight = true
+                };
+                TopPanel.AddChild(BuildMenu);
 
-            SpawnMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(250, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
-            {
-                DefaultText = "Spawn",
-                AutoSetListHeight = true
-            };
-            TopPanel.AddChild(SpawnMenu);
-
+                SpawnMenu = new DropDown(new Vector2(225, 75), Anchor.CenterLeft, new Vector2(250, 4), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
+                {
+                    DefaultText = "Spawn",
+                    AutoSetListHeight = true
+                };
+                TopPanel.AddChild(SpawnMenu);
             Icon foodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false);
             foodIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(foodIcon);
@@ -96,38 +95,40 @@ namespace GlobalWarmingGame.UI.Menus
             TopPanel.AddChild(HealthPanel);
 
             UserInterface.Active.AddEntity(TopPanel);
+        }
 
             //Bottom Panel
-            BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter)
             {
-                Opacity = 192
-            };
+                BottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter)
+                {
+                    Opacity = 192
+                };
 
-            Icon collectiveInventoryButton = new Icon(IconType.Sack, Anchor.CenterLeft, 1f, true);
-            BottomPanel.AddChild(collectiveInventoryButton);
+                Icon collectiveInventoryButton = new Icon(IconType.Sack, Anchor.CenterLeft, 1f, true);
+                BottomPanel.AddChild(collectiveInventoryButton);
 
-            Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426))
-            {
-                Opacity = 192,
-                Visible = open
-            };
-            BottomPanel.AddChild(collectiveInventory);
+                Panel collectiveInventory = new Panel(new Vector2(282, 400), PanelSkin.Simple, Anchor.TopLeft, new Vector2(-26, -426))
+                {
+                    Opacity = 192,
+                    Visible = open
+                };
+                BottomPanel.AddChild(collectiveInventory);
 
-            collectiveInventoryButton.OnClick = (Entity btn) => { open = !open; collectiveInventory.Visible = open; };
+                collectiveInventoryButton.OnClick = (Entity btn) => { open = !open; collectiveInventory.Visible = open; };
 
-            ItemSlots = new Icon[24];
-            ItemLabels = new Label[ItemSlots.Length];
-            for (int i = 0; i < ItemSlots.Length; i++)
-            {
-                ItemSlots[i] = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
-                collectiveInventory.AddChild(ItemSlots[i]);
+                ItemSlots = new Icon[24];
+                ItemLabels = new Label[ItemSlots.Length];
+                for (int i = 0; i < ItemSlots.Length; i++)
+                {
+                    ItemSlots[i] = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
+                    collectiveInventory.AddChild(ItemSlots[i]);
 
-                ItemLabels[i] = new Label("0", Anchor.TopLeft, null, new Vector2(7.9f,-20));
-                ItemSlots[i].AddChild(ItemLabels[i]);                
+                    ItemLabels[i] = new Label("0", Anchor.TopLeft, null, new Vector2(7.9f, -20));
+                    ItemSlots[i].AddChild(ItemLabels[i]);
+                }
+
+                UserInterface.Active.AddEntity(BottomPanel);
             }
-
-            UserInterface.Active.AddEntity(BottomPanel);
-
             TopPanel.Visible = false;
             BottomPanel.Visible = false;
         }

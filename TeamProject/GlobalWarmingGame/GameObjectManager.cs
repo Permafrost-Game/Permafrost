@@ -1,18 +1,14 @@
 ﻿using Engine;
 using Engine.TileGrid;
-using Engine.Drawing;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
-using PermaFrost;
-using System.Collections;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using IDrawable = Engine.Drawing.IDrawable;
 using Zone = PermaFrost.Zone;
-using Engine.PathFinding;
-using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame
 {
@@ -26,6 +22,10 @@ namespace GlobalWarmingGame
         readonly static IDictionary<Vector2, Zone> zoneTable;
         static Zone zone;
         static TileSet tileSet;
+
+        public static event EventHandler<GameObject> ObjectAdded = delegate { };
+        public static event EventHandler<GameObject> ObjectRemoved = delegate { };
+
         public static Camera Camera { get; set; }
 
         public static TileMap ZoneMap { get => zone.tileMap; }
@@ -154,6 +154,7 @@ namespace GlobalWarmingGame
         public static void Add(GameObject gameObject)
         {
             zone.GameObjects.Add(gameObject);
+            
 
             if (gameObject is IDrawable d)
                 zone.Drawables.Add(d);
@@ -166,6 +167,8 @@ namespace GlobalWarmingGame
 
             if (gameObject is IInteractable i)
                 zone.Interactables.Add(i);
+
+            ObjectAdded.Invoke(null, gameObject);
         }
 
         /// <summary>
@@ -187,6 +190,8 @@ namespace GlobalWarmingGame
 
             if (gameObject is IInteractable i)
                 zone.Interactables.Remove(i);
+
+            ObjectRemoved.Invoke(null, gameObject);
         }
 
         /// <summary>
@@ -196,7 +201,7 @@ namespace GlobalWarmingGame
         /// <returns></returns>
         public static IEnumerable<T> Filter<T>()
         {
-            return zone.GameObjects.OfType<T>().ToList();
+            return zone.GameObjects.OfType<T>();
         }
 
         /// <summary>
