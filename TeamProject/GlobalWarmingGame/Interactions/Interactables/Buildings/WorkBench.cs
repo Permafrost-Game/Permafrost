@@ -1,12 +1,12 @@
 ﻿
 using Engine;
+using Engine.Drawing;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.Craftables;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,10 +15,13 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class WorkBench : InteractableGameObject, IBuildable, IUpdatable
+    public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Stone(), 4), new ResourceItem(new Wood(), 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 8)};
         public Panel ResourceNotification { get; set; }
+
+        public List<InstructionType> InstructionTypes { get; }
+
         MouseState currentMouseState;
         MouseState previousMouseState;
 
@@ -30,197 +33,92 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "WorkBench",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
-            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100));
-            ResourceNotification.Padding = Vector2.Zero;
-            ResourceNotification.Visible = false;
+            InstructionTypes = new List<InstructionType>();
+
+            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
+            {
+                Padding = Vector2.Zero,
+                Visible = false
+            };
 
             UserInterface.Active.AddEntity(ResourceNotification);
 
             Label label = new Label("Not Enough Resources", Anchor.Center);
             ResourceNotification.AddChild(label);
 
-            InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", CraftCloth));
-            InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", CraftAxe));
-            InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", CraftBackPack));
-            InstructionTypes.Add(new InstructionType("craftcoat", "Coat", "Craft coat", CraftCoat));
-            InstructionTypes.Add(new InstructionType("craftbow", "Bow", "Craft bow", CraftBow));
-            InstructionTypes.Add(new InstructionType("crafthoe", "Hoe", "Craft hoe", CraftHoe));
-            InstructionTypes.Add(new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", CraftPickaxe));
-            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", CraftBasicRifle));
+            InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", onStart: CraftCloth));
+            InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", onStart: CraftAxe));
+            InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", onStart: CraftBackPack));
+            InstructionTypes.Add(new InstructionType("craftcoat", "Coat", "Craft coat", onStart: CraftCoat));
+            InstructionTypes.Add(new InstructionType("craftbow", "Bow", "Craft bow", onStart: CraftBow));
+            InstructionTypes.Add(new InstructionType("crafthoe", "Hoe", "Craft hoe", onStart: CraftHoe));
+            InstructionTypes.Add(new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", onStart: CraftPickaxe));
+            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", onStart: CraftBasicRifle));
         }
 
         //TODO Make the tier one crafting items be children of a common parent which can be used to reduce code.
 
-        private void CraftCloth(Colonist colonist)
+        private void CraftCloth(IInstructionFollower follower)
         {
-            Cloth cloth = new Cloth();
-            if (colonist.Inventory.CheckContainsList(cloth.CraftingCosts))
-            {
-                foreach (ResourceItem item in cloth.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added cloth" + " cloth: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(cloth, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Cloth);
         }
 
-        private void CraftAxe(Colonist colonist)
+        private void CraftAxe(IInstructionFollower follower)
         {
-            Axe axe = new Axe();
-            if (colonist.Inventory.CheckContainsList(axe.CraftingCosts))
-            {
-                foreach (ResourceItem item in axe.CraftingCosts) 
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added axe" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(axe, 1));                
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Axe);
         }
 
-        private void CraftBackPack(Colonist colonist)
+        private void CraftBackPack(IInstructionFollower follower)
         {
-            Backpack backpack = new Backpack();
-            if (colonist.Inventory.CheckContainsList(backpack.CraftingCosts))
-            {
-                foreach (ResourceItem item in backpack.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added backpack" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(backpack, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Backpack);
         }
 
-        private void CraftCoat(Colonist colonist)
+        private void CraftCoat(IInstructionFollower follower)
         {
-            Coat coat = new Coat();
-            if (colonist.Inventory.CheckContainsList(coat.CraftingCosts))
-            {
-                foreach (ResourceItem item in coat.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added coat" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(coat, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Coat);
         }
 
-        private void CraftBow(Colonist colonist)
+        private void CraftBow(IInstructionFollower follower)
         {
-            Bow bow = new Bow();
-            if (colonist.Inventory.CheckContainsList(bow.CraftingCosts))
-            {
-                foreach (ResourceItem item in bow.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added bow" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(bow, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Bow);
         }
 
-        private void CraftHoe(Colonist colonist)
+        private void CraftHoe(IInstructionFollower follower)
         {
-            Hoe hoe = new Hoe();
-            if (colonist.Inventory.CheckContainsList(hoe.CraftingCosts))
-            {
-                foreach (ResourceItem item in hoe.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added hoe" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(hoe, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Hoe);
         }
 
-        private void CraftPickaxe(Colonist colonist)
+        private void CraftPickaxe(IInstructionFollower follower)
         {
-            Pickaxe pickaxe = new Pickaxe();
-            if (colonist.Inventory.CheckContainsList(pickaxe.CraftingCosts))
-            {
-                foreach (ResourceItem item in pickaxe.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added pickaxe" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(pickaxe, 1));
-            }
-
-            else
-            {
-                ResourceNotification.Visible = true;
-            }
-            colonist.Goals.Clear();
+            WorkBenchCrafter(follower, Craftable.Pickaxe);
         }
 
-        private void CraftBasicRifle(Colonist colonist)
+        private void CraftBasicRifle(IInstructionFollower follower)
         {
-            BasicRifle basicRifle = new BasicRifle();
-            if (colonist.Inventory.CheckContainsList(basicRifle.CraftingCosts))
-            {
-                foreach (ResourceItem item in basicRifle.CraftingCosts)
-                {
-                    colonist.Inventory.RemoveItem(item);
-                    Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
-                }
-                Console.WriteLine("Added BasicRifle" + " amount: " + 1);
-                colonist.Inventory.AddItem(new ResourceItem(basicRifle, 1));
-            }
+            WorkBenchCrafter(follower, Craftable.BasicRifle);
+        }
 
+        private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)
+        {
+            CraftableType craftable = ResourceTypeFactory.MakeCraftable(craftableEnum);
+            if (follower.Inventory.CheckContainsList(craftable.CraftingCosts))
+            {
+                foreach (ResourceItem item in craftable.CraftingCosts)
+                {
+                    follower.Inventory.RemoveItem(item);
+                    //Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
+                }
+                //Console.WriteLine("Added "+ craftable.ID + " amount: " + 1);
+                follower.Inventory.AddItem(new ResourceItem(craftable, 1));
+            }
             else
             {
                 ResourceNotification.Visible = true;
             }
-            colonist.Goals.Clear();
+            //follower.Goals.Clear();
         }
 
         public void Update(GameTime gameTime)
@@ -234,6 +132,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
 
             previousMouseState = currentMouseState;
+        }
+
+        public void Build()
+        {
+            GameObjectManager.Add(this);
         }
     }
 }

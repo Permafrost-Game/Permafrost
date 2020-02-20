@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using System.Collections.Generic;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Menus;
+using GlobalWarmingGame.UI.Menus;
 
 namespace GlobalWarmingGame.Action
 {
@@ -21,6 +21,7 @@ namespace GlobalWarmingGame.Action
     /// <summary>
     /// This class manages the selection and instruction of interactable <see cref="GameObject"/>s using mouse input
     /// </summary>
+    [Obsolete]
     class MouseInputMethod : SelectionInputMethod, IUpdatable
     {
         readonly Camera camera;
@@ -54,6 +55,7 @@ namespace GlobalWarmingGame.Action
             this.currentInstruction = currentInstruction;
             this.mainUI = mainUI;
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
+
 
             PopulateBuildMenu();
         }
@@ -100,9 +102,9 @@ namespace GlobalWarmingGame.Action
                     button1.OnClick = (Entity btn) =>
                     {
                         if (objectClicked != null)
-                            currentInstruction.ActiveMember.Goals.Enqueue(objectClicked.Position);
+                            ((Colonist)currentInstruction.ActiveMember).Goals.Enqueue(objectClicked.Position);
                         else
-                            currentInstruction.ActiveMember.Goals.Enqueue(tileClicked.Position);
+                            ((Colonist)currentInstruction.ActiveMember).Goals.Enqueue(tileClicked.Position);
 
                         Menu.Visible = false;
                         CraftingMenu.Visible = false;
@@ -124,6 +126,7 @@ namespace GlobalWarmingGame.Action
 
                                 button2.OnClick = (Entity btn) =>
                                 {
+                                    currentInstruction.PassiveMember = objectClicked;
                                     UpdateInstruction(instructionType, (IInteractable)objectClicked);
                                     Menu.Visible = false;
                                     CraftingMenu.Visible = false;
@@ -168,7 +171,7 @@ namespace GlobalWarmingGame.Action
                                     }
                                 };
                             }
-                        }                       
+                        }
                     }
 
                     Button button3 = new Button("Do Nothing", ButtonSkin.Default, Anchor.Center, new Vector2(125, 25), new Vector2(0, 60));
@@ -192,7 +195,7 @@ namespace GlobalWarmingGame.Action
                         {
                             if (objectClicked == null && tileClicked.Walkable)
                             {
-                                PlaceBuildingHelper(tileClicked);
+                                //PlaceBuildingHelper(tileClicked);
                             }
 
                             Menu.Visible = false;
@@ -203,6 +206,7 @@ namespace GlobalWarmingGame.Action
             }
         }
 
+        /*
         void PlaceBuildingHelper(Tile tileClicked)
         {
             Building buildingDetails = BuildingManager.GetBuilding(buildingId);
@@ -235,11 +239,11 @@ namespace GlobalWarmingGame.Action
             }
 
             mainUI.BuildMenu.SelectedIndex = 0;
-        }
+        }*/
 
         bool CanColonistBuild(List<ResourceItem> buildingCosts)
         {
-            Colonist colonist = currentInstruction.ActiveMember;
+            IInstructionFollower colonist = currentInstruction.ActiveMember;
             bool build = false;
 
             if (colonist.Inventory.CheckContainsList(buildingCosts))
@@ -264,10 +268,10 @@ namespace GlobalWarmingGame.Action
 
         void PopulateBuildMenu()
         {
-            string[] buildings = BuildingManager.GetBuildingStrings();
+            //string[] buildings = BuildingManager.GetBuildingStrings();
 
-            for (int i = 0; i < buildings.Length; i++)
-                mainUI.BuildMenu.AddItem(buildings[i]);
+            //for (int i = 0; i < buildings.Length; i++)
+            //    mainUI.BuildMenu.AddItem(buildings[i]);
 
             mainUI.BuildMenu.OnValueChange = (Entity e) =>
             {
@@ -289,6 +293,7 @@ namespace GlobalWarmingGame.Action
             };
         }
 
+        [Obsolete]
         void UpdateInstruction(InstructionType type, IInteractable interactable)
         {
             currentInstruction.Type = type;
@@ -298,8 +303,8 @@ namespace GlobalWarmingGame.Action
 
             else
             {
-                currentInstruction.PassiveMember = interactable;
-                currentInstruction.ActiveMember.AddInstruction(currentInstruction);
+                currentInstruction.PassiveMember = (GameObject)interactable;
+                ((Colonist)currentInstruction.ActiveMember).AddInstruction(currentInstruction);
                 currentInstruction = new Instruction(currentInstruction.ActiveMember);
             }
         }

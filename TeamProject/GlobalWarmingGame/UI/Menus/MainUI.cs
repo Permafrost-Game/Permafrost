@@ -15,8 +15,9 @@ using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
 
-namespace GlobalWarmingGame.Menus
+namespace GlobalWarmingGame.UI.Menus
 {
+    [Obsolete]
     class MainUI : Entity
     {
         public Panel TopPanel { get; private set; }
@@ -39,7 +40,7 @@ namespace GlobalWarmingGame.Menus
 
         bool open;
 
-        public MainUI(Dictionary<string, Texture2D> icons)
+        public MainUI()
         {
             //Top Panel
             TopPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -64,28 +65,28 @@ namespace GlobalWarmingGame.Menus
             Icon foodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false);
             foodIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(foodIcon);
-            foodIcon.Texture = icons["food"];
+            foodIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Food).Texture;
             foodLabel = new Label("Food Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             foodIcon.AddChild(foodLabel);
 
             Icon woodIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(80, 0));
             woodIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(woodIcon);
-            woodIcon.Texture = icons["wood"];
+            woodIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Wood).Texture;
             woodLabel = new Label("Wood Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             woodIcon.AddChild(woodLabel);
 
             Icon stoneIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(160, 0));
             stoneIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(stoneIcon);
-            stoneIcon.Texture = icons["stone"];
+            stoneIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Stone).Texture;
             stoneLabel = new Label("Stone Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             stoneIcon.AddChild(stoneLabel);
 
             Icon fibersIcon = new Icon(IconType.None, Anchor.CenterRight, 1f, false, new Vector2(240, 0));
             fibersIcon.Size = new Vector2(32f, 32f);
             TopPanel.AddChild(fibersIcon);
-            fibersIcon.Texture = icons["fibers"];
+            fibersIcon.Texture = ResourceTypeFactory.MakeResource(Resource.Fibers).Texture;
             fibersLabel = new Label("Fibers Counter", Anchor.CenterRight, null, new Vector2(15, -7));
             fibersIcon.AddChild(fibersLabel);
 

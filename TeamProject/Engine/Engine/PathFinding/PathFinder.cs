@@ -106,8 +106,8 @@ namespace Engine.PathFinding
                 }
             }
 
-            //Search failed return null
-            return null;
+            //Search failed thow exception
+            throw new PathFindingPathException(goal, $"Goal: \"{goal}\" isnt reachable");
         }
 
         /// <summary>

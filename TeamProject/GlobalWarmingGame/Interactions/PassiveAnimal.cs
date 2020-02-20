@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    abstract class PassiveAnimal: AnimatedSprite, IInteractable, IPathFindable
+    public abstract class PassiveAnimal: AnimatedSprite, IInteractable, IPathFindable
     {
         public Queue<Vector2> Goals { get; set; }
         public Queue<Vector2> Path { get; set; }

@@ -2,7 +2,7 @@
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Menus;
+using GlobalWarmingGame.UI.Menus;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Resources
 {
+    [Obsolete]
     class CollectiveInventory
     {
         List<GameObject> Colonists { get; set; }
@@ -29,16 +30,16 @@ namespace GlobalWarmingGame.Resources
         readonly float timeBetweenUpdate = 500f;
         float timeUntilUpdate;
 
-        public CollectiveInventory(MainUI mainUI, Dictionary<String, Texture2D> icons)
+        public CollectiveInventory(MainUI mainUI)
         {
             Colonists = new List<GameObject>();
             ColonistInventories = new List<Inventory>();
             CollectiveResources = new Dictionary<string, ResourceItem>();
 
-            BuildCollectiveInventory(mainUI, icons);
+            BuildCollectiveInventory(mainUI);
         }
 
-        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI, Dictionary<String, Texture2D> icons)
+        public void UpdateCollectiveInventory(GameTime gameTime, MainUI mainUI)
         {
             timeUntilUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -48,13 +49,13 @@ namespace GlobalWarmingGame.Resources
                 ColonistInventories.Clear();
                 CollectiveResources.Clear();
 
-                BuildCollectiveInventory(mainUI, icons);
+                BuildCollectiveInventory(mainUI);
 
                 timeUntilUpdate = timeBetweenUpdate;
             }
         }
 
-        void BuildCollectiveInventory(MainUI mainUI, Dictionary<String, Texture2D> icons)
+        void BuildCollectiveInventory(MainUI mainUI)
         {
             TotalFood = 0;
             CollectiveCapacity = 0f;
@@ -85,34 +86,34 @@ namespace GlobalWarmingGame.Resources
                 switch (item.Type.ID)
                 {
                     case "food":
-                        mainUI.ItemSlots[0].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[0].Texture = ResourceTypeFactory.MakeResource(Resource.Food).Texture;
                         mainUI.ItemLabels[0].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "wood":
-                        mainUI.ItemSlots[1].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[1].Texture = ResourceTypeFactory.MakeResource(Resource.Wood).Texture;
                         mainUI.ItemLabels[1].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "stone":
-                        mainUI.ItemSlots[2].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[2].Texture = ResourceTypeFactory.MakeResource(Resource.Stone).Texture;
                         mainUI.ItemLabels[2].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
 
                     case "fibers":
-                        mainUI.ItemSlots[3].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[3].Texture = ResourceTypeFactory.MakeResource(Resource.Fibers).Texture;
                         mainUI.ItemLabels[3].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "axe":
-                        mainUI.ItemSlots[4].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[4].Texture = ResourceTypeFactory.MakeCraftable(Craftable.Axe).Texture;
                         mainUI.ItemLabels[4].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "pickaxe":
-                        mainUI.ItemSlots[5].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[5].Texture = ResourceTypeFactory.MakeCraftable(Craftable.Pickaxe).Texture;
                         mainUI.ItemLabels[5].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                     case "hoe":
-                        mainUI.ItemSlots[6].Texture = icons[item.Type.ID];
+                        mainUI.ItemSlots[6].Texture = ResourceTypeFactory.MakeCraftable(Craftable.Hoe).Texture;
                         mainUI.ItemLabels[6].Text = CollectiveResources[item.Type.ID].Amount.ToString();
                         break;
                 }

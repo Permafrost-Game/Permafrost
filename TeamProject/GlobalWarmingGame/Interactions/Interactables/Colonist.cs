@@ -3,50 +3,34 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using GlobalWarmingGame.Action;
-using Engine;
-using GlobalWarmingGame;
-using Engine.TileGrid;
-using GlobalWarmingGame.ResourceItems;
 using System.Threading.Tasks;
-using GlobalWarmingGame.Resources.ResourceTypes;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    class Colonist : AnimatedSprite, IPathFindable, IInteractable, IUpdatable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable
     {
+        #region Instruction
 
         public List<InstructionType> InstructionTypes { get; }
-        public Inventory Inventory { get; }
         private Queue<Instruction> instructions;
+        public Inventory Inventory { get; }
 
+        #endregion
+
+        #region Combat
         public float Health { get; set; }
         public int attackSpeed { get; set; }
-        public string Name { get; private set; }
         public float AttackPower { get; set; }
         public float attackRange { get; set; }
         public float MaxHealth { get; private set; }
-        public Temperature Temperature { get; set; } = new Temperature(38);
-        private readonly float CoreBodyTemperature = 38;
-        public int UpperComfortRange { get; private set; } = 40;
-        public int LowerComfortRange { get; private set; } = 15;
-        
+        public bool ColonistDead { get; set; } = false;
 
-        public Boolean colonistDead = false;
-
-
-        private static readonly float Base_Consumption_Rate = 60000f;
-        private float timeUntillFoodTick;
-        private float timeUntillTemperature = 2000f;
-        private float timeToTemperature;
-        private float timeUntilTemperatureUpdate = 2000f;
-        private float timeToTemperatureUpdate;
-        private bool _inCombat  = false;
-        
+        private bool _inCombat = false;
         public bool inCombat
         {
             get { return _isAttacking; }
@@ -57,28 +41,49 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 {
                     TextureGroupIndex = 0;
                 }
-                
+
             }
         }
-        private bool _isAttacking  = false;
-        public bool isAttacking {
+        private bool _isAttacking = false;
+        public bool isAttacking
+        {
             get { return _isAttacking; }
-            set { _isAttacking = value;
+            set
+            {
+                _isAttacking = value;
                 isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
                 TextureGroupIndex = _isAttacking ? 1 : 0;
 
             }
         }
+        #endregion
 
-        #region IPathFindable
+        #region Temperature
+
+        public Temperature Temperature { get; set; } = new Temperature(38);
+        private readonly float CoreBodyTemperature = 38;
+        public int UpperComfortRange { get; private set; } = 40;
+        public int LowerComfortRange { get; private set; } = 15;
+        #endregion
+
+        #region Food
+        private static readonly float BASE_FOOD_CONSUMPTION = 60000f;
+        private float timeUntillFoodTick;
+        private float timeUntillTemperature = 2000f;
+        private float timeToTemperature;
+        private float timeUntilTemperatureUpdate = 2000f;
+        private float timeToTemperatureUpdate;
+        #endregion
+
+        #region PathFinding
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
         public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
         public float Speed { get; set; }
         #endregion
 
 
-        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity) : base
+        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity = 100) : base
         (
             position: position,
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
@@ -99,21 +104,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Health = MaxHealth;
             Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
-            timeUntillFoodTick = Base_Consumption_Rate;
+            timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
             timeToTemperature = timeUntillTemperature;
             timeToTemperatureUpdate = timeUntilTemperatureUpdate;
 
             instructions = new Queue<Instruction>();
-            InstructionTypes = new List<InstructionType>
-            {
-                new InstructionType("select", "Select Colonist", "Selects this colonist")
-            };
+            InstructionTypes = new List<InstructionType>();
+            
         }
 
         internal void setDead()
         {
             this.Rotation = 1.5f;
-            colonistDead = true;
+            ColonistDead = true;
 
             #region Start 2 Seconds Delay for 'Animation'
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
@@ -128,6 +131,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions.Enqueue(instruction);
         }
 
+
+
         public void OnGoalComplete(Vector2 completedGoal)
         {
             if (instructions.Count > 0 &&
@@ -136,19 +141,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Count != 0)
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Act(this);
+                currentInstruction.Type.Start(this);
 
-                if (currentInstruction.Type.ResourceItem != null)
-                    Inventory.AddItem(currentInstruction.Type.ResourceItem);
+                //if (currentInstruction.Type.ResourceItem != null)
+                //    Inventory.AddItem(currentInstruction.Type.ResourceItem);
 
                 instructions.Dequeue();
             }
         }
 
-        public Boolean isColonistDead()
-        {
-            return colonistDead;
-        }
 
         public override void Update(GameTime gameTime)
         {
@@ -159,7 +160,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             Vector2 delta = position1 - this.Position;
 
-           
+
             if (delta.Equals(Vector2.Zero))
             {
                 if (!isAttacking)
@@ -173,7 +174,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 isAnimated = true;
                 TextureGroupIndex = 2;
                 SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                
+
             }
 
             if (Goals.Count == 0 && instructions.Count > 0)
@@ -217,13 +218,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if ((timeUntillFoodTick * foodFormula) < 0)
             {
                 FoodTick();
-                timeUntillFoodTick = Base_Consumption_Rate;
+                timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
             }
         }
         private void FoodTick()
         {
             //If colonist doesn't have food on them, they are starving -1 health
-            ResourceItem food = new ResourceItem(new Food(), 1);
+            ResourceItem food = new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 1);
             if (!Inventory.RemoveItem(food))
             {
                 //TODO uncomment
@@ -261,8 +262,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
+
+        public void AddInstruction(Instruction instruction, int priority)
+        {
+            instructions.Enqueue(instruction);
+        }
         #endregion
 
     }
 }
-

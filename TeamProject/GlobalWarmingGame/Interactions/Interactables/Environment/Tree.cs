@@ -1,14 +1,15 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class Tree : InteractableGameObject
+    public class Tree : Sprite, IInteractable
     {
         private bool _choppable;
         private InstructionType chop;
@@ -24,6 +25,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             }
         }
 
+        public List<InstructionType> InstructionTypes { get; }
+
         public Tree(Vector2 position, Texture2D textureTree, Texture2D textureStump) : base
         (
             position: position,
@@ -32,20 +35,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             rotationOrigin: new Vector2(0, 0),
             tag: "Tree",
             depth: 0.7f,
-            texture: textureTree,
-            instructionTypes: new List<InstructionType>()
+            texture: textureTree
         )
         {
+            InstructionTypes = new List<InstructionType>();
             this.textureTree = textureTree;
             this.textureStump = textureStump;
             choppable = true;
-            chop =new InstructionType("chop", "Chop", "Chop for wood", new ResourceItem(new Wood(), 4), Chop);
+            chop =new InstructionType("chop", "Chop", "Chop for wood", onStart: Chop);
             InstructionTypes.Add(chop);
         }
 
-        private void Chop(Colonist colonist)
+        private void Chop(IInstructionFollower follower)
         {
-            //+Wood
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 4));
             choppable = false;
             InstructionTypes.Remove(chop);
         }

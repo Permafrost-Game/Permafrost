@@ -1,8 +1,9 @@
 ﻿using Engine;
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,9 +11,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class Farm : InteractableGameObject, IUpdatable, IBuildable
+    public class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(new Wood(), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 4)};
+
+        public List<InstructionType> InstructionTypes { get; }
 
         private InstructionType plant;
         private InstructionType harvest;
@@ -28,24 +31,25 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             rotationOrigin: new Vector2(0, 0),
             tag: "Farm",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
-            plant = new InstructionType("plant", "Plant", "Plant", Plant);
-            harvest = new InstructionType("harvest", "Harvest", "Harvest", new ResourceItem(new Food(), 10), Harvest);
+            InstructionTypes = new List<InstructionType>();
+            plant = new InstructionType("plant", "Plant", "Plant", onStart: Plant);
+            harvest = new InstructionType("harvest", "Harvest", "Harvest", onStart: Harvest);
             timeUntilGrown = 20000f;
             InstructionTypes.Add(plant);
         }
 
-        private void Harvest(Colonist colonist)
+        private void Harvest(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 10));
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }
 
-        private void Plant(Colonist colonist)
+        private void Plant(IInstructionFollower follower)
         {
             //Plant wheat seeds
             InstructionTypes.Remove(plant);
@@ -65,6 +69,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     timeUntilGrown = growTime;
                 }
             }
+        }
+
+        public void Build()
+        {
+            GameObjectManager.Add(this);
         }
     }
 }

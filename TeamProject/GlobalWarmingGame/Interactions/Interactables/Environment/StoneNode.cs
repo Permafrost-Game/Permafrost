@@ -1,15 +1,18 @@
 ﻿
+using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources.ResourceTypes;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class StoneNode : InteractableGameObject
-    {        
+    public class StoneNode : Sprite, IInteractable
+    {
+        public List<InstructionType> InstructionTypes { get; }
+
         public StoneNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
@@ -18,15 +21,16 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             rotationOrigin: new Vector2(0, 0),
             tag: "StoneNode",
             depth: 0.7f,
-            texture: texture,
-            instructionTypes: new List<InstructionType>() { }
+            texture: texture
         )
         {
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", new ResourceItem(new Stone(), 4), Mine));
+            InstructionTypes = new List<InstructionType>();
+            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
         }
 
-        private void Mine(Colonist colonist)
+        private void Mine(IInstructionFollower follower)
         {
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }
