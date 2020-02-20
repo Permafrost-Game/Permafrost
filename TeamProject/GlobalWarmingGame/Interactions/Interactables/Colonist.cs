@@ -34,6 +34,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private readonly float CoreBodyTemperature = 38;
         public int UpperComfortRange { get; private set; } = 40;
         public int LowerComfortRange { get; private set; } = 15;
+        
 
         public Boolean colonistDead = false;
 
@@ -45,6 +46,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntilTemperatureUpdate = 2000f;
         private float timeToTemperatureUpdate;
         private bool _inCombat  = false;
+        
         public bool inCombat
         {
             get { return _isAttacking; }
@@ -150,6 +152,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
+            
             Vector2 position1 = this.Position;
             this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             base.Update(gameTime);

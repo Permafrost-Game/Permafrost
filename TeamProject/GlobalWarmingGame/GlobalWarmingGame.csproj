@@ -52,6 +52,8 @@
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Bear.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Robot.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
     <Compile Include="Interactions\Interactables\Enemies\AggressiveMovement.cs" />

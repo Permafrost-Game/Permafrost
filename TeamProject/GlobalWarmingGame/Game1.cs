@@ -22,6 +22,7 @@ using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 
 namespace GlobalWarmingGame
 {
@@ -346,32 +347,12 @@ namespace GlobalWarmingGame
 
                 for (int i = 0; i < spawnables.Length; i++)
                     MainUI.SpawnMenu.AddItem(spawnables[i]);
-                GameObjectManager.Add(new Enemy(
-                    tag: "Bear",
-                    aSpeed: 1000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 10, // Attack Power
-                    maxHp: 300, // Health
+                GameObjectManager.Add(new Bear(
                     position: new Vector2(1160, 1160),
                     textureSet: bear
                 ));
-                GameObjectManager.Add(new Enemy(
-                    tag: "Robot",
-                    aSpeed: 5000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 0, // Attack Power (0 = Going to be random)
-                    maxHp: 500, // Health
-                    position: new Vector2(500, 500),
-                    textureSet: robot
-                ));
-                GameObjectManager.Add(new Enemy(
-                   tag: "Robot",
-                   aSpeed: 5000, // Attack Speed
-                   aRange: 60, // Agro Range
-                   aPower: 0, // Attack Power (0 = Going to be random)
-                   maxHp: 500, // Health
-                   position: new Vector2(800, 500),
-                   textureSet: robot
+                    GameObjectManager.Add(new Robot(textureSet: robot, position: new Vector2(500,500)));
+                   GameObjectManager.Add(new Robot( textureSet: robot, position: new Vector2(600, 600)
                ));
 
                 MainUI.SpawnMenu.OnValueChange = (Entity e) => {
@@ -690,23 +671,10 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add(new TallGrass(position: position, texture: tallGrass));
                     break;
                 case 8:
-                    GameObjectManager.Add(new Enemy(
-                    tag: "Robot",
-                    aSpeed: 5000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 0, // Attack Power (0 = Going to be random)
-                    maxHp: 800, // Health
-                    position:position,
-                    textureSet: robot
-                ));
+                   GameObjectManager.Add(new Robot( textureSet: robot, position: position));
                     break;
                 case 9:
-                    GameObjectManager.Add(new Enemy(
-                    tag: "Bear",
-                    aSpeed: 1000, // Attack Speed
-                    aRange: 60, // Agro Range
-                    aPower: 10, // Attack Power
-                    maxHp: 300, // Health
+                    GameObjectManager.Add(new Bear(
                     position: position,
                     textureSet: bear
                 

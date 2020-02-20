@@ -16,7 +16,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 {
     //add animated sprite instead of aggressive movement
     //add random movement using randomAI class
-    class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
+   abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
         List<GameObject> colonists;
         GameTime duration;
@@ -105,7 +105,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
             if (targetFound == false)
             {
-                Goals.Clear();
+             //needs fixing
+                Random rnd = new Random();
+                Vector2 v = new Vector2
+                {
+                    X = rnd.Next(500, 600),
+                    Y = rnd.Next(500, 600)
+                };
+                Goals.Enqueue(v);
             }
             else
             {
@@ -114,18 +121,43 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         public void animateAttack() {
-
+            bool flippedOnce=false;
 
             if (this.Tag == "Robot")
             {
                 isAnimated = true;
                 this.TextureGroupIndex = 3;
+                if (this.Position.X < target.Position.X)
+                {
+                    SpriteEffect = SpriteEffects.FlipHorizontally;
+                    flippedOnce = true;
+                }
+                else {
+                    if (flippedOnce == true)
+                    {
+                        SpriteEffect = SpriteEffects.FlipHorizontally;
+                    }
+                    flippedOnce = false;
+                }
             }
             else if (this.Tag == "Bear") {
 
                 isAnimated = true;
                 this.TextureGroupIndex = 3;
-                
+                if (this.Position.X < target.Position.X)
+                {
+                    SpriteEffect = SpriteEffects.FlipHorizontally;
+                    flippedOnce = true;
+                }
+                else
+                {
+                    if (flippedOnce == true)
+                    {
+                        SpriteEffect = SpriteEffects.FlipHorizontally;
+                    }
+                    flippedOnce = false;
+                }
+
             }
                 
                 
@@ -163,9 +195,13 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                Goals.Clear();
 
+                    if(Math.Abs(this.Position.X - (target.Position.X)) > 20 || Math.Abs(this.Position.Y - (target.Position.Y)) > 20)
+                {
+                    Vector2 fakePosition = new Vector2(target.Position.X, target.Position.Y);
+                    Goals.Enqueue(fakePosition);
+                    }
+                
                
-                Vector2 fakePosition = new Vector2(target.Position.X+xdifference, target.Position.Y+ydifference);
-                Goals.Enqueue(fakePosition);
             }
             else
             {
@@ -175,13 +211,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         //change random movement
         public  void OnGoalComplete(Vector2 completedGoal){
-            Random rnd = new Random();
-            Vector2 v = new Vector2
-            {
-                X = rnd.Next(500, 600),
-                Y = rnd.Next(500, 600)
-            };
-            Goals.Enqueue(v);
+           
         }
 
         
@@ -201,12 +231,13 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 if (flipped)
                 {
-                    SpriteEffect = SpriteEffects.FlipHorizontally;
+                    //SpriteEffect = SpriteEffects.FlipHorizontally;
                 }
                 if (attacking)
                 {
                    
                     animateAttack();
+                    
 
                 }
                 else if (!attacking)
@@ -255,7 +286,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             else
             {
                 Goals.Clear();
-                Goals.Enqueue(this.Position);
+              //  Goals.Enqueue(this.Position);
             }
         }
 
