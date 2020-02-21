@@ -75,7 +75,6 @@
     <Compile Include="Action\SelectionManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />
-    <Compile Include="Action\MouseInputMethod.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />

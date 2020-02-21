@@ -32,7 +32,6 @@ namespace GlobalWarmingGame
 
         MainMenu MainMenu;
         PauseMenu PauseMenu;
-        CollectiveInventory CollectiveInventory;
 
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;

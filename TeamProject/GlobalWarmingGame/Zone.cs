@@ -5,7 +5,7 @@ using GlobalWarmingGame.Interactions;
 using System.Collections.Generic;
 using System;
 using SimplexNoise;
-
+using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame
 {
@@ -32,15 +32,15 @@ namespace GlobalWarmingGame
                     {
                         if (value > 0.80)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                         }
                         if (value < 0.9 && value > 0.85)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeBush(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
                         }
                         if (value < 0.1)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeTallGrass(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
                         }
                     }
 
@@ -48,7 +48,7 @@ namespace GlobalWarmingGame
                     {
                         if (value > 0.85)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeStoneNode(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
                         }
                     }
 
@@ -56,19 +56,19 @@ namespace GlobalWarmingGame
                     {
                         if (value > 0.9)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                         }
                     }
                     if (t.type.Equals("textures/tiles/main_tileset/Snow"))
                     {
                         if (value > 0.9)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeTree(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                         }
 
                         if (rand.Next(0, 10000) == 99)
                         {
-                            GameObjects.Add(InteractablesFactory.MakeBear(t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
                         }
                     }
                 }
