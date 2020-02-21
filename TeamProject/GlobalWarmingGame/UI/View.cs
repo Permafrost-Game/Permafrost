@@ -3,14 +3,14 @@ using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI
 {
     /// <summary>
-    /// This class is for implementation specific UI, in this case GeoBit UI<br>
-    /// This class is for creating buttons and panels based on the information provided by controller.<br>
+    /// This class is for implementation specific UI, in this case <see cref="GeonBit.UI"/> <br/>
+    /// This class is for creating buttons and panels based on the information provided by <see cref="Controller"/>.<br/>
+    /// This class should not reference any <see cref="GlobalWarmingGame"/> specific classes, and should be the only class referencing <see cref="GeonBit.UI"/> specific classes.<br/>
     /// </summary>
     internal static class View
     {
@@ -20,7 +20,8 @@ namespace GlobalWarmingGame.UI
         private static Panel menu;
         private static readonly Dictionary<int, Panel> inventories;
         
-        internal static bool Hovering { get; set; } = false;
+        /// <summary>True if the current mouse position is over a UI entity</summary>
+        internal static bool Hovering { get; set; }
 
         static View()
         {
@@ -67,15 +68,21 @@ namespace GlobalWarmingGame.UI
             UserInterface.Active.Draw(spriteBatch);
         }
 
-
-        internal static void CreateMenu<T>(Point location, List<ButtonHandler<T>> options)
+        /// <summary>
+        /// Creates a button list menu.
+        /// </summary>
+        /// <typeparam name="T">Type of <see cref="ButtonHandler{T}"/></typeparam>
+        /// <param name="text">The label of the menu</param>
+        /// <param name="location">the screenspace location of the menu</param>
+        /// <param name="options">the elements of the menu</param>
+        internal static void CreateMenu<T>(string text, Point location, List<ButtonHandler<T>> options)
         {
             if (menu != null) UserInterface.Active.RemoveEntity(menu);
 
             menu = new Panel(new Vector2(150f, 75f + (options.Count * 30f)), PanelSkin.Default, Anchor.TopLeft, location.ToVector2());
             UserInterface.Active.AddEntity(menu);
 
-            Label label = new Label("Choose Action", Anchor.TopCenter, new Vector2(500f, 50f))
+            Label label = new Label(text, Anchor.TopCenter, new Vector2(500f, 50f))
             {
                 Scale = 0.7f
             };
@@ -101,11 +108,17 @@ namespace GlobalWarmingGame.UI
 
         }
 
-        internal static void CreateDropDown<T>(string label, List<ButtonHandler<T>> options)
+        /// <summary>
+        /// Creates a drop down menu in the top panel.
+        /// </summary>
+        /// <typeparam name="T">Type of <see cref="ButtonHandler{T}"/></typeparam>
+        /// <param name="text">The label of the dropdown button</param>
+        /// <param name="options">The elements of the drop down</param>
+        internal static void CreateDropDown<T>(string text, List<ButtonHandler<T>> options)
         {
             DropDown menu = new DropDown(new Vector2(225f, 75f), Anchor.CenterLeft, new Vector2(250f * topPanel.Children.Count, 4f), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
             {
-                DefaultText = label,
+                DefaultText = text,
                 AutoSetListHeight = true,
                 DontKeepSelection = true,
             };
@@ -133,6 +146,13 @@ namespace GlobalWarmingGame.UI
         }
 
 
+        /// <summary>
+        /// Adds an inventory button and menu to the bottom panel.
+        /// </summary>
+        /// <typeparam name="T">Type of <see cref="ButtonHandler{T}"/></typeparam>
+        /// <param name="buttonHandler">The <see cref="ButtonHandler{T}"/> that handles the OnClick event</param>
+        /// <param name="visible">whether the inventory menu should be visible on creation</param>
+        /// <param name="icon">A custom <see cref="Texture2D"/> that is to be used, if null then <see cref="IconType.Sack"/> will be used</param>
         internal static void AddInventory<T>(ButtonHandler<T> buttonHandler, bool visible = false, Texture2D icon = default)
         {
             bool customIcon = icon != default;
@@ -156,6 +176,12 @@ namespace GlobalWarmingGame.UI
             bottomPanel.AddChild(inventory);
         }
 
+        /// <summary>
+        /// Sets the elements of the inventory menu.
+        /// </summary>
+        /// <param name="id">The unique ID of the inventory menu (eg hashcode)</param>
+        /// <param name="items">Items that are to be added to the inventory menu</param>
+        /// <example><c>View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);</c></example>
         internal static void UpdateInventoryMenu(int id, IEnumerable<ItemElement> items)
         {
             inventories[id].ClearChildren();
@@ -180,16 +206,11 @@ namespace GlobalWarmingGame.UI
             return slot;
         }
 
-        [Obsolete]
-        internal static void ToggleInventoryMenuVisibility(int id)
-        {
-            bool oldState = inventories[id].Visible;
-            foreach (Entity panel in inventories.Values)
-            {
-                panel.Visible = false;
-            }
-            inventories[id].Visible = !oldState;
-        }
+        /// <summary>
+        /// Sets the given inventory as the currently selected inventory
+        /// </summary>
+        /// <param name="id">The unique id (eg hashcode) of the inventory  that is to be made visible</param>
+        /// <example><c>View.SetInventoryVisible(inventory.GetHashCode());</c></example>
         internal static void SetInventoryVisiblity(int id)
         {
             foreach (Entity panel in inventories.Values)
@@ -199,6 +220,11 @@ namespace GlobalWarmingGame.UI
             inventories[id].Visible = true;
         }
 
+        /// <summary>
+        /// Removes an inventory menu
+        /// </summary>
+        /// <param name="id">The unique id (eg hashcode) of the inventory  that is to be removed</param>
+        /// <example><c>View.RemoveInventory(inventory.GetHashCode());</c></example>
         internal static void RemoveInventory(int id)
         {
             bottomPanel.RemoveChild(inventories[id]);

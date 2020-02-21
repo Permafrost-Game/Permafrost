@@ -1,14 +1,13 @@
 ﻿using Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.UI
 {
+    /// <summary>
+    /// This class is for handling keyboard inputs.<br/>
+    /// This is the only class that should be checking for keyboard input.<br/>
+    /// </summary>
     class KeyboardInputHandler : IUpdatable
     {
 

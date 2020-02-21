@@ -18,20 +18,10 @@ namespace GlobalWarmingGame.UI
     /// <summary>
     /// The controller class controlls the logic behind the UI<br/>
     /// Communicates with the <see cref="View"/> to display menus<br/>
-    /// eg.<br/>
-    /// When the user clicks, this class will tell View to create a new menu, view is in charge of the GUI specific logic.<br/>
-    /// This class defines what UI needs to exist.<br/>
+    /// This is the only class that should interface with <see cref="View"/><br/>
     /// </summary>
     static class Controller
     {
-
-        private static Texture2D colonistInventoryIcon;
-        
-
-        private static MouseState currentMouseState;
-        private static MouseState previousMouseState;
-
-        private static readonly List<Inventory> openInventories;
 
         static Controller()
         {
@@ -49,21 +39,14 @@ namespace GlobalWarmingGame.UI
             AddDropDowns();
         }
 
+        #region Event handlers
 
-
-        public static void UpdateColonist()
-        {
-            openInventories.Clear();
-            foreach (Colonist colonist in GameObjectManager.Filter<Colonist>())
-            {
-                if (SelectedColonist == null)
-                {
-                    SelectedColonist = colonist;
-                }
-
-                AddInventoryMenu(colonist);
-            }
-        }
+        /// <summary>
+        /// Handles <see cref="GameObjectManager.ObjectAdded"/><br/>
+        /// Checks if a new colonist has been added
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="GameObject"></param>
         public static void ObjectAddedEventHandler(object sender, GameObject GameObject)
         {
             if(GameObject is Colonist colonist)
@@ -76,6 +59,12 @@ namespace GlobalWarmingGame.UI
             }
         }
 
+        /// <summary>
+        /// Handles <see cref="GameObjectManager.ObjectRemoved"/><br/>
+        /// Checks if a colonist has been removed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="GameObject"></param>
         public static void ObjectRemovedEventHandler(object sender, GameObject GameObject)
         {
             if (GameObject is Colonist colonist)
@@ -83,6 +72,7 @@ namespace GlobalWarmingGame.UI
                 RemoveInventoryMenu(colonist);
             }
         }
+        #endregion
 
         #region Instruction Menu
 
@@ -95,46 +85,46 @@ namespace GlobalWarmingGame.UI
         public static Colonist SelectedColonist { get; set; }
 
         /// <summary>
-        /// Takes an input GameObject 
+        /// Generates a list of button handlers.<br/>
+        /// Will add walk if the object clicked isnt null<br/>
+        /// 
         /// </summary>
-        /// <param name="objectClicked">the object that was </param>
+        /// <param name="objectClicked">the object that was clicked</param>
+        /// <param name="activeMember">the colonist and active member of the instructions</param>
         /// <returns></returns>
-        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
+        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist activeMember)
         {
             List<ButtonHandler<Instruction>> options = new List<ButtonHandler<Instruction>>();
 
             if (objectClicked != null)
             {
-                options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, colonist, objectClicked), IssueInstructionCallback));
+                options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
                 if (objectClicked is IInteractable interactable)
                 {
                     foreach (InstructionType type in interactable.InstructionTypes)
                     {
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(type, colonist, objectClicked), IssueInstructionCallback));
+                        options.Add(new ButtonHandler<Instruction>(new Instruction(type, activeMember, objectClicked), IssueInstructionCallback));
                     }
                 }
 
                 if (objectClicked is Colonist)
                 {
-                    options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, colonist, objectClicked), SelectColonistCallback));
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, activeMember, objectClicked), SelectColonistCallback));
                 } else if (objectClicked is IStorage)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventoryCallback));
                 }
 
-
-                //If the colonist is allowed to start constructing a building
-                if (constructing)
+                if (constructingMode)
                 {
-                    //Building gets fed a Interactable that is also a buildable
                     building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
                     //If Colonist has the resources build
-                    if (colonist.Inventory.ContainsAll(building.CraftingCosts))
+                    if (activeMember.Inventory.ContainsAll(building.CraftingCosts))
                     {
                         InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), onStart: Build);
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(construct, colonist, (GameObject)building), IssueInstructionCallback));
+                        options.Add(new ButtonHandler<Instruction>(new Instruction(construct, activeMember, (GameObject)building), IssueInstructionCallback));
                     }
                     //TODO Else show notification that the colonist can't craft the building
                 }
@@ -190,11 +180,11 @@ namespace GlobalWarmingGame.UI
 
         #endregion
 
-        #region Drop-Down Menu
+        #region Drop-Down Menu and Build logic
 
-        private static bool constructing = false;
+        private static bool constructingMode = false;
         private static IBuildable building;
-        public static Interactable SelectedBuildable { get; set; }
+        private static Interactable SelectedBuildable { get; set; }
         public static Camera Camera { get => GameObjectManager.Camera; }
 
         /// <summary>
@@ -223,13 +213,14 @@ namespace GlobalWarmingGame.UI
         private static void SelectBuildableCallback(Interactable interactable)
         {
             SelectedBuildable = interactable;
-            constructing = true;
+            constructingMode = true;
         }
 
         /// <summary>
-        /// Creates the interactable
+        /// Creates a <see cref="IInteractable"/> from the given <paramref name="interactable"/>, with the position at the center of the screen<br/>
+        /// adding it to the game <see cref="GameObjectManager"/>.<br/>
         /// </summary>
-        /// <param name="interactable"></param>
+        /// <param name="interactable">the <see cref="Interactable"/> that maps to the <see cref="IInteractable"/> to be added</param>
         private static void SpawnInteractableCallback(Interactable interactable)
         {
             Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - Camera.Position;
@@ -254,11 +245,14 @@ namespace GlobalWarmingGame.UI
                 building.Build();
             }
             //Else show notification that the colonist can't craft the building
-            constructing = false;
+            constructingMode = false;
         }
         #endregion
 
         #region Update loop
+
+        private static MouseState currentMouseState;
+        private static MouseState previousMouseState;
 
         public static void Update(GameTime gameTime)
         {
@@ -271,7 +265,10 @@ namespace GlobalWarmingGame.UI
             previousMouseState = currentMouseState;
 
         }
-
+        /// <summary>
+        /// Draws UI, calls <see cref="View.Draw"/>
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public static void Draw(SpriteBatch spriteBatch)
         {
             View.Draw(spriteBatch);
@@ -288,9 +285,9 @@ namespace GlobalWarmingGame.UI
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
                 List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
-                if (options != null)
+                if (options != null && (options.Count > 0 || objectClicked is IInteractable))
                 {
-                    View.CreateMenu(currentMouseState.Position, options);
+                    View.CreateMenu("Choose Action", currentMouseState.Position, options);
                 }
             }
         }
@@ -314,13 +311,29 @@ namespace GlobalWarmingGame.UI
         }
         #endregion
 
+        #region Inventory Menu
 
+        /// <summary>The Icon that is to be used when a colonist's inventory is added</summary>
+        private static Texture2D colonistInventoryIcon;
+
+        /// <summary>A list of all inventories that have a UI menu</summary>
+        private static readonly List<Inventory> openInventories;
+
+        /// <summary>
+        /// Converts <paramref name="inventory"/> into a <c>IEnumberable{ItemElemnt}</c><br/>
+        /// and calls <see cref="View.UpdateInventoryMenu"/>
+        /// </summary>
+        /// <param name="inventory">The <see cref="Inventory"/> to be updated</param>
         private static void UpdateInventoryMenu(Inventory inventory)
         {
             IEnumerable<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString()));
             View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
 
+        /// <summary>
+        /// Adds the <see cref="IStorage.Inventory"/> belonging to <paramref name="storage"/> to the UI system
+        /// </summary>
+        /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> is to be used to create an inventory menu</param>
         private static void AddInventoryMenu(IStorage storage)
         {
             if (!openInventories.Contains(storage.Inventory))
@@ -333,6 +346,10 @@ namespace GlobalWarmingGame.UI
             }
         }
 
+        /// <summary>
+        /// Removes the <see cref="IStorage.Inventory"/> belonging to <paramref name="storage"/> from the UI system
+        /// </summary>
+        /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> was previously added and now should be removed</param>
         private static void RemoveInventoryMenu(IStorage storage)
         {
             if(openInventories.Contains(storage.Inventory))
@@ -354,6 +371,10 @@ namespace GlobalWarmingGame.UI
             UpdateInventoryMenu((Inventory)sender);
         }
 
+        /// <summary>
+        /// Selects an inventory menu by its <paramref name="index"/>
+        /// </summary>
+        /// <param name="index"></param>
         public static void SelectInventory(int index)
         {
             if(openInventories.Count - 1 >= index)
@@ -363,7 +384,10 @@ namespace GlobalWarmingGame.UI
         }
 
 
-
+        /// <summary>
+        /// Selects an inventory menu by its associated <paramref name="inventory"/>
+        /// </summary>
+        /// <param name="inventory"></param>
         private static void SelectInventory(Inventory inventory)
         {
             View.SetInventoryVisiblity(inventory.GetHashCode());
@@ -375,6 +399,8 @@ namespace GlobalWarmingGame.UI
                 }
             }
         }
+        #endregion
+
 
     }
 }
