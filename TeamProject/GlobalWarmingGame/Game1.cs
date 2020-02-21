@@ -32,7 +32,6 @@ namespace GlobalWarmingGame
 
         MainMenu MainMenu;
         PauseMenu PauseMenu;
-        MainUI MainUI;
         CollectiveInventory CollectiveInventory;
 
         KeyboardState previousKeyboardState;
@@ -141,25 +140,23 @@ namespace GlobalWarmingGame
                
                 logo = Content.Load<Texture2D>(@"logo");
 
-                Texture2D[] textureArray = new Texture2D[] { this.Content.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"), null};
-                string[] stringArray = new string[] { "Farm", "Workbench" };
-
-                BuildingManager.AddBuilding(0, "No Building");
-                for (int i = 0; i < stringArray.Length; i++)
-                    BuildingManager.AddBuilding(i + 1, stringArray[i], textureArray[i]);
-
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
 
-                MainUI = new MainUI();
-
+                
                 controller = new Controller(camera);
 
-                ProcessMenuSelection();
-                var c1 = InteractablesFactory.MakeColonist(position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size / 2); 
-                
+                Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size / 2);
+
                 Controller.SelectedColonist = c1;
                 GameObjectManager.Add(c1);
+                ProcessMenuSelection();
+
+                /*
+                MainUI = new MainUI();
+
+                ProcessMenuSelection();
+                
 
                 string[] spawnables = new string[11];
                 spawnables[0] = "Colonist";
@@ -181,9 +178,12 @@ namespace GlobalWarmingGame
                     ProcessSpawnables();
                     //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
                 };
-                CollectiveInventory = new CollectiveInventory(MainUI);
 
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
+                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
+                
+                CollectiveInventory = new CollectiveInventory(MainUI);
+                */
+
             }
         }
 
@@ -217,8 +217,8 @@ namespace GlobalWarmingGame
 
                 UpdateColonistTemperatures(gameTime);
 
-                CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
-                MainUI.UpdateMainUI(CollectiveInventory, gameTime);
+                //CollectiveInventory.UpdateCollectiveInventory(gameTime, MainUI);
+                //MainUI.UpdateMainUI(CollectiveInventory, gameTime);
 
                 base.Update(gameTime);
             }
@@ -402,8 +402,8 @@ namespace GlobalWarmingGame
             {
                 MainMenu.Menu.Visible = true;
                 PauseMenu.Menu.Visible = false;
-                MainUI.TopPanel.Visible = false;
-                MainUI.BottomPanel.Visible = false;
+                //MainUI.TopPanel.Visible = false;
+                //MainUI.BottomPanel.Visible = false;
             }
 
             else
@@ -416,8 +416,8 @@ namespace GlobalWarmingGame
             {
                 MainMenu.Menu.Visible = false;
                 PauseMenu.Menu.Visible = true;
-                MainUI.TopPanel.Visible = false;
-                MainUI.BottomPanel.Visible = false;
+                //MainUI.TopPanel.Visible = false;
+                //MainUI.BottomPanel.Visible = false;
             }
 
             else
@@ -430,14 +430,14 @@ namespace GlobalWarmingGame
             {
                 MainMenu.Menu.Visible = false;
                 PauseMenu.Menu.Visible = false;
-                MainUI.TopPanel.Visible = true;
-                MainUI.BottomPanel.Visible = true;
+                //MainUI.TopPanel.Visible = true;
+                //MainUI.BottomPanel.Visible = true;
             }
 
             else
             {
-                MainUI.TopPanel.Visible = false;
-                MainUI.BottomPanel.Visible = false;
+                //MainUI.TopPanel.Visible = false;
+                //MainUI.BottomPanel.Visible = false;
             }
         }
 
@@ -451,6 +451,7 @@ namespace GlobalWarmingGame
             PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
         }
 
+        /*
         void ProcessSpawnables()
         {
             Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - camera.Position;
@@ -459,43 +460,44 @@ namespace GlobalWarmingGame
             {
                 case 0:
 
-                    GameObjectManager.Add(InteractablesFactory.MakeColonist(position));
+                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.Colonist, position));
                     break;
                 case 1:
-                    GameObjectManager.Add(InteractablesFactory.MakeRabbit(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, position));
                     break;
                 case 2:
-                    GameObjectManager.Add(InteractablesFactory.MakeFarm(position));
+                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.Farm,position));
                     break;
                 case 3:
-                    GameObjectManager.Add(InteractablesFactory.MakeTree(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, position));
                     break;
                 case 4:
-                    GameObjectManager.Add(InteractablesFactory.MakeBush(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, position));
                     break;
                 case 5:
-                    GameObjectManager.Add(InteractablesFactory.MakeWorkBench(position));
+                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.WorkBench,position));
                     break;
                 case 6:
-                    GameObjectManager.Add(InteractablesFactory.MakeStoneNode(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, position));
                     break;
                 case 7:
-                    GameObjectManager.Add(InteractablesFactory.MakeTallGrass(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, position));
                     break;
                 case 8:
-                    GameObjectManager.Add(InteractablesFactory.MakeRobot(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot, position));
                     break;
                 case 9:
-                    GameObjectManager.Add(InteractablesFactory.MakeBear(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, position));
                     break;
                 case 10:
-                    GameObjectManager.Add(InteractablesFactory.MakeCampfire(position));
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.CampFire, position));
                     break;
             }
 
-            MainUI.SpawnMenu.DontKeepSelection = true;
-        }
+            //MainUI.SpawnMenu.DontKeepSelection = true;
+        }*/
 
         #endregion
     }
 }
+ 

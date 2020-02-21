@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.wood), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 4)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -43,7 +43,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Harvest(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.food), 10));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 10));
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
@@ -69,6 +69,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     timeUntilGrown = growTime;
                 }
             }
+        }
+
+        public void Build()
+        {
+            GameObjectManager.Add(this);
         }
     }
 }

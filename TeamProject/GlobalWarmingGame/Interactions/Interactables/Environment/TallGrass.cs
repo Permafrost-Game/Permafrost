@@ -30,7 +30,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void Trim(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.fibers), 4));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Fibers), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

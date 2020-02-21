@@ -49,7 +49,7 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\SelectionInputMethod.cs" />
-    <Compile Include="InteractablesFactory.cs" />
+    <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
-    <Compile Include="UI\InstructionEvent.cs" />
+    <Compile Include="UI\ButtonHandler.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />

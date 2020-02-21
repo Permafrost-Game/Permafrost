@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
 {
-    interface IInteractable
+    public interface IInteractable
     {
         List<InstructionType> InstructionTypes { get; }
     }
