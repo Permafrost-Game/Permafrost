@@ -55,11 +55,16 @@ namespace GlobalWarmingGame
 
         public static void Init(TileSet ts)
         {
-            zonePos = Vector2.Zero;
+
             tileSet = ts;
+
+
+            zonePos = Vector2.Zero;
+            
             ZoneMap = GenerateMap(zonePos);
             PathFinder.TileMap = ZoneMap;
             zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap));
+            SetZone(zonePos);
         }
 
         public static bool IsZone(Vector2 direction)

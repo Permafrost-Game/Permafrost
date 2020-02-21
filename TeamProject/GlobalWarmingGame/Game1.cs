@@ -208,7 +208,8 @@ namespace GlobalWarmingGame
                 BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
                 UpdateColonistTemperatures(gameTime);
 
-                foreach (IUpdatable updatable in GameObjectManager.Updatables)
+                //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
+                foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
 
 
