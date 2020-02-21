@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
     {
         #region Instruction
 
@@ -223,7 +223,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void FoodTick()
         {
             //If colonist doesn't have food on them, they are starving -1 health
-            ResourceItem food = new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 1);
+            ResourceItem food = new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1);
             if (!Inventory.RemoveItem(food))
             {
                 //TODO uncomment

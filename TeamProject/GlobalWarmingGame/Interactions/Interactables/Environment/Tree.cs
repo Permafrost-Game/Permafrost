@@ -48,7 +48,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void Chop(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 4));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4));
             choppable = false;
             InstructionTypes.Remove(chop);
         }

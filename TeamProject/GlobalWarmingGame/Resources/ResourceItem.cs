@@ -4,18 +4,19 @@ namespace GlobalWarmingGame.ResourceItems
 {
     public class ResourceItem
     {
-        public ResourceType Type { get; set; }
-        public int Amount { get; set; }
+        public ResourceType ResourceType { get; set; }
+        public int Weight { get; set; }
 
-        public ResourceItem(ResourceType Type, int Amount = 0)
+        public ResourceItem(ResourceType Type, int weight = 0)
         {
-            this.Type = Type;
-            this.Amount = Amount;
+            this.ResourceType = Type;
+            this.Weight = weight;
         }
 
         public ResourceItem Clone()
         {
             return (ResourceItem)MemberwiseClone();
         }
+
     }
 }

@@ -1,17 +1,13 @@
 ﻿using Engine;
+using Engine.PathFinding;
 using Engine.TileGrid;
-using Engine.Drawing;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
-using System.Collections;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using IDrawable = Engine.Drawing.IDrawable;
-using Engine.PathFinding;
-using GlobalWarmingGame.Interactions.Interactables;
-using System;
 
 namespace GlobalWarmingGame
 {
@@ -21,13 +17,17 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
-        private static int seed = 255;
+        private static readonly int seed = 255;
         private static TileSet tileSet;
 
         static Vector2 zonePos;
         readonly static IDictionary<Vector2, Zone> zoneTable;
 
         public static Zone CurrentZone { get => zoneTable[zonePos]; }
+
+
+        public static event EventHandler<GameObject> ObjectAdded = delegate { };
+        public static event EventHandler<GameObject> ObjectRemoved = delegate { };
 
         public static Camera Camera { get; set; }
 
@@ -55,11 +55,16 @@ namespace GlobalWarmingGame
 
         public static void Init(TileSet ts)
         {
-            zonePos = Vector2.Zero;
+
             tileSet = ts;
+
+
+            zonePos = Vector2.Zero;
+            
             ZoneMap = GenerateMap(zonePos);
             PathFinder.TileMap = ZoneMap;
             zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap));
+            SetZone(zonePos);
         }
 
         public static bool IsZone(Vector2 direction)
@@ -168,6 +173,8 @@ namespace GlobalWarmingGame
 
             if (gameObject is IInteractable i)
                 Interactables.Add(i);
+
+            ObjectAdded.Invoke(null, gameObject);
         }
 
         /// <summary>
@@ -186,6 +193,8 @@ namespace GlobalWarmingGame
 
             if (gameObject is IInteractable i)
                 Interactables.Remove(i);
+
+            ObjectRemoved.Invoke(null, gameObject);
         }
 
         /// <summary>

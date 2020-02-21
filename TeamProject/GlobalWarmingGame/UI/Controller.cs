@@ -1,156 +1,229 @@
 ﻿using Engine;
-using Engine.TileGrid;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GlobalWarmingGame.UI
 {
     /// <summary>
-    /// The controller class controlls the logic behind the UI<br>
-    /// Communicates with the <see cref="View"/> to display menus<br>
-    /// eg.<br>
-    /// When the user clicks, this class will tell View to create a new menu, view is in charge of the GUI specific logic.<br>
-    /// This class defines what UI needs to exist.
+    /// The controller class controlls the logic behind the UI<br/>
+    /// Communicates with the <see cref="View"/> to display menus<br/>
+    /// This is the only class that should interface with <see cref="View"/><br/>
     /// </summary>
-    class Controller : IUpdatable
+    static class Controller
     {
 
-        private View view;
+        static Controller()
+        {
+            openInventories = new List<Inventory>();
+            
+            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
+            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
+        }
 
-        /// <summary>The currently selected colonist that instructions will be given</summary>
-        public static Colonist SelectedColonist { get; set; }
-        public static Interactable SelectedBuildable { get; set; }
+        public static void LoadContent(ContentManager content)
+        {
+            View.Initialize(content);
+            colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
 
-        /// <summary>Reference to the camera for inverse transforms</summary>
-        private Camera camera;
+            AddDropDowns();
+        }
 
-        /// <summary>Whether the mouse is hovering over a menu</summary>
-        private bool hovering = false;
+        #region Event handlers
 
-        private static bool constructing = false;
-        private static IBuildable building;
+        /// <summary>
+        /// Handles <see cref="GameObjectManager.ObjectAdded"/><br/>
+        /// Checks if a new colonist has been added
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="GameObject"></param>
+        public static void ObjectAddedEventHandler(object sender, GameObject GameObject)
+        {
+            if(GameObject is Colonist colonist)
+            {
+                if (SelectedColonist == null)
+                {
+                    SelectedColonist = colonist;
+                }
+                AddInventoryMenu(colonist);
+            }
+        }
 
-        private MouseState currentMouseState;
-        private MouseState previousMouseState;
+        /// <summary>
+        /// Handles <see cref="GameObjectManager.ObjectRemoved"/><br/>
+        /// Checks if a colonist has been removed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="GameObject"></param>
+        public static void ObjectRemovedEventHandler(object sender, GameObject GameObject)
+        {
+            if (GameObject is Colonist colonist)
+            {
+                RemoveInventoryMenu(colonist);
+            }
+        }
+        #endregion
+
+        #region Instruction Menu
+
 
         private static readonly InstructionType WALK_INSTRUCTION_TYPE = new InstructionType("walk", "Walk", "Walk here");
         private static readonly InstructionType COLONIST_INSTRUCTION_TYPE = new InstructionType("selectColonist", "Select", "Selects the colonist");
+        private static readonly InstructionType VIEW_INVENTORY = new InstructionType("viewInventory", "View Inventory", "Opens the inventory");
 
-        public Controller(Camera camera)
-        {
-            this.camera = camera;
-            view = new View();
-            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { hovering = true; };
-
-            //Buildings drop down
-            List<ButtonHandler<Interactable>> BuildingButtonHandlers = new List<ButtonHandler<Interactable>>();
-
-            BuildingButtonHandlers.Add(new ButtonHandler<Interactable>(Interactable.CampFire, SelectBuildable));
-            BuildingButtonHandlers.Add(new ButtonHandler<Interactable>(Interactable.Farm, SelectBuildable));
-            BuildingButtonHandlers.Add(new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildable));
-
-            view.CreateDropDown("Building", BuildingButtonHandlers);
-
-            //Spawnables drop down
-            List<ButtonHandler<Interactable>> spawnButtonHandlers = new List<ButtonHandler<Interactable>>();
-            foreach (Interactable interactable in Enum.GetValues(typeof(Interactable)))
-            {
-                spawnButtonHandlers.Add(new ButtonHandler<Interactable>(interactable, SpawnInteractable));
-            }
-
-            view.CreateDropDown("Spawn", spawnButtonHandlers);
-        }
+        /// <summary>The currently selected colonist that instructions will be given</summary>
+        public static Colonist SelectedColonist { get; set; }
 
         /// <summary>
-        /// Called on a mouse click
+        /// Generates a list of button handlers.<br/>
+        /// Will add walk if the object clicked isnt null<br/>
+        /// 
         /// </summary>
-        private void OnClick()
-        {
-            if (!hovering)
-            {
-                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), camera.InverseTransform);
-                GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
-
-                List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
-                if (options != null)
-                {
-                    view.CreateMenu(currentMouseState.Position, options);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Takes an input GameObject 
-        /// </summary>
-        /// <param name="objectClicked">the object that was </param>
+        /// <param name="objectClicked">the object that was clicked</param>
+        /// <param name="activeMember">the colonist and active member of the instructions</param>
         /// <returns></returns>
-        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist colonist)
+        private static List<ButtonHandler<Instruction>> GenerateInstructionOptions(GameObject objectClicked, Colonist activeMember)
         {
             List<ButtonHandler<Instruction>> options = new List<ButtonHandler<Instruction>>();
 
             if (objectClicked != null)
             {
-                options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, colonist, objectClicked), IssueInstruction));
+                options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
-                if (objectClicked is IInteractable)
+                if (objectClicked is IInteractable interactable)
                 {
-                    foreach (InstructionType type in ((IInteractable)objectClicked).InstructionTypes)
+                    foreach (InstructionType type in interactable.InstructionTypes)
                     {
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(type, colonist, objectClicked), IssueInstruction));
+                        options.Add(new ButtonHandler<Instruction>(new Instruction(type, activeMember, objectClicked), IssueInstructionCallback));
                     }
                 }
 
                 if (objectClicked is Colonist)
                 {
-                    options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, colonist, objectClicked), SelectColonist));
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, activeMember, objectClicked), SelectColonistCallback));
+                } else if (objectClicked is IStorage)
+                {
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventoryCallback));
                 }
 
-                //If the colonist is allowed to start constructing a building
-                if (constructing)
+                if (constructingMode)
                 {
-                    //Building gets fed a Interactable that is also a buildable
                     building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
                     //If Colonist has the resources build
-                    if (SelectedColonist.Inventory.CheckContainsList(building.CraftingCosts))
+                    if (activeMember.Inventory.ContainsAll(building.CraftingCosts))
                     {
                         InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), onStart: Build);
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(construct, colonist, (GameObject)building), IssueInstruction));
+                        options.Add(new ButtonHandler<Instruction>(new Instruction(construct, activeMember, (GameObject)building), IssueInstructionCallback));
                     }
-                    //Else show notification that the colonist can't craft the building
+                    //TODO Else show notification that the colonist can't craft the building
                 }
             }
 
             return options;
         }
 
-        #region Drop-Down Menu Delegate methods
         /// <summary>
-        /// Delegate method to select the right building
+        /// Adds the instruction to the active member of the instruction.
         /// </summary>
-        /// <param name="buildable"></param>
-        private void SelectBuildable(Interactable interactable)
+        /// <param name="instruction">the instruction to be issued</param>
+        private static void IssueInstructionCallback(Instruction instruction)
         {
-            SelectedBuildable = interactable;
-            constructing = true;
+            instruction.ActiveMember.AddInstruction(instruction, 0);
         }
 
         /// <summary>
-        /// Delegate method to spawn the right interactable
+        /// Adds the instruction to the active member of the instruction.
+        /// </summary>
+        /// <param name="instruction">the instruction to be issued</param>
+        private static void ViewInventoryCallback(Instruction instruction)
+        {
+
+            if (instruction.PassiveMember is IStorage storage)
+            {
+                if (!openInventories.Contains(storage.Inventory))
+                {
+                    AddInventoryMenu(storage);
+                }
+                else
+                {
+                    SelectInventory(storage.Inventory);
+                }
+            }
+            else
+            {
+                throw new InvalidInstructionMemberTypeException(instruction, instruction.PassiveMember, typeof(IStorage));
+            }
+        }
+
+        /// <summary>
+        /// Takes the passive member of the instruction and sets that as the active colonist<br>
+        /// This is meant to be used to select a colonist
+        /// </summary>
+        /// <param name="instruction">The instruction that has been selected</param>
+        private static void SelectColonistCallback(Instruction instruction)
+        {
+            SelectedColonist = (Colonist)instruction.PassiveMember;
+            ViewInventoryCallback(instruction);
+        }
+
+
+        #endregion
+
+        #region Drop-Down Menu and Build logic
+
+        private static bool constructingMode = false;
+        private static IBuildable building;
+        private static Interactable SelectedBuildable { get; set; }
+        public static Camera Camera { get => GameObjectManager.Camera; }
+
+        /// <summary>
+        /// Adds the Building and Spawn dropdown menus to the view
+        /// </summary>
+        private static void AddDropDowns()
+        {
+            //Buildings drop down
+            View.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
+            {
+                new ButtonHandler<Interactable>(Interactable.CampFire,  SelectBuildableCallback),
+                new ButtonHandler<Interactable>(Interactable.Farm,      SelectBuildableCallback),
+                new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildableCallback)
+            });
+
+            //Spawnables drop down
+            View.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
+                .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
+        }
+
+
+        /// <summary>
+        /// Selects an Interactable for construction
         /// </summary>
         /// <param name="interactable"></param>
-        private void SpawnInteractable(Interactable interactable)
+        private static void SelectBuildableCallback(Interactable interactable)
         {
-            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - camera.Position;
+            SelectedBuildable = interactable;
+            constructingMode = true;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IInteractable"/> from the given <paramref name="interactable"/>, with the position at the center of the screen<br/>
+        /// adding it to the game <see cref="GameObjectManager"/>.<br/>
+        /// </summary>
+        /// <param name="interactable">the <see cref="Interactable"/> that maps to the <see cref="IInteractable"/> to be added</param>
+        private static void SpawnInteractableCallback(Interactable interactable)
+        {
+            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - Camera.Position;
             //Map the position onto the nearest tile and then get that tiles position
             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, GameObjectManager.ZoneMap.GetTileAtPosition(position).Position));
         }
@@ -164,7 +237,7 @@ namespace GlobalWarmingGame.UI
             List<ResourceItem> buildingCosts = new List<ResourceItem>();
 
             //If Colonist has the resources build
-            if (follower.Inventory.CheckContainsList(buildingCosts))
+            if (follower.Inventory.ContainsAll(buildingCosts))
             {
                 foreach (ResourceItem item in buildingCosts)
                     follower.Inventory.RemoveItem(item);
@@ -172,39 +245,51 @@ namespace GlobalWarmingGame.UI
                 building.Build();
             }
             //Else show notification that the colonist can't craft the building
-            constructing = false;
+            constructingMode = false;
         }
         #endregion
 
-        /// <summary>
-        /// Adds the instruction to the active member of the instruction.
-        /// </summary>
-        /// <param name="instruction">the instruction to be issued</param>
-        private static void IssueInstruction(Instruction instruction)
-        {
-            instruction.ActiveMember.AddInstruction(instruction, 0);
-        }
+        #region Update loop
 
-        /// <summary>
-        /// Takes the passive member of the instruction and sets that as the active colonist<br>
-        /// This is meant to be used to select a colonist
-        /// </summary>
-        /// <param name="instruction">The instruction that has been selected</param>
-        private static void SelectColonist(Instruction instruction)
-        {
-            SelectedColonist = (Colonist)instruction.PassiveMember;
-        }
+        private static MouseState currentMouseState;
+        private static MouseState previousMouseState;
 
-
-        public void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
+            View.Update(gameTime);
             currentMouseState = Mouse.GetState();
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
                 OnClick();
 
             previousMouseState = currentMouseState;
-            hovering = false;
+
+        }
+        /// <summary>
+        /// Draws UI, calls <see cref="View.Draw"/>
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        public static void Draw(SpriteBatch spriteBatch)
+        {
+            View.Draw(spriteBatch);
+        }
+
+        /// <summary>
+        /// Called on a mouse click
+        /// </summary>
+        private static void OnClick()
+        {
+            if (!View.Hovering)
+            {
+                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
+                GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
+
+                List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
+                if (options != null && (options.Count > 0 || objectClicked is IInteractable))
+                {
+                    View.CreateMenu("Choose Action", currentMouseState.Position, options);
+                }
+            }
         }
 
 
@@ -224,6 +309,98 @@ namespace GlobalWarmingGame.UI
             }
             return GameObjectManager.ZoneMap.GetTileAtPosition(position.ToVector2());
         }
+        #endregion
+
+        #region Inventory Menu
+
+        /// <summary>The Icon that is to be used when a colonist's inventory is added</summary>
+        private static Texture2D colonistInventoryIcon;
+
+        /// <summary>A list of all inventories that have a UI menu</summary>
+        private static readonly List<Inventory> openInventories;
+
+        /// <summary>
+        /// Converts <paramref name="inventory"/> into a <c>IEnumberable{ItemElemnt}</c><br/>
+        /// and calls <see cref="View.UpdateInventoryMenu"/>
+        /// </summary>
+        /// <param name="inventory">The <see cref="Inventory"/> to be updated</param>
+        private static void UpdateInventoryMenu(Inventory inventory)
+        {
+            IEnumerable<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString()));
+            View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
+        }
+
+        /// <summary>
+        /// Adds the <see cref="IStorage.Inventory"/> belonging to <paramref name="storage"/> to the UI system
+        /// </summary>
+        /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> is to be used to create an inventory menu</param>
+        private static void AddInventoryMenu(IStorage storage)
+        {
+            if (!openInventories.Contains(storage.Inventory))
+            {
+                Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
+                View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, SelectInventory), icon: icon);
+                openInventories.Add(storage.Inventory);
+                storage.Inventory.InventoryChange += InventoryChangeCallBack;
+                UpdateInventoryMenu(storage.Inventory);
+            }
+        }
+
+        /// <summary>
+        /// Removes the <see cref="IStorage.Inventory"/> belonging to <paramref name="storage"/> from the UI system
+        /// </summary>
+        /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> was previously added and now should be removed</param>
+        private static void RemoveInventoryMenu(IStorage storage)
+        {
+            if(openInventories.Contains(storage.Inventory))
+            {
+                openInventories.Remove(storage.Inventory);
+                storage.Inventory.InventoryChange -= InventoryChangeCallBack;
+                View.RemoveInventory(storage.Inventory.GetHashCode());
+            }
+            
+        }
+
+        /// <summary>
+        /// Callback for <see cref="Inventory.InventoryChange"/> Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void InventoryChangeCallBack(object sender, EventArgs e)
+        {
+            UpdateInventoryMenu((Inventory)sender);
+        }
+
+        /// <summary>
+        /// Selects an inventory menu by its <paramref name="index"/>
+        /// </summary>
+        /// <param name="index"></param>
+        public static void SelectInventory(int index)
+        {
+            if(openInventories.Count - 1 >= index)
+            {
+                SelectInventory(openInventories[index]);
+            }
+        }
+
+
+        /// <summary>
+        /// Selects an inventory menu by its associated <paramref name="inventory"/>
+        /// </summary>
+        /// <param name="inventory"></param>
+        private static void SelectInventory(Inventory inventory)
+        {
+            View.SetInventoryVisiblity(inventory.GetHashCode());
+            foreach (Colonist colonist in GameObjectManager.Filter<Colonist>() )
+            {
+                if(colonist.Inventory == inventory)
+                {
+                    SelectedColonist = colonist;
+                }
+            }
+        }
+        #endregion
+
 
     }
 }

@@ -8,68 +8,31 @@ namespace GlobalWarmingGame.ResourceItems
 {
     public class Inventory
     {
-        public Dictionary<string, ResourceItem> Resources { get; set; }
-        public float Capacity { get; set; }
-        public float CurrentLoad { get; set; }
-        public bool IsFull { get; set; }
+        public event EventHandler InventoryChange = delegate { };
+
+        public Dictionary<ResourceType, ResourceItem> Resources { get; private set; }
+        public float Capacity { get; private set; }
+        public float CurrentLoad { get; private set; }
+        public bool IsFull { get => Capacity < CurrentLoad;  }
 
         public Inventory(float capacity)
         {
-            this.Resources = new Dictionary<string, ResourceItem>();
+            Resources = new Dictionary<ResourceType, ResourceItem>();
             Capacity = capacity;
             CurrentLoad = 0f;
-            IsFull = false;
         }
 
+
         /// <summary>
-        /// Adds ResourceItems to the Inventory while space is available
+        /// Adds a copy of <paramref name="item"/> to the Inventory if space is available
         /// </summary>
         /// <param name="item"></param>
-        /// <returns></returns>
+        /// <returns>whether the item can be added</returns>
         public bool AddItem(ResourceItem item)
         {
-            item = item.Clone();
-
-            CheckWeightLimit();
-
-            if (!IsFull)
+            if (CurrentLoad + item.Weight < Capacity)
             {
-                if (Resources.ContainsKey(item.Type.ID))
-                    Resources[item.Type.ID].Amount += item.Amount;
-
-                else
-                    Resources.Add(item.Type.ID, item);
-
-                CurrentLoad += item.Type.Weight * item.Amount;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Adds ResourceItems to the Inventory
-        /// </summary>
-        /// <param name="item">Item to be removed</param
-        /// <returns>If the remove was sucsessful</returns>
-        public bool RemoveItem(ResourceItem item)
-        {
-            if (CheckContains(item))
-            {
-                if (Resources[item.Type.ID].Amount > item.Amount)
-                {
-                    Resources[item.Type.ID].Amount -= item.Amount;
-                    CurrentLoad -= item.Type.Weight * item.Amount;
-                }
-                else if (Resources[item.Type.ID].Amount == item.Amount)
-                {
-                    CurrentLoad -= item.Type.Weight * Resources[item.Type.ID].Amount;
-                    Resources.Remove(item.Type.ID);
-                }
-                else
-                {
-                    return false;
-                }
-
+                AddItemUnchecked(item);
                 return true;
             }
 
@@ -77,44 +40,80 @@ namespace GlobalWarmingGame.ResourceItems
         }
 
         /// <summary>
-        /// Returns true if the inventory contains atleast the specified ResourceItem
+        /// Adds <paramref name="item"/> to <see cref="Inventory.Resources"/> without checking load
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public bool CheckContains(ResourceItem item)
+        /// <param name="item">item to be added</param>
+        private void AddItemUnchecked(ResourceItem item)
         {
-            return (Resources.ContainsKey(item.Type.ID));
+            
+            if (Resources.ContainsKey(item.ResourceType))
+            {
+                Resources[item.ResourceType].Weight += item.Weight;
+                
+            }
+            else
+            {
+                Resources.Add(item.ResourceType, item.Clone());
+            }
+                
+            CurrentLoad += item.Weight;
+            InventoryChange.Invoke(this, new EventArgs());
+        }
+
+
+        private void RemoveItemUnchecked(ResourceItem item)
+        { 
+            Resources[item.ResourceType].Weight -= item.Weight;
+
+            if(Resources[item.ResourceType].Weight <= 0)
+                Resources.Remove(item.ResourceType);
+
+            CurrentLoad -= item.Weight;
+            InventoryChange.Invoke(this, new EventArgs());
         }
 
         /// <summary>
-        /// Returns true if the inventory contains all the specified ResourceItems in a list
+        /// Removes <paramref name="item"/> from the <see cref="Inventory"/>
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public bool CheckContainsList(List<ResourceItem> items)
+        /// <param name="item"><see cref="ResourceItem"/> to be removed</param>
+        /// <returns>whether the <paramref name="item"/> can be removed</returns>
+        public bool RemoveItem(ResourceItem item)
         {
-            foreach (ResourceItem item in items)
+            if (Contains(item))
             {
-                if (!CheckContains(item))
+                RemoveItemUnchecked(item);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the inventory contains a <paramref name="resourceItem"/>.
+        /// </summary>
+        /// <param name="resourceItem">the <see cref="ResourceItem"/> to be checked</param>
+        /// <returns><code>true</code> if the <see cref="Inventory"/> contains the <paramref name="resourceItem"/></returns>
+        public bool Contains(ResourceItem resourceItem)
+        {
+            return Resources.ContainsKey(resourceItem.ResourceType) ?
+                Resources[resourceItem.ResourceType].Weight >= resourceItem.Weight : false;
+        }
+
+        /// <summary>
+        /// Checks if all of <paramref name="resourceItem"/> are in the inventory.
+        /// </summary>
+        /// <param name="resourceItem">the <see cref="ResourceItem"/>s to be checked</param>
+        /// <returns>true if all <see cref="ResourceItem"/>s in <paramref name="resourceItem"/> are in the <see cref="Inventory"/></returns>
+        public bool ContainsAll(IEnumerable<ResourceItem> resourceItem)
+        {
+            foreach (ResourceItem item in resourceItem)
+            {
+                if (!Contains(item))
                 {
                     return false;
                 }
             }
             return true;
-        }
-
-        /// <summary>
-        /// Checks if the inventory has reacher maximum capicity and sets isFull accordingly
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckWeightLimit()
-        {
-            if (CurrentLoad < Capacity)
-                IsFull = false;
-            else
-                IsFull = true;
-
-            return IsFull;
         }
     }
 }

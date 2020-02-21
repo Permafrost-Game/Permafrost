@@ -24,13 +24,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("mine", "Mine", "Mine stone", onStart: Mine)
+            };
         }
 
         private void Mine(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }
