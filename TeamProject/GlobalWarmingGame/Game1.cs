@@ -26,6 +26,7 @@ namespace GlobalWarmingGame
         TileSet tileSet;
 
         Camera camera;
+        KeyboardInputHandler keyboardInputHandler;
 
         MainMenu MainMenu;
         PauseMenu PauseMenu;
@@ -68,7 +69,6 @@ namespace GlobalWarmingGame
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
-
             base.Initialize();
         }
 
@@ -126,6 +126,7 @@ namespace GlobalWarmingGame
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size);
 
                 GameObjectManager.Camera = camera;
+                this.keyboardInputHandler = new KeyboardInputHandler();
             }
 
             //CREATING GAME OBJECTS
@@ -203,6 +204,7 @@ namespace GlobalWarmingGame
             if (gameState == GameState.playing)
             {
                 camera.Update(gameTime);
+                keyboardInputHandler.Update(gameTime);
 
                 GameObjectManager.ZoneMap.Update(gameTime);
                 BuildingManager.UpdateBuildingTemperatures(gameTime, ZoneManager.CurrentZone.TileMap);
@@ -217,26 +219,6 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
-
-            if (gameState == GameState.playing)
-            {
-                if (CheckKeyPress(Keys.I))
-                    GameObjectManager.MoveZone(new Vector2(0, -1));
-                else if (CheckKeyPress(Keys.K))
-                    GameObjectManager.MoveZone(new Vector2(0, 1));
-                else if (CheckKeyPress(Keys.L))
-                    GameObjectManager.MoveZone(new Vector2(1, 0));
-                else if (CheckKeyPress(Keys.J))
-                    GameObjectManager.MoveZone(new Vector2(-1, 0));
-            }
-
-            //if (gameState == GameState.playing)
-            //{
-            //    if (currentKeyboardState.IsKeyUp(Keys.Escape) && previousKeyboardState.IsKeyDown(Keys.Escape))
-            //        ShowPauseMenu();
-            //}
-
-            //peformanceMonitor.Update(gameTime);
 
             previousKeyboardState = currentKeyboardState;
         }

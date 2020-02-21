@@ -3,6 +3,7 @@ using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI
@@ -24,8 +25,7 @@ namespace GlobalWarmingGame.UI
         static View()
         {
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
-            //UserInterface.Active.         OnMouseLeave = (Entity e) => { Hovering = false; };
-
+            
             inventories = new Dictionary<int, Panel>();
 
             #region topPanel
@@ -180,7 +180,7 @@ namespace GlobalWarmingGame.UI
             return slot;
         }
 
-
+        [Obsolete]
         internal static void ToggleInventoryMenuVisibility(int id)
         {
             bool oldState = inventories[id].Visible;
@@ -190,6 +190,14 @@ namespace GlobalWarmingGame.UI
             }
             inventories[id].Visible = !oldState;
         }
+        internal static void SetInventoryVisiblity(int id)
+        {
+            foreach (Entity panel in inventories.Values)
+            {
+                panel.Visible = false;
+            }
+            inventories[id].Visible = true;
+        }
 
         internal static void RemoveInventory(int id)
         {
@@ -198,5 +206,7 @@ namespace GlobalWarmingGame.UI
             inventories.Remove(id);
             
         }
+
+        
     }
 }

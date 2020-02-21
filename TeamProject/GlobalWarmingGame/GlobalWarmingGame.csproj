@@ -82,6 +82,7 @@
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
     <Compile Include="UI\ButtonHandler.cs" />
     <Compile Include="UI\ItemElement.cs" />
+    <Compile Include="UI\KeyboardInputHandler.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />

@@ -167,7 +167,7 @@ namespace GlobalWarmingGame.UI
                 }
                 else
                 {
-                    ToggleInventoryVisibility(storage.Inventory);
+                    SelectInventory(storage.Inventory);
                 }
             }
             else
@@ -326,7 +326,7 @@ namespace GlobalWarmingGame.UI
             if (!openInventories.Contains(storage.Inventory))
             {
                 Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
-                View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, ToggleInventoryVisibility), icon: icon);
+                View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, SelectInventory), icon: icon);
                 openInventories.Add(storage.Inventory);
                 storage.Inventory.InventoryChange += InventoryChangeCallBack;
                 UpdateInventoryMenu(storage.Inventory);
@@ -354,9 +354,26 @@ namespace GlobalWarmingGame.UI
             UpdateInventoryMenu((Inventory)sender);
         }
 
-        private static void ToggleInventoryVisibility(Inventory inventory)
+        public static void SelectInventory(int index)
         {
-            View.ToggleInventoryMenuVisibility(inventory.GetHashCode());
+            if(openInventories.Count - 1 >= index)
+            {
+                SelectInventory(openInventories[index]);
+            }
+        }
+
+
+
+        private static void SelectInventory(Inventory inventory)
+        {
+            View.SetInventoryVisiblity(inventory.GetHashCode());
+            foreach (Colonist colonist in GameObjectManager.Filter<Colonist>() )
+            {
+                if(colonist.Inventory == inventory)
+                {
+                    SelectedColonist = colonist;
+                }
+            }
         }
 
     }
