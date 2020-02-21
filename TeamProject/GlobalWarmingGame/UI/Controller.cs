@@ -150,9 +150,9 @@ namespace GlobalWarmingGame.UI
         /// <param name="interactable"></param>
         private void SpawnInteractable(Interactable interactable)
         {
-            Vector2 position = ZoneManager.CurrentZone.TileMap.Size * ZoneManager.CurrentZone.TileMap.Tiles[0, 0].size - camera.Position;
+            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - camera.Position;
             //Map the position onto the nearest tile and then get that tiles position
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position).Position));
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, GameObjectManager.ZoneMap.GetTileAtPosition(position).Position));
         }
 
         /// <summary>
@@ -215,14 +215,14 @@ namespace GlobalWarmingGame.UI
         /// <returns></returns>
         private static GameObject ObjectClicked(Point position)
         {
-            foreach (GameObject o in GameObjectManager.Interactable)
+            foreach (GameObject o in GameObjectManager.Interactables)
             {
                 if (new Rectangle(o.Position.ToPoint(), o.Size.ToPoint()).Contains(position))
                 {
                     return o;
                 }
             }
-            return ZoneManager.CurrentZone.TileMap.GetTileAtPosition(position.ToVector2());
+            return GameObjectManager.ZoneMap.GetTileAtPosition(position.ToVector2());
         }
 
     }

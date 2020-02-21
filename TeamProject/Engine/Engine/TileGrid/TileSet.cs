@@ -9,10 +9,10 @@ namespace Engine.TileGrid
     /// </summary>
     public class TileSet
     {
-        public Dictionary<string, Texture2D> tileSetTextures { get; set; }
+        public Dictionary<int, Texture2D> tileSetTextures { get; set; }
         public readonly Vector2 textureSize;
 
-        public TileSet(Dictionary<string, Texture2D> tileSetTextures, Vector2 textureSize)
+        public TileSet(Dictionary<int, Texture2D> tileSetTextures, Vector2 textureSize)
         {
             this.tileSetTextures = tileSetTextures;
             this.textureSize = textureSize;

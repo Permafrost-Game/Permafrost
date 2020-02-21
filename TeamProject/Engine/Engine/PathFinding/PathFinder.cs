@@ -8,7 +8,8 @@ namespace Engine.PathFinding
 {
     public static class PathFinder
     {
-        private static TileMap TileMap { get => ZoneManager.CurrentZone.TileMap; }
+        public static TileMap TileMap { get; set; }
+
         private static Dictionary<Tile, TileCosts> openDictionary;
         private static Dictionary<Tile, TileCosts> closedDictionary;
 

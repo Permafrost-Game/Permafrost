@@ -41,11 +41,11 @@ namespace Engine.TileGrid
                     Vector2 position = new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y);
 
                     string key = rows[y].Split(',')[x];
-                    Texture2D texture = tileSet.tileSetTextures[key
+                    Texture2D texture = tileSet.tileSetTextures[Int32.Parse(key)
 
                         ];
                     //TODO this is test code below - walkable
-                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("Non-Walkable"));
+                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("textures/tiles/main_tileset/water"), texture.Name);
                     
                     
                 }
