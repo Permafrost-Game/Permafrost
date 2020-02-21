@@ -1,18 +1,13 @@
 ﻿using Engine;
+using Engine.PathFinding;
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
-using System.Collections;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using IDrawable = Engine.Drawing.IDrawable;
-using Engine.PathFinding;
-using GlobalWarmingGame.Interactions.Interactables;
-using System;
-using Zone = PermaFrost.Zone;
 
 namespace GlobalWarmingGame
 {
@@ -22,7 +17,7 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
-        private static int seed = 255;
+        private static readonly int seed = 255;
         private static TileSet tileSet;
 
         static Vector2 zonePos;
@@ -204,7 +199,7 @@ namespace GlobalWarmingGame
         /// <returns></returns>
         public static List<T> Filter<T>()
         {
-            return CurrentZone.GameObjects.OfType<T>();
+            return CurrentZone.GameObjects.OfType<T>().ToList();
         }
 
         /// <summary>

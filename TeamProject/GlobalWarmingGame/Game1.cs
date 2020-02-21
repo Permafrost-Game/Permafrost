@@ -20,7 +20,7 @@ namespace GlobalWarmingGame
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
+        readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         TileSet tileSet;

@@ -22,7 +22,7 @@ namespace Engine.TileGrid
         private readonly int tag = -1;
         public bool Walkable { get; }
 
-        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, String type) : base(position, size)
+        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, string type) : base(position, size)
         {
             this.type = texture.Name; 
             
@@ -51,7 +51,6 @@ namespace Engine.TileGrid
         {
             if (t is Tile tile)
             {
-                tile = (Tile)t;
                 if (this.size.Equals(tile.size) && this.Position.Equals(tile.Position))
                 {
                     return true;
