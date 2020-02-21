@@ -194,7 +194,7 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            UserInterface.Active.Update(gameTime);
+            Controller.Update(gameTime);
             ShowMainMenu();
             ShowPauseMenu();
             ShowMainUI();
@@ -211,7 +211,6 @@ namespace GlobalWarmingGame
                 foreach (IUpdatable updatable in GameObjectManager.Updatable)
                     updatable.Update(gameTime);
 
-                Controller.Update(gameTime);
 
                 UpdateColonistTemperatures(gameTime);
                 //MainUI.UpdateMainUI(CollectiveInventory, gameTime);
@@ -432,8 +431,8 @@ namespace GlobalWarmingGame
         {
             if (gameState == GameState.playing)
             {
-                MainMenu.Menu.Visible = false;
-                PauseMenu.Menu.Visible = false;
+                //MainMenu.Menu.Visible = false;
+                //PauseMenu.Menu.Visible = false;
                 //MainUI.TopPanel.Visible = true;
                 //MainUI.BottomPanel.Visible = true;
             }

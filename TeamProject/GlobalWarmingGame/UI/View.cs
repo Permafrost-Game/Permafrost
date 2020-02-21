@@ -18,13 +18,13 @@ namespace GlobalWarmingGame.UI
         private static readonly Panel bottomPanel;
         private static Panel menu;
         private static readonly Dictionary<int, Panel> inventories;
-
+        
         internal static bool Hovering { get; set; } = false;
 
         static View()
         {
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
-            UserInterface.Active.         OnMouseLeave = (Entity e) => { Hovering = false; };
+            //UserInterface.Active.         OnMouseLeave = (Entity e) => { Hovering = false; };
 
             inventories = new Dictionary<int, Panel>();
 
@@ -59,6 +59,7 @@ namespace GlobalWarmingGame.UI
 
         internal static void Update(GameTime gameTime)
         {
+            Hovering = false;
             UserInterface.Active.Update(gameTime);
         }
         internal static void Draw(SpriteBatch spriteBatch)
@@ -91,8 +92,9 @@ namespace GlobalWarmingGame.UI
                 newButton.OnClick = (Entity btn) =>
                 {
                     option.action(option.Tag);
-                    menu.Visible = false;
-                    Hovering = false;
+                    menu.Dispose();
+                    UserInterface.Active.RemoveEntity(menu);
+                    menu = null;
                 };
                 counter++;
             }
