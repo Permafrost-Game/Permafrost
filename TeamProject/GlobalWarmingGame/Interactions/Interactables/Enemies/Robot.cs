@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    class Robot : Enemy
+    public class Robot : Enemy
     {
         
         
-        public Robot(Texture2D[][] textureSet,Vector2 position): base("Robot", 5000, 60, 0, 500, position, textureSet)
+        public Robot(Vector2 position,Texture2D[][] textureSet): base("Robot", 5000, 60, 0, 500, position, textureSet)
         {
 
             

@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 {
     //add animated sprite instead of aggressive movement
     //add random movement using randomAI class
-   abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
+   public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
         List<GameObject> colonists;
         GameTime duration;
@@ -275,9 +275,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
             EnemyAttacked();
             if (target != null && targetFound == true)
             {
-                 c.intializeCombat((Colonist)target, this,gameTime);
+               //  c.intializeCombat((Colonist)target, this,gameTime);
                
-                 c.PerformCombat();
+                // c.PerformCombat();
             
             }
             else

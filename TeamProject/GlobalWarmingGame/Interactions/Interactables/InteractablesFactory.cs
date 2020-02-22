@@ -1,6 +1,7 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -174,9 +175,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
                 case Interactable.Robot:
-                    return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
+                    return new Robot(position, textureSet["robot"]);
                 case Interactable.Bear:
-                    return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
+                    return new Bear(position, textureSet["bear"]);
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
             }
@@ -238,15 +239,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
 
         [Obsolete]
-        public static Enemy MakeRobot(Vector2 position)
+        public static Robot MakeRobot(Vector2 position)
         {
-            return new Enemy("Robot", 5000, 60, 0, 500,position, textureSet["robot"]);
+            return new Robot(position, textureSet["robot"]);
         }
 
         [Obsolete]
-        public static Enemy MakeBear(Vector2 position)
+        public static Bear MakeBear(Vector2 position)
         {
-            return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
+            return new Bear(position, textureSet["bear"]);
         }
        
     }

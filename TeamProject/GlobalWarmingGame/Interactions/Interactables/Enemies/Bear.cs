@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    class Bear : Enemy
+   public class Bear : Enemy
     {
 
 

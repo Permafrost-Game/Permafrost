@@ -65,8 +65,8 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = 1000,
+                PreferredBackBufferHeight = 800
             };
 
             graphics.IsFullScreen = false;
@@ -206,6 +206,7 @@ namespace GlobalWarmingGame
                 */
 
             }
+            GlobalCombatDetector.Initialize();
         }
 
         protected override void UnloadContent()
@@ -278,7 +279,7 @@ namespace GlobalWarmingGame
             {
                 float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
-                colonist.UpdateTemp(tileTemp, gameTime);
+                //colonist.UpdateTemp(tileTemp, gameTime);
                 //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
             }
         }
