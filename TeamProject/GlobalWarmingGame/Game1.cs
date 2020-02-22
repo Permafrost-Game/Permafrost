@@ -20,6 +20,12 @@ namespace GlobalWarmingGame
     /// </summary>
     public class Game1 : Game
     {
+        private readonly bool isFullScreen = false;
+        private readonly float resolutionScale = 0.75f;
+
+
+
+
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -50,13 +56,10 @@ namespace GlobalWarmingGame
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                IsFullScreen = isFullScreen
             };
-
-            graphics.IsFullScreen = false;
-            graphics.ApplyChanges();
-
+            
+            
             Content.RootDirectory = "Content";
 
             gameState = GameState.mainmenu;
@@ -64,6 +67,10 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
+            graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
+            graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
+            graphics.ApplyChanges();
+
             UserInterface.Initialize(Content, "hd");
 
             //Removes 60 FPS limit

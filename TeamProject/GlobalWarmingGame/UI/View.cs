@@ -19,7 +19,8 @@ namespace GlobalWarmingGame.UI
         private static readonly Panel bottomPanel;
         private static Panel menu;
         private static readonly Dictionary<int, Panel> inventories;
-        
+        private static readonly Dictionary<int, Icon> inventoryButtons;
+
         /// <summary>True if the current mouse position is over a UI entity</summary>
         internal static bool Hovering { get; set; }
 
@@ -28,6 +29,7 @@ namespace GlobalWarmingGame.UI
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
             
             inventories = new Dictionary<int, Panel>();
+            inventoryButtons = new Dictionary<int, Icon>();
 
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -159,6 +161,7 @@ namespace GlobalWarmingGame.UI
             Icon inventoryButton = new Icon(customIcon ? IconType.None : IconType.Sack, Anchor.BottomLeft, 1f, true, new Vector2(64f * inventories.Count, 0f)) ;
             if(customIcon) inventoryButton.Texture = icon;
 
+            inventoryButtons.Add(buttonHandler.Tag.GetHashCode(), inventoryButton);
             bottomPanel.AddChild(inventoryButton);
 
             inventoryButton.OnClick = (Entity btn) => {
@@ -227,6 +230,8 @@ namespace GlobalWarmingGame.UI
         /// <example><c>View.RemoveInventory(inventory.GetHashCode());</c></example>
         internal static void RemoveInventory(int id)
         {
+            bottomPanel.RemoveChild(inventoryButtons[id]);
+            inventoryButtons.Remove(id);
             bottomPanel.RemoveChild(inventories[id]);
             inventories[id].Dispose();
             inventories.Remove(id);
