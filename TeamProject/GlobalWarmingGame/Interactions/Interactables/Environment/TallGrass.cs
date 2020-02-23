@@ -18,9 +18,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "TallGrass",
-            depth: 0.7f,
             texture: texture
         )
         {

@@ -37,9 +37,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             position: position,
             size: new Vector2(harvestable.Width, harvestable.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(harvestable.Width / 2f, harvestable.Height / 2f),
             tag: "Bush",
-            depth: 0.7f,
             texture: harvestable
         )
         {

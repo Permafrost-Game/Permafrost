@@ -47,16 +47,27 @@ namespace Engine.Drawing
         /// </summary>
         /// <param name="textureSet">A 2D array of textures, where the first dimension is for texture groups, and the seccond dimension is for animation frames</param>
         /// <param name="frameTime">The time in ms between frames</param>
-        public AnimatedSprite(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D[][] textureSet, float frameTime, SpriteEffects spriteEffect = SpriteEffects.None) :
-            base(position, size, rotation, rotationOrigin, tag, depth, textureSet[0][0], spriteEffect )
+        public AnimatedSprite(Vector2 position, Vector2 size, float rotation, Vector2 origin, string tag, float depth, Texture2D[][] textureSet, float frameTime, SpriteEffects spriteEffect = SpriteEffects.None) :
+            base(position, size, rotation, origin, tag, depth, textureSet[0][0], spriteEffect )
         {
             this.isAnimated = true;
-            this.depth = depth;
-            this.SpriteEffect = spriteEffect;
             this.textureSet = textureSet;
             this.frameTime = frameTime;
             this.timeUntilNextFrame  = frameTime;
+        }
 
+        /// <summary>
+        /// Creates a new <see cref="AnimatedSprite"/> with a <paramref name="textureSet"/> 
+        /// </summary>
+        /// <param name="textureSet">A 2D array of textures, where the first dimension is for texture groups, and the seccond dimension is for animation frames</param>
+        /// <param name="frameTime">The time in ms between frames</param>
+        public AnimatedSprite(Vector2 position, Vector2 size, float rotation, Vector2 origin, string tag, Texture2D[][] textureSet, float frameTime, SpriteEffects spriteEffect = SpriteEffects.None) :
+            base(position, size, rotation, origin, tag, textureSet[0][0], spriteEffect)
+        {
+            this.isAnimated = true;
+            this.textureSet = textureSet;
+            this.frameTime = frameTime;
+            this.timeUntilNextFrame = frameTime;
         }
 
         public virtual void Update(GameTime gameTime)

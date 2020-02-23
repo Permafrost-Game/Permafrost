@@ -37,12 +37,12 @@ namespace Engine.TileGrid
         {
             //spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
             spriteBatch.Draw(
-                texture,
-                new Rectangle(base.Position.ToPoint(), size.ToPoint()),
-                new Rectangle(
-                    new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
-                    size.ToPoint()),
-                Color.White
+                texture: texture,
+                destinationRectangle: new Rectangle((base.Position - size /2).ToPoint(), size.ToPoint()),
+                sourceRectangle: new Rectangle(
+                                 new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
+                                 size.ToPoint()),
+                color: Color.White
                 );
         }
 

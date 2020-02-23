@@ -32,9 +32,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             position: position,
             size: new Vector2(textureTree.Width, textureTree.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(textureTree.Width / 2f, textureTree.Height / 2f),
             tag: "Tree",
-            depth: 0.7f,
             texture: textureTree
         )
         {

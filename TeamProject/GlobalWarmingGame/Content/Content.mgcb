@@ -4856,36 +4856,6 @@
 /processorParam:TextureFormat=Color
 /build:logo.png
 
-#begin maps/map0/00.csv
-/copy:maps/map0/00.csv
-
-#begin maps/map1/00.csv
-/copy:maps/map1/00.csv
-
-#begin maps/map1/01.csv
-/copy:maps/map1/01.csv
-
-#begin maps/map1/02.csv
-/copy:maps/map1/02.csv
-
-#begin maps/map1/10.csv
-/copy:maps/map1/10.csv
-
-#begin maps/map1/11.csv
-/copy:maps/map1/11.csv
-
-#begin maps/map1/12.csv
-/copy:maps/map1/12.csv
-
-#begin maps/map1/20.csv
-/copy:maps/map1/20.csv
-
-#begin maps/map1/21.csv
-/copy:maps/map1/21.csv
-
-#begin maps/map1/22.csv
-/copy:maps/map1/22.csv
-
 #begin shaders/reductionEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor

@@ -18,13 +18,22 @@ namespace Engine.Drawing
         protected SpriteEffects SpriteEffect { get; set; }
 
 
-        public Sprite(Vector2 position, Vector2 size, float rotation, Vector2 rotationOrigin, string tag, float depth, Texture2D texture, SpriteEffects spriteEffect = SpriteEffects.None) :
-            base(position, size, rotation, rotationOrigin, tag)
+        public Sprite(Vector2 position, Vector2 size, float rotation, Vector2 origin, string tag, float depth, Texture2D texture = default, SpriteEffects spriteEffect = SpriteEffects.None) :
+            base(position, size, rotation, origin, tag)
         {
             this.depth = depth;
             this.Texture = texture;
             this.SpriteEffect = spriteEffect;
         }
+
+        public Sprite(Vector2 position, Vector2 size, float rotation = 0f, Vector2 origin = default, string tag = "", Texture2D texture = default, SpriteEffects spriteEffect = SpriteEffects.None) :
+            base(position, size, rotation, origin, tag)
+        {
+            this.depth = (position.Y + (position.X / 2)) / 48000f;
+            this.Texture = texture;
+            this.SpriteEffect = spriteEffect;
+        }
+
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
@@ -33,7 +42,7 @@ namespace Engine.Drawing
                 sourceRectangle: null,
                 color:      Color.White,
                 rotation:   Rotation,
-                origin:     RotationOrigin,
+                origin:     Origin,
                 scale:      1f,
                 effects: SpriteEffect,
                 layerDepth: depth);

@@ -88,9 +88,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             position: position,
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(textureSet[0][0].Width / 2, textureSet[0][0].Height / 2),
             tag: "Colonist",
-            depth: 1f,
+            depth: 0f,
             textureSet: textureSet,
             frameTime: 100f
         )
@@ -154,7 +154,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public override void Update(GameTime gameTime)
         {
             Vector2 position1 = this.Position;
-            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+            depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 1f" stops Z Fighting
             base.Update(gameTime);
 
             Vector2 delta = position1 - this.Position;
