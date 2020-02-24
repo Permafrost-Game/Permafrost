@@ -12,10 +12,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
     public class Tree : Sprite, IInteractable
     {
         private bool _choppable;
-        private InstructionType chop;
-        private Texture2D textureTree;
-        private Texture2D textureStump;
-        private bool choppable
+        private readonly InstructionType chop;
+        private readonly Texture2D textureTree;
+        private readonly Texture2D textureStump;
+        private bool Choppable
         {
             get { return _choppable; }
             set
@@ -40,7 +40,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             InstructionTypes = new List<InstructionType>();
             this.textureTree = textureTree;
             this.textureStump = textureStump;
-            choppable = true;
+            Choppable = true;
             chop =new InstructionType("chop", "Chop", "Chop for wood", onStart: Chop);
             InstructionTypes.Add(chop);
         }
@@ -48,7 +48,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private void Chop(IInstructionFollower follower)
         {
             follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4));
-            choppable = false;
+            Choppable = false;
             InstructionTypes.Remove(chop);
         }
     }

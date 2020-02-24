@@ -7,7 +7,7 @@ namespace Engine
     /// </summary>
     public class GameObject
     {
-        public Vector2 Position { get; set;}
+        public Vector2 Position { get; set; }
         public Vector2 Size { get; protected set; }
         public float Rotation { get; protected set; }
         public Vector2 Origin { get; protected set; }

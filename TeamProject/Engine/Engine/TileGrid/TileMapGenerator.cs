@@ -41,8 +41,7 @@ namespace Engine.TileGrid
                                 texture: tileSet.tileSetTextures[counter],
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
-                                walkable: !tileSet.tileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water"), //TODO temporary
-                                type: tileSet.tileSetTextures[counter].Name
+                                walkable: !tileSet.tileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water")
                                 );
                             break;
                         }
@@ -54,8 +53,7 @@ namespace Engine.TileGrid
                                 texture: tileSet.tileSetTextures[0],
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
-                                walkable: true,
-                                type: tileSet.tileSetTextures[tileCount].Name
+                                walkable: true
                                 );
                     }
 

@@ -13,7 +13,7 @@ namespace Engine.TileGrid
         public Tile[,] Tiles { get; }
 
         private float timeToTempTick;
-        private float timeUntilTempTick = 2000f;
+        private readonly float timeUntilTempTick = 2000f;
 
         public Vector2 Size
         {
@@ -41,7 +41,7 @@ namespace Engine.TileGrid
         /// <returns>The <see cref="Engine.TileGrid.Tile"/> within the region of <paramref name="position"/></returns>
         public Tile GetTileAtPosition(Vector2 position)
         {
-            Vector2 tileSize = Tiles[0, 0].size;
+            Vector2 tileSize = Tiles[0, 0].Size;
             int x = (Int32) Math.Round(position.X / tileSize.X);
             int y = (Int32) Math.Round(position.Y / tileSize.Y);
 
@@ -111,7 +111,7 @@ namespace Engine.TileGrid
             List<Tile> adjTiles = new List<Tile>();
 
             Vector2 v;
-            float tileSize = tile.size.X;
+            float tileSize = tile.Size.X;
 
             if ((tile.Position.X - tileSize) >= 0)
             {

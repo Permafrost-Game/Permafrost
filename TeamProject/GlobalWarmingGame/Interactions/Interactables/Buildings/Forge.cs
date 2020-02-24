@@ -27,8 +27,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem)
+            };
         }
 
         private void ForgeItem(IInstructionFollower follower)
