@@ -13,8 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Forge : Sprite, IInteractable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.MachineParts), 10),
-                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 6) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.MachineParts), 10),
+                                                                                                   new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 6) };
         public List<InstructionType> InstructionTypes { get; }
 
         public Forge(Vector2 position, Texture2D texture) : base
@@ -22,14 +22,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "Forge",
-            depth: 0.7f,
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem)
+            };
         }
 
         private void ForgeItem(IInstructionFollower follower)

@@ -16,7 +16,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 2), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Fibers), 1) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 2), new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
@@ -26,14 +26,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             position: position,
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
             tag: "CampFire",
-            depth: 0.7f,
             textureSet: textureSet,
             frameTime: 50f
         )
         {
             Heating = true;
+
             TextureGroupIndex = 1;
             InstructionTypes = new List<InstructionType>
             {

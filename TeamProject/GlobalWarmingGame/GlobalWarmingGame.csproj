@@ -48,7 +48,7 @@
     <Compile Include="Action\IInstructionFollower.cs" />
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
-    <Compile Include="Action\SelectionInputMethod.cs" />
+    <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
@@ -61,7 +61,6 @@
     <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
-    <Compile Include="Interactions\Interactables\Enemies\AggressiveMovement.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
@@ -74,23 +73,23 @@
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="Resources\CraftableType.cs" />
+    <Compile Include="Resources\IStorage.cs" />
     <Compile Include="Resources\ResourceTypeFactory.cs" />
     <Compile Include="UI\Controller.cs" />
-    <Compile Include="Action\SelectionManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />
-    <Compile Include="Action\MouseInputMethod.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatable.cs" />
     <Compile Include="Interactions\PassiveMovingInteractable.cs" />
     <Compile Include="UI\ButtonHandler.cs" />
+    <Compile Include="UI\ItemElement.cs" />
+    <Compile Include="UI\KeyboardInputHandler.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PathFindable.cs" />
     <Compile Include="Resources\CollectiveInventory.cs" />
     <Compile Include="Resources\ICraftable.cs" />
     <Compile Include="Resources\Inventory.cs" />
@@ -108,6 +107,9 @@
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplexNoise, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimplexNoise.2.0.0\lib\net45\SimplexNoise.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -758,6 +760,9 @@
     <Content Include="Content\GeonBit.UI\themes\lowres\textures\slider_fancy_md.xml" />
     <Content Include="Content\GeonBit.UI\themes\lowres\textures\white_texture.png" />
     <Content Include="Content\GeonBit.UI\themes\lowres\ThemeData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4), new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4), new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 8)};
         public Panel ResourceNotification { get; set; }
 
         public List<InstructionType> InstructionTypes { get; }
@@ -30,9 +30,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "WorkBench",
-            depth: 0.7f,
             texture: texture
         )
         {
@@ -103,8 +102,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)
         {
-            CraftableType craftable = ResourceTypeFactory.MakeCraftable(craftableEnum);
-            if (follower.Inventory.CheckContainsList(craftable.CraftingCosts))
+            CraftableType craftable = ResourceTypeFactory.GetCraftable(craftableEnum);
+            if (follower.Inventory.ContainsAll(craftable.CraftingCosts))
             {
                 foreach (ResourceItem item in craftable.CraftingCosts)
                 {

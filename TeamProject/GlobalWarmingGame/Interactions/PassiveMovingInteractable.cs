@@ -32,7 +32,7 @@ namespace GlobalWarmingGame.Interactions
             position: position,
             size: size,
             rotation: rotation,
-            rotationOrigin: rotationOrigin,
+            origin: rotationOrigin,
             tag: tag,
             depth: depth,
             texture: texture

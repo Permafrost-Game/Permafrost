@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 
@@ -8,6 +9,7 @@ namespace Engine
     /// This class will read a text file
     /// This class is just for pre release purposes and will eventually be replaced with a procedurally generated map
     /// </summary>
+    [Obsolete]
     public static class ContentReader
     {
 

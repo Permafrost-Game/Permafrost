@@ -19,94 +19,98 @@ namespace GlobalWarmingGame.Resources
 
         public static void LoadContent(ContentManager contentManger)
         {
-            resources = new Dictionary<Resource, ResourceType>();
+            resources  = new Dictionary<Resource, ResourceType>();
             craftables = new Dictionary<Craftable, CraftableType>();
 
             //Resource Type definitions
-            ResourceType stone = new ResourceType("stone", "Stone", "A piece of rock", 1f, contentManger.Load<Texture2D>(@"textures/icons/stone"));
-            ResourceType wood = new ResourceType("wood", "Wood", "A wooden log", 1f, contentManger.Load<Texture2D>(@"textures/icons/wood"));
-            ResourceType fibers = new ResourceType("fibers", "Fibers", "A bundle of fibers", 1f, contentManger.Load<Texture2D>(@"textures/icons/fibers"));
-            ResourceType food = new ResourceType("food", "Food", "Food", 1f, contentManger.Load<Texture2D>(@"textures/icons/apple"));
-            ResourceType coal = new ResourceType("coal", "Coal", "A lump of coal", 1f, null); //Needs texture
-            ResourceType leather = new ResourceType("leather", "Leather", "Tanned leather", 1f, null); //Needs texture
-            ResourceType machineParts = new ResourceType("machineParts", "Machine Parts", "Machine parts", 1f, null); //Needs texture
+            ResourceType stone        = new ResourceType("Stone",           "A piece of rock",      contentManger.Load<Texture2D>(@"textures/icons/stone"));
+            ResourceType wood         = new ResourceType("Wood",            "A wooden log",         contentManger.Load<Texture2D>(@"textures/icons/wood"));
+            ResourceType fibers       = new ResourceType("Fibers",          "A bundle of fibers",   contentManger.Load<Texture2D>(@"textures/icons/fibers"));
+            ResourceType food         = new ResourceType("Food",            "Food",                 contentManger.Load<Texture2D>(@"textures/icons/apple"));
+            ResourceType coal         = new ResourceType("Coal",            "A lump of coal",       null); //TODO coal Needs texture
+            ResourceType leather      = new ResourceType("Leather",         "Tanned leather",       null); //TODO leather Needs texture
+            ResourceType machineParts = new ResourceType("Machine Parts",   "Machine parts",        null); //TODO machineParts Needs texture
 
             //Populate resources dictionary
-            resources.Add(Resource.Stone, stone);
-            resources.Add(Resource.Wood, wood);
-            resources.Add(Resource.Fibers, fibers);
-            resources.Add(Resource.Food, food);
-            resources.Add(Resource.Coal, coal);
+            resources.Add(Resource.Stone,   stone);
+            resources.Add(Resource.Wood,    wood);
+            resources.Add(Resource.Fibers,  fibers);
+            resources.Add(Resource.Food,    food);
+            resources.Add(Resource.Coal,    coal);
             resources.Add(Resource.Leather, leather);
             resources.Add(Resource.MachineParts, machineParts);
 
             //Craftable Type definitions and populate craftables dictionary
-            //Axe
-            Texture2D axe = contentManger.Load<Texture2D>(@"textures/icons/axe");
-            craftables.Add(Craftable.Axe, new CraftableType("axe", "Axe", "An Axe", 5f, axe));
-            //Hoe
-            Texture2D hoe = contentManger.Load<Texture2D>(@"textures/icons/hoe");
-            craftables.Add(Craftable.Hoe, new CraftableType("hoe", "Hoe", "A hoe", 5f, hoe));
-            //Pickaxe
-            Texture2D pickaxe = contentManger.Load<Texture2D>(@"textures/icons/pickaxe");
-            craftables.Add(Craftable.Pickaxe, new CraftableType("pickaxe", "Pickaxe", "A Pickaxe", 10f, pickaxe));
-            //Backpack
-            craftables.Add(Craftable.Backpack, new CraftableType("backpack", "Backpack", "A backpack", 2f, null)); //Needs texture
-            //BasicRifle
-            craftables.Add(Craftable.BasicRifle, new CraftableType("basicRifle", "BasicRifle", "A basic rifle", 10f, null)); //Needs texture
-            //Bow
-            craftables.Add(Craftable.Bow, new CraftableType("bow", "bow", "A bow with arrows", 5f, null)); //Needs texture
-            //Cloth
-            craftables.Add(Craftable.Cloth, new CraftableType("cloth", "Cloth", "A piece of cloth", 1f, null)); //Needs texture
-            //Coat
-            craftables.Add(Craftable.Coat, new CraftableType("coat", "Coat", "A basic coat", 5f, null)); //Needs texture
+
+            craftables.Add(Craftable.Axe,        new CraftableType("Axe", "An axe",        contentManger.Load<Texture2D>(@"textures/icons/axe")));
+
+            craftables.Add(Craftable.Hoe,        new CraftableType("Hoe", "A hoe",         contentManger.Load<Texture2D>(@"textures/icons/hoe")));
+
+            craftables.Add(Craftable.Pickaxe,    new CraftableType("Pickaxe", "A Pickaxe", contentManger.Load<Texture2D>(@"textures/icons/pickaxe")));
+
+            craftables.Add(Craftable.Backpack,   new CraftableType("Backpack", "A backpack",      null)); //TODO Needs texture
+
+            craftables.Add(Craftable.BasicRifle, new CraftableType("BasicRifle", "A basic rifle", null)); //TODO Needs texture
+
+            craftables.Add(Craftable.Bow,        new CraftableType("bow", "A bow with arrows",    null)); //TODONeeds texture
+
+            craftables.Add(Craftable.Cloth,      new CraftableType("Cloth", "A piece of cloth",   null)); //TODONeeds texture
+
+            craftables.Add(Craftable.Coat,       new CraftableType("Coat", "A basic coat",        null)); //TODO Needs texture
 
 
             //The crafting costs need to be set after all the resources and craftables types have been created.
             #region Teir 1 crafting costs
             //Axe
-            List<ResourceItem> axeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 1),
-                                                                                     new ResourceItem(MakeResource(Resource.Fibers), 2),
-                                                                                     new ResourceItem(MakeResource(Resource.Stone), 1) };
-            craftables[Craftable.Axe].CraftingCosts = axeCraftingCosts;
+            craftables[Craftable.Axe].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetResource(Resource.Wood), 1),
+                new ResourceItem(GetResource(Resource.Fibers), 2),
+                new ResourceItem(GetResource(Resource.Stone), 1),
+            };
 
             //Hoe
-            List<ResourceItem> hoeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 1),
-                                                                                     new ResourceItem(MakeResource(Resource.Fibers), 2),
-                                                                                     new ResourceItem(MakeResource(Resource.Stone), 1) };
-            craftables[Craftable.Hoe].CraftingCosts = hoeCraftingCosts;
+            craftables[Craftable.Hoe].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetResource(Resource.Wood), 1),
+                new ResourceItem(GetResource(Resource.Fibers), 2),
+            };
 
             //Pickaxe
-            List<ResourceItem> pickaxeCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 1),
-                                                                                         new ResourceItem(MakeResource(Resource.Fibers), 2),
-                                                                                         new ResourceItem(MakeResource(Resource.Stone), 2) };
-            craftables[Craftable.Pickaxe].CraftingCosts = pickaxeCraftingCosts;
+            craftables[Craftable.Pickaxe].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetResource(Resource.Wood), 1),
+                new ResourceItem(GetResource(Resource.Fibers), 2),
+                new ResourceItem(GetResource(Resource.Stone), 2),
+            };
 
             //Backpack
-            List<ResourceItem> backpackCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeCraftable(Craftable.Cloth), 2),
-                                                                                          new ResourceItem(MakeResource(Resource.Leather), 5) };
-            craftables[Craftable.Backpack].CraftingCosts = backpackCraftingCosts;
+            craftables[Craftable.Backpack].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetCraftable(Craftable.Cloth), 2),
+                new ResourceItem(GetResource(Resource.Leather), 5),
+            };
 
             //BasicRifle
-            List<ResourceItem> basicRifleCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 8),
-                                                                                            new ResourceItem(MakeResource(Resource.Leather), 2),
-                                                                                            new ResourceItem(MakeResource(Resource.MachineParts), 4) };
-            craftables[Craftable.BasicRifle].CraftingCosts = basicRifleCraftingCosts;
+            craftables[Craftable.BasicRifle].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetResource(Resource.Wood), 8),
+                new ResourceItem(GetResource(Resource.Leather), 2),
+                new ResourceItem(GetResource(Resource.MachineParts), 4),
+            };
 
             //Bow
-            List<ResourceItem> bowCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Wood), 4),
-                                                                                     new ResourceItem(MakeResource(Resource.Fibers), 6),
-                                                                                     new ResourceItem(MakeResource(Resource.Stone), 1) };
-            craftables[Craftable.Bow].CraftingCosts = bowCraftingCosts;
+            craftables[Craftable.Bow].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetResource(Resource.Wood), 4),
+                new ResourceItem(GetResource(Resource.Fibers), 6),
+                new ResourceItem(GetResource(Resource.Stone), 1),
+            };
 
             //Cloth
-            List<ResourceItem> clothCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeResource(Resource.Fibers), 4) };
-            craftables[Craftable.Cloth].CraftingCosts = clothCraftingCosts;
+            craftables[Craftable.Cloth].CraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(GetResource(Resource.Fibers), 4),
+            };
 
             //Coat
-            List<ResourceItem> coatCraftingCosts = new List<ResourceItem>() { new ResourceItem(MakeCraftable(Craftable.Cloth), 4),
-                                                                                      new ResourceItem(MakeResource(Resource.Leather), 2) };
-            craftables[Craftable.Coat].CraftingCosts = coatCraftingCosts;
+            craftables[Craftable.Coat].CraftingCosts =  new List<ResourceItem>() {
+                new ResourceItem(GetCraftable(Craftable.Cloth), 4),
+                new ResourceItem(GetResource(Resource.Leather), 2),
+            };
             #endregion
         }
 
@@ -115,7 +119,7 @@ namespace GlobalWarmingGame.Resources
         /// </summary>
         /// <param name="resource"></param>
         /// <returns></returns>
-        public static ResourceType MakeResource(Resource resource)
+        public static ResourceType GetResource(Resource resource)
         {
             return resources[resource];
         }
@@ -125,7 +129,7 @@ namespace GlobalWarmingGame.Resources
         /// </summary>
         /// <param name="craftable"></param>
         /// <returns></returns>
-        public static CraftableType MakeCraftable(Craftable craftable)
+        public static CraftableType GetCraftable(Craftable craftable)
         {
             return craftables[craftable];
         }

@@ -1,18 +1,13 @@
 ﻿using Engine;
+using Engine.PathFinding;
 using Engine.TileGrid;
-using Engine.Drawing;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
-using PermaFrost;
-using System.Collections;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using IDrawable = Engine.Drawing.IDrawable;
-using Zone = PermaFrost.Zone;
-using Engine.PathFinding;
-using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame
 {
@@ -22,74 +17,91 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
+        private static readonly int seed = 255;
+        private static TileSet tileSet;
+
         static Vector2 zonePos;
         readonly static IDictionary<Vector2, Zone> zoneTable;
-        static Zone zone;
-        static TileSet tileSet;
+
+        public static Zone CurrentZone { get => zoneTable[zonePos]; }
+
+
+        public static event EventHandler<GameObject> ObjectAdded = delegate { };
+        public static event EventHandler<GameObject> ObjectRemoved = delegate { };
+
         public static Camera Camera { get; set; }
 
-        public static TileMap ZoneMap { get => zone.tileMap; }
+        public static TileMap ZoneMap { get; set; }
 
         static GameObjectManager()
         {
-            zonePos = new Vector2(0, 0);
-
             zoneTable = new Dictionary<Vector2, Zone>();
-            zoneTable.Add(zonePos, new Zone());
-
-            zone = zoneTable[zonePos];
+            Updatables = new List<IUpdatable>();
+            Drawables = new List<IDrawable>();
+            Interactables = new List<IInteractable>();
         }
 
+        [Obsolete]
         public static string MapPath(Vector2 pos)
         {
             return string.Format(@"Content/maps/map1/{0}{1}.csv", pos.X, pos.Y);
         }
 
-        static TileMap LoadMap(Vector2 pos)
+        static TileMap GenerateMap(Vector2 pos)
         {
-            return TileMapParser.parseTileMap(MapPath(pos), tileSet);
+            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
         }
 
         public static void Init(TileSet ts)
         {
+
             tileSet = ts;
-            zone.tileMap = LoadMap(zonePos);
+
+
+            zonePos = Vector2.Zero;
+            
+            ZoneMap = GenerateMap(zonePos);
+            PathFinder.TileMap = ZoneMap;
+            zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap));
+            SetZone(zonePos);
         }
 
-        public static bool isZone(Vector2 direction)
+        public static bool IsZone(Vector2 direction)
         {
             Vector2 newZonePos = zonePos + direction;
 
-            return zoneTable.ContainsKey(newZonePos) || File.Exists(MapPath(newZonePos));
+            return zoneTable.ContainsKey(newZonePos);
         }
 
+        private static void SetZone(Vector2 position)
+        {
+            zonePos = position;
+            ZoneMap = GenerateMap(position);
+            Updatables = Filter<IUpdatable>();
+            Drawables = Filter<IDrawable>();
+            Interactables = Filter<IInteractable>();
+        }
         public static void MoveZone(Vector2 direction)
         {
-            if (isZone(direction))
+            //if (isZone(direction))
             {
-                List<GameObject> colonists = GameObjectManager.GetObjectsByTag("Colonist");
+                List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
 
-                foreach (GameObject colonist in colonists)
+                foreach (Colonist colonist in colonists)
                     GameObjectManager.Remove(colonist);
 
                 Vector2 newZonePos = zonePos + direction;
 
-                if (zoneTable.ContainsKey(newZonePos))
+                if (! zoneTable.ContainsKey(newZonePos))
                 {
-                    zonePos = newZonePos;
-                    zone = zoneTable[zonePos];
+
+                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, GenerateMap(newZonePos)));                   
                 }
 
-                else if (File.Exists(MapPath(newZonePos)))
-                {
-                    zoneTable.Add(newZonePos, new Zone());
-                    zoneTable[newZonePos].tileMap = LoadMap(newZonePos);
+                SetZone(newZonePos);
 
-                    zonePos = newZonePos;
-                    zone = zoneTable[zonePos];
-                }
-
-                for (int i = 0; i < colonists.Count; i++)
+                for (int i = 0; i < colonists.Count(); i++)
                 {
                     Colonist colonist = (Colonist)colonists[i];
                     colonist.Goals.Clear();
@@ -136,16 +148,14 @@ namespace GlobalWarmingGame
                 {
                     Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, ZoneMap.Size.Y * tileSet.textureSize.Y);
                 }
-
-                ZoneManager.CurrentZone.TileMap = ZoneMap;
+                PathFinder.TileMap = ZoneMap;
             }
         }
 
-        public static List<GameObject> Objects { get => zone.GameObjects.ToList(); }
-        public static List<IUpdatable> Updatable { get => zone.Updatables.ToList(); }
-        public static List<IDrawable> Drawable { get => zone.Drawables.ToList(); }
-        public static List<IClickable> Clickable { get => zone.Clickables.ToList(); }
-        public static List<IInteractable> Interactable { get => zone.Interactables.ToList(); }
+        public static List<GameObject> Objects { get => CurrentZone.GameObjects.ToList(); }
+        public static List<IUpdatable> Updatables { get; private set; } = new List<IUpdatable>();
+        public static List<IDrawable> Drawables { get; private set; } = new List<IDrawable>();
+        public static List<IInteractable> Interactables { get; private set; } = new List<IInteractable>();
 
         /// <summary>
         /// Adds a GameObject
@@ -153,19 +163,18 @@ namespace GlobalWarmingGame
         /// <param name="gameObject">The GameObject to be Added</param>
         public static void Add(GameObject gameObject)
         {
-            zone.GameObjects.Add(gameObject);
+            CurrentZone.GameObjects.Add(gameObject);
 
             if (gameObject is IDrawable d)
-                zone.Drawables.Add(d);
+                Drawables.Add(d);
 
             if (gameObject is IUpdatable u)
-                zone.Updatables.Add(u);
-
-            if (gameObject is IClickable c)
-                zone.Clickables.Add(c);
+                Updatables.Add(u);
 
             if (gameObject is IInteractable i)
-                zone.Interactables.Add(i);
+                Interactables.Add(i);
+
+            ObjectAdded.Invoke(null, gameObject);
         }
 
         /// <summary>
@@ -174,19 +183,18 @@ namespace GlobalWarmingGame
         /// <param name="gameObject">The GameObject to be removed</param>
         public static void Remove(GameObject gameObject)
         {
-            zone.GameObjects.Remove(gameObject);
+            CurrentZone.GameObjects.Remove(gameObject);
 
             if (gameObject is IDrawable d)
-                zone.Drawables.Remove(d);
+                Drawables.Remove(d);
 
             if (gameObject is IUpdatable u)
-                zone.Updatables.Remove(u);
-
-            if (gameObject is IClickable c)
-                zone.Clickables.Remove(c);
+                Updatables.Remove(u);
 
             if (gameObject is IInteractable i)
-                zone.Interactables.Remove(i);
+                Interactables.Remove(i);
+
+            ObjectRemoved.Invoke(null, gameObject);
         }
 
         /// <summary>
@@ -194,9 +202,9 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> Filter<T>()
+        public static List<T> Filter<T>()
         {
-            return zone.GameObjects.OfType<T>().ToList();
+            return CurrentZone.GameObjects.OfType<T>().ToList();
         }
 
         /// <summary>
@@ -208,7 +216,7 @@ namespace GlobalWarmingGame
         {
             List<GameObject> go = new List<GameObject>();
 
-            foreach(GameObject o in zone.GameObjects)
+            foreach(GameObject o in CurrentZone.GameObjects)
             {
                 if(o.Tag == tag)
                 {

@@ -12,9 +12,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Oven : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.MachineParts), 6),
-                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Stone), 4),
-                                                                                                   new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 2)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.MachineParts), 6),
+                                                                                                   new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4),
+                                                                                                   new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 2)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -30,9 +30,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "Oven",
-            depth: 0.7f,
             texture: texture
         )
         {

@@ -18,19 +18,20 @@ namespace GlobalWarmingGame.Interactions.Interactables
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "TallGrass",
-            depth: 0.7f,
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("trim", "Trim grass", "Trim grass", onStart: Trim));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("trim", "Trim grass", "Trim grass", onStart: Trim)
+            };
         }
 
         private void Trim(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Fibers), 4));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

@@ -13,24 +13,23 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Wood), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4)};
 
         public List<InstructionType> InstructionTypes { get; }
 
-        private InstructionType plant;
-        private InstructionType harvest;
+        private readonly InstructionType plant;
+        private readonly InstructionType harvest;
         private bool growing;
         private float timeUntilGrown;
-        private float growTime = 20000f;
+        private static readonly float growTime = 20000f;
 
         public Farm(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "Farm",
-            depth: 0.7f,
             texture: texture
         )
         {
@@ -43,7 +42,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Harvest(IInstructionFollower follower)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 10));
+            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 10));
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
