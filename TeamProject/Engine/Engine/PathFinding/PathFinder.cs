@@ -121,7 +121,7 @@ namespace Engine.PathFinding
             Dictionary<Tile, TileCosts> tileList = new Dictionary<Tile, TileCosts>();
 
             //Storage for all 8 possible adjacent tiles
-            float tileSize = current.size.X;
+            float tileSize = current.Size.X;
             float[] xDirections = new float[] { tileSize, -tileSize, 0,         0,        tileSize, -tileSize, tileSize, -tileSize };
             float[] yDirections = new float[] { 0,         0,        tileSize, -tileSize, tileSize, tileSize, -tileSize, -tileSize };
 

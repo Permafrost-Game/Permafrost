@@ -17,20 +17,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public List<InstructionType> InstructionTypes { get; }
 
-        private InstructionType plant;
-        private InstructionType harvest;
+        private readonly InstructionType plant;
+        private readonly InstructionType harvest;
         private bool growing;
         private float timeUntilGrown;
-        private float growTime = 20000f;
+        private static readonly float growTime = 20000f;
 
         public Farm(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "Farm",
-            depth: 0.7f,
             texture: texture
         )
         {

@@ -12,14 +12,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
     public class Bush : Sprite, IInteractable, IUpdatable
     {
-        private InstructionType forrage;
+        private readonly InstructionType forrage;
         private bool _isHarvestable;
 
-        private float timeToHarvestable = 3000f;
+        private static readonly float timeToHarvestable = 6000f;
         private float timeUnitlHarvestable;
 
-        private Texture2D textureHarvestable;
-        private Texture2D textureHarvested;
+        private readonly Texture2D textureHarvestable;
+        private readonly Texture2D textureHarvested;
         private bool IsHarvestable
         {
             get { return _isHarvestable; } 
@@ -37,9 +37,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             position: position,
             size: new Vector2(harvestable.Width, harvestable.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(harvestable.Width / 2f, harvestable.Height / 2f),
             tag: "Bush",
-            depth: 0.7f,
             texture: harvestable
         )
         {

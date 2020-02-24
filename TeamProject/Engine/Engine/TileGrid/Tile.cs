@@ -12,23 +12,21 @@ namespace Engine.TileGrid
     {
 
         private readonly Texture2D texture;
-        public Vector2 size { get; }
         public new Vector2 Position { get; }
         public Temperature temperature;
         public bool Heated { get; set; }
         
-        public String type { get; }
+        public string Type { get; }
         ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
         public bool Walkable { get; }
 
-        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, string type) : base(position, size)
+        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
         {
-            this.type = texture.Name; 
+            this.Type = texture.Name; 
             
             this.Position = position;
             this.texture = texture;
-            this.size = size;
             this.Walkable = walkable;
             temperature = new Temperature(-5/*ZoneManager.GlobalTemperature*/);//TODO fix this
         }
@@ -37,12 +35,12 @@ namespace Engine.TileGrid
         {
             //spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
             spriteBatch.Draw(
-                texture,
-                new Rectangle(base.Position.ToPoint(), size.ToPoint()),
-                new Rectangle(
-                    new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
-                    size.ToPoint()),
-                Color.White
+                texture: texture,
+                destinationRectangle: new Rectangle((base.Position - Size /2).ToPoint(), Size.ToPoint()),
+                sourceRectangle: new Rectangle(
+                                 new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
+                                 Size.ToPoint()),
+                color: Color.White
                 );
         }
 
@@ -51,7 +49,7 @@ namespace Engine.TileGrid
         {
             if (t is Tile tile)
             {
-                if (this.size.Equals(tile.size) && this.Position.Equals(tile.Position))
+                if (this.Size.Equals(tile.Size) && this.Position.Equals(tile.Position))
                 {
                     return true;
                 }

@@ -26,14 +26,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             position: position,
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
             tag: "CampFire",
-            depth: 0.7f,
             textureSet: textureSet,
             frameTime: 50f
         )
         {
             Heating = true;
+
             TextureGroupIndex = 1;
             InstructionTypes = new List<InstructionType>
             {

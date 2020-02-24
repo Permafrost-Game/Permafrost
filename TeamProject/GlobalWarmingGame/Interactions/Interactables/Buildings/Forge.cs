@@ -22,14 +22,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
-            rotationOrigin: new Vector2(0, 0),
+            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
             tag: "Forge",
-            depth: 0.7f,
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem)
+            };
         }
 
         private void ForgeItem(IInstructionFollower follower)
