@@ -79,7 +79,7 @@ namespace GlobalWarmingGame
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
             base.Initialize();
-           musicManager.playGameSoundtrack(Content); 
+           musicManager.PlayGameSoundtrack(Content); 
         }
 
         #region Load Content

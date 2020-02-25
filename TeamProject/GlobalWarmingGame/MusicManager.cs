@@ -6,7 +6,7 @@ namespace GlobalWarmingGame
     internal class MusicManager
     {
         Song song;
-        public void playGameSoundtrack(Microsoft.Xna.Framework.Content.ContentManager content)
+        public void PlayGameSoundtrack(Microsoft.Xna.Framework.Content.ContentManager content)
         {
             this.song = content.Load<Song>("sound/There _is_a_light_that_never_goes_out");
             MediaPlayer.IsRepeating = true;
