@@ -121,6 +121,8 @@ namespace GlobalWarmingGame
                 textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
                 textureSet.Add(5, water);
 
+                Textures.LoadContent(Content);
+
                 InteractablesFactory.LoadContent(Content);
 
                 ResourceTypeFactory.LoadContent(Content);

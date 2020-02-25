@@ -42,6 +42,12 @@ namespace GlobalWarmingGame.UI
                 GameObjectManager.MoveZone(new Vector2(1, 0));
             else if (CheckKeyPress(Keys.J))
                 GameObjectManager.MoveZone(new Vector2(-1, 0));
+
+            //else if (CheckKeyPress(Keys.F5))
+            //    GameObjectManager.SaveZone();
+            //else if (CheckKeyPress(Keys.F9))
+            //    GameObjectManager.LoadZone();
+
         }
 
         private bool CheckKeyPress(Keys key)

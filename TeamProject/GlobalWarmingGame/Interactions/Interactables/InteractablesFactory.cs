@@ -162,15 +162,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Rabbit:
                     return new Rabbit(position, textureSet["rabbit"]);
                 case Interactable.Bush:
-                    return new Bush(position, textures["bushH"], textures["bushN"]);
+                    return new Bush(position, TextureTypes.bushH, TextureTypes.bushN);
                 case Interactable.Tree:
-                    return new Tree(position, textures["tree"], textures["treeStump"]);
+                    return new Tree(position, TextureTypes.tree, TextureTypes.treeStump);
                 case Interactable.WorkBench:
                     return new WorkBench(position, textures["workBench"]);
                 case Interactable.StoneNode:
-                    return new StoneNode(position, textures["stoneNode"]);
+                    return new StoneNode(position, TextureTypes.stoneNode);
                 case Interactable.TallGrass:
-                    return new TallGrass(position, textures["tallGrass"]);
+                    return new TallGrass(position, TextureTypes.tallGrass);
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
                 case Interactable.Robot:
@@ -204,13 +204,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         [Obsolete]
         public static Bush MakeBush(Vector2 position)
         {
-            return new Bush(position, textures["bushH"], textures["bushN"]);
+            return new Bush(position, TextureTypes.bushH, TextureTypes.bushN);
         }
 
         [Obsolete]
         public static Tree MakeTree(Vector2 position)
         {
-            return new Tree(position, textures["tree"], textures["treeStump"]);
+            return new Tree(position, TextureTypes.tree, TextureTypes.treeStump);
         }
 
         [Obsolete]
@@ -222,13 +222,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         [Obsolete]
         public static StoneNode MakeStoneNode(Vector2 position)
         {
-            return new StoneNode(position, textures["stoneNode"]);
+            return new StoneNode(position, TextureTypes.stoneNode); //textures["stoneNode"]);
         }
 
         [Obsolete]
         public static TallGrass MakeTallGrass(Vector2 position)
         {
-            return new TallGrass(position, textures["tallGrass"]); 
+            return new TallGrass(position, TextureTypes.tallGrass); 
         }
 
         [Obsolete]

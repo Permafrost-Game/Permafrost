@@ -10,12 +10,16 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    public class Bush : Sprite, IInteractable, IUpdatable
+    public class Bush : Sprite, IInteractable, IUpdatable, IReconstructable
     {
         private readonly InstructionType forrage;
-        private bool _isHarvestable;
+
+        [PFSerializable]
+        public bool _isHarvestable;
 
         private static readonly float timeToHarvestable = 6000f;
+
+        [PFSerializable]
         private float timeUnitlHarvestable;
 
         private readonly Texture2D textureHarvestable;
@@ -32,22 +36,45 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public List<InstructionType> InstructionTypes { get; }
 
-        public Bush(Vector2 position, Texture2D harvestable, Texture2D harvested) : base
+        [PFSerializable]
+        public new Vector2 Position { get; set; }
+
+        [PFSerializable]
+        public readonly int textureHarvestableID;
+
+        [PFSerializable]
+        public readonly int textureHarvestedID;
+
+        public Bush() : base(Vector2.Zero, Vector2.Zero)
+        {
+
+        }
+
+        public Bush(Vector2 position, TextureTypes textureTypeHarvestable, TextureTypes textureTypeHarvested, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
         (
             position: position,
-            size: new Vector2(harvestable.Width, harvestable.Height),
+            size: new Vector2(Textures.Map[textureTypeHarvestable].Width, Textures.Map[textureTypeHarvestable].Height),
             rotation: 0f,
-            origin: new Vector2(harvestable.Width / 2f, harvestable.Height / 2f),
+            origin: new Vector2(Textures.Map[textureTypeHarvestable].Width / 2f, Textures.Map[textureTypeHarvestable].Height / 2f),
             tag: "Bush",
-            texture: harvestable
+            texture: Textures.Map[textureTypeHarvestable]
         )
         {
+            Position = base.Position;
+            textureHarvestableID = (int)textureTypeHarvestable;
+            textureHarvestedID = (int)textureTypeHarvested;
+
             InstructionTypes = new List<InstructionType>();
             forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onStart: Forrage);
-            this.textureHarvestable = harvestable;
-            this.textureHarvested = harvested;
-            IsHarvestable = true;
-            InstructionTypes.Add(forrage);
+            this.textureHarvestable = Textures.Map[textureTypeHarvestable];
+            this.textureHarvested = Textures.Map[textureTypeHarvested];
+
+            IsHarvestable = isHarvestable;
+
+            if (IsHarvestable)
+                InstructionTypes.Add(forrage);
+            else
+                this.timeUnitlHarvestable = timeToHarvestable;
         }
 
         private void Forrage(IInstructionFollower follower)
@@ -73,6 +100,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     IsHarvestable = true;
                 }
             }
+        }
+
+        public object Reconstruct()
+        {
+            System.Console.WriteLine(_isHarvestable);
+            return new Bush(Position, (TextureTypes)textureHarvestableID, (TextureTypes)textureHarvestedID, _isHarvestable, timeUnitlHarvestable);
         }
     }
 }
