@@ -11,6 +11,7 @@ using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame
@@ -30,7 +31,7 @@ namespace GlobalWarmingGame
         SpriteBatch spriteBatch;
 
         TileSet tileSet;
-
+ 
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
@@ -50,7 +51,7 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
         Texture2D logo;
-       
+        MusicManager musicManager;  
 
         public Game1()
         {
@@ -67,6 +68,7 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
+            musicManager = new MusicManager(); 
             graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
@@ -77,6 +79,7 @@ namespace GlobalWarmingGame
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
             base.Initialize();
+           musicManager.playGameSoundtrack(Content); 
         }
 
         #region Load Content
@@ -190,6 +193,7 @@ namespace GlobalWarmingGame
                 */
 
             }
+            
         }
 
         protected override void UnloadContent()

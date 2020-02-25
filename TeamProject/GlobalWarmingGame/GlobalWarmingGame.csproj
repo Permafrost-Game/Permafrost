@@ -69,6 +69,7 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
+    <Compile Include="MusicManager.cs" />
     <Compile Include="Resources\CraftableType.cs" />
     <Compile Include="Resources\IStorage.cs" />
     <Compile Include="Resources\ResourceTypeFactory.cs" />
@@ -109,6 +110,7 @@
       <HintPath>..\packages\SimplexNoise.2.0.0\lib\net45\SimplexNoise.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
