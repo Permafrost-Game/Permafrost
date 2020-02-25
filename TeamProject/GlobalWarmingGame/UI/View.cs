@@ -147,6 +147,21 @@ namespace GlobalWarmingGame.UI
 
         }
 
+        internal static void Notification<T>(string text) 
+        {
+            Panel Notification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
+            {
+                Padding = Vector2.Zero,
+                Visible = false
+            };
+
+            UserInterface.Active.AddEntity(Notification);
+
+            Label label = new Label(text, Anchor.Center);
+            Notification.AddChild(label);
+            Notification.Visible = true;
+        }
+
 
         /// <summary>
         /// Adds an inventory button and menu to the bottom panel.

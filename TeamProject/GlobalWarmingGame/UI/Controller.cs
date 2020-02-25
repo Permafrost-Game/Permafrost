@@ -123,10 +123,13 @@ namespace GlobalWarmingGame.UI
                     //If Colonist has the resources build
                     if (activeMember.Inventory.ContainsAll(building.CraftingCosts))
                     {
-                        InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), onStart: Build);
+                        InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onStart: Build);
                         options.Add(new ButtonHandler<Instruction>(new Instruction(construct, activeMember, (GameObject)building), IssueInstructionCallback));
                     }
-                    //TODO Else show notification that the colonist can't craft the building
+                    else
+                    {
+                        View.Notification<string>("Not enough resources");
+                    }
                 }
             }
 
@@ -231,19 +234,23 @@ namespace GlobalWarmingGame.UI
         /// Called when colonist is at the building site and then the building is made visible
         /// </summary>
         /// <param name="follower"></param>
-        private static void Build(IInstructionFollower follower)
+        private static void Build(Instruction instruction)
         {
-            List<ResourceItem> buildingCosts = new List<ResourceItem>();
+            Colonist colonist = (Colonist) instruction.ActiveMember;
+            List<ResourceItem> buildingCosts = instruction.Type.CraftingCosts;
 
             //If Colonist has the resources build
-            if (follower.Inventory.ContainsAll(buildingCosts))
+            if (colonist.Inventory.ContainsAll(buildingCosts))
             {
                 foreach (ResourceItem item in buildingCosts)
-                    follower.Inventory.RemoveItem(item);
+                    colonist.Inventory.RemoveItem(item);
 
                 building.Build();
             }
-            //Else show notification that the colonist can't craft the building
+            else 
+            {
+                //View.Notification<string>("Not enough resources");           
+            }
             constructingMode = false;
         }
         #endregion

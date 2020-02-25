@@ -33,7 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             };
         }
 
-        private void ForgeItem(IInstructionFollower follower)
+        private void ForgeItem(Instruction instruction)
         {
             //Open craft menu
             //Force the colonist to wait at the station until job is done

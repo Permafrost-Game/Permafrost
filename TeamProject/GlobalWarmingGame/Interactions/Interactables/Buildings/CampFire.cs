@@ -41,7 +41,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             };
         }
 
-        private void Fuel(IInstructionFollower follower)
+        private void Fuel(Instruction instruction)
         {
         }
 

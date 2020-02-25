@@ -15,15 +15,12 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
+    public class WorkBench : Sprite, IInteractable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4), new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 8)};
         public Panel ResourceNotification { get; set; }
 
         public List<InstructionType> InstructionTypes { get; }
-
-        MouseState currentMouseState;
-        MouseState previousMouseState;
 
         public WorkBench(Vector2 position, Texture2D texture) : base
         (
@@ -37,17 +34,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             InstructionTypes = new List<InstructionType>();
 
-            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
-            {
-                Padding = Vector2.Zero,
-                Visible = false
-            };
-
-            UserInterface.Active.AddEntity(ResourceNotification);
-
-            Label label = new Label("Not Enough Resources", Anchor.Center);
-            ResourceNotification.AddChild(label);
-
             InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", onStart: CraftCloth));
             InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", onStart: CraftAxe));
             InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", onStart: CraftBackPack));
@@ -60,77 +46,65 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         //TODO Make the tier one crafting items be children of a common parent which can be used to reduce code.
 
-        private void CraftCloth(IInstructionFollower follower)
+        private void CraftCloth(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Cloth);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Cloth);
         }
 
-        private void CraftAxe(IInstructionFollower follower)
+        private void CraftAxe(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Axe);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Axe);
         }
 
-        private void CraftBackPack(IInstructionFollower follower)
+        private void CraftBackPack(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Backpack);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Backpack);
         }
 
-        private void CraftCoat(IInstructionFollower follower)
+        private void CraftCoat(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Coat);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Coat);
         }
 
-        private void CraftBow(IInstructionFollower follower)
+        private void CraftBow(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Bow);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Bow);
         }
 
-        private void CraftHoe(IInstructionFollower follower)
+        private void CraftHoe(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Hoe);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Hoe);
         }
 
-        private void CraftPickaxe(IInstructionFollower follower)
+        private void CraftPickaxe(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Pickaxe);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.Pickaxe);
         }
 
-        private void CraftBasicRifle(IInstructionFollower follower)
+        private void CraftBasicRifle(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.BasicRifle);
+            WorkBenchCrafter(instruction.ActiveMember, Craftable.BasicRifle);
         }
 
         private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)
         {
+            Colonist colonist = (Colonist) follower;
+
             CraftableType craftable = ResourceTypeFactory.GetCraftable(craftableEnum);
-            if (follower.Inventory.ContainsAll(craftable.CraftingCosts))
+            if (colonist.Inventory.ContainsAll(craftable.CraftingCosts))
             {
                 foreach (ResourceItem item in craftable.CraftingCosts)
                 {
-                    follower.Inventory.RemoveItem(item);
+                    colonist.Inventory.RemoveItem(item);
                     //Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 //Console.WriteLine("Added "+ craftable.ID + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(craftable, 1));
+                colonist.Inventory.AddItem(new ResourceItem(craftable, 1));
             }
             else
             {
-                ResourceNotification.Visible = true;
+                //ResourceNotification.Visible = true;
             }
-            //follower.Goals.Clear();
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            currentMouseState = Mouse.GetState();
-
-            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-            {
-                if (ResourceNotification != null && ResourceNotification.Visible)
-                    ResourceNotification.Visible = false;
-            }
-
-            previousMouseState = currentMouseState;
         }
 
         public void Build()

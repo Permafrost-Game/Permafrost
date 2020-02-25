@@ -50,9 +50,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             InstructionTypes.Add(forrage);
         }
 
-        private void Forrage(IInstructionFollower follower)
+        private void Forrage(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             //This is tempory and should be replaced by the resource system
             if (IsHarvestable)
             {

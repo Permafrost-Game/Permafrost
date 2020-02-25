@@ -71,7 +71,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
-        private void EnemyAttacked(IInstructionFollower follower)
+        private void EnemyAttacked(Instruction instruction)
         {
             EnemyAttacked();
         }

@@ -30,9 +30,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             };
         }
 
-        private void Mine(IInstructionFollower follower)
+        private void Mine(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Coal), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Coal), 4));
             //Maybe destory the node or allow 3 more mine operations
         }
     }
