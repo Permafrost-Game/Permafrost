@@ -9,6 +9,7 @@ namespace GlobalWarmingGame
         public void playGameSoundtrack(Microsoft.Xna.Framework.Content.ContentManager content)
         {
             this.song = content.Load<Song>("sound/There _is_a_light_that_never_goes_out");
+            MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(song);
             MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
         }
