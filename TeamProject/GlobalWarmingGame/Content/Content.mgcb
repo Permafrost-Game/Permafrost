@@ -4868,11 +4868,11 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
-#begin sound/There _is_a_light_that_never_goes_out (online-audio-converter.com).mp3
-/importer:Mp3Importer
+#begin sound/There _is_a_light_that_never_goes_out.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/There _is_a_light_that_never_goes_out (online-audio-converter.com).mp3;sound/There _is_a_light_that_never_goes_out.mp3
+/build:sound/There _is_a_light_that_never_goes_out.ogg
 
 #begin textures/icons/apple.png
 /importer:TextureImporter
