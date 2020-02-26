@@ -125,7 +125,7 @@ namespace GlobalWarmingGame
 
                 InteractablesFactory.LoadContent(Content);
 
-                ResourceTypeFactory.LoadContent(Content);
+                ResourceTypeFactory.Init();
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
                 GameObjectManager.Init(tileSet);
@@ -153,9 +153,6 @@ namespace GlobalWarmingGame
                 Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
 
                 GameObjectManager.Add(c1);
-
-                
-                
                 
                 ProcessMenuSelection();
 

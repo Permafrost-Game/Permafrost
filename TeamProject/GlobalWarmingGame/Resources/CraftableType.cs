@@ -11,7 +11,7 @@ namespace GlobalWarmingGame.Resources
     public class CraftableType : ResourceType, ICraftable
     {
         public List<ResourceItem> CraftingCosts { get; set; }
-        public CraftableType(string displayName, string description, Texture2D texture) : base(displayName, description, texture)
+        public CraftableType(string displayName, string description, TextureIconTypes textureIconType) : base(displayName, description, textureIconType)
         {
 
         }

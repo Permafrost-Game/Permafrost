@@ -135,7 +135,7 @@ namespace GlobalWarmingGame
                 typeArrays[objType.FullName].Add(GetSerializedData(objType, obj));
             }
 
-            // Console.WriteLine(objectsData);
+            Console.WriteLine(objectsData);
 
             WriteSerializationInfo();
 

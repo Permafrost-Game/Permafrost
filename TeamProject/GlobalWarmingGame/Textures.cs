@@ -7,11 +7,15 @@ namespace GlobalWarmingGame
     static class Textures
     {
         public static IDictionary<TextureTypes, Texture2D> Map { get; }
+
+        public static IDictionary<TextureIconTypes, Texture2D> MapIcon { get; }
+
         public static IDictionary<TextureSetTypes, Texture2D[][]> MapSet { get; }
 
         static Textures()
         {
             Map = new Dictionary<TextureTypes, Texture2D>();
+            MapIcon = new Dictionary<TextureIconTypes, Texture2D>();
             MapSet = new Dictionary<TextureSetTypes, Texture2D[][]>();
         }
 
@@ -25,6 +29,27 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.workBench, contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
             Map.Add(TextureTypes.stoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
             Map.Add(TextureTypes.tallGrass, contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
+
+            MapIcon.Add(TextureIconTypes.stone, contentManager.Load<Texture2D>(@"textures/icons/stone"));
+            MapIcon.Add(TextureIconTypes.wood, contentManager.Load<Texture2D>(@"textures/icons/wood"));
+            MapIcon.Add(TextureIconTypes.fibers, contentManager.Load<Texture2D>(@"textures/icons/fibers"));
+            MapIcon.Add(TextureIconTypes.apple, contentManager.Load<Texture2D>(@"textures/icons/apple"));
+
+            /* todo */
+            MapIcon.Add(TextureIconTypes.coal, null);
+            MapIcon.Add(TextureIconTypes.leather, null);
+            MapIcon.Add(TextureIconTypes.machineParts, null);
+
+            MapIcon.Add(TextureIconTypes.axe, contentManager.Load<Texture2D>(@"textures/icons/axe"));
+            MapIcon.Add(TextureIconTypes.hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
+            MapIcon.Add(TextureIconTypes.pickaxe, contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
+
+            /* todo */
+            MapIcon.Add(TextureIconTypes.backpack, null);
+            MapIcon.Add(TextureIconTypes.basicRifle, null);
+            MapIcon.Add(TextureIconTypes.bow, null);
+            MapIcon.Add(TextureIconTypes.cloth, null);
+            MapIcon.Add(TextureIconTypes.coat, null);
 
             MapSet.Add(TextureSetTypes.colonist, new Texture2D[][]{
                     new Texture2D[]
@@ -150,6 +175,25 @@ namespace GlobalWarmingGame
         workBench,
         stoneNode,
         tallGrass
+    }
+
+    public enum TextureIconTypes
+    {
+        stone,
+        wood,
+        fibers,
+        apple,
+        coal,
+        leather,
+        machineParts,
+        axe,
+        hoe,
+        pickaxe,
+        backpack,
+        basicRifle,
+        bow,
+        cloth,
+        coat
     }
 
     public enum TextureSetTypes

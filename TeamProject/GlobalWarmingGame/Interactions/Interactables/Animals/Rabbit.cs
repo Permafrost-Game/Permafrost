@@ -26,13 +26,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         }
 
-        public Rabbit(Vector2 position, TextureSetTypes textureSet) : base
+        public Rabbit(Vector2 position, TextureSetTypes textureSetType) : base
         (
-            position, "Rabbit", Textures.MapSet[textureSet], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
+            position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
         {
             Position = base.Position;
-            textureSetID = (int)textureSet;
+            textureSetID = (int)textureSetType;
 
             this.InstructionTypes.Add(
                 new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onStart: Hunt)

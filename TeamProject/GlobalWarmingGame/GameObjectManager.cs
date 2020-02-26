@@ -111,6 +111,11 @@ namespace GlobalWarmingGame
             SaveZone();
             SetZone(zonePos + direction);
 
+            Serializer.Serialize(@"Content/test.json", ((Colonist)colonists[0]).Inventory.Resources.Values);
+
+            //foreach (ResourceItems.ResourceItem v in ((Colonist)colonists[0]).Inventory.Resources.Values)
+            //    System.Console.WriteLine(v.ResourceType.displayName + " " + v.Weight);
+
             for (int i = 0; i < colonists.Count(); i++)
             {
                 Colonist colonist = (Colonist)colonists[i];
