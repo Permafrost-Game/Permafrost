@@ -160,7 +160,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Farm:
                     return new Farm(position, textures["farm"]);
                 case Interactable.Rabbit:
-                    return new Rabbit(position, textureSet["rabbit"]);
+                    return new Rabbit(position, TextureSetTypes.rabbit);
                 case Interactable.Bush:
                     return new Bush(position, TextureTypes.bushH, TextureTypes.bushN);
                 case Interactable.Tree:
@@ -198,7 +198,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         [Obsolete]
         public static Rabbit MakeRabbit(Vector2 position)
         {
-            return new Rabbit(position, textureSet["rabbit"]);
+            return new Rabbit(position, TextureSetTypes.rabbit);
         }
 
         [Obsolete]

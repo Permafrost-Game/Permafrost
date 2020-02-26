@@ -20,7 +20,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private static readonly float timeToHarvestable = 6000f;
 
         [PFSerializable]
-        private float timeUnitlHarvestable;
+        public float timeUnitlHarvestable;
 
         private readonly Texture2D textureHarvestable;
         private readonly Texture2D textureHarvested;
@@ -69,12 +69,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             this.textureHarvestable = Textures.Map[textureTypeHarvestable];
             this.textureHarvested = Textures.Map[textureTypeHarvested];
 
-            IsHarvestable = isHarvestable;
-
-            if (IsHarvestable)
+            if (IsHarvestable = isHarvestable)
                 InstructionTypes.Add(forrage);
             else
-                this.timeUnitlHarvestable = timeToHarvestable;
+                this.timeUnitlHarvestable = timeUnitlHarvestable;
         }
 
         private void Forrage(IInstructionFollower follower)

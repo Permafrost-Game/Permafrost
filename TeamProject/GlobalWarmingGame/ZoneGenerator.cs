@@ -38,39 +38,38 @@ namespace GlobalWarmingGame
                     {
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
                     }
-                    //    else if(value < 0.12)
-                    //    {
-                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
-                    //    }
-                    //}
-
-                    if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
+                    else if (value < 0.12)
                     {
-                        if (value > 0.85)
-                        {
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
-                        }
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+                    }
+                }
+
+                else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
+                {
+                    if (value > 0.85)
+                    {
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
+                    }
+                }
+
+                else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
+                {
+                    if (value > 0.9)
+                    {
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                    }
+                }
+                else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
+                {
+                    if (value > 0.9)
+                    {
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                     }
 
-                    //if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
-                    //{
-                    //    if (value > 0.9)
-                    //    {
-                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                    //    }
-                    //}
-                    //if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
-                    //{
-                    //    if (value > 0.9)
-                    //    {
-                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                    //    }
-
-                    //    else if(rand.Next(0, 10000) == 99)
-                    //    {
-                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
-                    //    }
-                    //}
+                    else if (rand.Next(0, 10000) == 99)
+                    {
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
+                    }
                 }
             }
         }
