@@ -9,14 +9,13 @@ using GlobalWarmingGame.Interactions.Interactables;
 
 namespace GlobalWarmingGame
 {
-    static class Zone
+    static class ZoneGenerator
     {
-        public static List<GameObject> GenerateGameObjects(int seed, TileMap tileMap)
+        public static void SpawnGameObjects(int seed)
         {
-            List<GameObject> gameObjects = new List<GameObject>();
             Random rand = new Random(seed);
 
-            foreach (Tile t in tileMap.Tiles)
+            foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
             {
                 //int item = rand.Next(0, 100);
                 float value = ((Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 4f) / 255) + (Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 0.1f) / 255)) / 2;
@@ -28,20 +27,20 @@ namespace GlobalWarmingGame
                     {
                         if (value > 0.80 && value < 0.85)
                         {
-                            gameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                         }
                         else if (value > 0.85 && value < 0.9)
                         {
-                            gameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
                         }
                     }
                     else if (value < 0.1)
                     {
-                        gameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
                     }
                     //    else if(value < 0.12)
                     //    {
-                    //        GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
                     //    }
                     //}
 
@@ -49,7 +48,7 @@ namespace GlobalWarmingGame
                     {
                         if (value > 0.85)
                         {
-                            gameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
                         }
                     }
 
@@ -57,25 +56,23 @@ namespace GlobalWarmingGame
                     //{
                     //    if (value > 0.9)
                     //    {
-                    //        GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                     //    }
                     //}
                     //if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
                     //{
                     //    if (value > 0.9)
                     //    {
-                    //        GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                     //    }
 
                     //    else if(rand.Next(0, 10000) == 99)
                     //    {
-                    //        GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
+                    //        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
                     //    }
                     //}
                 }
             }
-
-            return gameObjects;
         }
     }
     

@@ -104,7 +104,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            System.Console.WriteLine(_isHarvestable);
             return new Bush(Position, (TextureTypes)textureHarvestableID, (TextureTypes)textureHarvestedID, _isHarvestable, timeUnitlHarvestable);
         }
     }

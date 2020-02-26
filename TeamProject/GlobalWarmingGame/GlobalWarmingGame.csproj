@@ -97,7 +97,7 @@
     <Compile Include="Resources\ResourceItem.cs" />
     <Compile Include="Resources\ResourceType.cs" />
     <Compile Include="UI\View.cs" />
-    <Compile Include="Zone.cs" />
+    <Compile Include="ZoneGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -80,7 +80,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            // System.Console.WriteLine(_choppable);
             return new Tree(Position, (TextureTypes)textureTreeID, (TextureTypes)textureStumpID, _choppable);
         }
     }

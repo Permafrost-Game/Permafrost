@@ -96,12 +96,7 @@ namespace GlobalWarmingGame
             {
                 Console.WriteLine("Creating " + ZoneFilePath());
 
-                gameObjects.AddRange(Zone.GenerateGameObjects(seed, ZoneMap));
-
-                Updatables = Filter<IUpdatable>();
-                Drawables = Filter<IDrawable>();
-                Interactables = Filter<IInteractable>();
-
+                ZoneGenerator.SpawnGameObjects(seed);
                 SaveZone();
             }
         }
