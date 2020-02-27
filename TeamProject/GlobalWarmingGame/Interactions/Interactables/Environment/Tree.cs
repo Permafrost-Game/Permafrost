@@ -41,7 +41,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             this.textureTree = textureTree;
             this.textureStump = textureStump;
             Choppable = true;
-            chop =new InstructionType("chop", "Chop", "Chop for wood", onStart: Chop);
+            chop = new InstructionType("chop", "Chop", "Chop for wood", 0,
+                                       new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1)}, onStart: Chop);
+
             InstructionTypes.Add(chop);
         }
 

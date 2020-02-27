@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Action
 
         public delegate void OnStart(Instruction instruction);
         private readonly OnStart onStart;
-        public List<ResourceItem> CraftingCosts { get; }
+        public List<ResourceItem> RequiredCosts { get; }
 
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace GlobalWarmingGame.Action
             this.Name = name;
             this.Description = description;
             this.Priority = priority;
-            this.CraftingCosts = requiredCosts;
+            this.RequiredCosts = requiredCosts;
 
             this.onStart = onStart;
         }

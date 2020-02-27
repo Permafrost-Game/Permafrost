@@ -151,7 +151,7 @@ namespace GlobalWarmingGame.UI
 
         internal static void Notification<T>(string text) 
         {
-            Panel Notification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
+            Panel Notification = new Panel(new Vector2(175, 125), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
             {
                 Padding = Vector2.Zero,
                 Visible = false
@@ -164,7 +164,7 @@ namespace GlobalWarmingGame.UI
 
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                Notification.Visible = false;
+                Notification.Dispose();
                 UserInterface.Active.RemoveEntity(Notification);
             });
         }

@@ -32,16 +32,69 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             texture: texture
         )
         {
+            #region Teir 1 crafting costs
+            //Axe
+            List<ResourceItem> AxeCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 1),
+            };
+
+            //Hoe
+            List<ResourceItem> HoeCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 2),
+            };
+
+            //Pickaxe
+            List<ResourceItem> PickaxeCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 2),
+            };
+
+            //Backpack
+            List<ResourceItem> BackpackCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Cloth), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Leather), 5),
+            };
+
+            //BasicRifle
+            List<ResourceItem> BasicRifleCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 8),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Leather), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.MachineParts), 4),
+            };
+
+            //Bow
+            List<ResourceItem> BowCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 6),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 1),
+            };
+
+            //Cloth
+            List<ResourceItem> ClothCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4),
+            };
+
+            //Coat
+            List<ResourceItem> CoatCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Cloth), 4),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Leather), 2),
+            };
+            #endregion
+
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("craftcloth", "Cloth", "Craft cloth", onStart: CraftCloth),
-                new InstructionType("craftaxe", "Axe", "Craft axe", onStart: CraftAxe),
-                new InstructionType("craftbackpack", "Backpack", "Craft backpack", onStart: CraftBackPack),
-                new InstructionType("craftcoat", "Coat", "Craft coat", onStart: CraftCoat),
-                new InstructionType("craftbow", "Bow", "Craft bow", onStart: CraftBow),
-                new InstructionType("crafthoe", "Hoe", "Craft hoe", onStart: CraftHoe),
-                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", onStart: CraftPickaxe),
-                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", onStart: CraftBasicRifle)
+                new InstructionType("craftaxe", "Axe", "Craft axe", 0, AxeCraftingCosts, onStart: CraftAxe),
+                new InstructionType("crafthoe", "Hoe", "Craft hoe", 0, HoeCraftingCosts, onStart: CraftHoe),
+                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", 0, PickaxeCosts, onStart: CraftPickaxe),
+                new InstructionType("craftbackpack", "Backpack", "Craft backpack", 0, BackpackCraftingCosts, onStart: CraftBackPack),
+                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", 0, BasicRifleCraftingCosts, onStart: CraftBasicRifle),
+                new InstructionType("craftbow", "Bow", "Craft bow", 0, BowCraftingCosts, onStart: CraftBow),
+                new InstructionType("craftcloth", "Cloth", "Craft cloth", 0, ClothCraftingCosts, onStart: CraftCloth),
+                new InstructionType("craftcoat", "Coat", "Craft coat", 0, CoatCraftingCosts, onStart: CraftCoat)
             };
         }
 
@@ -49,52 +102,52 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void CraftCloth(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Cloth);
+            WorkBenchCrafter(instruction, Resource.Cloth);
         }
 
         private void CraftAxe(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Axe);
+            WorkBenchCrafter(instruction, Resource.Axe);
         }
 
         private void CraftBackPack(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Backpack);
+            WorkBenchCrafter(instruction, Resource.Backpack);
         }
 
         private void CraftCoat(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Coat);
+            WorkBenchCrafter(instruction, Resource.Coat);
         }
 
         private void CraftBow(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Bow);
+            WorkBenchCrafter(instruction, Resource.Bow);
         }
 
         private void CraftHoe(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Hoe);
+            WorkBenchCrafter(instruction, Resource.Hoe);
         }
 
         private void CraftPickaxe(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.Pickaxe);
+            WorkBenchCrafter(instruction, Resource.Pickaxe);
         }
 
         private void CraftBasicRifle(Instruction instruction)
         {
-            WorkBenchCrafter(instruction.ActiveMember, Craftable.BasicRifle);
+            WorkBenchCrafter(instruction, Resource.BasicRifle);
         }
 
-        private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)
+        private void WorkBenchCrafter(Instruction instruction, Resource resourceEnum)
         {
-            Colonist colonist = (Colonist) follower;
+            Colonist colonist = (Colonist) instruction.ActiveMember;
 
-            CraftableType craftable = ResourceTypeFactory.GetCraftable(craftableEnum);
-            if (colonist.Inventory.ContainsAll(craftable.CraftingCosts))
+            ResourceType craftable = ResourceTypeFactory.GetResource(resourceEnum);
+            if (colonist.Inventory.ContainsAll(instruction.Type.RequiredCosts))
             {
-                foreach (ResourceItem item in craftable.CraftingCosts)
+                foreach (ResourceItem item in instruction.Type.RequiredCosts)
                 {
                     colonist.Inventory.RemoveItem(item);
                     //Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);

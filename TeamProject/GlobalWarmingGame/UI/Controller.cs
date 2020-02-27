@@ -145,8 +145,23 @@ namespace GlobalWarmingGame.UI
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
         {
-            //MAKE THE CHECKS FOR REQUIRED COSTS HERE
-            instruction.ActiveMember.AddInstruction(instruction, 0);
+            //Check if the instruction requires resources or craftables
+            if (instruction.Type.RequiredCosts != null)
+            {
+                //Check if the colonist has the required resources in their inventory
+                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredCosts))
+                {
+                    instruction.ActiveMember.AddInstruction(instruction, 0);
+                }
+                else 
+                {
+                    View.Notification<string>("Required resources missing");
+                }
+            }
+            else
+            {
+                instruction.ActiveMember.AddInstruction(instruction, 0);
+            }
         }
 
         /// <summary>
@@ -241,7 +256,7 @@ namespace GlobalWarmingGame.UI
         private static void Build(Instruction instruction)
         {
             Colonist colonist = (Colonist) instruction.ActiveMember;
-            List<ResourceItem> buildingCosts = instruction.Type.CraftingCosts;
+            List<ResourceItem> buildingCosts = instruction.Type.RequiredCosts;
 
             //If Colonist has the resources build
             if (colonist.Inventory.ContainsAll(buildingCosts))
