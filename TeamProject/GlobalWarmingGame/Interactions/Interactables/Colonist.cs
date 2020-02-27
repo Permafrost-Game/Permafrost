@@ -18,7 +18,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public List<InstructionType> InstructionTypes { get; }
         private Queue<Instruction> instructions;
-        public Inventory Inventory { get; }
+
+        [PFSerializable]
+        public readonly Inventory inventory;
+
+        public Inventory Inventory { get => inventory; }
 
         #endregion
 
@@ -102,7 +106,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Speed = 0.5f;
             MaxHealth = 100f;
             Health = MaxHealth;
-            Inventory = new Inventory(inventoryCapacity);
+            inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
             timeToTemperature = timeUntillTemperature;

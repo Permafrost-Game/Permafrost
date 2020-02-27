@@ -48,7 +48,7 @@ namespace GlobalWarmingGame
                 || type == typeof(Guid);
         }
 
-        static void HandleNewType(Type type, object obj)
+        static void HandleNewType(Type type)
         {
             StaticSerializationInfo serializationInfo = new StaticSerializationInfo(type);
 
@@ -56,8 +56,16 @@ namespace GlobalWarmingGame
             {
                 Type fieldType = field.FieldType;
 
-                if (!lookupTable.ContainsKey(fieldType) && !IsSimpleType(fieldType))
-                    HandleNewType(fieldType, field.GetValue(obj));
+                if (fieldType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(fieldType))
+                {
+                    Type elementType = fieldType.GetGenericArguments()[0];
+
+                    if (!lookupTable.ContainsKey(elementType) && !IsSimpleType(elementType))
+                        HandleNewType(elementType);
+                }
+
+                else if (!lookupTable.ContainsKey(fieldType) && !IsSimpleType(fieldType))
+                    HandleNewType(fieldType);
 
                 serializationInfo.AddField(field);
             }
@@ -66,8 +74,16 @@ namespace GlobalWarmingGame
             {
                 Type propertyType = property.PropertyType;
 
-                if (!lookupTable.ContainsKey(propertyType) && !IsSimpleType(propertyType))
-                    HandleNewType(propertyType, property.GetValue(obj));
+                if (propertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(propertyType))
+                {
+                    Type elementType = propertyType.GetGenericArguments()[0];
+
+                    if (!lookupTable.ContainsKey(elementType) && !IsSimpleType(elementType))
+                        HandleNewType(elementType);
+                }
+
+                else if (!lookupTable.ContainsKey(propertyType) && !IsSimpleType(propertyType))
+                    HandleNewType(propertyType);
 
                 serializationInfo.AddProperty(property);
             }
@@ -124,7 +140,7 @@ namespace GlobalWarmingGame
                 Type objType = obj.GetType();
 
                 if (!lookupTable.ContainsKey(objType))
-                    HandleNewType(objType, obj);
+                    HandleNewType(objType);
 
                 if (!typeArrays.ContainsKey(objType.FullName))
                 {
@@ -166,6 +182,19 @@ namespace GlobalWarmingGame
             {
                 if (IsSimpleType(type))
                     return Convert.ChangeType(data.ToString(), type);
+
+                if (type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type))
+                {
+                    Type elementType = type.GetGenericArguments()[0];
+
+                    var listType = typeof(List<>).MakeGenericType(elementType);
+                    var list = (System.Collections.IList)Activator.CreateInstance(listType);
+
+                    foreach (var elementData in data)
+                        list.Add(GetDeserailizedObject(type.GetGenericArguments()[0], elementData));
+
+                    return list;
+                }
 
                 object obj = Activator.CreateInstance(type);
 

@@ -6,20 +6,33 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.ResourceItems
 {
-    public class Inventory
+    public class Inventory : IReconstructable
     {
         public event EventHandler InventoryChange = delegate { };
 
         public Dictionary<ResourceType, ResourceItem> Resources { get; private set; }
+
+        [PFSerializable]
         public float Capacity { get; private set; }
+
         public float CurrentLoad { get; private set; }
         public bool IsFull { get => Capacity < CurrentLoad;  }
+
+        [PFSerializable]
+        public readonly IEnumerable<ResourceItem> resourceItems;
+
+        public Inventory()
+        {
+
+        }
 
         public Inventory(float capacity)
         {
             Resources = new Dictionary<ResourceType, ResourceItem>();
             Capacity = capacity;
             CurrentLoad = 0f;
+
+            resourceItems = Resources.Values;
         }
 
 
@@ -114,6 +127,16 @@ namespace GlobalWarmingGame.ResourceItems
                 }
             }
             return true;
+        }
+
+        public object Reconstruct()
+        {
+            Inventory inventory = new Inventory(Capacity);
+
+            foreach (ResourceItem item in resourceItems)
+                inventory.AddItemUnchecked(item);
+
+            return inventory;
         }
     }
 }
