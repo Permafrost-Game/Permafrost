@@ -32,16 +32,17 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-
-            InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", onStart: CraftCloth));
-            InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", onStart: CraftAxe));
-            InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", onStart: CraftBackPack));
-            InstructionTypes.Add(new InstructionType("craftcoat", "Coat", "Craft coat", onStart: CraftCoat));
-            InstructionTypes.Add(new InstructionType("craftbow", "Bow", "Craft bow", onStart: CraftBow));
-            InstructionTypes.Add(new InstructionType("crafthoe", "Hoe", "Craft hoe", onStart: CraftHoe));
-            InstructionTypes.Add(new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", onStart: CraftPickaxe));
-            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", onStart: CraftBasicRifle));
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("craftcloth", "Cloth", "Craft cloth", onStart: CraftCloth),
+                new InstructionType("craftaxe", "Axe", "Craft axe", onStart: CraftAxe),
+                new InstructionType("craftbackpack", "Backpack", "Craft backpack", onStart: CraftBackPack),
+                new InstructionType("craftcoat", "Coat", "Craft coat", onStart: CraftCoat),
+                new InstructionType("craftbow", "Bow", "Craft bow", onStart: CraftBow),
+                new InstructionType("crafthoe", "Hoe", "Craft hoe", onStart: CraftHoe),
+                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", onStart: CraftPickaxe),
+                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", onStart: CraftBasicRifle)
+            };
         }
 
         //TODO Make the tier one crafting items be children of a common parent which can be used to reduce code.

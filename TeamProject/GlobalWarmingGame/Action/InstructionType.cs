@@ -28,13 +28,13 @@ namespace GlobalWarmingGame.Action
         /// <param name="description">Display description</param>
         /// <param name="onStart">The method that is called when the instruction has started</param>
         /// /// <param name="onComplete">The method that is called when the instruction has started</param>
-        public InstructionType(string id, string name, string description, int priority = 0, List<ResourceItem> craftingCosts = null, OnStart onStart = default)
+        public InstructionType(string id, string name, string description, int priority = 0, List<ResourceItem> requiredCosts = null, OnStart onStart = default)
         {
             this.ID = id;
             this.Name = name;
             this.Description = description;
             this.Priority = priority;
-            this.CraftingCosts = craftingCosts;
+            this.CraftingCosts = requiredCosts;
 
             this.onStart = onStart;
         }

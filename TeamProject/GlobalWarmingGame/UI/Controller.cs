@@ -111,7 +111,8 @@ namespace GlobalWarmingGame.UI
                 if (objectClicked is Colonist)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, activeMember, objectClicked), SelectColonistCallback));
-                } else if (objectClicked is IStorage)
+                } 
+                else if (objectClicked is IStorage)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventoryCallback));
                 }
@@ -123,12 +124,14 @@ namespace GlobalWarmingGame.UI
                     //If Colonist has the resources build
                     if (activeMember.Inventory.ContainsAll(building.CraftingCosts))
                     {
-                        InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onStart: Build);
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(construct, activeMember, (GameObject)building), IssueInstructionCallback));
+                        options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onStart: Build), 
+                                                                                   activeMember, 
+                                                                                   (GameObject)building), IssueInstructionCallback));
                     }
                     else
                     {
                         View.Notification<string>("Not enough resources");
+                        constructingMode = false;
                     }
                 }
             }
@@ -142,6 +145,7 @@ namespace GlobalWarmingGame.UI
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
         {
+            //MAKE THE CHECKS FOR REQUIRED COSTS HERE
             instruction.ActiveMember.AddInstruction(instruction, 0);
         }
 
@@ -246,10 +250,6 @@ namespace GlobalWarmingGame.UI
                     colonist.Inventory.RemoveItem(item);
 
                 building.Build();
-            }
-            else 
-            {
-                //View.Notification<string>("Not enough resources");           
             }
             constructingMode = false;
         }

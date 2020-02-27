@@ -3,7 +3,9 @@ using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.UI
 {
@@ -157,9 +159,14 @@ namespace GlobalWarmingGame.UI
 
             UserInterface.Active.AddEntity(Notification);
 
-            Label label = new Label(text, Anchor.Center);
-            Notification.AddChild(label);
+            Notification.AddChild(new Label(text, Anchor.Center));
             Notification.Visible = true;
+
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            {
+                Notification.Visible = false;
+                UserInterface.Active.RemoveEntity(Notification);
+            });
         }
 
 
