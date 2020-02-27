@@ -11,7 +11,9 @@ using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GlobalWarmingGame
 {
@@ -20,9 +22,12 @@ namespace GlobalWarmingGame
     /// </summary>
     public class Game1 : Game
     {
-        private readonly bool isFullScreen = false;
-        private readonly float resolutionScale = 0.75f;
+        const string SettingsPath = @"Content/settings.json";
 
+        // private bool isFullScreen = false;
+        private float resolutionScale = 0.75f;
+        private int seed = new System.Random().Next();
+        private Vector2 currentZone = Vector2.Zero;
 
 
 
@@ -50,15 +55,10 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
         Texture2D logo;
-       
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this)
-            {
-                IsFullScreen = isFullScreen
-            };
-            
+            graphics = new GraphicsDeviceManager(this);
             
             Content.RootDirectory = "Content";
 
@@ -67,6 +67,21 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
+            if (File.Exists(SettingsPath))
+            {
+                var settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(SettingsPath));
+
+                if (bool.Parse(settings["isFullScreen"]))
+                    graphics.ToggleFullScreen();
+
+                resolutionScale = float.Parse(settings["resolutionScale"]);
+
+                seed = int.Parse(settings["seed"]);
+
+                string[] zoneCoords = settings["currentZone"].Split(',');
+                currentZone = new Vector2(int.Parse(zoneCoords[0]), int.Parse(zoneCoords[1]));
+            }
+
             graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
@@ -128,14 +143,15 @@ namespace GlobalWarmingGame
                 ResourceTypeFactory.Init();
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
-                GameObjectManager.Init(tileSet);
 
+                GameObjectManager.Init(tileSet, seed, currentZone);
+                    
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
 
                 GameObjectManager.Camera = camera;
-                this.keyboardInputHandler = new KeyboardInputHandler();
+                this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
             //CREATING GAME OBJECTS
@@ -193,7 +209,15 @@ namespace GlobalWarmingGame
 
         protected override void UnloadContent()
         {
+            var settingsData = JsonConvert.SerializeObject(new
+            {
+                isFullScreen = graphics.IsFullScreen,
+                resolutionScale,
+                seed,
+                currentZone = GameObjectManager.ZoneFileName()
+            }, Formatting.Indented);
 
+            System.IO.File.WriteAllText(SettingsPath, settingsData);
         }
         #endregion
 

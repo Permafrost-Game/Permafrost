@@ -14,6 +14,12 @@ namespace GlobalWarmingGame.UI
         private KeyboardState previousKeyboardState;
         private KeyboardState currentKeyboardState;
 
+        private GraphicsDeviceManager graphics;
+
+        public KeyboardInputHandler(GraphicsDeviceManager graphics)
+        {
+            this.graphics = graphics;
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -42,6 +48,9 @@ namespace GlobalWarmingGame.UI
                 GameObjectManager.MoveZone(new Vector2(1, 0));
             else if (CheckKeyPress(Keys.J))
                 GameObjectManager.MoveZone(new Vector2(-1, 0));
+
+            else if (CheckKeyPress(Keys.F11))
+                graphics.ToggleFullScreen();
 
             //else if (CheckKeyPress(Keys.F5))
             //    GameObjectManager.SaveZone();

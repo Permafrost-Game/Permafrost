@@ -1,10 +1,12 @@
 ﻿using Engine;
 using Engine.PathFinding;
 using Engine.TileGrid;
+using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using SimplexNoise;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
-        private static readonly int seed = 255;
+        public static int seed;
         private static TileSet tileSet;
 
         static Vector2 zonePos;
@@ -42,17 +44,19 @@ namespace GlobalWarmingGame
             Interactables = new List<IInteractable>();
         }
 
-        static TileMap GenerateMap(Vector2 pos)
-        {
-            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
-        }
-
-        public static void Init(TileSet ts)
+        public static void Init(TileSet ts, int worldSeed, Vector2 currentZone)
         {
             tileSet = ts;
 
-            SetZone(Vector2.Zero);
+            seed = worldSeed;
+            zonePos = currentZone;
+
+            SetZone(zonePos);
+
+            //private void Trim DoSomething()
+
+            //EnvironmentObject environmentObject= new EnvironmentObject(new Vector2(1750, 1750), TextureTypes.workBench);
+            //environmentObject.InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
         }
 
         public static string ZoneFileName()
@@ -69,6 +73,12 @@ namespace GlobalWarmingGame
         {
             Console.WriteLine("Saving to " + ZoneFilePath());
             Serializer.Serialize(ZoneFilePath(), gameObjects);
+        }
+
+        private static TileMap GenerateMap(Vector2 pos)
+        {
+            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
         }
 
         private static void SetZone(Vector2 position)
@@ -111,8 +121,10 @@ namespace GlobalWarmingGame
             SaveZone();
             SetZone(zonePos + direction);
 
-            List<object> l = new List<object>();
-            l.Add((Colonist)colonists[0]);
+            //List<object> l = new List<object>();
+            //l.Add((Colonist)colonists[0]);
+
+
 
             // Serializer.Serialize(@"Content/test.json", l);
 
