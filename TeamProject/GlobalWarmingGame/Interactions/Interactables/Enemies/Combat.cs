@@ -57,7 +57,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
             if (colonist.Health <= 0 || enemy.Health<=0) {
                 colonist.setDead();
-                enemy.ResetEnemyTarget();
+               // enemy.ResetEnemyTarget();
                 enemy.setAttacking(false);
                
                 colonist.inCombat = false;

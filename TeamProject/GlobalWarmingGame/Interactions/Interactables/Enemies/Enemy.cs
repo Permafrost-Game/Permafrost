@@ -15,10 +15,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
     //add random movement using randomAI class
    public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
-        List<GameObject> colonists;
-        GameTime duration;
-        GameObject target;
-        Boolean targetFound = false;
+        
+        Colonist target=null;
+        Colonist targetInRange=null;
+       
         public float AttackPower { get; set; }
         public float Health { get; set; }
         public float attackRange { get; set; }
@@ -37,6 +37,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
     
         private bool isInCombat=false;
         private bool flipped;
+        private double EnemytimeToAttack;
+        public double aggroRange=200;
 
         public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
@@ -73,7 +75,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         private void EnemyAttacked(IInstructionFollower follower)
         {
-            EnemyAttacked();
+            Aggro();
         }
 
         public void SetEnemyDead(){
@@ -81,84 +83,77 @@ namespace GlobalWarmingGame.Interactions.Enemies
             
         }
 
-        public void ResetEnemyTarget() {
-            colonists.Remove(target);
-            targetFound = false;
-            target = null;
-            Goals.Clear();
-        }
 
-        private void EnemyAttacked()
+
+        private void Aggro()
         {
-            colonists = GameObjectManager.GetObjectsByTag("Colonist");
-            targetFound = false;
-            for (int i = 0; i < colonists.Count; i++)
+
+
+
+
+
+
+            target = GlobalCombatDetector.ColonistInAggroRange(this);
+            targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
+            
+            if (target == null)
             {
-                if (InAggroRange(colonists.ElementAt(i).Position) & targetFound == false)
-                {
-                    targetFound = true;
-                    target = colonists.ElementAt(i);
-                }
-            }
-            if (targetFound == false)
-            {
-             //needs fixing
-                Random rnd = new Random();
-                Vector2 v = new Vector2
-                {
-                    X = rnd.Next(500, 600),
-                    Y = rnd.Next(500, 600)
-                };
-                Goals.Enqueue(v);
+             //needs random movement
+               
             }
             else
             {
-                ChaseColonist();
+                
+                ChaseColonist(target);
             }
         }
 
         public void animateAttack() {
-            bool flippedOnce=false;
-
-            if (this.Tag == "Robot")
+            if (targetInRange != null)
             {
-                isAnimated = true;
-                this.TextureGroupIndex = 3;
-                if (this.Position.X < target.Position.X)
+                bool flippedOnce = false;
+
+                if (this.Tag == "Robot")
                 {
-                    SpriteEffect = SpriteEffects.FlipHorizontally;
-                    flippedOnce = true;
-                }
-                else {
-                    if (flippedOnce == true)
+                    isAnimated = true;
+                    this.TextureGroupIndex = 3;
+                    if (this.Position.X < targetInRange.Position.X)
                     {
                         SpriteEffect = SpriteEffects.FlipHorizontally;
+                        flippedOnce = true;
                     }
-                    flippedOnce = false;
+                    else
+                    {
+                        if (flippedOnce == true)
+                        {
+                            SpriteEffect = SpriteEffects.FlipHorizontally;
+                        }
+                        flippedOnce = false;
+                    }
                 }
-            }
-            else if (this.Tag == "Bear") {
+                else if (this.Tag == "Bear")
+                {
 
-                isAnimated = true;
-                this.TextureGroupIndex = 3;
-                if (this.Position.X < target.Position.X)
-                {
-                    SpriteEffect = SpriteEffects.FlipHorizontally;
-                    flippedOnce = true;
-                }
-                else
-                {
-                    if (flippedOnce == true)
+                    isAnimated = true;
+                    this.TextureGroupIndex = 3;
+                    if (this.Position.X < target.Position.X)
                     {
                         SpriteEffect = SpriteEffects.FlipHorizontally;
+                        flippedOnce = true;
                     }
-                    flippedOnce = false;
+                    else
+                    {
+                        if (flippedOnce == true)
+                        {
+                            SpriteEffect = SpriteEffects.FlipHorizontally;
+                        }
+                        flippedOnce = false;
+                    }
+
                 }
 
-            }
-                
-                
-            
+
+            }  
         }
         public void setAttacking(Boolean b) {
             attacking = b;
@@ -167,43 +162,21 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             isInCombat = b;
         }
-        private bool InAggroRange(Vector2 aggressor)
+        
+
+        private void ChaseColonist(Colonist colonist)
         {
-            //Cost from this node to another node
-            double toEndCost;
+            
 
-            //Positions of the tiles in vector form
-            Vector2 enemy = this.Position;
-            Vector2 attacker = aggressor;
 
-            //Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)
-            toEndCost = Math.Sqrt((enemy.X - attacker.X) * (enemy.X - attacker.X) + (enemy.Y - attacker.Y) * (enemy.Y - attacker.Y));
+            
+                    Goals.Enqueue(colonist.Position);
 
-            if (toEndCost < 200)
-            {
-                return true;
-            }
+            Console.WriteLine("bear " + this.Position);
 
-            return false;
-        }
 
-        private void ChaseColonist(){
-            if (InAggroRange(target.Position))
-            {
-               Goals.Clear();
 
-                    if(Math.Abs(this.Position.X - (target.Position.X)) > 20 || Math.Abs(this.Position.Y - (target.Position.Y)) > 20)
-                {
-                    Vector2 fakePosition = new Vector2(target.Position.X, target.Position.Y);
-                    Goals.Enqueue(fakePosition);
-                    }
-                
-               
-            }
-            else
-            {
-               Goals.Clear();
-            }
+
         }
 
         //change random movement
@@ -220,8 +193,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Vector2 position1 = this.Position;
             this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             depth = (Position.X + (Position.Y / 2)) / 48000f;
+            Aggro();
             base.Update(gameTime);
-
+            
             Vector2 delta = position1 - this.Position;
 
             //Math.Atan2(delta.X, delta.Y);
@@ -273,22 +247,96 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
 
 
-            EnemyAttacked();
-            if (target != null && targetFound == true)
+           
+            if (targetInRange != null)
             {
                //  c.intializeCombat((Colonist)target, this,gameTime);
                
-                // c.PerformCombat();
+                PerformCombat(gameTime,targetInRange);
             
             }
-            else
+            else if(target!=null)
             {
                 Goals.Clear();
-              //  Goals.Enqueue(this.Position);
+                Goals.Enqueue(target.Position);
             }
         }
 
-      
+        private void PerformCombat(GameTime gameTime,Colonist targetInRange)
+        {
+            this.setInCombat(false);
+
+            
+
+
+                
+                if (targetInRange != null)
+                {
+
+                    if ( targetInRange.Health > 0 & this.Health > 0)
+                    {
+                        targetInRange.inCombat = true;
+                        this.setInCombat(true);
+                        EnemyAttack(gameTime);
+                    }
+                    else
+                    {
+                       
+                        this.setInCombat(false);
+                }
+                }
+
+
+            
+        }
+
+        private void EnemyAttack(GameTime gameTime)
+        {
+            if (EnemyAttackSpeedControl(gameTime))
+            {
+                this.setAttacking(true);
+                targetInRange.Health = target.Health - this.AttackPower;
+
+            }
+
+
+
+
+
+            if (targetInRange.Health <= 0 || this.Health <= 0)
+            {
+              
+                
+                this.setAttacking(false);
+
+                
+                this.setInCombat(false);
+                targetInRange = null;
+                
+            }
+        }
+
+        private bool EnemyAttackSpeedControl(GameTime gameTime)
+        {
+            EnemytimeToAttack = EnemytimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
+            if (EnemytimeToAttack > 500 & EnemytimeToAttack < 600)
+            {
+                this.setAttacking(false);
+            }
+
+            if (EnemytimeToAttack >= this.getAttackSpeed())
+            {
+                EnemytimeToAttack = 0;
+                return true;
+
+
+
+            }
+            return false;
+
+        }
     }
 }
 

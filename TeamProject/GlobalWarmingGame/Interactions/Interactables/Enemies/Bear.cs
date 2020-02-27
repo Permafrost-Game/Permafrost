@@ -18,6 +18,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         
         }
 
-       
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            if (this.Health <= 0)
+            {
+                GameObjectManager.Remove(this);
+            }
+        }
+
     }
 }

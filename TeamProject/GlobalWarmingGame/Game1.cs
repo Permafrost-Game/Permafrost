@@ -31,7 +31,7 @@ namespace GlobalWarmingGame
     public class Game1 : Game
     {
         private readonly bool isFullScreen = false;
-        private readonly float resolutionScale = 0.75f;
+        private readonly float resolutionScale = 1f;
 
 
 
@@ -223,7 +223,7 @@ namespace GlobalWarmingGame
             ShowPauseMenu();
             ShowMainUI();
             PauseGame();
-
+            GlobalCombatDetector.updateParticipants();
             if (gameState == GameState.playing)
             {
                 camera.Update(gameTime);

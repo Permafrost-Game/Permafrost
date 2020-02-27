@@ -161,6 +161,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 1f" stops Z Fighting
             base.Update(gameTime);
+            enemy = GlobalCombatDetector.FindColonistThreat(this);
 
             Vector2 delta = position1 - this.Position;
 
@@ -183,7 +184,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (Goals.Count == 0 && instructions.Count > 0)
                 Goals.Enqueue(((GameObject)instructions.Peek().PassiveMember).Position);
-            enemy = GlobalCombatDetector.FindColonistThreat(this);
+            
 
             if (enemy!=null)
             {
@@ -198,6 +199,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 performCombat(gameTime, enemy);
             }
 
+            if (this.Health <= 0) {
+                GameObjectManager.Remove(this);
+            }
 
         }
 
@@ -216,6 +220,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 else
                 {
                     this.inCombat = false;
+                    
                 }
                 
             }
@@ -318,7 +323,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     this.isAttacking = true;
                     enemy.Health = enemy.Health - this.AttackPower;
                 }
-                Console.WriteLine("Colonist hp: " + this.Health + " Enemy hp: " + enemy.Health);
+                //Console.WriteLine("Colonist hp: " + this.Health + " Enemy hp: " + enemy.Health);
 
 
 
@@ -336,7 +341,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
+           // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
             if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
             {
                 this.isAttacking = false;
@@ -351,11 +356,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             return false;
 
+
         }
 
         public void AddInstruction(Instruction instruction, int priority)
         {
-            throw new NotImplementedException();
+            instructions.Enqueue(instruction);
         }
+
     }
 }
