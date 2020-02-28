@@ -143,6 +143,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             textures.Add("workBench", contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
             textures.Add("stoneNode", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
             textures.Add("tallGrass", contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
+            textures.Add("towerH", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            textures.Add("towerC", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
         }
 
         /// <summary>
@@ -177,6 +179,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
                 case Interactable.Bear:
                     return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
+                case Interactable.Tower:
+                    return new Tower(position, textures["towerC"], textures["towerH"]);
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
             }
@@ -265,4 +269,5 @@ public enum Interactable
     Rabbit,
     Farm,
     Colonist,
+    Tower,
 }
