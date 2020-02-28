@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using SimplexNoise;
 using GlobalWarmingGame.Interactions.Interactables;
+using Microsoft.Xna.Framework;
 
 namespace GlobalWarmingGame
 {
@@ -17,10 +18,14 @@ namespace GlobalWarmingGame
         {
             GameObjects = objects;
         }
-        public static Zone GenerateZone(int seed, TileMap tileMap)
+        public static Zone GenerateZone(int seed, TileMap tileMap, Vector2 zonePos)
         {
             List<GameObject> GameObjects = new List<GameObject>();
             Random rand = new Random(seed);
+            if (zonePos.Equals(new Vector2(3,0)) || zonePos.Equals(new Vector2(-10, 2)) || zonePos.Equals(new Vector2(15, -5)))
+            {
+                GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tower, new Vector2((32*50),(32*50))));
+            }
             foreach (Tile t in tileMap.Tiles)
             {
                 //int item = rand.Next(0, 100);

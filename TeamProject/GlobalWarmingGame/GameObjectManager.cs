@@ -63,7 +63,7 @@ namespace GlobalWarmingGame
             
             ZoneMap = GenerateMap(zonePos);
             PathFinder.TileMap = ZoneMap;
-            zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap));
+            zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap, zonePos));
             SetZone(zonePos);
         }
 
@@ -96,7 +96,7 @@ namespace GlobalWarmingGame
                 if (! zoneTable.ContainsKey(newZonePos))
                 {
 
-                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, GenerateMap(newZonePos)));                   
+                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, GenerateMap(newZonePos), newZonePos));   
                 }
 
                 SetZone(newZonePos);
