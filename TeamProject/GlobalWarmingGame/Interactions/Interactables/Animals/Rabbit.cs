@@ -21,7 +21,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         [PFSerializable]
         public readonly int textureSetID;
 
-        public Rabbit() : base(Vector2.Zero, "", Textures.MapSet[TextureSetTypes.rabbit], 0, RabbitAI)
+        public Rabbit() : this(Vector2.Zero, TextureSetTypes.rabbit)
         {
 
         }

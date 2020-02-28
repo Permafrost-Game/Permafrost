@@ -96,6 +96,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public float Speed { get; set; }
         #endregion
 
+        public Colonist() : this(Vector2.Zero, TextureSetTypes.colonist)
+        {
+
+        }
 
         public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = null, int capacity = 100) : base
         (

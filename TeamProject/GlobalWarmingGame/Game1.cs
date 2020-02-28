@@ -45,7 +45,6 @@ namespace GlobalWarmingGame
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
-        enum GameState { mainmenu, playing, paused }
         GameState gameState;
 
         List<Light> lightObjects;
@@ -142,6 +141,8 @@ namespace GlobalWarmingGame
 
                 ResourceTypeFactory.Init();
 
+                Controller.LoadContent(Content);
+
                 tileSet = new TileSet(textureSet, new Vector2(32f));
 
                 GameObjectManager.Init(tileSet, seed, currentZone);
@@ -157,7 +158,7 @@ namespace GlobalWarmingGame
             //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
-                Controller.LoadContent(Content);
+                // Controller.LoadContent(Content);
 
                 
                
@@ -209,6 +210,8 @@ namespace GlobalWarmingGame
 
         protected override void UnloadContent()
         {
+            GameObjectManager.SaveZone();
+
             var settingsData = JsonConvert.SerializeObject(new
             {
                 isFullScreen = graphics.IsFullScreen,
@@ -229,19 +232,19 @@ namespace GlobalWarmingGame
             ShowMainUI();
             PauseGame();
 
+            keyboardInputHandler.Update(gameTime, gameState);
+
             if (gameState == GameState.playing)
             {
                 camera.Update(gameTime);
-                keyboardInputHandler.Update(gameTime);
-
                 GameObjectManager.ZoneMap.Update(gameTime);
+
                 BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
                 UpdateColonistTemperatures(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
-
 
                 UpdateColonistTemperatures(gameTime);
 
@@ -512,5 +515,7 @@ namespace GlobalWarmingGame
 
         #endregion
     }
+
+    public enum GameState { mainmenu, playing, paused }
 }
  

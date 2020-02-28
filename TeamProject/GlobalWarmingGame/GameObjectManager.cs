@@ -81,7 +81,7 @@ namespace GlobalWarmingGame
             return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
         }
 
-        private static void SetZone(Vector2 position)
+        private static void SetZone(Vector2 position, List<Colonist> colonists = null)
         {
             zonePos = position;
             ZoneMap = GenerateMap(position);
@@ -91,6 +91,10 @@ namespace GlobalWarmingGame
             Updatables.Clear();
             Drawables.Clear();
             Interactables.Clear();
+
+            if (colonists != null)
+                foreach (Colonist colonist in colonists)
+                    Add(colonist);
 
             try
             {
@@ -119,28 +123,10 @@ namespace GlobalWarmingGame
         {
             List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
 
-            // Serializer.Serialize(@"Content/coloniststest.json", colonists);
-
             foreach (Colonist colonist in colonists)
                 GameObjectManager.Remove(colonist);
 
             SaveZone();
-            SetZone(zonePos + direction);
-
-            //List<object> l = new List<object>();
-            //l.Add((Colonist)colonists[0]);
-
-
-
-            // Serializer.Serialize(@"Content/test.json", l);
-
-            //Serializer.Deserialize(@"Content/test.json");
-
-            //Serializer.Serialize(@"Content/test2.json", Serializer.Deserialize(@"Content/test.json")[typeof(ResourceItems.Inventory)]);
-
-
-            //foreach (ResourceItems.ResourceItem v in ((Colonist)colonists[0]).Inventory.Resources.Values)
-            //    System.Console.WriteLine(v.ResourceType.displayName + " " + v.Weight);
 
             for (int i = 0; i < colonists.Count(); i++)
             {
@@ -166,9 +152,9 @@ namespace GlobalWarmingGame
 
                     colonist.Position = new Vector2(x, y);
                 }
-
-                GameObjectManager.Add(colonist);
             }
+
+            SetZone(zonePos + direction, colonists);
 
             if (direction.X == 1)
             {

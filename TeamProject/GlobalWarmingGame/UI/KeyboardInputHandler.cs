@@ -8,7 +8,7 @@ namespace GlobalWarmingGame.UI
     /// This class is for handling keyboard inputs.<br/>
     /// This is the only class that should be checking for keyboard input.<br/>
     /// </summary>
-    class KeyboardInputHandler : IUpdatable
+    class KeyboardInputHandler
     {
 
         private KeyboardState previousKeyboardState;
@@ -21,36 +21,38 @@ namespace GlobalWarmingGame.UI
             this.graphics = graphics;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, GameState gameState)
         {
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
-            CheckInput();
-
+            CheckInput(gameState);
         }
 
-        private void CheckInput()
+        private void CheckInput(GameState gameState)
         {
-            for(int keyCode = (int)Keys.D1; keyCode <= (int)Keys.D9; keyCode++)
-            {
-                if(CheckKeyPress((Keys) keyCode))
-                {
-                    Controller.SelectInventory(keyCode - (int)Keys.D1);
-                }
-            }
-
-            if (CheckKeyPress(Keys.I))
-                GameObjectManager.MoveZone(new Vector2(0, -1));
-            else if (CheckKeyPress(Keys.K))
-                GameObjectManager.MoveZone(new Vector2(0, 1));
-            else if (CheckKeyPress(Keys.L))
-                GameObjectManager.MoveZone(new Vector2(1, 0));
-            else if (CheckKeyPress(Keys.J))
-                GameObjectManager.MoveZone(new Vector2(-1, 0));
-
-            else if (CheckKeyPress(Keys.F11))
+            if (CheckKeyPress(Keys.F11))
                 graphics.ToggleFullScreen();
+
+            if (gameState == GameState.playing)
+            {
+                for (int keyCode = (int)Keys.D1; keyCode <= (int)Keys.D9; keyCode++)
+                {
+                    if (CheckKeyPress((Keys)keyCode))
+                    {
+                        Controller.SelectInventory(keyCode - (int)Keys.D1);
+                    }
+                }
+
+                if (CheckKeyPress(Keys.I))
+                    GameObjectManager.MoveZone(new Vector2(0, -1));
+                else if (CheckKeyPress(Keys.K))
+                    GameObjectManager.MoveZone(new Vector2(0, 1));
+                else if (CheckKeyPress(Keys.L))
+                    GameObjectManager.MoveZone(new Vector2(1, 0));
+                else if (CheckKeyPress(Keys.J))
+                    GameObjectManager.MoveZone(new Vector2(-1, 0));
+            }
 
             //else if (CheckKeyPress(Keys.F5))
             //    GameObjectManager.SaveZone();
