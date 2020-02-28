@@ -22,7 +22,7 @@ namespace GlobalWarmingGame
         {
             List<GameObject> GameObjects = new List<GameObject>();
             Random rand = new Random(zonePos.GetHashCode());
-            if (zonePos.Equals(new Vector2(5,0)) || zonePos.Equals(new Vector2(0, 2)) || zonePos.Equals(new Vector2(0, -5)))
+            if (((zonePos.X % 10 == 0) && zonePos.X < 100 && zonePos.X > -100) && ((zonePos.Y % 10 == 0) && zonePos.Y < 100 && zonePos.Y > -100) && ! zonePos.Equals(Vector2.Zero)) 
             {
                 GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tower, new Vector2((32*50),(32*50))));
                 for (int i = rand.Next(0, 5); i < 5; i++) {

@@ -34,7 +34,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Capture(IInstructionFollower follower)
         {
-            this.Texture = capturedTexture; 
+            InstructionTypes.Clear();
+            this.Texture = capturedTexture;
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + 32)));
         }
     }
 }
