@@ -11,24 +11,30 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class Tower : Sprite, IInteractable, IUpdatable
+    public class Tower : Sprite, IInteractable
        {
-        public List<InstructionType> InstructionTypes => throw new NotImplementedException();
-        public Tower(Vector2 position, Texture2D texture) : base
+        public List<InstructionType> InstructionTypes { get;}
+        private readonly Texture2D hostileTexture;
+        private readonly Texture2D capturedTexture;
+        public Tower(Vector2 position, Texture2D capturedTexture, Texture2D hostileTexture) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
+            size: new Vector2(hostileTexture.Width, hostileTexture.Height),
             rotation: 0f,
-            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
+            origin: new Vector2(hostileTexture.Width / 2f, hostileTexture.Height / 2f),
             tag: "Farm",
-            texture: texture
+            texture: hostileTexture
         )
         {
-
+            this.hostileTexture = hostileTexture;
+            this.capturedTexture = capturedTexture;
+            InstructionTypes = new List<InstructionType>();
+            InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onStart: Capture));
         }
-        public void Update(GameTime gameTime)
+
+        private void Capture(IInstructionFollower follower)
         {
-           
+            this.Texture = capturedTexture; 
         }
     }
 }

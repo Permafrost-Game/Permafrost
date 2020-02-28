@@ -143,7 +143,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             textures.Add("workBench", contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
             textures.Add("stoneNode", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
             textures.Add("tallGrass", contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
-            textures.Add("tower", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/tower"));
+            textures.Add("towerH", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            textures.Add("towerC", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
         }
 
         /// <summary>
@@ -179,7 +180,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Bear:
                     return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
                 case Interactable.Tower:
-                    return new Tower(position, textures["tower"]);
+                    return new Tower(position, textures["towerC"], textures["towerH"]);
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
             }
