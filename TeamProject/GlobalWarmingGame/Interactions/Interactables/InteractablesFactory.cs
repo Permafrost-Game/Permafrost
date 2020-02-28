@@ -156,7 +156,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             switch(interactable)
             {
                 case Interactable.Colonist:
-                    return new Colonist(position, textureSet["colonist"]);
+                    return new Colonist(position, TextureSetTypes.colonist);
                 case Interactable.Farm:
                     return new Farm(position, textures["farm"]);
                 case Interactable.Rabbit:
@@ -186,7 +186,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         [Obsolete]
         public static Colonist MakeColonist(Vector2 position)
         {
-            return new Colonist(position, textureSet["colonist"]);
+            return new Colonist(position, TextureSetTypes.colonist);
         }
 
         [Obsolete]

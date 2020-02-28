@@ -107,6 +107,10 @@ namespace GlobalWarmingGame
                 Console.WriteLine("Creating " + ZoneFilePath());
 
                 ZoneGenerator.SpawnGameObjects(seed);
+
+                if (position == Vector2.Zero)
+                    Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+
                 SaveZone();
             }
         }
@@ -114,6 +118,8 @@ namespace GlobalWarmingGame
         public static void MoveZone(Vector2 direction)
         {
             List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
+
+            // Serializer.Serialize(@"Content/coloniststest.json", colonists);
 
             foreach (Colonist colonist in colonists)
                 GameObjectManager.Remove(colonist);

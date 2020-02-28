@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
     {
         #region Instruction
 
@@ -23,6 +23,16 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public readonly Inventory inventory;
 
         public Inventory Inventory { get => inventory; }
+
+        [PFSerializable]
+        public readonly int textureSetID;
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         #endregion
 
@@ -87,26 +97,31 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
 
-        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity = 100) : base
+        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = null, int capacity = 100) : base
         (
             position: position,
-            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
+            size: new Vector2(Textures.MapSet[textureSetType][0][0].Width, Textures.MapSet[textureSetType][0][0].Height),
             rotation: 0f,
-            origin: new Vector2(textureSet[0][0].Width / 2, textureSet[0][0].Height / 2),
+            origin: new Vector2(Textures.MapSet[textureSetType][0][0].Width / 2, Textures.MapSet[textureSetType][0][0].Height / 2),
             tag: "Colonist",
             depth: 0f,
-            textureSet: textureSet,
+            textureSet: Textures.MapSet[textureSetType],
             frameTime: 100f
         )
         {
+            textureSetID = (int)textureSetType;
+
+            if (inventory == null)
+                this.inventory = new Inventory(capacity);
+            else
+                this.inventory = inventory;
+
             attackRange = 60;
             AttackPower = 30;
             attackSpeed = 1000;
-
             Speed = 0.5f;
             MaxHealth = 100f;
             Health = MaxHealth;
-            inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
             timeToTemperature = timeUntillTemperature;
@@ -157,12 +172,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 position1 = this.Position;
+            Vector2 position1 = Position;
             Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 1f" stops Z Fighting
             base.Update(gameTime);
 
-            Vector2 delta = position1 - this.Position;
+            Vector2 delta = position1 - Position;
 
 
             if (delta.Equals(Vector2.Zero))
@@ -272,6 +287,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions.Enqueue(instruction);
         }
         #endregion
+
+        public object Reconstruct()
+        {
+            return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);
+        }
 
     }
 }

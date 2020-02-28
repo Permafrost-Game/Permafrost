@@ -166,9 +166,9 @@ namespace GlobalWarmingGame
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
 
-                Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
+                //Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
 
-                GameObjectManager.Add(c1);
+                //GameObjectManager.Add(c1);
                 
                 ProcessMenuSelection();
 
