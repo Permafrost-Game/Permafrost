@@ -21,10 +21,13 @@ namespace GlobalWarmingGame
         public static Zone GenerateZone(int seed, TileMap tileMap, Vector2 zonePos)
         {
             List<GameObject> GameObjects = new List<GameObject>();
-            Random rand = new Random(seed);
-            if (zonePos.Equals(new Vector2(3,0)) || zonePos.Equals(new Vector2(-10, 2)) || zonePos.Equals(new Vector2(15, -5)))
+            Random rand = new Random(zonePos.GetHashCode());
+            if (zonePos.Equals(new Vector2(5,0)) || zonePos.Equals(new Vector2(0, 2)) || zonePos.Equals(new Vector2(0, -5)))
             {
                 GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tower, new Vector2((32*50),(32*50))));
+                for (int i = rand.Next(0, 5); i < 5; i++) {
+                    GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot, new Vector2(((rand.Next(24, 40)) * 50), ((rand.Next(24, 40)) * 50))));
+                }
             }
             foreach (Tile t in tileMap.Tiles)
             {
