@@ -32,7 +32,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onStart: Capture));
         }
 
-        private void Capture(IInstructionFollower follower)
+        private void Capture(Instruction instruction)
         {
             InstructionTypes.Clear();
             this.Texture = capturedTexture;
