@@ -50,6 +50,7 @@
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />

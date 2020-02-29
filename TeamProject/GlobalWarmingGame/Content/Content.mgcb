@@ -5504,6 +5504,30 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
 
+#begin textures/interactables/buildings/tower/tower.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/tower/tower.png;textures/interactables/buildings/tower/hostile_tower.png
+
+#begin textures/interactables/buildings/tower/yellow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/tower/yellow.png;textures/interactables/buildings/tower/captured_tower.png
+
 #begin textures/interactables/buildings/workbench.png
 /importer:TextureImporter
 /processor:TextureProcessor
