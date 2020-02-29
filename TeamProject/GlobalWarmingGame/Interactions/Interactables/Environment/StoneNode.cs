@@ -31,7 +31,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void Mine(IInstructionFollower follower)
         {
-            SoundFactory.PlaySoundEffect("stone_pickup");
+            SoundFactory.PlaySoundEffect(Sound.stone_pickup);
             follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);

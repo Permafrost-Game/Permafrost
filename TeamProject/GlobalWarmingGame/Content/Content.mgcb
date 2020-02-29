@@ -4868,6 +4868,12 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
+#begin sound/songs/Blaetter_im_Wind_preview.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/songs/Blaetter_im_Wind_preview.mp3
+
 #begin sound/sounds/rabbit_death.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -4885,12 +4891,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/sounds/wood_chop.wav
-
-#begin sound/There _is_a_light_that_never_goes_out.ogg
-/importer:OggImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/There _is_a_light_that_never_goes_out.ogg
 
 #begin sound/There _is_a_light_that_never_goes_out.ogg
 /importer:OggImporter
