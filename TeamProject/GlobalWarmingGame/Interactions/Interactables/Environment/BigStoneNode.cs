@@ -9,11 +9,11 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    public class StoneNode : Sprite, IInteractable
+    public class BigStoneNode : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
 
-        public StoneNode(Vector2 position, Texture2D texture) : base
+        public BigStoneNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
@@ -25,13 +25,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine stone", onStart: Mine)
+                new InstructionType("mine", "Mine", "Mine stone", 0,
+                                       new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Pickaxe), 1)}, onStart: Mine)
             };
         }
 
         private void Mine(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 8));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

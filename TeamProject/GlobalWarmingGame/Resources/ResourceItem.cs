@@ -18,5 +18,10 @@ namespace GlobalWarmingGame.ResourceItems
             return (ResourceItem)MemberwiseClone();
         }
 
+        public override string ToString() 
+        {
+            return ResourceType.DisplayName;                    
+        }
+
     }
 }

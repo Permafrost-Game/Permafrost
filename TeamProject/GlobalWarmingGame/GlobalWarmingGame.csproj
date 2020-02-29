@@ -49,6 +49,7 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
+    <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
-    <Compile Include="Interactions\Interactables\Environment\StoneNode.cs" />
+    <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
     <Compile Include="Interactions\Interactables\Environment\Bush.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Oven.cs" />

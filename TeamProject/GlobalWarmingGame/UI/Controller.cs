@@ -107,6 +107,14 @@ namespace GlobalWarmingGame.UI
                         options.Add(new ButtonHandler<Instruction>(new Instruction(type, activeMember, objectClicked), IssueInstructionCallback));
                     }
                 }
+                else if (constructingMode)
+                {
+                    building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
+
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onStart: Build),
+                                                                               activeMember,
+                                                                               (GameObject)building), IssueInstructionCallback));
+                }
 
                 if (objectClicked is Colonist)
                 {
@@ -116,24 +124,6 @@ namespace GlobalWarmingGame.UI
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventoryCallback));
                 }
-
-                if (constructingMode)
-                {
-                    building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
-
-                    //If Colonist has the resources build
-                    if (activeMember.Inventory.ContainsAll(building.CraftingCosts))
-                    {
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onStart: Build), 
-                                                                                   activeMember, 
-                                                                                   (GameObject)building), IssueInstructionCallback));
-                    }
-                    else
-                    {
-                        View.Notification<string>("Not enough resources");
-                        constructingMode = false;
-                    }
-                }
             }
 
             return options;
@@ -141,6 +131,8 @@ namespace GlobalWarmingGame.UI
 
         /// <summary>
         /// Adds the instruction to the active member of the instruction.
+        /// Checks if a instruction has any required resources and if so the instruction will
+        /// display a notification to the user if they dont have enough resources.
         /// </summary>
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
@@ -155,7 +147,7 @@ namespace GlobalWarmingGame.UI
                 }
                 else 
                 {
-                    View.Notification<string>("Required resources missing");
+                    View.Notification("Missing items:", instruction.Type.RequiredCosts);
                 }
             }
             else
