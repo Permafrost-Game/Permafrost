@@ -87,14 +87,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("craftaxe", "Axe", "Craft axe", 0, AxeCraftingCosts, onStart: CraftAxe),
-                new InstructionType("crafthoe", "Hoe", "Craft hoe", 0, HoeCraftingCosts, onStart: CraftHoe),
-                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", 0, PickaxeCosts, onStart: CraftPickaxe),
-                new InstructionType("craftbackpack", "Backpack", "Craft backpack", 0, BackpackCraftingCosts, onStart: CraftBackPack),
-                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", 0, BasicRifleCraftingCosts, onStart: CraftBasicRifle),
-                new InstructionType("craftbow", "Bow", "Craft bow", 0, BowCraftingCosts, onStart: CraftBow),
-                new InstructionType("craftcloth", "Cloth", "Craft cloth", 0, ClothCraftingCosts, onStart: CraftCloth),
-                new InstructionType("craftcoat", "Coat", "Craft coat", 0, CoatCraftingCosts, onStart: CraftCoat)
+                new InstructionType("craftaxe", "Axe", "Craft axe", 0, AxeCraftingCosts, onComplete: CraftAxe),
+                new InstructionType("crafthoe", "Hoe", "Craft hoe", 0, HoeCraftingCosts, onComplete: CraftHoe),
+                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", 0, PickaxeCosts, onComplete: CraftPickaxe),
+                new InstructionType("craftbackpack", "Backpack", "Craft backpack", 0, BackpackCraftingCosts, onComplete: CraftBackPack),
+                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", 0, BasicRifleCraftingCosts, onComplete: CraftBasicRifle),
+                new InstructionType("craftbow", "Bow", "Craft bow", 0, BowCraftingCosts, onComplete: CraftBow),
+                new InstructionType("craftcloth", "Cloth", "Craft cloth", 0, ClothCraftingCosts, onComplete: CraftCloth),
+                new InstructionType("craftcoat", "Coat", "Craft coat", 0, CoatCraftingCosts, onComplete: CraftCoat)
             };
         }
 
@@ -145,9 +145,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             Colonist colonist = (Colonist) instruction.ActiveMember;
 
             ResourceType craftable = ResourceTypeFactory.GetResource(resourceEnum);
-            if (colonist.Inventory.ContainsAll(instruction.Type.RequiredCosts))
+            if (colonist.Inventory.ContainsAll(instruction.Type.RequiredResources))
             {
-                foreach (ResourceItem item in instruction.Type.RequiredCosts)
+                foreach (ResourceItem item in instruction.Type.RequiredResources)
                 {
                     colonist.Inventory.RemoveItem(item);
                     //Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);

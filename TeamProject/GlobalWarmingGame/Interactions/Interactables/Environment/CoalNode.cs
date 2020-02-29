@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine coal", onStart: Mine)
+                new InstructionType("mine", "Mine", "Mine coal", onComplete: Mine)
             };
         }
 

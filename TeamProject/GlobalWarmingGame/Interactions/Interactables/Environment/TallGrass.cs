@@ -25,7 +25,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("trim", "Trim grass", "Trim grass", onStart: Trim)
+                new InstructionType("trim", "Trim grass", "Trim grass", onComplete: Trim)
             };
         }
 

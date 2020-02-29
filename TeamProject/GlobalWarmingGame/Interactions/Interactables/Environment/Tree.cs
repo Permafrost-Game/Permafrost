@@ -42,14 +42,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             this.textureStump = textureStump;
             Choppable = true;
             chop = new InstructionType("chop", "Chop", "Chop for wood", 0,
-                                       new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1)}, onStart: Chop);
+                                       new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1)}, onStart: StartChop, onComplete: EndChop, timeCost: 3500f);
 
             InstructionTypes.Add(chop);
         }
 
-        private void Chop(Instruction instruction)
+        private void StartChop(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.wood_chop);
+
+        }
+        private void EndChop(Instruction instruction)
+        {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4));
             Choppable = false;
             InstructionTypes.Remove(chop);        

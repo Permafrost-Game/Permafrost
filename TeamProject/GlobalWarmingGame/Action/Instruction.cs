@@ -1,25 +1,28 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions;
+using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using static GlobalWarmingGame.Action.InstructionType;
 
 namespace GlobalWarmingGame.Action
 {
     /// <summary>
     /// An Instruction descrives a instance interaction between two interactable objects.
     /// </summary>
-    public class Instruction : IComparable<Instruction>
+    public class Instruction : IComparable<Instruction>, IUpdatable
     {
         public InstructionType Type { get; set; }
         public IInstructionFollower ActiveMember { get; set; }
         public GameObject PassiveMember { get; set; }
         public int Priority { get; }
+        public bool IsStarted { get; private set; }
+        public bool IsComplete { get; private set; }
 
-        [Obsolete]
-        public Instruction(IInstructionFollower activeMember)
-        { //TODO DELETE ME
-            ActiveMember = activeMember;
-        }
-        public Instruction() { }
+        public readonly List<InstructionEvent> OnStart;
+        public readonly List<InstructionEvent> OnComplete;
+
+        private float timeSpent;
 
         /// <summary>
         /// Creates a new Instruction with an overridden priority
@@ -34,6 +37,16 @@ namespace GlobalWarmingGame.Action
             ActiveMember = activeMember;
             PassiveMember = passiveMember;
             Priority = priorityOverride;
+            IsStarted = false;
+
+            OnStart = new List<InstructionEvent>();
+            if (type.onStart != null)
+                OnStart.Add(type.onStart);
+
+            OnComplete = new List<InstructionEvent>();
+            if (type.onComplete != null)
+                OnComplete.Add(type.onComplete);
+
         }
 
         /// <summary>
@@ -45,15 +58,47 @@ namespace GlobalWarmingGame.Action
         /// <param name="passiveMember">the target member of the instruction</param>
         public Instruction(InstructionType type, IInstructionFollower activeMember, GameObject passiveMember) : this (type, activeMember, passiveMember, type.Priority) { }
 
-        public int CompareTo(Instruction obj)
-        {
-            return this.Priority.CompareTo(obj.Priority);
+        /// <summary>
+        /// Starts the instruction
+        /// </summary>
+        public void Start() {
+            if(!IsStarted)
+            {
+                IsStarted = true;
+                OnStart.ForEach(e => e.Invoke(this));
+            }
+            //else throw new Exception("Instruction has allready started");
         }
 
-        public override string ToString()
+        private void Complete()
         {
-            return Type.Name;
+            if(IsStarted)
+            {
+                if (!IsComplete)
+                {
+                    IsComplete = true;
+                    OnComplete.ForEach(e => e.Invoke(this));
+                }
+                else throw new Exception("Instruction has allready completed");
+            }
+            else throw new Exception("Instruction has not yet been started");
         }
+
+        public void Update(GameTime gameTime)
+        {
+            if(IsStarted && !IsComplete)
+            {
+                timeSpent += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if(timeSpent >= Type.TimeCost)
+                {
+                    Complete();
+                }
+            }
+        }
+
+        public int CompareTo(Instruction obj) => this.Priority.CompareTo(obj.Priority);
+
+        public override string ToString() => Type.Name;
 
     }
 }
