@@ -26,9 +26,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
             );
         }
 
-        public void Hunt(IInstructionFollower follower)
+        public void Hunt(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             GameObjectManager.Remove(this);
             SoundFactory.PlaySoundEffect(Sound.rabbit_death);
         }

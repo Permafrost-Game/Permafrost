@@ -141,8 +141,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             textures.Add("tree", contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
             textures.Add("treeStump", contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
             textures.Add("workBench", contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
-            textures.Add("stoneNode", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
+            textures.Add("stoneNodeSmall", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
+            textures.Add("stoneNodeBig", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
             textures.Add("tallGrass", contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
+            textures.Add("towerH", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            textures.Add("towerC", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
         }
 
         /// <summary>
@@ -157,98 +160,47 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 case Interactable.Colonist:
                     return new Colonist(position, textureSet["colonist"]);
+
                 case Interactable.Farm:
                     return new Farm(position, textures["farm"]);
+
                 case Interactable.Rabbit:
                     return new Rabbit(position, textureSet["rabbit"]);
+
                 case Interactable.Bush:
                     return new Bush(position, textures["bushH"], textures["bushN"]);
+
                 case Interactable.Tree:
                     return new Tree(position, textures["tree"], textures["treeStump"]);
+
                 case Interactable.WorkBench:
                     return new WorkBench(position, textures["workBench"]);
-                case Interactable.StoneNode:
-                    return new StoneNode(position, textures["stoneNode"]);
+
+                case Interactable.StoneNodeSmall:
+                    return new SmallStoneNode(position, textures["stoneNodeSmall"]);
+
+                case Interactable.StoneNodeBig:
+                    return new BigStoneNode(position, textures["stoneNodeBig"]);
+
                 case Interactable.TallGrass:
                     return new TallGrass(position, textures["tallGrass"]);
+
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
+
                 case Interactable.Robot:
                     return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
+
                 case Interactable.Bear:
                     return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
+                
+                case Interactable.Tower:
+                    return new Tower(position, textures["towerC"], textures["towerH"]);
+                
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
             }
         }
-
-
-        [Obsolete]
-        public static Colonist MakeColonist(Vector2 position)
-        {
-            return new Colonist(position, textureSet["colonist"]);
-        }
-
-        [Obsolete]
-        public static Farm MakeFarm(Vector2 position)
-        {
-            return new Farm(position, textures["farm"]);
-        }
-
-        [Obsolete]
-        public static Rabbit MakeRabbit(Vector2 position)
-        {
-            return new Rabbit(position, textureSet["rabbit"]);
-        }
-
-        [Obsolete]
-        public static Bush MakeBush(Vector2 position)
-        {
-            return new Bush(position, textures["bushH"], textures["bushN"]);
-        }
-
-        [Obsolete]
-        public static Tree MakeTree(Vector2 position)
-        {
-            return new Tree(position, textures["tree"], textures["treeStump"]);
-        }
-
-        [Obsolete]
-        public static WorkBench MakeWorkBench(Vector2 position)
-        {
-            return new WorkBench(position, textures["workBench"]);
-        }
-
-        [Obsolete]
-        public static StoneNode MakeStoneNode(Vector2 position)
-        {
-            return new StoneNode(position, textures["stoneNode"]);
-        }
-
-        [Obsolete]
-        public static TallGrass MakeTallGrass(Vector2 position)
-        {
-            return new TallGrass(position, textures["tallGrass"]); 
-        }
-
-        [Obsolete]
-        public static CampFire MakeCampfire(Vector2 position)
-        {
-            return new CampFire(position, textureSet["campFire"]); 
-        }
-
-        [Obsolete]
-        public static Enemy MakeRobot(Vector2 position)
-        {
-            return new Enemy("Robot", 5000, 60, 0, 500,position, textureSet["robot"]);
-        }
-
-        [Obsolete]
-        public static Enemy MakeBear(Vector2 position)
-        {
-            return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
-        }
-       
     }
 }
 
@@ -258,11 +210,13 @@ public enum Interactable
     Robot,
     CampFire,
     TallGrass,
-    StoneNode,
+    StoneNodeSmall,
+    StoneNodeBig,
     WorkBench,
     Tree,
     Bush,
     Rabbit,
     Farm,
     Colonist,
+    Tower,
 }

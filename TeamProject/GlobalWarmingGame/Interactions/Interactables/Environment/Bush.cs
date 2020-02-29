@@ -44,15 +44,23 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             InstructionTypes = new List<InstructionType>();
             forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onStart: Forrage);
+
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
             InstructionTypes.Add(forrage);
+            InstructionTypes.Add(new InstructionType("chop", "Chop", "Chop for wood", onStart: Chop));
         }
 
-        private void Forrage(IInstructionFollower follower)
+        private void Chop(Instruction instruction) 
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1));
+            GameObjectManager.Remove(this);
+        }
+
+        private void Forrage(Instruction instruction)
+        {
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             //This is tempory and should be replaced by the resource system
             if (IsHarvestable)
             {

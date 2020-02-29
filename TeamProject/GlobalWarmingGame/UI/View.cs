@@ -1,9 +1,12 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.UI
 {
@@ -145,6 +148,43 @@ namespace GlobalWarmingGame.UI
                 }
             };
 
+        }
+
+        /// <summary>
+        /// Creates a notification for the user
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="text">Common notification text</param>
+        /// <param name="list">List of objects of type T that will be appended to the notification text</param>
+        internal static void Notification<T>(string text, List<T> list = null) 
+        {
+            string notificatonText = text;
+
+            Panel Notification = new Panel(new Vector2(225f, 100f), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100f))
+            {
+                Padding = Vector2.Zero,
+                Visible = false
+            };
+
+            UserInterface.Active.AddEntity(Notification);
+
+            if (list != null && list.Count > 0) 
+            {
+                foreach(T item in list) 
+                {
+                    Notification.Size += new Vector2(0f, 10f);
+                    notificatonText += "\n " + item.ToString();
+                }
+            }
+
+            Notification.AddChild(new Label(notificatonText, Anchor.Center));
+            Notification.Visible = true;
+
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            {
+                Notification.Dispose();
+                UserInterface.Active.RemoveEntity(Notification);
+            });
         }
 
 

@@ -40,15 +40,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             InstructionTypes.Add(plant);
         }
 
-        private void Harvest(IInstructionFollower follower)
+        private void Harvest(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 10));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 10));
             //Harvest wheat
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }
 
-        private void Plant(IInstructionFollower follower)
+        private void Plant(Instruction instruction)
         {
             //Plant wheat seeds
             InstructionTypes.Remove(plant);
