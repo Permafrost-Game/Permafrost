@@ -10,18 +10,31 @@ namespace GlobalWarmingGame
 {
     public static class SoundFactory
     {
-        public static Song song; 
         public static Dictionary<string, SoundEffect> sounds;
+        public static Dictionary<string, Song> songs;
+        public static Song song; 
         public static void Loadsounds(ContentManager content)
         {
             sounds = new Dictionary<string, SoundEffect>();
-            song = content.Load<Song>("sound/songs/Blaetter_im_Wind_preview");
+            songs = new Dictionary<string, Song>();
+            Song song = null;
+            songs.Add("menu",content.Load<Song>("sound/songs/menu"));
+            songs.Add("main",content.Load<Song>("sound/songs/ColdAtmosphericMusic"));
+            songs.Add("enemy_zone", content.Load<Song>("sound/songs/enemy_zone"));
             sounds.Add("wood_chop", content.Load<SoundEffect>(@"sound/sounds/wood_chop"));
             sounds.Add("rabbit_death", content.Load<SoundEffect>(@"sound/sounds/rabbit_death"));
             sounds.Add("stone_pickup", content.Load<SoundEffect>(@"sound/sounds/stone_pickup"));
         }
         static public void PlayGameSoundtrack()
         {
+            song = songs["main"];
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(song);
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+        }
+        static public void PlayGameMenuSong()
+        {
+            song = songs["menu"];
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(song);
             MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;

@@ -62,8 +62,9 @@ namespace GlobalWarmingGame
             
             
             Content.RootDirectory = "Content";
-
             gameState = GameState.mainmenu;
+            SoundFactory.Loadsounds(Content);
+            SoundFactory.PlayGameMenuSong();
         }
 
         protected override void Initialize()
@@ -78,8 +79,7 @@ namespace GlobalWarmingGame
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
             base.Initialize();
-            SoundFactory.Loadsounds(Content);
-            SoundFactory.PlayGameSoundtrack(); 
+
         }
 
         #region Load Content
@@ -212,6 +212,7 @@ namespace GlobalWarmingGame
 
             if (gameState == GameState.playing)
             {
+                
                 camera.Update(gameTime);
                 keyboardInputHandler.Update(gameTime);
 
@@ -437,7 +438,7 @@ namespace GlobalWarmingGame
 
         void ProcessMenuSelection()
         {
-            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
+            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing;  SoundFactory.PlayGameSoundtrack(); };
             MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
             PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
