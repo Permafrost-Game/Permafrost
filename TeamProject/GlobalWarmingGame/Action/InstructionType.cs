@@ -1,6 +1,7 @@
 ﻿using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.ResourceItems;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Action
 {
@@ -14,8 +15,9 @@ namespace GlobalWarmingGame.Action
         public string Description { get; }
         public int Priority { get; }
 
-        public delegate void OnStart(IInstructionFollower follower);
+        public delegate void OnStart(Instruction instruction);
         private readonly OnStart onStart;
+        public List<ResourceItem> RequiredCosts { get; }
 
 
         /// <summary>
@@ -26,19 +28,20 @@ namespace GlobalWarmingGame.Action
         /// <param name="description">Display description</param>
         /// <param name="onStart">The method that is called when the instruction has started</param>
         /// /// <param name="onComplete">The method that is called when the instruction has started</param>
-        public InstructionType(string id, string name, string description, int priority = 0, OnStart onStart = default)
+        public InstructionType(string id, string name, string description, int priority = 0, List<ResourceItem> requiredCosts = null, OnStart onStart = default)
         {
             this.ID = id;
             this.Name = name;
             this.Description = description;
             this.Priority = priority;
+            this.RequiredCosts = requiredCosts;
 
             this.onStart = onStart;
         }
         
-        public void Start(IInstructionFollower follower)
+        public void Start(Instruction instruction)
         {
-            onStart?.Invoke(follower);
+            onStart?.Invoke(instruction);
         }
     }
 }

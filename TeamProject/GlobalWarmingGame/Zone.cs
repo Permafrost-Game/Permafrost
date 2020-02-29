@@ -83,7 +83,7 @@ namespace GlobalWarmingGame
                     {
                         if (value > 0.85)
                         {
-                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
+                            GameObjects.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
                         }
                     }
 

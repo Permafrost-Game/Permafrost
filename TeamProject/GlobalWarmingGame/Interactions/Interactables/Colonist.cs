@@ -141,7 +141,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Count != 0)
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Start(this);
+                currentInstruction.Type.Start(currentInstruction);
 
                 //if (currentInstruction.Type.ResourceItem != null)
                 //    Inventory.AddItem(currentInstruction.Type.ResourceItem);

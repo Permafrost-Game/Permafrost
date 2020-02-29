@@ -15,15 +15,12 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class WorkBench : Sprite, IInteractable, IBuildable, IUpdatable
+    public class WorkBench : Sprite, IInteractable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4), new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 8)};
         public Panel ResourceNotification { get; set; }
 
         public List<InstructionType> InstructionTypes { get; }
-
-        MouseState currentMouseState;
-        MouseState previousMouseState;
 
         public WorkBench(Vector2 position, Texture2D texture) : base
         (
@@ -35,102 +32,133 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             texture: texture
         )
         {
-            InstructionTypes = new List<InstructionType>();
-
-            ResourceNotification = new Panel(new Vector2(175, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100))
-            {
-                Padding = Vector2.Zero,
-                Visible = false
+            #region Teir 1 crafting costs
+            //Axe
+            List<ResourceItem> AxeCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 1),
             };
 
-            UserInterface.Active.AddEntity(ResourceNotification);
+            //Hoe
+            List<ResourceItem> HoeCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 2),
+            };
 
-            Label label = new Label("Not Enough Resources", Anchor.Center);
-            ResourceNotification.AddChild(label);
+            //Pickaxe
+            List<ResourceItem> PickaxeCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 2),
+            };
 
-            InstructionTypes.Add(new InstructionType("craftcloth", "Cloth", "Craft cloth", onStart: CraftCloth));
-            InstructionTypes.Add(new InstructionType("craftaxe", "Axe", "Craft axe", onStart: CraftAxe));
-            InstructionTypes.Add(new InstructionType("craftbackpack", "Backpack", "Craft backpack", onStart: CraftBackPack));
-            InstructionTypes.Add(new InstructionType("craftcoat", "Coat", "Craft coat", onStart: CraftCoat));
-            InstructionTypes.Add(new InstructionType("craftbow", "Bow", "Craft bow", onStart: CraftBow));
-            InstructionTypes.Add(new InstructionType("crafthoe", "Hoe", "Craft hoe", onStart: CraftHoe));
-            InstructionTypes.Add(new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", onStart: CraftPickaxe));
-            InstructionTypes.Add(new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", onStart: CraftBasicRifle));
+            //Backpack
+            List<ResourceItem> BackpackCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Cloth), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Leather), 5),
+            };
+
+            //BasicRifle
+            List<ResourceItem> BasicRifleCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 8),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Leather), 2),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.MachineParts), 4),
+            };
+
+            //Bow
+            List<ResourceItem> BowCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 6),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 1),
+            };
+
+            //Cloth
+            List<ResourceItem> ClothCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4),
+            };
+
+            //Coat
+            List<ResourceItem> CoatCraftingCosts = new List<ResourceItem>() {
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Cloth), 4),
+                new ResourceItem(ResourceTypeFactory.GetResource(Resource.Leather), 2),
+            };
+            #endregion
+
+            InstructionTypes = new List<InstructionType>
+            {
+                new InstructionType("craftaxe", "Axe", "Craft axe", 0, AxeCraftingCosts, onStart: CraftAxe),
+                new InstructionType("crafthoe", "Hoe", "Craft hoe", 0, HoeCraftingCosts, onStart: CraftHoe),
+                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", 0, PickaxeCosts, onStart: CraftPickaxe),
+                new InstructionType("craftbackpack", "Backpack", "Craft backpack", 0, BackpackCraftingCosts, onStart: CraftBackPack),
+                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", 0, BasicRifleCraftingCosts, onStart: CraftBasicRifle),
+                new InstructionType("craftbow", "Bow", "Craft bow", 0, BowCraftingCosts, onStart: CraftBow),
+                new InstructionType("craftcloth", "Cloth", "Craft cloth", 0, ClothCraftingCosts, onStart: CraftCloth),
+                new InstructionType("craftcoat", "Coat", "Craft coat", 0, CoatCraftingCosts, onStart: CraftCoat)
+            };
         }
 
         //TODO Make the tier one crafting items be children of a common parent which can be used to reduce code.
 
-        private void CraftCloth(IInstructionFollower follower)
+        private void CraftCloth(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Cloth);
+            WorkBenchCrafter(instruction, Resource.Cloth);
         }
 
-        private void CraftAxe(IInstructionFollower follower)
+        private void CraftAxe(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Axe);
+            WorkBenchCrafter(instruction, Resource.Axe);
         }
 
-        private void CraftBackPack(IInstructionFollower follower)
+        private void CraftBackPack(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Backpack);
+            WorkBenchCrafter(instruction, Resource.Backpack);
         }
 
-        private void CraftCoat(IInstructionFollower follower)
+        private void CraftCoat(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Coat);
+            WorkBenchCrafter(instruction, Resource.Coat);
         }
 
-        private void CraftBow(IInstructionFollower follower)
+        private void CraftBow(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Bow);
+            WorkBenchCrafter(instruction, Resource.Bow);
         }
 
-        private void CraftHoe(IInstructionFollower follower)
+        private void CraftHoe(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Hoe);
+            WorkBenchCrafter(instruction, Resource.Hoe);
         }
 
-        private void CraftPickaxe(IInstructionFollower follower)
+        private void CraftPickaxe(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.Pickaxe);
+            WorkBenchCrafter(instruction, Resource.Pickaxe);
         }
 
-        private void CraftBasicRifle(IInstructionFollower follower)
+        private void CraftBasicRifle(Instruction instruction)
         {
-            WorkBenchCrafter(follower, Craftable.BasicRifle);
+            WorkBenchCrafter(instruction, Resource.BasicRifle);
         }
 
-        private void WorkBenchCrafter(IInstructionFollower follower, Craftable craftableEnum)
+        private void WorkBenchCrafter(Instruction instruction, Resource resourceEnum)
         {
-            CraftableType craftable = ResourceTypeFactory.GetCraftable(craftableEnum);
-            if (follower.Inventory.ContainsAll(craftable.CraftingCosts))
+            Colonist colonist = (Colonist) instruction.ActiveMember;
+
+            ResourceType craftable = ResourceTypeFactory.GetResource(resourceEnum);
+            if (colonist.Inventory.ContainsAll(instruction.Type.RequiredCosts))
             {
-                foreach (ResourceItem item in craftable.CraftingCosts)
+                foreach (ResourceItem item in instruction.Type.RequiredCosts)
                 {
-                    follower.Inventory.RemoveItem(item);
+                    colonist.Inventory.RemoveItem(item);
                     //Console.WriteLine("Removed " + item.Type.DisplayName + " amount: " + item.Amount);
                 }
                 //Console.WriteLine("Added "+ craftable.ID + " amount: " + 1);
-                follower.Inventory.AddItem(new ResourceItem(craftable, 1));
+                colonist.Inventory.AddItem(new ResourceItem(craftable, 1));
             }
             else
             {
-                ResourceNotification.Visible = true;
+                //ResourceNotification.Visible = true;
             }
-            //follower.Goals.Clear();
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            currentMouseState = Mouse.GetState();
-
-            if (previousMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed)
-            {
-                if (ResourceNotification != null && ResourceNotification.Visible)
-                    ResourceNotification.Visible = false;
-            }
-
-            previousMouseState = currentMouseState;
         }
 
         public void Build()
