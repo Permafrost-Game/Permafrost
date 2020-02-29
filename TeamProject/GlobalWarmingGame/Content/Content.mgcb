@@ -4868,6 +4868,30 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
+#begin sound/sounds/rabbit_death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/rabbit_death.wav
+
+#begin sound/sounds/stone_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/stone_pickup.wav
+
+#begin sound/sounds/wood_chop.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/wood_chop.wav
+
+#begin sound/There _is_a_light_that_never_goes_out.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/There _is_a_light_that_never_goes_out.ogg
+
 #begin sound/There _is_a_light_that_never_goes_out.ogg
 /importer:OggImporter
 /processor:SongProcessor

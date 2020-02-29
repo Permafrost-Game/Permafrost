@@ -69,7 +69,7 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
-    <Compile Include="MusicManager.cs" />
+    <Compile Include="SoundFactory.cs" />
     <Compile Include="Resources\CraftableType.cs" />
     <Compile Include="Resources\IStorage.cs" />
     <Compile Include="Resources\ResourceTypeFactory.cs" />
