@@ -30,6 +30,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         {
             follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             GameObjectManager.Remove(this);
+            SoundFactory.PlaySoundEffect("rabbit_death");
         }
 
     }

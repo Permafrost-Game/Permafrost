@@ -26,8 +26,13 @@ namespace GlobalWarmingGame
         }
         public static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
         {
-            MediaPlayer.Volume -= 0.1f;
+            MediaPlayer.Volume -= 0.5f;
             MediaPlayer.Play(song);
         }
+        public static void PlaySoundEffect(string sound)
+        {
+           SoundEffect mySound = sounds[sound]; 
+            mySound.Play();
+        } 
     }
 }
