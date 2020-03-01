@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             this.hostileTexture = hostileTexture;
             this.capturedTexture = capturedTexture;
             InstructionTypes = new List<InstructionType>();
-            InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onStart: Capture));
+            InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onComplete: Capture));
         }
 
         private void Capture(Instruction instruction)

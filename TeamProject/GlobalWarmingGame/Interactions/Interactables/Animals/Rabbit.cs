@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         {
 
             this.InstructionTypes.Add(
-                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onStart: Hunt)
+                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onComplete: Hunt)
             );
         }
 

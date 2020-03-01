@@ -43,13 +43,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         )
         {
             InstructionTypes = new List<InstructionType>();
-            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onStart: Forrage);
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onComplete: Forrage);
 
             this.textureHarvestable = harvestable;
             this.textureHarvested = harvested;
             IsHarvestable = true;
             InstructionTypes.Add(forrage);
-            InstructionTypes.Add(new InstructionType("chop", "Chop", "Chop for wood", onStart: Chop));
+            InstructionTypes.Add(new InstructionType("chop", "Chop", "Chop for wood", onComplete: Chop));
         }
 
         private void Chop(Instruction instruction) 

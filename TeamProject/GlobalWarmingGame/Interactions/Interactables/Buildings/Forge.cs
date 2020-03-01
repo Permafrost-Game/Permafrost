@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem)
+                new InstructionType("forge", "Forge", "Forge iron item", onComplete: ForgeItem)
             };
         }
 

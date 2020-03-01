@@ -25,15 +25,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine stone", onStart: Mine)
+                new InstructionType("mine", "Mine", "Mine stone", timeCost: 500f, onStart: StartMine, onComplete: EndMine)
             };
         }
 
-        private void Mine(Instruction instruction)
+        private void StartMine(Instruction instruction)
+        {
+            //TODO Stone mine sound
+            //SoundFactory.PlaySoundEffect(Sound.stone_mine);
+        }
+
+        private void EndMine(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.stone_pickup);
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 2));
-            //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }
     }

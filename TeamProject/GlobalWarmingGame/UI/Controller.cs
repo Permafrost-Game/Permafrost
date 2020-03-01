@@ -111,7 +111,7 @@ namespace GlobalWarmingGame.UI
                 {
                     building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
-                    options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onStart: Build),
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onComplete: Build),
                                                                                activeMember,
                                                                                (GameObject)building), IssueInstructionCallback));
                 }
@@ -138,16 +138,16 @@ namespace GlobalWarmingGame.UI
         private static void IssueInstructionCallback(Instruction instruction)
         {
             //Check if the instruction requires resources or craftables
-            if (instruction.Type.RequiredCosts != null)
+            if (instruction.Type.RequiredResources != null)
             {
                 //Check if the colonist has the required resources in their inventory
-                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredCosts))
+                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredResources))
                 {
                     instruction.ActiveMember.AddInstruction(instruction, 0);
                 }
                 else 
                 {
-                    View.Notification("Missing items:", instruction.Type.RequiredCosts);
+                    View.Notification("Missing items:", instruction.Type.RequiredResources);
                 }
             }
             else
@@ -248,7 +248,7 @@ namespace GlobalWarmingGame.UI
         private static void Build(Instruction instruction)
         {
             Colonist colonist = (Colonist) instruction.ActiveMember;
-            List<ResourceItem> buildingCosts = instruction.Type.RequiredCosts;
+            List<ResourceItem> buildingCosts = instruction.Type.RequiredResources;
 
             //If Colonist has the resources build
             if (colonist.Inventory.ContainsAll(buildingCosts))
