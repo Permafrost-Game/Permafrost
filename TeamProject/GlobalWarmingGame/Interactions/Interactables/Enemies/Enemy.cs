@@ -168,25 +168,20 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Math.Atan2(delta.X, delta.Y);
             if (isInCombat)
             {
-                
+
+                if (targetInRange != null)
+                {
+
+                    SpriteEffect = targetInRange.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+                    targetToTheLeftBefore = targetToTheLeftAfter;
+                }
+
                 if (attacking)
                 {
-                    if (targetInRange != null)
-                    {
-                        if (targetInRange.Position.X < position1.X)
-                        {
-                            targetToTheLeftAfter = true;
-                        }
-                        else
-                        {
-                            targetToTheLeftAfter = false;
-                        }
-                    }
                     animateAttack();
-                    
-
                 }
-                else if (!attacking)
+                else
                 {
                 
                     isAnimated = true;
@@ -197,7 +192,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             else
             {
                 
-                /* if (delta.Equals(Vector2.Zero))
+                 if (delta.Equals(Vector2.Zero))
                  {
                      isAnimated = false;
                  }
@@ -207,14 +202,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
                      isAnimated = true;
                      TextureGroupIndex = 1;
                      SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                     flipped = true;
+                     //flipped = true;
                  }
                  else
                  {
                      isAnimated = true;
                      TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
 
-                 }*/
+                 }
             }
             
 

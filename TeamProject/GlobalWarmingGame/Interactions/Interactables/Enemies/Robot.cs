@@ -36,16 +36,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 Console.WriteLine("bear " + this.Position.X);
                 Console.WriteLine("colonist " + targetInRange.Position.X);
                 Console.WriteLine("After: " + targetToTheLeftAfter + "  Before: " + targetToTheLeftBefore);
-                if (targetToTheLeftAfter ^ targetToTheLeftBefore)
-                {
-                    SpriteEffect = SpriteEffects.FlipHorizontally;
-                    
-                }
-                targetToTheLeftBefore = targetToTheLeftAfter;
+                
             }
 
-
-            }
+        }
 
         public override void Update(GameTime gameTime)
         {
