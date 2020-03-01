@@ -37,11 +37,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             TextureGroupIndex = 1;
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("fuel", "Fuel", "Fuel campfire", onStart: Fuel)
+                new InstructionType("fuel", "Fuel", "Fuel campfire", onComplete: Fuel)
             };
         }
 
-        private void Fuel(IInstructionFollower follower)
+        private void Fuel(Instruction instruction)
         {
         }
 

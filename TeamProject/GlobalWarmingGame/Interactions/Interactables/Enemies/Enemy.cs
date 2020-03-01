@@ -57,7 +57,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
 
 
-            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onStart: EnemyAttacked));
+            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onComplete: EnemyAttacked));
 
             if (this.Tag == "Robot") { xdifference = 19; ydifference = 16; } else if(this.Tag=="Bear"){ xdifference=16; ydifference = -15; }
 
@@ -71,7 +71,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
-        private void EnemyAttacked(IInstructionFollower follower)
+        private void EnemyAttacked(Instruction instruction)
         {
             EnemyAttacked();
         }

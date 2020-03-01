@@ -5540,6 +5540,30 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
 
+#begin textures/interactables/buildings/tower/tower.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/tower/tower.png;textures/interactables/buildings/tower/hostile_tower.png
+
+#begin textures/interactables/buildings/tower/yellow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/tower/yellow.png;textures/interactables/buildings/tower/captured_tower.png
+
 #begin textures/interactables/buildings/workbench.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5599,6 +5623,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/stone/sprite_0.png;textures/interactables/environment/stone/stone_0.png
+
+#begin textures/interactables/environment/stone/stone_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/stone/stone_1.png
 
 #begin textures/interactables/environment/tree/snowtree.png
 /importer:TextureImporter

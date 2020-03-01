@@ -1,5 +1,4 @@
 ﻿
-using Engine;
 using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
@@ -10,30 +9,37 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    class CoalNode : Sprite, IInteractable
+    public class SmallStoneNode : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; }
 
-        public CoalNode(Vector2 position, Texture2D texture) : base
+        public SmallStoneNode(Vector2 position, Texture2D texture) : base
         (
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: 0f,
             origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
-            tag: "CoalNode",
+            tag: "StoneNode",
             texture: texture
         )
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine coal", onComplete: Mine)
+                new InstructionType("mine", "Mine", "Mine stone", timeCost: 500f, onStart: StartMine, onComplete: EndMine)
             };
         }
 
-        private void Mine(Instruction instruction)
+        private void StartMine(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Coal), 4));
-            //Maybe destory the node or allow 3 more mine operations
+            //TODO Stone mine sound
+            //SoundFactory.PlaySoundEffect(Sound.stone_mine);
+        }
+
+        private void EndMine(Instruction instruction)
+        {
+            SoundFactory.PlaySoundEffect(Sound.StonePickup);
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 2));
+            GameObjectManager.Remove(this);
         }
     }
 }
