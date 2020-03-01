@@ -10,65 +10,49 @@ namespace GlobalWarmingGame
 {
     public static class SoundFactory
     {
-        public static Dictionary<string, SoundEffect> sounds;
-        public static Dictionary<string, Song> songs;
+        public static Dictionary<Sound, SoundEffect> sounds;
+        public static Dictionary<PFSong, Song> songs;
         public static Song song; 
         public static void Loadsounds(ContentManager content)
         {
-            sounds = new Dictionary<string, SoundEffect>();
-            songs = new Dictionary<string, Song>();
-            Song song = null;
-            songs.Add("menu",content.Load<Song>("sound/songs/menu"));
-            songs.Add("main",content.Load<Song>("sound/songs/ColdAtmosphericMusic"));
-            songs.Add("enemy_zone", content.Load<Song>("sound/songs/enemy_zone"));
-            sounds.Add("wood_chop", content.Load<SoundEffect>(@"sound/sounds/wood_chop"));
-            sounds.Add("rabbit_death", content.Load<SoundEffect>(@"sound/sounds/rabbit_death"));
-            sounds.Add("stone_pickup", content.Load<SoundEffect>(@"sound/sounds/stone_pickup"));
+            songs = new Dictionary<PFSong, Song>
+            {
+                { PFSong.Menu,      content.Load<Song>(@"sound/songs/menu") },
+                { PFSong.Game,      content.Load<Song>(@"sound/songs/ColdAtmosphericMusic") },
+                { PFSong.EnemyZone, content.Load<Song>(@"sound/songs/enemy_zone") }
+            };
+            sounds = new Dictionary<Sound, SoundEffect>
+            {
+                { Sound.WoodChop,       content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
+                { Sound.RabbitDeath,    content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
+                { Sound.StonePickup,    content.Load<SoundEffect>(@"sound/sounds/stone_pickup") }
+            };
         }
-        static public void PlayGameSoundtrack()
+        static public void PlaySong(PFSong s, bool repeate = true)
         {
-            song = songs["main"];
-            MediaPlayer.IsRepeating = true;
+            song = songs[s];
+            MediaPlayer.IsRepeating = repeate;
             MediaPlayer.Play(song);
             MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
         }
-        static public void PlayGameMenuSong()
-        {
-            song = songs["menu"];
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(song);
-            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
-        }
-        public static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
+        private static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
         {
             MediaPlayer.Volume -= 100f;
             MediaPlayer.Play(song);
         }
-        public static void PlaySoundEffect(Sound sound)
-        {
-            SoundEffect mySound = null;
-            switch (sound)
-            {
-                case Sound.wood_chop:
-                    mySound = sounds["wood_chop"];
-                    break;
-                case Sound.rabbit_death:
-                    mySound = sounds["rabbit_death"];
-                    break;
-                case Sound.stone_pickup:
-                    mySound = sounds["stone_pickup"];
-                    break;
-                default:
-                    throw new NotImplementedException(sound + " has not been implemented");
-            }
-             
-            mySound.Play();
-        } 
+        public static void PlaySoundEffect(Sound sound) => sounds[sound].Play();
     }
 }
 public enum Sound
 {
-    wood_chop,
-    rabbit_death,
-    stone_pickup
+    WoodChop,
+    RabbitDeath,
+    StonePickup,
+}
+
+public enum PFSong
+{
+    Menu,
+    Game,
+    EnemyZone,
 }
