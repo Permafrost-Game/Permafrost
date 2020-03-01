@@ -101,12 +101,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
             
             if (target == null)
             {
-             //needs random movement
-               
+                Speed = 0.05f;
+                RandomAI ai = new RandomAI(70,0) ;
+                Goals.Enqueue(this.Position + ai.RandomTranslation());
+
             }
             else
             {
-                
+                Speed = 0.2f;
                 ChaseColonist(target);
             }
         }
@@ -221,7 +223,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
            
             if (targetInRange != null)
             {
-               //  c.intializeCombat((Colonist)target, this,gameTime);
+               
                
                 PerformCombat(gameTime,targetInRange);
             
