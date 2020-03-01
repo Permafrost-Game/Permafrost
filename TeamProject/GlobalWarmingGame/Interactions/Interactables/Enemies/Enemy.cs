@@ -16,16 +16,16 @@ namespace GlobalWarmingGame.Interactions.Enemies
    public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
         
-        Colonist target=null;
-        Colonist targetInRange=null;
-       
+        public Colonist target=null;
+        public Colonist targetInRange=null;
+        Vector2 fakeLeftXcoordinate;
+        Vector2 fakeRightXcoordinate;
         public float AttackPower { get; set; }
         public float Health { get; set; }
         public float attackRange { get; set; }
         public string enemyTag { get; set; }
         private double attackSpeed { get; set; }
-        private float xdifference;
-        private float ydifference;
+      
 
         public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
@@ -36,9 +36,12 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public Boolean attacking=false;
     
         private bool isInCombat=false;
-        private bool flipped;
+ 
         private double EnemytimeToAttack;
         public double aggroRange=200;
+        public bool targetToTheLeftBefore;
+        public bool targetToTheLeftAfter;
+        public bool flip;
 
         public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
@@ -61,10 +64,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
             InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onStart: EnemyAttacked));
 
-            if (this.Tag == "Robot") { xdifference = 19; ydifference = 16; } else if(this.Tag=="Bear"){ xdifference=16; ydifference = -15; }
+            
 
-
-            c = new Combat();
+         
+          
             this.attackRange = aRange;
             this.Health = maxHp;
             this.AttackPower = aPower;
@@ -108,53 +111,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
         }
 
-        public void animateAttack() {
-            if (targetInRange != null)
-            {
-                bool flippedOnce = false;
+        public abstract void animateAttack();
 
-                if (this.Tag == "Robot")
-                {
-                    isAnimated = true;
-                    this.TextureGroupIndex = 3;
-                    if (this.Position.X < targetInRange.Position.X)
-                    {
-                        SpriteEffect = SpriteEffects.FlipHorizontally;
-                        flippedOnce = true;
-                    }
-                    else
-                    {
-                        if (flippedOnce == true)
-                        {
-                            SpriteEffect = SpriteEffects.FlipHorizontally;
-                        }
-                        flippedOnce = false;
-                    }
-                }
-                else if (this.Tag == "Bear")
-                {
-
-                    isAnimated = true;
-                    this.TextureGroupIndex = 3;
-                    if (this.Position.X < target.Position.X)
-                    {
-                        SpriteEffect = SpriteEffects.FlipHorizontally;
-                        flippedOnce = true;
-                    }
-                    else
-                    {
-                        if (flippedOnce == true)
-                        {
-                            SpriteEffect = SpriteEffects.FlipHorizontally;
-                        }
-                        flippedOnce = false;
-                    }
-
-                }
-
-
-            }  
-        }
         public void setAttacking(Boolean b) {
             attacking = b;
         }
@@ -166,13 +124,21 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         private void ChaseColonist(Colonist colonist)
         {
+
+            fakeLeftXcoordinate = new Vector2(colonist.Position.X - 40, colonist.Position.Y);
+            fakeRightXcoordinate = new Vector2(colonist.Position.X + 40, colonist.Position.Y);
+            if (this.Position.X < colonist.Position.X)
+            {
+                Goals.Enqueue(fakeLeftXcoordinate);
+            }
+            else
+            {
+                Goals.Enqueue(fakeRightXcoordinate);
+            }
+
+           
+
             
-
-
-            
-                    Goals.Enqueue(colonist.Position);
-
-            Console.WriteLine("bear " + this.Position);
 
 
 
@@ -194,26 +160,35 @@ namespace GlobalWarmingGame.Interactions.Enemies
             this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             depth = (Position.X + (Position.Y / 2)) / 48000f;
             Aggro();
+            
             base.Update(gameTime);
             
             Vector2 delta = position1 - this.Position;
 
-            //Math.Atan2(delta.X, delta.Y);
+            Math.Atan2(delta.X, delta.Y);
             if (isInCombat)
             {
-                if (flipped)
-                {
-                    //SpriteEffect = SpriteEffects.FlipHorizontally;
-                }
+                
                 if (attacking)
                 {
-                   
+                    if (targetInRange != null)
+                    {
+                        if (targetInRange.Position.X < position1.X)
+                        {
+                            targetToTheLeftAfter = true;
+                        }
+                        else
+                        {
+                            targetToTheLeftAfter = false;
+                        }
+                    }
                     animateAttack();
                     
 
                 }
                 else if (!attacking)
                 {
+                
                     isAnimated = true;
                     TextureGroupIndex = 1;
                    
@@ -221,24 +196,25 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
             else
             {
-                if (delta.Equals(Vector2.Zero))
-                {
-                    isAnimated = false;
-                }
-                else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
-                {
+                
+                /* if (delta.Equals(Vector2.Zero))
+                 {
+                     isAnimated = false;
+                 }
+                 else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
+                 {
 
-                    isAnimated = true;
-                    TextureGroupIndex = 1;
-                    SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                    flipped = true;
-                }
-                else
-                {
-                    isAnimated = true;
-                    TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
+                     isAnimated = true;
+                     TextureGroupIndex = 1;
+                     SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                     flipped = true;
+                 }
+                 else
+                 {
+                     isAnimated = true;
+                     TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
 
-                }
+                 }*/
             }
             
 
@@ -257,8 +233,16 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
             else if(target!=null)
             {
+                fakeLeftXcoordinate = new Vector2(target.Position.X -40,target.Position.Y);
+                fakeRightXcoordinate = new Vector2(target.Position.X + 40, target.Position.Y);
                 Goals.Clear();
-                Goals.Enqueue(target.Position);
+                if (this.Position.X < target.Position.X) { 
+                Goals.Enqueue(fakeLeftXcoordinate);
+                }
+                else
+                {
+                    Goals.Enqueue(fakeRightXcoordinate);
+                }
             }
         }
 

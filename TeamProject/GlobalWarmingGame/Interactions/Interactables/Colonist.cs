@@ -31,6 +31,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public float MaxHealth { get; private set; }
         public bool ColonistDead { get; set; } = false;
         private bool combatModeOn = false;
+        public Vector2 lastPosition;
         Enemy enemy = null;
 
         private bool _inCombat = false;
@@ -100,8 +101,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             attackRange = 60;
-            AttackPower = 30;
+            AttackPower = 0;
             attackSpeed = 1000;
+            lastPosition = position;
 
             Speed = 0.5f;
             MaxHealth = 100f;
@@ -157,13 +159,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 position1 = this.Position;
+            lastPosition = this.Position;
             Position += PathFindingHelper.CalculateNextMove(gameTime, this);
             depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 1f" stops Z Fighting
             base.Update(gameTime);
             enemy = GlobalCombatDetector.FindColonistThreat(this);
 
-            Vector2 delta = position1 - this.Position;
+            Vector2 delta = lastPosition - this.Position;
 
 
             if (delta.Equals(Vector2.Zero))
