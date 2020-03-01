@@ -64,7 +64,7 @@ namespace GlobalWarmingGame
             Content.RootDirectory = "Content";
             gameState = GameState.mainmenu;
             SoundFactory.Loadsounds(Content);
-            SoundFactory.PlayGameMenuSong();
+            SoundFactory.PlaySong(Songs.menu);
         }
 
         protected override void Initialize()
@@ -438,7 +438,7 @@ namespace GlobalWarmingGame
 
         void ProcessMenuSelection()
         {
-            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing;  SoundFactory.PlayGameSoundtrack(); };
+            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing;  SoundFactory.PlaySong(Songs.main); };
             MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
             PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
