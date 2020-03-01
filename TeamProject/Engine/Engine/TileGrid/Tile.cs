@@ -15,9 +15,8 @@ namespace Engine.TileGrid
         public new Vector2 Position { get; }
         public Temperature temperature;
         public bool Heated { get; set; }
-        
+
         public string Type { get; }
-        ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
         public bool Walkable { get; }
 
@@ -25,8 +24,8 @@ namespace Engine.TileGrid
         private readonly Rectangle destinationRectangle;
         public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
         {
-            this.Type = texture.Name; 
-            
+            this.Type = texture.Name;
+
             this.Position = position;
             this.texture = texture;
             this.Walkable = walkable;
@@ -41,7 +40,6 @@ namespace Engine.TileGrid
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
             spriteBatch.Draw(
                 texture: texture,
                 destinationRectangle: destinationRectangle,
@@ -50,7 +48,6 @@ namespace Engine.TileGrid
                 );
         }
 
-        ///<summary>Equality testing</summary>
         public override bool Equals(object t)
         {
             if (t is Tile tile)
