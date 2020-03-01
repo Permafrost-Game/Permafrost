@@ -21,6 +21,8 @@ namespace Engine.TileGrid
         private readonly int tag = -1;
         public bool Walkable { get; }
 
+        private readonly Rectangle sourceRectangle;
+        private readonly Rectangle destinationRectangle;
         public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
         {
             this.Type = texture.Name; 
@@ -29,6 +31,12 @@ namespace Engine.TileGrid
             this.texture = texture;
             this.Walkable = walkable;
             temperature = new Temperature(-5/*ZoneManager.GlobalTemperature*/);//TODO fix this
+
+            sourceRectangle = new Rectangle(
+                                 location: new Point((Position.X / 32) % 2 == 0 ? 0 : 32, (Position.Y / 32) % 2 == 0 ? 0 : 32),
+                                 size: Size.ToPoint()
+                                 );
+            destinationRectangle = new Rectangle((base.Position - Size / 2).ToPoint(), Size.ToPoint());
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -36,10 +44,8 @@ namespace Engine.TileGrid
             //spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
             spriteBatch.Draw(
                 texture: texture,
-                destinationRectangle: new Rectangle((base.Position - Size /2).ToPoint(), Size.ToPoint()),
-                sourceRectangle: new Rectangle(
-                                 new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
-                                 Size.ToPoint()),
+                destinationRectangle: destinationRectangle,
+                sourceRectangle: sourceRectangle,
                 color: Color.White
                 );
         }
