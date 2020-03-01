@@ -47,7 +47,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void Chop(IInstructionFollower follower)
         {
-            SoundFactory.PlaySoundEffect(Sound.wood_chop);
+            SoundFactory.PlaySoundEffect(Sound.WoodChop);
             follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4));
             Choppable = false;
             InstructionTypes.Remove(chop);        

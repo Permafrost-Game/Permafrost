@@ -10,18 +10,18 @@ namespace GlobalWarmingGame
 {
     public static class SoundFactory
     {
-        public static Dictionary<string, SoundEffect> sounds;
-        public static Dictionary<string, Song> songs;
+        public static Dictionary<Sound, SoundEffect> sounds;
+        public static Dictionary<Songs, Song> songs;
         public static void Loadsounds(ContentManager content)
         {
-            sounds = new Dictionary<string, SoundEffect>();
-            songs = new Dictionary<string, Song>();
-            songs.Add("menu",content.Load<Song>("sound/songs/menu"));
-            songs.Add("main",content.Load<Song>("sound/songs/ColdAtmosphericMusic"));
-            songs.Add("enemy_zone", content.Load<Song>("sound/songs/enemy_zone"));
-            sounds.Add("wood_chop", content.Load<SoundEffect>(@"sound/sounds/wood_chop"));
-            sounds.Add("rabbit_death", content.Load<SoundEffect>(@"sound/sounds/rabbit_death"));
-            sounds.Add("stone_pickup", content.Load<SoundEffect>(@"sound/sounds/stone_pickup"));
+            sounds = new Dictionary<Sound, SoundEffect>();
+            songs = new Dictionary<Songs, Song>();
+            songs.Add(Songs.Menu,content.Load<Song>("sound/songs/menu"));
+            songs.Add(Songs.Main,content.Load<Song>("sound/songs/ColdAtmosphericMusic"));
+            songs.Add(Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone"));
+            sounds.Add(Sound.WoodChop, content.Load<SoundEffect>(@"sound/sounds/wood_chop"));
+            sounds.Add(Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death"));
+            sounds.Add(Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup"));
         }
  
         public static void PlaySong(Songs songS)
@@ -29,18 +29,18 @@ namespace GlobalWarmingGame
             Song song = null;
             switch (songS)
             {
-                case Songs.menu:
-                    song = songs["menu"];
+                case Songs.Menu:
+                    song = songs[Songs.Menu];
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Play(song);
                     break;
-                case Songs.main:
-                    song = songs["main"];
+                case Songs.Main:
+                    song = songs[Songs.Main];
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Play(song);
                     break;
-                case Songs.enemy_zone:
-                    song = songs["enemy_zone"];
+                case Songs.EnemyZone:
+                    song = songs[Songs.EnemyZone];
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Play(song);
                     break;
@@ -54,14 +54,14 @@ namespace GlobalWarmingGame
             SoundEffect mySound = null;
             switch (sound)
             {
-                case Sound.wood_chop:
-                    mySound = sounds["wood_chop"];
+                case Sound.WoodChop:
+                    mySound = sounds[Sound.WoodChop];
                     break;
-                case Sound.rabbit_death:
-                    mySound = sounds["rabbit_death"];
+                case Sound.RabbitDeath:
+                    mySound = sounds[Sound.RabbitDeath];
                     break;
-                case Sound.stone_pickup:
-                    mySound = sounds["stone_pickup"];
+                case Sound.StonePickup:
+                    mySound = sounds[Sound.StonePickup];
                     break;
                 default:
                     throw new NotImplementedException(sound + " has not been implemented");
@@ -73,13 +73,13 @@ namespace GlobalWarmingGame
 }
 public enum Songs
 {
-    main, 
-    menu, 
-    enemy_zone
+    Main, 
+    Menu, 
+    EnemyZone
 }
 public enum Sound
 {
-    wood_chop,
-    rabbit_death,
-    stone_pickup
+    WoodChop,
+    RabbitDeath,
+    StonePickup
 }
