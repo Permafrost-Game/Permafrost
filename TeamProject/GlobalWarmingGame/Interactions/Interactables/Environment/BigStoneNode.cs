@@ -38,7 +38,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void EndMine(Instruction instruction)
         {
-            SoundFactory.PlaySoundEffect(Sound.stone_pickup);
+            SoundFactory.PlaySoundEffect(Sound.StonePickup);
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 8));
             GameObjectManager.Remove(this);
         }
