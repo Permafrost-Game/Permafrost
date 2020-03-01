@@ -49,7 +49,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         private void StartChop(Instruction instruction)
         {
-            SoundFactory.PlaySoundEffect(Sound.wood_chop);
+            SoundFactory.PlaySoundEffect(Sound.WoodChop);
 
         }
         private void EndChop(Instruction instruction)
