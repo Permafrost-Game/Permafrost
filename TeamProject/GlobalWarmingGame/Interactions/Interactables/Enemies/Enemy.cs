@@ -62,7 +62,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
 
 
-            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onStart: EnemyAttacked));
+            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onComplete: EnemyAttacked));
 
             
 
@@ -76,7 +76,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
        
         }
 
-        private void EnemyAttacked(IInstructionFollower follower)
+        private void EnemyAttacked(Instruction instruction)
         {
             Aggro();
         }

@@ -11,6 +11,7 @@ using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 
 using GeonBit.UI;
@@ -40,7 +41,7 @@ namespace GlobalWarmingGame
         SpriteBatch spriteBatch;
 
         TileSet tileSet;
-
+ 
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
@@ -60,7 +61,7 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
         Texture2D logo;
-       
+ 
 
         public Game1()
         {
@@ -71,8 +72,9 @@ namespace GlobalWarmingGame
             
             
             Content.RootDirectory = "Content";
-
             gameState = GameState.mainmenu;
+            SoundFactory.Loadsounds(Content);
+            SoundFactory.PlayGameMenuSong();
         }
 
         protected override void Initialize()
@@ -87,6 +89,7 @@ namespace GlobalWarmingGame
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
             base.Initialize();
+
         }
 
         #region Load Content
@@ -226,6 +229,7 @@ namespace GlobalWarmingGame
             GlobalCombatDetector.updateParticipants();
             if (gameState == GameState.playing)
             {
+                
                 camera.Update(gameTime);
                 keyboardInputHandler.Update(gameTime);
 
@@ -451,7 +455,7 @@ namespace GlobalWarmingGame
 
         void ProcessMenuSelection()
         {
-            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
+            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing;  SoundFactory.PlayGameSoundtrack(); };
             MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
 
             PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };

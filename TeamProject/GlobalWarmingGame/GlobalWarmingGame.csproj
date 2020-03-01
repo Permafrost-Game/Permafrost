@@ -50,6 +50,8 @@
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
+    <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
+    <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
     <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
@@ -64,7 +66,7 @@
     <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
-    <Compile Include="Interactions\Interactables\Environment\StoneNode.cs" />
+    <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
     <Compile Include="Interactions\Interactables\Environment\Bush.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Oven.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
-    <Compile Include="Resources\CraftableType.cs" />
+    <Compile Include="SoundFactory.cs" />
     <Compile Include="Resources\IStorage.cs" />
     <Compile Include="Resources\ResourceTypeFactory.cs" />
     <Compile Include="UI\Controller.cs" />
@@ -91,7 +93,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\CollectiveInventory.cs" />
-    <Compile Include="Resources\ICraftable.cs" />
     <Compile Include="Resources\Inventory.cs" />
     <Compile Include="Resources\ResourceItem.cs" />
     <Compile Include="Resources\ResourceType.cs" />
@@ -112,6 +113,7 @@
       <HintPath>..\packages\SimplexNoise.2.0.0\lib\net45\SimplexNoise.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
