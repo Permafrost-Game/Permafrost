@@ -11,48 +11,44 @@ namespace GlobalWarmingGame
     public static class SoundFactory
     {
         public static Dictionary<Sound, SoundEffect> sounds;
-        public static Dictionary<PFSong, Song> songs;
-        public static Song song; 
+        public static Dictionary<Songs, Song> songs;
         public static void Loadsounds(ContentManager content)
         {
-            songs = new Dictionary<PFSong, Song>
-            {
-                { PFSong.Menu,      content.Load<Song>(@"sound/songs/menu") },
-                { PFSong.Game,      content.Load<Song>(@"sound/songs/ColdAtmosphericMusic") },
-                { PFSong.EnemyZone, content.Load<Song>(@"sound/songs/enemy_zone") }
-            };
             sounds = new Dictionary<Sound, SoundEffect>
             {
-                { Sound.WoodChop,       content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
-                { Sound.RabbitDeath,    content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
-                { Sound.StonePickup,    content.Load<SoundEffect>(@"sound/sounds/stone_pickup") }
+                { Sound.WoodChop, content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
+                { Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
+                { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") }
             };
+            songs = new Dictionary<Songs, Song>
+            {
+                { Songs.Menu, content.Load<Song>("sound/songs/menu") },
+                { Songs.Main, content.Load<Song>("sound/songs/ColdAtmosphericMusic") },
+                { Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone") }
+            };
+
         }
-        static public void PlaySong(PFSong s, bool repeate = true)
+ 
+        public static void PlaySong(Songs songS)
         {
-            song = songs[s];
-            MediaPlayer.IsRepeating = repeate;
-            MediaPlayer.Play(song);
-            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(songs[songS]);
         }
-        private static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
+        public static void PlaySoundEffect(Sound sound)
         {
-            MediaPlayer.Volume -= 100f;
-            MediaPlayer.Play(song);
-        }
-        public static void PlaySoundEffect(Sound sound) => sounds[sound].Play();
+            sounds[sound].Play();
+        } 
     }
+}
+public enum Songs
+{
+    Main, 
+    Menu, 
+    EnemyZone
 }
 public enum Sound
 {
     WoodChop,
     RabbitDeath,
-    StonePickup,
-}
-
-public enum PFSong
-{
-    Menu,
-    Game,
-    EnemyZone,
+    StonePickup
 }
