@@ -136,8 +136,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public void OnGoalComplete(Vector2 completedGoal)
         {
-            if( Goals.Count == 0
-                && instructions.Count > 0 
+            if (Goals.Count == 0
+                && instructions.Count > 0
                 && completedGoal == (instructions.Peek().PassiveMember.Position)
                     )
             {
@@ -161,7 +161,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 position1 = this.Position;
+            Vector2 lastPosition = this.Position;
             Move(gameTime);
             base.Update(gameTime);
             enemy = GlobalCombatDetector.FindColonistThreat(this);
@@ -202,11 +202,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 combatModeOn = false;
             }
 
-
-            TemperatureCheck(gameTime);
-            HungerCheck(gameTime);
-        
-
             if (combatModeOn)
             {
                 performCombat(gameTime, enemy);
@@ -215,6 +210,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (this.Health <= 0) {
                 GameObjectManager.Remove(this);
             }
+
+            TemperatureCheck(gameTime);
+            HungerCheck(gameTime);
 
         }
 
@@ -233,93 +231,88 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 else
                 {
                     this.inCombat = false;
-                    
+
                 }
-                
             }
-
-
-
-
+        }
 
             #region Colonist Temperature Check
-           /* private void TemperatureCheck(GameTime gameTime)
+        private void TemperatureCheck(GameTime gameTime)
+        {
+            //Temperature affecting colonist's health
+            timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeToTemperature < 0f)
             {
-                //Temperature affecting colonist's health
-                timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (timeToTemperature < 0f)
+                if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
                 {
-                    if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
-                    {
-                        //Health -= 1;
-                    }
-                    timeToTemperature = timeUntillTemperature;
-                }
-            }*/
-            #endregion
-
-          /*  #region Colonist Hunger Check
-            private void HungerCheck(GameTime gameTime)
-            {
-                //Temperature affecting food
-                timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
-
-                if (foodFormula <= 0.25)
-                {
-                    foodFormula = 0.25;
-                }
-                //TODO uncomment
-                // foodFormula is a multiplier on the timeUntillFoodTick
-                if ((timeUntillFoodTick * foodFormula) < 0)
-                {
-                    FoodTick();
-                    timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
-                }
-            }
-            private void FoodTick()
-            {
-                //If colonist doesn't have food on them, they are starving -1 health
-                ResourceItem food = new ResourceItem(ResourceTypeFactory.MakeResource(Resource.Food), 1);
-                if (!Inventory.RemoveItem(food))
-                {
-                    //TODO uncomment
                     //Health -= 1;
+                }
+                timeToTemperature = timeUntillTemperature;
+            }
+        }
+        #endregion
+
+        #region Colonist Hunger Check
+        private void HungerCheck(GameTime gameTime)
+        {
+            //Temperature affecting food
+            timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
+
+            if (foodFormula <= 0.25)
+            {
+                foodFormula = 0.25;
+            }
+            //TODO uncomment
+            // foodFormula is a multiplier on the timeUntillFoodTick
+            if ((timeUntillFoodTick * foodFormula) < 0)
+            {
+                FoodTick();
+                timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
+            }
+        }
+        private void FoodTick()
+        {
+            //If colonist doesn't have food on them, they are starving -1 health
+            ResourceItem food = new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1);
+            if (!Inventory.RemoveItem(food))
+            {
+                //TODO uncomment
+                //Health -= 1;
+            }
+            else
+            {
+                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
+            }
+        }
+        #endregion
+
+        #region Update Temperature
+        public void UpdateTemp(float tileTemp, GameTime gameTime)
+        {
+            //Adjust the colonist's temperature based on the tile they are over
+            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeToTemperatureUpdate < 0f)
+            {
+                if (tileTemp > CoreBodyTemperature)
+                {
+                    Temperature.Value = Temperature.Value + (tileTemp / 10);
+                    //Colonist's temperature should be able to be greater than the tile they are over
+                    Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
+                    //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
                 else
                 {
-                    //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
+                    Temperature.Value = Temperature.Value - 1;
+                    //Colonist's temperature should be able to be lower than the tile they are over
+                    Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
+                    //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
                 }
-            }
-            #endregion
-
-            #region Update Temperature
-            public void UpdateTemp(float tileTemp, GameTime gameTime)
-            {
-                //Adjust the colonist's temperature based on the tile they are over
-                timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (timeToTemperatureUpdate < 0f)
-                {
-                    if (tileTemp > CoreBodyTemperature)
-                    {
-                        Temperature.Value = Temperature.Value + (tileTemp / 10);
-                        //Colonist's temperature should be able to be greater than the tile they are over
-                        Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                        //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
-                    }
-                    else
-                    {
-                        Temperature.Value = Temperature.Value - 1;
-                        //Colonist's temperature should be able to be lower than the tile they are over
-                        Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                        //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
-                    }
 
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
         #endregion
-
         public void AddInstruction(Instruction instruction, int priority)
         {
             instruction.OnComplete.Add(OnInstructionComplete);
@@ -341,36 +334,33 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
-    */
-        }
-
         private void ColonistAttack(GameTime gameTime)
         {
-            
-                if (ColonistAttackSpeedControl(gameTime))
-                {
-                    this.isAttacking = true;
-                    enemy.Health = enemy.Health - this.AttackPower;
-                }
-                //Console.WriteLine("Colonist hp: " + this.Health + " Enemy hp: " + enemy.Health);
 
-
-
-                if (enemy.Health <= 0)
-                {
-                    enemy.SetEnemyDead();
-                    this.inCombat = false;
-                    this.isAttacking = false;
-                    enemy = null;
-                    
-                }
+            if (ColonistAttackSpeedControl(gameTime))
+            {
+                this.isAttacking = true;
+                enemy.Health = enemy.Health - this.AttackPower;
             }
+            //Console.WriteLine("Colonist hp: " + this.Health + " Enemy hp: " + enemy.Health);
+
+
+
+            if (enemy.Health <= 0)
+            {
+                enemy.SetEnemyDead();
+                this.inCombat = false;
+                this.isAttacking = false;
+                enemy = null;
+
+            }
+        }
 
         private bool ColonistAttackSpeedControl(GameTime gameTime)
         {
             ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
 
-           // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
+            // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
             if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
             {
                 this.isAttacking = false;
@@ -388,10 +378,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        public void AddInstruction(Instruction instruction, int priority)
-        {
-            instructions.Enqueue(instruction);
-        }
-
     }
 }
+
+
+
