@@ -55,9 +55,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set
             {
                 _isAttacking = value;
-                //isAnimated = true;
+                isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-                //TextureGroupIndex = _isAttacking ? 1 : 0;
+
+                TextureGroupIndex = _isAttacking ? 1 : 0;
 
             }
         }
@@ -197,6 +198,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (enemy!=null)
             {
                 combatModeOn = true;
+                SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             }
             else {
                 combatModeOn = false;
@@ -325,8 +327,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (instructions.Peek() == instruction)
             {
                 instructions.Dequeue();
-
-                TextureGroupIndex = 0;
+                if (!inCombat)
+                {
+                    TextureGroupIndex = 0;
+                }
             }
             else
             {
