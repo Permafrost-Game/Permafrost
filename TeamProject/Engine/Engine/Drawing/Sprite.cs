@@ -17,7 +17,6 @@ namespace Engine.Drawing
         /// </summary>
         protected SpriteEffects SpriteEffect { get; set; }
 
-
         public Sprite(Vector2 position, Vector2 size, float rotation, Vector2 origin, string tag, float depth, Texture2D texture = default, SpriteEffects spriteEffect = SpriteEffects.None) :
             base(position, size, rotation, origin, tag)
         {

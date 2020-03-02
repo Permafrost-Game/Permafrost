@@ -11,8 +11,10 @@ using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GlobalWarmingGame
 {
@@ -21,9 +23,12 @@ namespace GlobalWarmingGame
     /// </summary>
     public class Game1 : Game
     {
-        private readonly bool isFullScreen = false;
-        private readonly float resolutionScale = 0.75f;
+        const string SettingsPath = @"Content/settings.json";
 
+        // private bool isFullScreen = false;
+        private float resolutionScale = 0.75f;
+        private int seed = new System.Random().Next();
+        private Vector2 currentZone = Vector2.Zero;
 
 
 
@@ -41,7 +46,6 @@ namespace GlobalWarmingGame
         KeyboardState previousKeyboardState;
         KeyboardState currentKeyboardState;
 
-        enum GameState { mainmenu, playing, paused }
         GameState gameState;
 
         List<Light> lightObjects;
@@ -51,15 +55,10 @@ namespace GlobalWarmingGame
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
         Texture2D logo;
- 
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this)
-            {
-                IsFullScreen = isFullScreen
-            };
-            
+            graphics = new GraphicsDeviceManager(this);
             
             Content.RootDirectory = "Content";
             gameState = GameState.mainmenu;
@@ -69,6 +68,21 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
+            if (File.Exists(SettingsPath))
+            {
+                var settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(SettingsPath));
+
+                if (bool.Parse(settings["isFullScreen"]))
+                    graphics.ToggleFullScreen();
+
+                resolutionScale = float.Parse(settings["resolutionScale"]);
+
+                seed = int.Parse(settings["seed"]);
+
+                string[] zoneCoords = settings["currentZone"].Split(',');
+                currentZone = new Vector2(int.Parse(zoneCoords[0]), int.Parse(zoneCoords[1]));
+            }
+
             graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
@@ -124,25 +138,30 @@ namespace GlobalWarmingGame
                 textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
                 textureSet.Add(5, water);
 
+                Textures.LoadContent(Content);
+
                 InteractablesFactory.LoadContent(Content);
 
-                ResourceTypeFactory.LoadContent(Content);
+                ResourceTypeFactory.Init();
+
+                Controller.LoadContent(Content);
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
-                GameObjectManager.Init(tileSet);
 
+                GameObjectManager.Init(tileSet, seed, currentZone, false);
+                    
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
 
                 GameObjectManager.Camera = camera;
-                this.keyboardInputHandler = new KeyboardInputHandler();
+                this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
             //CREATING GAME OBJECTS
             {
                 //All this code below is for testing and will eventually be replaced.
-                Controller.LoadContent(Content);
+                // Controller.LoadContent(Content);
 
                 
                
@@ -151,12 +170,9 @@ namespace GlobalWarmingGame
                 MainMenu = new MainMenu(logo);
                 PauseMenu = new PauseMenu();
 
-                Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
+                //Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
 
-                GameObjectManager.Add(c1);
-
-                
-                
+                //GameObjectManager.Add(c1);
                 
                 ProcessMenuSelection();
 
@@ -198,7 +214,17 @@ namespace GlobalWarmingGame
 
         protected override void UnloadContent()
         {
+            GameObjectManager.SaveZone();
 
+            var settingsData = JsonConvert.SerializeObject(new
+            {
+                isFullScreen = graphics.IsFullScreen,
+                resolutionScale,
+                seed,
+                currentZone = GameObjectManager.ZoneFileName()
+            }, Formatting.Indented);
+
+            System.IO.File.WriteAllText(SettingsPath, settingsData);
         }
         #endregion
 
@@ -210,20 +236,20 @@ namespace GlobalWarmingGame
             ShowMainUI();
             PauseGame();
 
+            keyboardInputHandler.Update(gameTime, gameState);
+
             if (gameState == GameState.playing)
             {
                 
                 camera.Update(gameTime);
-                keyboardInputHandler.Update(gameTime);
-
                 GameObjectManager.ZoneMap.Update(gameTime);
+
                 BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
                 UpdateColonistTemperatures(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
-
 
                 UpdateColonistTemperatures(gameTime);
 
@@ -494,5 +520,7 @@ namespace GlobalWarmingGame
 
         #endregion
     }
+
+    public enum GameState { mainmenu, playing, paused }
 }
  

@@ -2,10 +2,18 @@
 
 namespace GlobalWarmingGame.ResourceItems
 {
-    public class ResourceItem
+    public class ResourceItem : IReconstructable
     {
+        [PFSerializable]
         public ResourceType ResourceType { get; set; }
+
+        [PFSerializable]
         public int Weight { get; set; }
+
+        public ResourceItem()
+        {
+
+        }
 
         public ResourceItem(ResourceType Type, int weight = 0)
         {
@@ -20,8 +28,12 @@ namespace GlobalWarmingGame.ResourceItems
 
         public override string ToString() 
         {
-            return ResourceType.DisplayName;                    
+            return ResourceType.displayName;                    
         }
 
+        public object Reconstruct()
+        {
+            return new ResourceItem(ResourceType, Weight);
+        }
     }
 }

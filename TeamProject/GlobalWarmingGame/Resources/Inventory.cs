@@ -6,20 +6,33 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.ResourceItems
 {
-    public class Inventory
+    public class Inventory : IReconstructable
     {
         public event EventHandler InventoryChange = delegate { };
 
-        public Dictionary<ResourceType, ResourceItem> Resources { get; private set; }
+        public Dictionary<Resource, ResourceItem> Resources { get; private set; }
+
+        [PFSerializable]
         public float Capacity { get; private set; }
+
         public float CurrentLoad { get; private set; }
         public bool IsFull { get => Capacity < CurrentLoad;  }
 
+        [PFSerializable]
+        public readonly IEnumerable<ResourceItem> resourceItems;
+
+        public Inventory()
+        {
+
+        }
+
         public Inventory(float capacity)
         {
-            Resources = new Dictionary<ResourceType, ResourceItem>();
+            Resources = new Dictionary<Resource, ResourceItem>();
             Capacity = capacity;
             CurrentLoad = 0f;
+
+            resourceItems = Resources.Values;
         }
 
 
@@ -46,14 +59,14 @@ namespace GlobalWarmingGame.ResourceItems
         private void AddItemUnchecked(ResourceItem item)
         {
             
-            if (Resources.ContainsKey(item.ResourceType))
+            if (Resources.ContainsKey(item.ResourceType.ResourceID))
             {
-                Resources[item.ResourceType].Weight += item.Weight;
+                Resources[item.ResourceType.ResourceID].Weight += item.Weight;
                 
             }
             else
             {
-                Resources.Add(item.ResourceType, item.Clone());
+                Resources.Add(item.ResourceType.ResourceID, item.Clone());
             }
                 
             CurrentLoad += item.Weight;
@@ -63,10 +76,10 @@ namespace GlobalWarmingGame.ResourceItems
 
         private void RemoveItemUnchecked(ResourceItem item)
         { 
-            Resources[item.ResourceType].Weight -= item.Weight;
+            Resources[item.ResourceType.ResourceID].Weight -= item.Weight;
 
-            if(Resources[item.ResourceType].Weight <= 0)
-                Resources.Remove(item.ResourceType);
+            if(Resources[item.ResourceType.ResourceID].Weight <= 0)
+                Resources.Remove(item.ResourceType.ResourceID);
 
             CurrentLoad -= item.Weight;
             InventoryChange.Invoke(this, new EventArgs());
@@ -95,8 +108,8 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns><code>true</code> if the <see cref="Inventory"/> contains the <paramref name="resourceItem"/></returns>
         public bool Contains(ResourceItem resourceItem)
         {
-            return Resources.ContainsKey(resourceItem.ResourceType) ?
-                Resources[resourceItem.ResourceType].Weight >= resourceItem.Weight : false;
+            return Resources.ContainsKey(resourceItem.ResourceType.ResourceID) ?
+                Resources[resourceItem.ResourceType.ResourceID].Weight >= resourceItem.Weight : false;
         }
 
         /// <summary>
@@ -114,6 +127,16 @@ namespace GlobalWarmingGame.ResourceItems
                 }
             }
             return true;
+        }
+
+        public object Reconstruct()
+        {
+            Inventory inventory = new Inventory(Capacity);
+
+            foreach (ResourceItem item in resourceItems)
+                inventory.AddItemUnchecked(item);
+
+            return inventory;
         }
     }
 }

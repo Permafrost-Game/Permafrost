@@ -12,13 +12,27 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
     {
         #region Instruction
 
         public List<InstructionType> InstructionTypes { get; }
         private readonly Queue<Instruction> instructions;
-        public Inventory Inventory { get; }
+
+        [PFSerializable]
+        public readonly Inventory inventory;
+
+        public Inventory Inventory { get => inventory; }
+
+        [PFSerializable]
+        public readonly int textureSetID;
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         #endregion
 
@@ -82,19 +96,30 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public float Speed { get; set; }
         #endregion
 
+        public Colonist() : this(Vector2.Zero, TextureSetTypes.colonist)
+        {
 
-        public Colonist(Vector2 position, Texture2D[][] textureSet, float inventoryCapacity = 100) : base
+        }
+
+        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = null, int capacity = 100) : base
         (
             position: position,
-            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
+            size: new Vector2(Textures.MapSet[textureSetType][0][0].Width, Textures.MapSet[textureSetType][0][0].Height),
             rotation: 0f,
-            origin: new Vector2(textureSet[0][0].Width / 2, textureSet[0][0].Height / 2),
+            origin: new Vector2(Textures.MapSet[textureSetType][0][0].Width / 2, Textures.MapSet[textureSetType][0][0].Height / 2),
             tag: "Colonist",
             depth: 0f,
-            textureSet: textureSet,
+            textureSet: Textures.MapSet[textureSetType],
             frameTime: 100f
         )
         {
+            textureSetID = (int)textureSetType;
+
+            if (inventory == null)
+                this.inventory = new Inventory(capacity);
+            else
+                this.inventory = inventory;
+
             attackRange = 60;
             AttackPower = 30;
             attackSpeed = 1000;
@@ -103,7 +128,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Speed = 0.25f;
             MaxHealth = 100f;
             Health = MaxHealth;
-            Inventory = new Inventory(inventoryCapacity);
             Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
             timeToTemperature = timeUntillTemperature;
@@ -155,11 +179,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 position1 = this.Position;
+            Vector2 position1 = Position;
             Move(gameTime);
             base.Update(gameTime);
 
-            Vector2 delta = position1 - this.Position;
+            Vector2 delta = position1 - Position;
 
 
             if (delta.Equals(Vector2.Zero))
@@ -290,6 +314,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 throw new Exception("Async instruction completed");
             }
+        }
+
+        public object Reconstruct()
+        {
+            return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);
         }
 
     }

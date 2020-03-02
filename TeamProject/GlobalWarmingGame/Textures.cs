@@ -1,28 +1,60 @@
-﻿using GlobalWarmingGame.Interactions.Enemies;
-using GlobalWarmingGame.Interactions.Interactables.Animals;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
-using GlobalWarmingGame.Interactions.Interactables.Environment;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
-namespace GlobalWarmingGame.Interactions.Interactables
+namespace GlobalWarmingGame
 {
-    /// <summary>
-    /// A nice and easy way to create interactables
-    /// </summary>
-    public static class InteractablesFactory
+    static class Textures
     {
-        public static Dictionary<string, Texture2D> textures;
-        public static Dictionary<string, Texture2D[][]> textureSet;
+        public static IDictionary<TextureTypes, Texture2D> Map { get; }
+
+        public static IDictionary<TextureIconTypes, Texture2D> MapIcon { get; }
+
+        public static IDictionary<TextureSetTypes, Texture2D[][]> MapSet { get; }
+
+        static Textures()
+        {
+            Map = new Dictionary<TextureTypes, Texture2D>();
+            MapIcon = new Dictionary<TextureIconTypes, Texture2D>();
+            MapSet = new Dictionary<TextureSetTypes, Texture2D[][]>();
+        }
 
         public static void LoadContent(ContentManager contentManager)
         {
-            textures = new Dictionary<string, Texture2D>();
-            textureSet = new Dictionary<string, Texture2D[][]>(); 
-            textureSet.Add("colonist", new Texture2D[][]{
+            Map.Add(TextureTypes.farm, contentManager.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"));
+            Map.Add(TextureTypes.bushH, contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0"));
+            Map.Add(TextureTypes.bushN, contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1"));
+            Map.Add(TextureTypes.tree, contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
+            Map.Add(TextureTypes.treeStump, contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
+            Map.Add(TextureTypes.workBench, contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
+            Map.Add(TextureTypes.smallStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
+            Map.Add(TextureTypes.bigStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
+            Map.Add(TextureTypes.tallGrass, contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
+            Map.Add(TextureTypes.towerC, contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            Map.Add(TextureTypes.towerH, contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
+
+            MapIcon.Add(TextureIconTypes.stone, contentManager.Load<Texture2D>(@"textures/icons/stone"));
+            MapIcon.Add(TextureIconTypes.wood, contentManager.Load<Texture2D>(@"textures/icons/wood"));
+            MapIcon.Add(TextureIconTypes.fibers, contentManager.Load<Texture2D>(@"textures/icons/fibers"));
+            MapIcon.Add(TextureIconTypes.apple, contentManager.Load<Texture2D>(@"textures/icons/apple"));
+
+            /* todo */
+            MapIcon.Add(TextureIconTypes.coal, null);
+            MapIcon.Add(TextureIconTypes.leather, null);
+            MapIcon.Add(TextureIconTypes.machineParts, null);
+
+            MapIcon.Add(TextureIconTypes.axe, contentManager.Load<Texture2D>(@"textures/icons/axe"));
+            MapIcon.Add(TextureIconTypes.hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
+            MapIcon.Add(TextureIconTypes.pickaxe, contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
+
+            /* todo */
+            MapIcon.Add(TextureIconTypes.backpack, null);
+            MapIcon.Add(TextureIconTypes.basicRifle, null);
+            MapIcon.Add(TextureIconTypes.bow, null);
+            MapIcon.Add(TextureIconTypes.cloth, null);
+            MapIcon.Add(TextureIconTypes.coat, null);
+
+            MapSet.Add(TextureSetTypes.colonist, new Texture2D[][]{
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0"),
@@ -42,7 +74,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     }
                });
 
-            textureSet.Add("campFire", new Texture2D[][]    {
+            MapSet.Add(TextureSetTypes.campFire, new Texture2D[][]    {
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_1")
@@ -58,11 +90,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             });
 
-            textures.Add("farm", contentManager.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"));
-            textures.Add("bushH", contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0"));
-            textures.Add("bushN", contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1"));
-
-            textureSet.Add("bear", new Texture2D[][] {
+            MapSet.Add(TextureSetTypes.bear, new Texture2D[][] {
                 new Texture2D[]
                 {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite4")
@@ -86,7 +114,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     }
             });
 
-            textureSet.Add("robot", new Texture2D[][]  {
+            MapSet.Add(TextureSetTypes.robot, new Texture2D[][]  {
                     new Texture2D[]
                     {
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
@@ -120,7 +148,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     }
                 });
 
-            textureSet.Add("rabbit", new Texture2D[][] {
+            MapSet.Add(TextureSetTypes.rabbit, new Texture2D[][] {
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite0"),
@@ -137,80 +165,49 @@ namespace GlobalWarmingGame.Interactions.Interactables
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
                     }
             });
-
-            textures.Add("tree", contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
-            textures.Add("treeStump", contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
-            textures.Add("workBench", contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
-            textures.Add("stoneNodeSmall", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
-            textures.Add("stoneNodeBig", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
-            textures.Add("tallGrass", contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
-            textures.Add("towerH", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
-            textures.Add("towerC", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
-        }
-
-        /// <summary>
-        /// Create an Interable given a Enum and a position
-        /// </summary>
-        /// <param name="interactable"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public static IInteractable MakeInteractable(Interactable interactable, Vector2 position)
-        {
-            switch(interactable)
-            {
-                case Interactable.Colonist:
-                    return new Colonist(position, TextureSetTypes.colonist);
-                case Interactable.Farm:
-                    return new Farm(position, textures["farm"]);
-                case Interactable.Rabbit:
-                    return new Rabbit(position, TextureSetTypes.rabbit);
-                case Interactable.Bush:
-                    return new Bush(position, TextureTypes.bushH, TextureTypes.bushN);
-                case Interactable.Tree:
-                    return new Tree(position, TextureTypes.tree, TextureTypes.treeStump);
-                case Interactable.WorkBench:
-                    return new WorkBench(position, textures["workBench"]);
-
-                case Interactable.StoneNodeSmall:
-                    return new SmallStoneNode(position, TextureTypes.smallStoneNode);
-
-                case Interactable.StoneNodeBig:
-                    return new BigStoneNode(position, TextureTypes.bigStoneNode);
-
-                case Interactable.TallGrass:
-                    return new TallGrass(position, TextureTypes.tallGrass);
-                case Interactable.CampFire:
-                    return new CampFire(position, textureSet["campFire"]);
-
-                case Interactable.Robot:
-                    return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
-
-                case Interactable.Bear:
-                    return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
-                
-                case Interactable.Tower:
-                    return new Tower(position, TextureTypes.towerC, TextureTypes.towerH);
-                
-                default:
-                    throw new NotImplementedException(interactable + " has not been implemented");
-            }
         }
     }
-}
 
-public enum Interactable
-{
-    Bear,
-    Robot,
-    CampFire,
-    TallGrass,
-    StoneNodeSmall,
-    StoneNodeBig,
-    WorkBench,
-    Tree,
-    Bush,
-    Rabbit,
-    Farm,
-    Colonist,
-    Tower,
+    public enum TextureTypes
+    {
+        farm,
+        bushH,
+        bushN,
+        tree,
+        treeStump,
+        workBench,
+        smallStoneNode,
+        bigStoneNode,
+        tallGrass,
+        towerC,
+        towerH
+    }
+
+    public enum TextureIconTypes
+    {
+        stone,
+        wood,
+        fibers,
+        apple,
+        coal,
+        leather,
+        machineParts,
+        axe,
+        hoe,
+        pickaxe,
+        backpack,
+        basicRifle,
+        bow,
+        cloth,
+        coat
+    }
+
+    public enum TextureSetTypes
+    {
+        colonist,
+        campFire,
+        bear,
+        robot,
+        rabbit
+    }
 }
