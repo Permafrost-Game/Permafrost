@@ -189,7 +189,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
                 
                 case Interactable.Tower:
-                    return new Tower(position, textures["towerC"], textures["towerH"]);
+                    return new Tower(position, TextureTypes.towerC, TextureTypes.towerH);
                 
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");

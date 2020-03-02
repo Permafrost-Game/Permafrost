@@ -22,12 +22,15 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
+        private static bool serialization;
+        private static IDictionary<Vector2, List<GameObject>> zoneMap;
+
         public static int seed;
         private static TileSet tileSet;
 
         static Vector2 zonePos;
 
-        private static readonly List<GameObject> gameObjects;
+        private static /* readonly */ List<GameObject> gameObjects;
 
         public static event EventHandler<GameObject> ObjectAdded = delegate { };
         public static event EventHandler<GameObject> ObjectRemoved = delegate { };
@@ -44,8 +47,14 @@ namespace GlobalWarmingGame
             Interactables = new List<IInteractable>();
         }
 
-        public static void Init(TileSet ts, int worldSeed, Vector2 currentZone)
+        public static void Init(TileSet ts, int worldSeed, Vector2 currentZone, bool isSerialized = true)
         {
+            if (!(serialization = isSerialized))
+            {
+                currentZone = Vector2.Zero;
+                zoneMap = new Dictionary<Vector2, List<GameObject>>();
+            }
+
             tileSet = ts;
 
             seed = worldSeed;
@@ -71,8 +80,11 @@ namespace GlobalWarmingGame
 
         public static void SaveZone()
         {
-            Console.WriteLine("Saving to " + ZoneFilePath());
-            Serializer.Serialize(ZoneFilePath(), gameObjects);
+            if (serialization)
+            {
+                Console.WriteLine("Saving to " + ZoneFilePath());
+                Serializer.Serialize(ZoneFilePath(), gameObjects);
+            }
         }
 
         private static TileMap GenerateMap(Vector2 pos)
@@ -96,26 +108,44 @@ namespace GlobalWarmingGame
                 foreach (Colonist colonist in colonists)
                     Add(colonist);
 
-            try
+            if (!serialization)
             {
-                IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
+                if (zoneMap.ContainsKey(zonePos))
+                    gameObjects = zoneMap[zonePos];
+                else
+                {
+                    zoneMap.Add(zonePos, gameObjects);
 
-                Console.WriteLine("Loading from " + ZoneFilePath());
+                    ZoneGenerator.SpawnGameObjects(seed, zonePos);
 
-                foreach (IEnumerable<object> objList in objs.Values)
-                    foreach (GameObject gameObject in objList)
-                        Add(gameObject);
+                    if (position == Vector2.Zero)
+                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+                }
             }
-            catch (FileNotFoundException)
+
+            else
             {
-                Console.WriteLine("Creating " + ZoneFilePath());
+                try
+                {
+                    IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
 
-                ZoneGenerator.SpawnGameObjects(seed, zonePos);
+                    Console.WriteLine("Loading from " + ZoneFilePath());
 
-                if (position == Vector2.Zero)
-                    Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+                    foreach (IEnumerable<object> objList in objs.Values)
+                        foreach (GameObject gameObject in objList)
+                            Add(gameObject);
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.WriteLine("Creating " + ZoneFilePath());
 
-                SaveZone();
+                    ZoneGenerator.SpawnGameObjects(seed, zonePos);
+
+                    if (position == Vector2.Zero)
+                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+
+                    SaveZone();
+                }
             }
         }
 

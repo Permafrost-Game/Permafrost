@@ -30,6 +30,8 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.smallStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
             Map.Add(TextureTypes.bigStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
             Map.Add(TextureTypes.tallGrass, contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
+            Map.Add(TextureTypes.towerC, contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            Map.Add(TextureTypes.towerH, contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
 
             MapIcon.Add(TextureIconTypes.stone, contentManager.Load<Texture2D>(@"textures/icons/stone"));
             MapIcon.Add(TextureIconTypes.wood, contentManager.Load<Texture2D>(@"textures/icons/wood"));
@@ -176,7 +178,9 @@ namespace GlobalWarmingGame
         workBench,
         smallStoneNode,
         bigStoneNode,
-        tallGrass
+        tallGrass,
+        towerC,
+        towerH
     }
 
     public enum TextureIconTypes
