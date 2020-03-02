@@ -4,6 +4,11 @@ namespace GlobalWarmingGame.ResourceItems
 {
     public class ResourceType : IReconstructable
     {
+        [PFSerializable]
+        public readonly int resourceID;
+
+        public Resource ResourceID { get => (Resource)resourceID; }
+
         public Texture2D Texture { get; }
 
         [PFSerializable]
@@ -29,9 +34,15 @@ namespace GlobalWarmingGame.ResourceItems
             textureIconID = (int)textureIconType;
         }
 
+        public ResourceType(Resource resourceID, string displayName, string description, TextureIconTypes textureIconType) :
+            this(displayName, description, textureIconType)
+        {
+            this.resourceID = (int)resourceID;
+        }
+
         public object Reconstruct()
         {
-            return new ResourceType(displayName, description, (TextureIconTypes)textureIconID);
+            return new ResourceType((Resource)resourceID, displayName, description, (TextureIconTypes)textureIconID);
         }
     }
 }

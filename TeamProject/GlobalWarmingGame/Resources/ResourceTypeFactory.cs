@@ -17,28 +17,24 @@ namespace GlobalWarmingGame.Resources
         private static Dictionary<Resource, ResourceType> resources;
         private static Dictionary<Craftable, CraftableType> craftables;
 
+        private static void addResource(ResourceType resource)
+        {
+            resources.Add(resource.ResourceID, resource);
+        }
+
         public static void Init()
         {
             resources  = new Dictionary<Resource, ResourceType>();
             craftables = new Dictionary<Craftable, CraftableType>();
 
-            //Resource Type definitions
-            ResourceType stone        = new ResourceType("Stone",           "A piece of rock",      TextureIconTypes.stone);
-            ResourceType wood         = new ResourceType("Wood",            "A wooden log",         TextureIconTypes.wood);
-            ResourceType fibers       = new ResourceType("Fibers",          "A bundle of fibers",   TextureIconTypes.fibers);
-            ResourceType food         = new ResourceType("Food",            "Food",                 TextureIconTypes.apple);
-            ResourceType coal         = new ResourceType("Coal",            "A lump of coal",       TextureIconTypes.coal); //TODO coal Needs texture
-            ResourceType leather      = new ResourceType("Leather",         "Tanned leather",       TextureIconTypes.leather); //TODO leather Needs texture
-            ResourceType machineParts = new ResourceType("Machine Parts",   "Machine parts",        TextureIconTypes.machineParts); //TODO machineParts Needs texture
-
             //Populate resources dictionary
-            resources.Add(Resource.Stone,   stone);
-            resources.Add(Resource.Wood,    wood);
-            resources.Add(Resource.Fibers,  fibers);
-            resources.Add(Resource.Food,    food);
-            resources.Add(Resource.Coal,    coal);
-            resources.Add(Resource.Leather, leather);
-            resources.Add(Resource.MachineParts, machineParts);
+            addResource(new ResourceType(Resource.Stone, "Stone", "A piece of rock", TextureIconTypes.stone));
+            addResource(new ResourceType(Resource.Wood, "Wood", "A wooden log", TextureIconTypes.wood));
+            addResource(new ResourceType(Resource.Fibers, "Fibers", "A bundle of fibers", TextureIconTypes.fibers));
+            addResource(new ResourceType(Resource.Food, "Food", "Food", TextureIconTypes.apple));
+            addResource(new ResourceType(Resource.Coal, "Coal", "A lump of coal", TextureIconTypes.coal)); //TODO coal Needs texture
+            addResource(new ResourceType(Resource.Leather, "Leather", "Tanned leather", TextureIconTypes.leather)); //TODO leather Needs texture
+            addResource(new ResourceType(Resource.MachineParts, "Machine Parts", "Machine parts", TextureIconTypes.machineParts)); //TODO machineParts Needs texture
 
             //Craftable Type definitions and populate craftables dictionary
 
