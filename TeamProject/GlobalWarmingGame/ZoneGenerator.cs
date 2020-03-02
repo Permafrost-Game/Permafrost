@@ -50,7 +50,7 @@ namespace GlobalWarmingGame
             {
                 //int item = rand.Next(0, 100);
                 float value = ((Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 4f) / 255) + (Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 0.1f) / 255)) / 2;
-                
+
                 if (!t.Type.Equals("textures/tiles/main_tileset/water"))
                 {
 
@@ -64,18 +64,19 @@ namespace GlobalWarmingGame
                         {
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
                         }
-                    }
-                    else if (value < 0.1)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
-                    }
-                    else if (value < 0.12)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+
+                        else if (value < 0.1)
+                        {
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
+                        }
+                        else if (value < 0.12)
+                        {
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+                        }
                     }
                 }
 
-                else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
+                if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
                     if (value > 0.85)
                     {
@@ -83,14 +84,14 @@ namespace GlobalWarmingGame
                     }
                 }
 
-                else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
+                if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
                 {
                     if (value > 0.9)
                     {
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                     }
                 }
-                else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
+                if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
                 {
                     if (value > 0.9)
                     {
