@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
@@ -12,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static GlobalWarmingGame.Action.InstructionType;
 
 namespace GlobalWarmingGame.UI
 {
@@ -100,6 +102,8 @@ namespace GlobalWarmingGame.UI
             {
                 options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
+
+
                 if (objectClicked is IInteractable interactable)
                 {
                     foreach (InstructionType type in interactable.InstructionTypes)
@@ -107,13 +111,32 @@ namespace GlobalWarmingGame.UI
                         options.Add(new ButtonHandler<Instruction>(new Instruction(type, activeMember, objectClicked), IssueInstructionCallback));
                     }
                 }
-                else if (constructingMode)
+                else if (objectClicked is Tile tile)
                 {
-                    building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
-                    options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onComplete: Build),
-                                                                               activeMember,
-                                                                               (GameObject)building), IssueInstructionCallback));
+                    if (tile.Walkable)
+                    {
+                        if (tile.Position.X == 0)
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelWest), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (tile.Position.Y == 0)
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelNorth), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (tile.Position.X >= ((GameObjectManager.ZoneMap.Size.X - 1) * 32f))
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelEast), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (tile.Position.Y >= ((GameObjectManager.ZoneMap.Size.Y - 1) * 32f))
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelSouth), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (constructingMode)
+                        {
+                            building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
+
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onComplete: Build),
+                                                                                       activeMember,
+                                                                                       (GameObject)building), IssueInstructionCallback));
+                        } 
+                    }
                 }
 
                 if (objectClicked is Colonist)
@@ -128,6 +151,12 @@ namespace GlobalWarmingGame.UI
 
             return options;
         }
+
+        private static InstructionType TravelInstruction(InstructionEvent e) => new InstructionType("travel", "Travel", "Travel to the next zone", onComplete: e);
+        private static void ZoneTravelNorth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0, -1));
+        private static void ZoneTravelSouth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0,  1)); 
+        private static void ZoneTravelEast (Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 1,  0));
+        private static void ZoneTravelWest (Instruction i = default) => GameObjectManager.MoveZone(new Vector2(-1,  0));
 
         /// <summary>
         /// Adds the instruction to the active member of the instruction.

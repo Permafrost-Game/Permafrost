@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GlobalWarmingGame")]
-[assembly: AssemblyProduct("GlobalWarmingGame")]
+[assembly: AssemblyTitle("Permafrost")]
+[assembly: AssemblyProduct("Permafrost")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyDescription("https://permafrost-game.github.io/")]
+[assembly: AssemblyCompany("Permafrost")]
+[assembly: AssemblyCopyright("Copyright © Permafrost 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

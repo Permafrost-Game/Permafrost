@@ -79,6 +79,7 @@ namespace Engine.PathFinding
             catch (PathFindingPathException)
             {
                 //Path is not a valid path
+                paths.Clear();
                 pathFindable.Path.Clear();
             }
 
