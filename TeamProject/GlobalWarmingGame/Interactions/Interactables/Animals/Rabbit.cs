@@ -16,7 +16,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 
         [PFSerializable]
-        public new Vector2 Position { get; set; }
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         [PFSerializable]
         public readonly int textureSetID;
@@ -31,7 +35,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
             position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
         {
-            Position = base.Position;
             textureSetID = (int)textureSetType;
 
             this.InstructionTypes.Add(
@@ -48,7 +51,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public object Reconstruct()
         {
-            return new Rabbit(Position, (TextureSetTypes)textureSetID);
+            return new Rabbit(PFSPosition, (TextureSetTypes)textureSetID);
         }
     }
 }

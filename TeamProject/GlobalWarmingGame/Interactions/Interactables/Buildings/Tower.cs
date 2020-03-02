@@ -18,7 +18,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         private readonly Texture2D capturedTexture;
 
         [PFSerializable]
-        public new Vector2 Position { get; set; }
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         [PFSerializable]
         public readonly int hostileTextureID;
@@ -44,7 +48,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             texture: Textures.Map[hostileTextureType]
         )
         {
-            Position = base.Position;
             hostileTextureID = (int)hostileTextureType;
             capturedTextureID = (int)capturedTextureType;
 
@@ -68,7 +71,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public object Reconstruct()
         {
-            return new Tower(Position, (TextureTypes)capturedTextureID, (TextureTypes)hostileTextureID, captured);
+            return new Tower(PFSPosition, (TextureTypes)capturedTextureID, (TextureTypes)hostileTextureID, captured);
         }
     }
 }

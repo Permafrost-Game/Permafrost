@@ -148,7 +148,7 @@ namespace GlobalWarmingGame
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
 
-                GameObjectManager.Init(tileSet, seed, currentZone);
+                GameObjectManager.Init(tileSet, seed, currentZone, false);
                     
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };

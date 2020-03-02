@@ -29,7 +29,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         }
 
         [PFSerializable]
-        public new Vector2 Position { get; set; }
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         [PFSerializable]
         public readonly int textureTreeID;
@@ -54,7 +58,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             texture: Textures.Map[textureTypeTree]
         )
         {
-            Position = base.Position;
             textureTreeID = (int)textureTypeTree;
             textureStumpID = (int)textureTypeStump;
 
@@ -86,7 +89,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            return new Tree(Position, (TextureTypes)textureTreeID, (TextureTypes)textureStumpID, _choppable);
+            return new Tree(PFSPosition, (TextureTypes)textureTreeID, (TextureTypes)textureStumpID, _choppable);
         }
     }
 }

@@ -37,7 +37,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         public List<InstructionType> InstructionTypes { get; }
 
         [PFSerializable]
-        public new Vector2 Position { get; set; }
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         [PFSerializable]
         public readonly int textureHarvestableID;
@@ -60,7 +64,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             texture: Textures.Map[textureTypeHarvestable]
         )
         {
-            Position = base.Position;
             textureHarvestableID = (int)textureTypeHarvestable;
             textureHarvestedID = (int)textureTypeHarvested;
 
@@ -110,7 +113,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            return new Bush(Position, (TextureTypes)textureHarvestableID, (TextureTypes)textureHarvestedID, _isHarvestable, timeUnitlHarvestable);
+            return new Bush(PFSPosition, (TextureTypes)textureHarvestableID, (TextureTypes)textureHarvestedID, _isHarvestable, timeUnitlHarvestable);
         }
     }
 }

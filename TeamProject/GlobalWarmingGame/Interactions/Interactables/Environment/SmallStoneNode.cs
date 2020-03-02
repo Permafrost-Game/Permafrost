@@ -12,7 +12,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         public List<InstructionType> InstructionTypes { get; }
 
         [PFSerializable]
-        public new Vector2 Position { get; set; }
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         [PFSerializable]
         public readonly int textureID;
@@ -32,7 +36,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             texture: Textures.Map[textureType]
         )
         {
-            Position = base.Position;
             textureID = (int)textureType;
 
             InstructionTypes = new List<InstructionType>
@@ -56,7 +59,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            return new SmallStoneNode(Position, (TextureTypes)textureID);
+            return new SmallStoneNode(PFSPosition, (TextureTypes)textureID);
         }
     }
 }
