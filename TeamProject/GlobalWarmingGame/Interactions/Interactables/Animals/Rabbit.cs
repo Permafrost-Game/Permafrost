@@ -35,14 +35,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
             textureSetID = (int)textureSetType;
 
             this.InstructionTypes.Add(
-                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onStart: Hunt)
+                new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onComplete: Hunt)
             );
         }
 
-        public void Hunt(IInstructionFollower follower)
+        public void Hunt(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             GameObjectManager.Remove(this);
+            SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
         }
 
         public object Reconstruct()

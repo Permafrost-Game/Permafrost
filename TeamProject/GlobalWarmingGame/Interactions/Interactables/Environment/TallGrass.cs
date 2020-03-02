@@ -39,13 +39,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("trim", "Trim grass", "Trim grass", onStart: Trim)
+                new InstructionType("trim", "Trim grass", "Trim grass", onComplete: Trim)
             };
         }
 
-        private void Trim(IInstructionFollower follower)
+        private void Trim(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4));
             //Maybe destory the node or allow 3 more mine operations
             GameObjectManager.Remove(this);
         }

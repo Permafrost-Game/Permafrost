@@ -65,9 +65,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             textureHarvestedID = (int)textureTypeHarvested;
 
             InstructionTypes = new List<InstructionType>();
-            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onStart: Forrage);
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onComplete: Forrage);
             this.textureHarvestable = Textures.Map[textureTypeHarvestable];
             this.textureHarvested = Textures.Map[textureTypeHarvested];
+
+            InstructionTypes.Add(new InstructionType("chop", "Chop", "Chop for wood", onComplete: Chop));
 
             if (IsHarvestable = isHarvestable)
                 InstructionTypes.Add(forrage);
@@ -75,9 +77,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                 this.timeUnitlHarvestable = timeUnitlHarvestable;
         }
 
-        private void Forrage(IInstructionFollower follower)
+        private void Forrage(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
             //This is tempory and should be replaced by the resource system
             if (IsHarvestable)
             {

@@ -40,13 +40,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine coal", onStart: Mine)
+                new InstructionType("mine", "Mine", "Mine coal", onComplete: Mine)
             };
         }
 
-        private void Mine(IInstructionFollower follower)
+        private void Mine(Instruction instruction)
         {
-            follower.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Coal), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Coal), 4));
             //Maybe destory the node or allow 3 more mine operations
         }
 

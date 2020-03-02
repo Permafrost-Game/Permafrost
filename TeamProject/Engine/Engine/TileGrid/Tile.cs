@@ -15,36 +15,39 @@ namespace Engine.TileGrid
         public new Vector2 Position { get; }
         public Temperature temperature;
         public bool Heated { get; set; }
-        
+
         public string Type { get; }
-        ///<summary>Default tag, walkable boolean</summary>
         private readonly int tag = -1;
         public bool Walkable { get; }
 
+        private readonly Rectangle sourceRectangle;
+        private readonly Rectangle destinationRectangle;
         public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
         {
-            this.Type = texture.Name; 
-            
+            this.Type = texture.Name;
+
             this.Position = position;
             this.texture = texture;
             this.Walkable = walkable;
             temperature = new Temperature(-5/*ZoneManager.GlobalTemperature*/);//TODO fix this
+
+            sourceRectangle = new Rectangle(
+                                 location: new Point((int) position.X % texture.Width, (int)position.Y % texture.Height),
+                                 size: Size.ToPoint()
+                                 );
+            destinationRectangle = new Rectangle((base.Position - Size / 2).ToPoint(), Size.ToPoint());
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(texture, new Rectangle(base.Position.ToPoint(), size.ToPoint()), Color.White);
             spriteBatch.Draw(
                 texture: texture,
-                destinationRectangle: new Rectangle((base.Position - Size /2).ToPoint(), Size.ToPoint()),
-                sourceRectangle: new Rectangle(
-                                 new Point( (Position.X/32) % 2 == 0? 0 : 32, (Position.Y/32) % 2 == 0? 0 : 32),
-                                 Size.ToPoint()),
+                destinationRectangle: destinationRectangle,
+                sourceRectangle: sourceRectangle,
                 color: Color.White
                 );
         }
 
-        ///<summary>Equality testing</summary>
         public override bool Equals(object t)
         {
             if (t is Tile tile)

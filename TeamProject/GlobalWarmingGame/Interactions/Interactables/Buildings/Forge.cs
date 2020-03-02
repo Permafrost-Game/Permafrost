@@ -29,11 +29,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("forge", "Forge", "Forge iron item", onStart: ForgeItem)
+                new InstructionType("forge", "Forge", "Forge iron item", onComplete: ForgeItem)
             };
         }
 
-        private void ForgeItem(IInstructionFollower follower)
+        private void ForgeItem(Instruction instruction)
         {
             //Open craft menu
             //Force the colonist to wait at the station until job is done

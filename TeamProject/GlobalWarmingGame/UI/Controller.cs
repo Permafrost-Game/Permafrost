@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
@@ -12,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static GlobalWarmingGame.Action.InstructionType;
 
 namespace GlobalWarmingGame.UI
 {
@@ -100,6 +102,8 @@ namespace GlobalWarmingGame.UI
             {
                 options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
+
+
                 if (objectClicked is IInteractable interactable)
                 {
                     foreach (InstructionType type in interactable.InstructionTypes)
@@ -107,39 +111,78 @@ namespace GlobalWarmingGame.UI
                         options.Add(new ButtonHandler<Instruction>(new Instruction(type, activeMember, objectClicked), IssueInstructionCallback));
                     }
                 }
+                else if (objectClicked is Tile tile)
+                {
+
+                    if (tile.Walkable)
+                    {
+                        if (tile.Position.X == 0)
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelWest), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (tile.Position.Y == 0)
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelNorth), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (tile.Position.X >= ((GameObjectManager.ZoneMap.Size.X - 1) * 32f))
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelEast), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (tile.Position.Y >= ((GameObjectManager.ZoneMap.Size.Y - 1) * 32f))
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelSouth), activeMember, objectClicked), IssueInstructionCallback));
+
+                        else if (constructingMode)
+                        {
+                            building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
+
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onComplete: Build),
+                                                                                       activeMember,
+                                                                                       (GameObject)building), IssueInstructionCallback));
+                        } 
+                    }
+                }
 
                 if (objectClicked is Colonist)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(COLONIST_INSTRUCTION_TYPE, activeMember, objectClicked), SelectColonistCallback));
-                } else if (objectClicked is IStorage)
+                } 
+                else if (objectClicked is IStorage)
                 {
                     options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventoryCallback));
-                }
-
-                if (constructingMode)
-                {
-                    building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
-
-                    //If Colonist has the resources build
-                    if (activeMember.Inventory.ContainsAll(building.CraftingCosts))
-                    {
-                        InstructionType construct = new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), onStart: Build);
-                        options.Add(new ButtonHandler<Instruction>(new Instruction(construct, activeMember, (GameObject)building), IssueInstructionCallback));
-                    }
-                    //TODO Else show notification that the colonist can't craft the building
                 }
             }
 
             return options;
         }
 
+        private static InstructionType TravelInstruction(InstructionEvent e) => new InstructionType("travel", "Travel", "Travel to the next zone", onComplete: e);
+        private static void ZoneTravelNorth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0, -1));
+        private static void ZoneTravelSouth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0,  1)); 
+        private static void ZoneTravelEast (Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 1,  0));
+        private static void ZoneTravelWest (Instruction i = default) => GameObjectManager.MoveZone(new Vector2(-1,  0));
+
         /// <summary>
         /// Adds the instruction to the active member of the instruction.
+        /// Checks if a instruction has any required resources and if so the instruction will
+        /// display a notification to the user if they dont have enough resources.
         /// </summary>
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
         {
-            instruction.ActiveMember.AddInstruction(instruction, 0);
+            //Check if the instruction requires resources or craftables
+            if (instruction.Type.RequiredResources != null)
+            {
+                //Check if the colonist has the required resources in their inventory
+                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredResources))
+                {
+                    instruction.ActiveMember.AddInstruction(instruction, 0);
+                }
+                else 
+                {
+                    View.Notification("Missing items:", instruction.Type.RequiredResources);
+                }
+            }
+            else
+            {
+                instruction.ActiveMember.AddInstruction(instruction, 0);
+            }
         }
 
         /// <summary>
@@ -231,19 +274,19 @@ namespace GlobalWarmingGame.UI
         /// Called when colonist is at the building site and then the building is made visible
         /// </summary>
         /// <param name="follower"></param>
-        private static void Build(IInstructionFollower follower)
+        private static void Build(Instruction instruction)
         {
-            List<ResourceItem> buildingCosts = new List<ResourceItem>();
+            Colonist colonist = (Colonist) instruction.ActiveMember;
+            List<ResourceItem> buildingCosts = instruction.Type.RequiredResources;
 
             //If Colonist has the resources build
-            if (follower.Inventory.ContainsAll(buildingCosts))
+            if (colonist.Inventory.ContainsAll(buildingCosts))
             {
                 foreach (ResourceItem item in buildingCosts)
-                    follower.Inventory.RemoveItem(item);
+                    colonist.Inventory.RemoveItem(item);
 
                 building.Build();
             }
-            //Else show notification that the colonist can't craft the building
             constructingMode = false;
         }
         #endregion

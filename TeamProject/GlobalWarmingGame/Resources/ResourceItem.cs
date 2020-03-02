@@ -26,6 +26,11 @@ namespace GlobalWarmingGame.ResourceItems
             return (ResourceItem)MemberwiseClone();
         }
 
+        public override string ToString() 
+        {
+            return ResourceType.DisplayName;                    
+        }
+
         public object Reconstruct()
         {
             return new ResourceItem(ResourceType, Weight);

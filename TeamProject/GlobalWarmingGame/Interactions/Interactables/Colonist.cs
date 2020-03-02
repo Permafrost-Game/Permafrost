@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #region Instruction
 
         public List<InstructionType> InstructionTypes { get; }
-        private Queue<Instruction> instructions;
+        private readonly Queue<Instruction> instructions;
 
         [PFSerializable]
         public readonly Inventory inventory;
@@ -53,7 +53,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 _inCombat = value;
                 if (value == false)
                 {
-                    TextureGroupIndex = 0;
+                    //TextureGroupIndex = 0;
                 }
 
             }
@@ -65,9 +65,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set
             {
                 _isAttacking = value;
-                isAnimated = true;
+                //isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-                TextureGroupIndex = _isAttacking ? 1 : 0;
+                //TextureGroupIndex = _isAttacking ? 1 : 0;
 
             }
         }
@@ -123,7 +123,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             attackRange = 60;
             AttackPower = 30;
             attackSpeed = 1000;
-            Speed = 0.5f;
+
+
+            Speed = 0.25f;
             MaxHealth = 100f;
             Health = MaxHealth;
             Temperature.Value = CoreBodyTemperature;
@@ -133,7 +135,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>();
-            
+
         }
 
         internal void setDead()
@@ -149,36 +151,36 @@ namespace GlobalWarmingGame.Interactions.Interactables
             #endregion
         }
 
-        public void AddInstruction(Instruction instruction)
-        {
-            instructions.Enqueue(instruction);
-        }
-
-
 
         public void OnGoalComplete(Vector2 completedGoal)
         {
-            if (instructions.Count > 0 &&
-                //Since the instruction is identified by the goal, this may cause problems if two instructions have the same goal position.
-                completedGoal == (((GameObject)instructions.Peek().PassiveMember).Position) &&
-                instructions.Count != 0)
+            if( Goals.Count == 0
+                && instructions.Count > 0 
+                && completedGoal == (instructions.Peek().PassiveMember.Position)
+                    )
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Type.Start(this);
-
-                //if (currentInstruction.Type.ResourceItem != null)
-                //    Inventory.AddItem(currentInstruction.Type.ResourceItem);
-
-                instructions.Dequeue();
+                currentInstruction.Start();
+                if (currentInstruction.Type.TimeCost > 0)
+                {
+                    TextureGroupIndex = 1;
+                    isAnimated = true;
+                }
             }
+        }
+
+
+        private void Move(GameTime gameTime)
+        {
+            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+            depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 0.5f" stops Z Fighting
         }
 
 
         public override void Update(GameTime gameTime)
         {
             Vector2 position1 = Position;
-            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-            depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 1f" stops Z Fighting
+            Move(gameTime);
             base.Update(gameTime);
 
             Vector2 delta = position1 - Position;
@@ -188,20 +190,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (!isAttacking)
                 {
-                    isAnimated = false;
+                    //isAnimated = false;
                 }
             }
             else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
             {
-
                 isAnimated = true;
                 TextureGroupIndex = 2;
                 SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-
             }
 
-            if (Goals.Count == 0 && instructions.Count > 0)
-                Goals.Enqueue(((GameObject)instructions.Peek().PassiveMember).Position);
+            if (instructions.Count > 0)
+            {
+                if (Goals.Count == 0)
+                {
+                    Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                }
+                instructions.Peek().Update(gameTime);
+            }
+
+
 
             TemperatureCheck(gameTime);
             HungerCheck(gameTime);
@@ -285,12 +293,28 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
+        #endregion
 
         public void AddInstruction(Instruction instruction, int priority)
         {
+            instruction.OnComplete.Add(OnInstructionComplete);
             instructions.Enqueue(instruction);
+
         }
-        #endregion
+
+        private void OnInstructionComplete(Instruction instruction)
+        {
+            if (instructions.Peek() == instruction)
+            {
+                instructions.Dequeue();
+
+                TextureGroupIndex = 0;
+            }
+            else
+            {
+                throw new Exception("Async instruction completed");
+            }
+        }
 
         public object Reconstruct()
         {
