@@ -27,7 +27,8 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.tree, contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
             Map.Add(TextureTypes.treeStump, contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
             Map.Add(TextureTypes.workBench, contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
-            Map.Add(TextureTypes.stoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
+            Map.Add(TextureTypes.smallStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
+            Map.Add(TextureTypes.bigStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
             Map.Add(TextureTypes.tallGrass, contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
 
             MapIcon.Add(TextureIconTypes.stone, contentManager.Load<Texture2D>(@"textures/icons/stone"));
@@ -173,7 +174,8 @@ namespace GlobalWarmingGame
         tree,
         treeStump,
         workBench,
-        stoneNode,
+        smallStoneNode,
+        bigStoneNode,
         tallGrass
     }
 

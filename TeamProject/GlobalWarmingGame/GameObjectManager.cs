@@ -110,7 +110,7 @@ namespace GlobalWarmingGame
             {
                 Console.WriteLine("Creating " + ZoneFilePath());
 
-                ZoneGenerator.SpawnGameObjects(seed);
+                ZoneGenerator.SpawnGameObjects(seed, zonePos);
 
                 if (position == Vector2.Zero)
                     Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));

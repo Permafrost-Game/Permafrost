@@ -77,6 +77,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                 this.timeUnitlHarvestable = timeUnitlHarvestable;
         }
 
+        private void Chop(Instruction instruction)
+        {
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1));
+            GameObjectManager.Remove(this);
+        }
+
         private void Forrage(Instruction instruction)
         {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));

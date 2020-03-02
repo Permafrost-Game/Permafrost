@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.ResourceItems
 
         public override string ToString() 
         {
-            return ResourceType.DisplayName;                    
+            return ResourceType.displayName;                    
         }
 
         public object Reconstruct()

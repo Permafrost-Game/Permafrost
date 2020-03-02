@@ -6,14 +6,45 @@ using System.Collections.Generic;
 using System;
 using SimplexNoise;
 using GlobalWarmingGame.Interactions.Interactables;
+using Microsoft.Xna.Framework;
 
 namespace GlobalWarmingGame
 {
     static class ZoneGenerator
     {
-        public static void SpawnGameObjects(int seed)
+
+        private static readonly int towerDistance = 7;
+        private static readonly int towerSpan = 100;
+
+        public static void SpawnGameObjects(int seed, Vector2 zonePos)
         {
             Random rand = new Random(seed);
+
+
+            Vector2 zoneCenter = 32 * (GameObjectManager.ZoneMap.Size / 2);
+
+            if (zonePos.X % towerDistance == 0
+                && zonePos.X < towerSpan
+                && zonePos.X > -towerSpan
+                && zonePos.Y % towerDistance == 0
+                && zonePos.Y < towerSpan
+                && zonePos.Y > -towerSpan
+                && !zonePos.Equals(Vector2.Zero)
+                && !GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water")
+                )
+            {
+                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
+
+                for (int i = 0; i < rand.Next(1, 5); i++)
+                {
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
+                        GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water") ?
+                        zoneCenter :
+                        zoneCenter + new Vector2(rand.Next(-128, 128), rand.Next(-128, 128))
+                        ));
+                }
+            }
+
 
             foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
             {
@@ -48,7 +79,7 @@ namespace GlobalWarmingGame
                 {
                     if (value > 0.85)
                     {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, t.Position));
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
                     }
                 }
 

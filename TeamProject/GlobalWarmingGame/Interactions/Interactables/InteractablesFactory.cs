@@ -172,10 +172,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new WorkBench(position, textures["workBench"]);
 
                 case Interactable.StoneNodeSmall:
-                    return new SmallStoneNode(position, TextureTypes.StoneNodeSmall);
+                    return new SmallStoneNode(position, TextureTypes.smallStoneNode);
 
                 case Interactable.StoneNodeBig:
-                    return new BigStoneNode(position, TextureTypes.StoneNodeBig);
+                    return new BigStoneNode(position, TextureTypes.bigStoneNode);
 
                 case Interactable.TallGrass:
                     return new TallGrass(position, TextureTypes.tallGrass);
