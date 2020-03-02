@@ -32,7 +32,7 @@ namespace Engine.TileGrid
             temperature = new Temperature(-5/*ZoneManager.GlobalTemperature*/);//TODO fix this
 
             sourceRectangle = new Rectangle(
-                                 location: new Point((Position.X / 32) % 2 == 0 ? 0 : 32, (Position.Y / 32) % 2 == 0 ? 0 : 32),
+                                 location: new Point((int) position.X % texture.Width, (int)position.Y % texture.Height),
                                  size: Size.ToPoint()
                                  );
             destinationRectangle = new Rectangle((base.Position - Size / 2).ToPoint(), Size.ToPoint());
