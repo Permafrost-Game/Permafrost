@@ -13,6 +13,13 @@
 // This shader was created by Catalin ZZ 
 // Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
 
+#if OPENGL
+    #define VS_SHADERMODEL vs_3_0
+    #define PS_SHADERMODEL ps_3_0
+#else
+    #define VS_SHADERMODEL vs_4_0_level_9_1
+    #define PS_SHADERMODEL ps_4_0_level_9_1
+#endif
 texture InputTexture; 
 sampler inputSampler = sampler_state      
 {
@@ -263,8 +270,8 @@ technique ComputeDistances
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 FullScreenVS();
-        PixelShader  = compile ps_3_0 ComputeDistancesPS();
+        VertexShader = compile VS_SHADERMODEL FullScreenVS();
+        PixelShader  = compile PS_SHADERMODEL ComputeDistancesPS();
     }
 }
 
@@ -272,8 +279,8 @@ technique Distort
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 FullScreenVS();
-        PixelShader  = compile ps_3_0 DistortPS();
+        VertexShader = compile VS_SHADERMODEL FullScreenVS();
+        PixelShader  = compile PS_SHADERMODEL DistortPS();
     }
 }
 
@@ -281,8 +288,8 @@ technique DrawShadows
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 FullScreenVS();
-        PixelShader  = compile ps_3_0 DrawShadowsPS();
+        VertexShader = compile VS_SHADERMODEL FullScreenVS();
+        PixelShader  = compile PS_SHADERMODEL DrawShadowsPS();
     }
 }
 
@@ -290,8 +297,8 @@ technique BlurHorizontally
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 FullScreenVS();
-        PixelShader  = compile ps_3_0 BlurHorizontallyPS();
+        VertexShader = compile VS_SHADERMODEL FullScreenVS();
+        PixelShader  = compile PS_SHADERMODEL BlurHorizontallyPS();
     }
 }
 
@@ -299,7 +306,7 @@ technique BlurVerticallyAndAttenuate
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 FullScreenVS();
-        PixelShader  = compile ps_3_0 BlurVerticallyPS();
+        VertexShader = compile VS_SHADERMODEL FullScreenVS();
+        PixelShader  = compile PS_SHADERMODEL BlurVerticallyPS();
     }
 }
