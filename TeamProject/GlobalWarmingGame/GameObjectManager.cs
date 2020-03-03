@@ -80,7 +80,11 @@ namespace GlobalWarmingGame
 
         public static void SaveZone()
         {
-            if (serialization)
+            if (!serialization)
+            {
+                zoneMap[zonePos] = gameObjects.ToList();
+            }
+            else
             {
                 Console.WriteLine("Saving to " + ZoneFilePath());
                 Serializer.Serialize(ZoneFilePath(), gameObjects);
@@ -107,16 +111,25 @@ namespace GlobalWarmingGame
             if (colonists != null)
                 foreach (Colonist colonist in colonists)
                     Add(colonist);
+                    
 
             if (!serialization)
             {
                 if (zoneMap.ContainsKey(zonePos))
+                {
                     gameObjects = zoneMap[zonePos];
+                    if (colonists != null)
+                        foreach (Colonist colonist in colonists)
+                            Add(colonist);
+                    Updatables = Filter<IUpdatable>();
+                    Drawables = Filter<IDrawable>();
+                    Interactables = Filter<IInteractable>();
+                }
                 else
                 {
-                    zoneMap.Add(zonePos, gameObjects);
 
                     ZoneGenerator.SpawnGameObjects(seed, zonePos);
+                    zoneMap.Add(zonePos, gameObjects);
 
                     if (position == Vector2.Zero)
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
