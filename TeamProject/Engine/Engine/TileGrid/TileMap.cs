@@ -8,7 +8,7 @@ namespace Engine.TileGrid
     /// <summary>
     /// This is class will store a 2D array of <see cref="Tile"/>
     /// </summary>
-    public class TileMap : Engine.Drawing.IDrawable, IUpdatable
+    public class TileMap : Engine.Drawing.IDrawable
     {
         public Tile[,] Tiles { get; }
 
@@ -57,13 +57,8 @@ namespace Engine.TileGrid
             return t;
         }
 
-        public void Update(GameTime gameTime)
-        {
-            UpdateTilesTemperatures(gameTime);
-        }
-
         #region Update Tiles Temperature
-        private void UpdateTilesTemperatures(GameTime gameTime) 
+        public void UpdateTilesTemperatures(GameTime gameTime) 
         {
             timeToTempTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 

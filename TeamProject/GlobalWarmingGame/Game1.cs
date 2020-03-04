@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using System.IO;
+using GlobalWarmingGame.Interactions;
 
 namespace GlobalWarmingGame
 {
@@ -242,36 +243,18 @@ namespace GlobalWarmingGame
             {
                 
                 camera.Update(gameTime);
-                GameObjectManager.ZoneMap.Update(gameTime);
 
-                BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
-                UpdateColonistTemperatures(gameTime);
+                TemperatureManager.UpdateTemperature(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
-
-                UpdateColonistTemperatures(gameTime);
 
                 base.Update(gameTime);
             }
 
             previousKeyboardState = currentKeyboardState;
         }
-
-        #region Update Colonists Temperatures
-        void UpdateColonistTemperatures(GameTime gameTime)
-        {
-            //Adjust the temperatures of the colonists
-            foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
-            {
-                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
-
-                colonist.UpdateTemp(tileTemp, gameTime);
-                //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
-            }
-        }
-        #endregion
 
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)

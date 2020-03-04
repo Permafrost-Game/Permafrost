@@ -53,8 +53,6 @@
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
     <Compile Include="Interactions\Interactables\Environment\EnvironmentObject.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
@@ -78,6 +76,7 @@
     <Compile Include="Resources\ResourceTypeFactory.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="StaticSerializationInfo.cs" />
+    <Compile Include="Interactions\TemperatureManager.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="UI\Controller.cs" />
     <Compile Include="Game1.cs" />

@@ -11,19 +11,23 @@ namespace Engine
     {
         private float value;
 
+        public float Max { get; private set; } = 100;
+        public float Min { get; private set; } = -100;
+
         public float Value
         {
             get => value;
             set => SetTemp(value);
         }
 
-        public Temperature(float t) {
+        public Temperature(float t) 
+        {
             SetTemp(t);
         }
 
         public void SetTemp(float temp)
         {
-            value = MathHelper.Clamp(temp, -100, 100);
+            value = MathHelper.Clamp(temp, Min, Max);
             value = (float)Math.Round(value, 2);
         }
 
