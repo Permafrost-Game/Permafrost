@@ -25,7 +25,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
                 isAnimated = true;
                 this.TextureGroupIndex = 3;
-                Console.WriteLine("After: "+targetToTheLeftAfter+"  Before: "+targetToTheLeftBefore);
+               
                 if (targetToTheLeftAfter != targetToTheLeftBefore) {
                     SpriteEffect = SpriteEffects.FlipHorizontally;
                     targetToTheLeftBefore = targetToTheLeftAfter;
@@ -46,5 +46,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             }
         }
 
+        protected override void ChaseColonist(Colonist colonist)
+        {
+            Vector2 fakeLeftXcoordinate = new Vector2(colonist.Position.X - 60, colonist.Position.Y);
+            Vector2 fakeRightXcoordinate = new Vector2(colonist.Position.X + 40, colonist.Position.Y);
+            if (this.Position.X < colonist.Position.X)
+            {
+                Goals.Enqueue(fakeLeftXcoordinate);
+            }
+            else
+            {
+                Goals.Enqueue(fakeRightXcoordinate);
+            }
+        }
     }
 }

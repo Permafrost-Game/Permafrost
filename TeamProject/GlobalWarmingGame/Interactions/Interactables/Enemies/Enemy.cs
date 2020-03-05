@@ -11,8 +11,7 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Enemies
 {
-    //add animated sprite instead of aggressive movement
-    //add random movement using randomAI class
+    
    public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
         
@@ -32,7 +31,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public Queue<Vector2> Path { get; set; }  = new Queue<Vector2>();
         public float Speed { get; set; }
 
-        Combat c;
+        
         public Boolean attacking=false;
     
         private bool isInCombat=false;
@@ -122,34 +121,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             isInCombat = b;
         }
+
+
+        protected abstract void ChaseColonist(Colonist colonist);
         
-
-        private void ChaseColonist(Colonist colonist)
-        {
-
-            fakeLeftXcoordinate = new Vector2(colonist.Position.X - 40, colonist.Position.Y);
-            fakeRightXcoordinate = new Vector2(colonist.Position.X + 40, colonist.Position.Y);
-            if (this.Position.X < colonist.Position.X)
-            {
-                Goals.Enqueue(fakeLeftXcoordinate);
-            }
-            else
-            {
-                Goals.Enqueue(fakeRightXcoordinate);
-            }
-
-           
-
-            
-
-
-
-
-        }
 
         //change random movement
         public  void OnGoalComplete(Vector2 completedGoal){
-           
+           //its ok
         }
 
         
@@ -204,7 +183,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                      isAnimated = true;
                      TextureGroupIndex = 1;
                      SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                     //flipped = true;
+                     
                  }
                  else
                  {
@@ -301,7 +280,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             EnemytimeToAttack = EnemytimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
             if (EnemytimeToAttack > 500 & EnemytimeToAttack < 600)
             {
                 this.setAttacking(false);

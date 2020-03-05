@@ -33,9 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
                 isAnimated = true;
                 this.TextureGroupIndex = 3;
-                Console.WriteLine("bear " + this.Position.X);
-                Console.WriteLine("colonist " + targetInRange.Position.X);
-                Console.WriteLine("After: " + targetToTheLeftAfter + "  Before: " + targetToTheLeftBefore);
+                
                 
             }
 
@@ -48,6 +46,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             if (this.Health <= 0)
             {
                 GameObjectManager.Remove(this);
+            }
+        }
+
+        protected override void ChaseColonist(Colonist colonist)
+        {
+            Vector2 fakeLeftXcoordinate = new Vector2(colonist.Position.X - 40, colonist.Position.Y);
+           Vector2 fakeRightXcoordinate = new Vector2(colonist.Position.X + 40, colonist.Position.Y);
+            if (this.Position.X < colonist.Position.X)
+            {
+                Goals.Enqueue(fakeLeftXcoordinate);
+            }
+            else
+            {
+                Goals.Enqueue(fakeRightXcoordinate);
             }
         }
     }

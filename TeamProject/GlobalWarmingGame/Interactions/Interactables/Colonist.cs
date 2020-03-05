@@ -101,7 +101,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             frameTime: 100f
         )
         {
-            attackRange = 60;
+            attackRange = 65;
             AttackPower = 0;
             attackSpeed = 1000;
             lastPosition = position;
@@ -203,6 +203,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             else {
                 combatModeOn = false;
             }
+
 
             if (combatModeOn)
             {
