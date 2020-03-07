@@ -10,38 +10,47 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions
 {
+    /// <summary>
+    /// TemperatureManager handles updating the temperatures of colonists and buildings
+    /// based on the tile they are above and tiles around them respectively.
+    /// </summary>
     public static class TemperatureManager
     {
-        private static float timeToTemperatureUpdate = 0f;
-        private static readonly float timeUntilTemperatureUpdate = 2000f;
+        public static Temperature GlobalTemperature { get; set; } = new Temperature(-5);
 
-        private static float timeUntillBuildingTempCheck = 0f;
-        private static readonly float timeToBuildingTempCheck = 2000f;
+        private static float timeToColonistTemperatureUpdate = 0f;
+        private static readonly float timeUntilColonistTemperatureUpdate = 2000f;
+
+        private static float timeUntillBuildingTemperatureUpdate = 0f;
+        private static readonly float timeToBuildingTemperatureUpdate = 2000f;
 
         public static void UpdateTemperature(GameTime gameTime)
         {
             //TileMap temperature in the current zone
-            GameObjectManager.ZoneMap.UpdateTilesTemperatures(gameTime);
+            GameObjectManager.ZoneMap.UpdateTilesTemperatures(gameTime, GlobalTemperature.Value);
 
             //Colonist Temperature
-            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperatureUpdate < 0f)
+            timeToColonistTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeToColonistTemperatureUpdate < 0f)
             {
-                UpdateColonistTemperatures(gameTime);
-                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+                UpdateColonistTemperatures();
+                timeToColonistTemperatureUpdate = timeUntilColonistTemperatureUpdate;
             }
 
             //Building Temperature
-            timeUntillBuildingTempCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeUntillBuildingTempCheck < 0)
+            timeUntillBuildingTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeUntillBuildingTemperatureUpdate < 0)
             {
-                UpdateBuildingTemperatures(gameTime);
-                timeUntillBuildingTempCheck = timeToBuildingTempCheck;
+                UpdateBuildingTemperatures();
+                timeUntillBuildingTemperatureUpdate = timeToBuildingTemperatureUpdate;
             }
         }
 
         #region Update Colonist Temperatures
-        private static void UpdateColonistTemperatures(GameTime gameTime)
+        /// <summary>
+        /// Update the temperatures for each colonist
+        /// </summary>
+        private static void UpdateColonistTemperatures()
         {
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
@@ -49,37 +58,48 @@ namespace GlobalWarmingGame.Interactions
                 float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
                 colonist.UpdateTemp(tileTemp);
-                //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
+                Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " health: " + colonist.Health + " hunger: " + colonist.Hunger);
             }
         }
         #endregion
 
         #region Update Building Temperatures
-        private static void UpdateBuildingTemperatures(GameTime gameTime)
+        /// <summary>
+        /// Update the temperature of all buildings that produce heat
+        /// </summary>
+        private static void UpdateBuildingTemperatures()
         {
             foreach (IHeatable heatable in GameObjectManager.Filter<IHeatable>())
             {
                 float temperature = heatable.Temperature.Value;
                 Vector2 position = ((GameObject)heatable).Position;
                 Vector2 size = ((GameObject)heatable).Size;
-                bool heating = heatable.Heating;
-                GetBuildingArea(position, size, temperature, heating, GameObjectManager.ZoneMap);
+                bool heating = heatable.Heating; //Is the building currently producing heat
+                HeatBuildingArea(position, size, temperature, heating, GameObjectManager.ZoneMap);
             }
         }
 
-        public static void GetBuildingArea(Vector2 position, Vector2 size, float temperature, bool heating, TileMap tileMap)
+        /// <summary>
+        /// Calculate the tile area the building takes up and heat the tiles.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="temperature"></param>
+        /// <param name="heating"></param>
+        /// <param name="tileMap"></param>
+        public static void HeatBuildingArea(Vector2 position, Vector2 size, float temperature, bool heating, TileMap tileMap)
         {
             float tileWidth = tileMap.Tiles[0, 0].Size.X;
             int numberOfTilesX = (int)(size.X / tileWidth);
             int numberOfTilesY = (int)(size.Y / tileWidth);
-            for (int y = 0; y < numberOfTilesX; y++)
+            for (int y = 0; y < numberOfTilesY; y++)
             {
-                for (int x = 0; x < numberOfTilesY; x++)
+                for (int x = 0; x < numberOfTilesX; x++)
                 {
-                    Tile t = tileMap.Tiles[(int)(position.X / tileWidth + x), (int)(position.Y / tileWidth + y)];
-                    t.Heated = heating;
+                    Tile t = tileMap.GetTileAtPosition(new Vector2(position.X + x * tileWidth, position.Y - y * tileWidth));
                     if (heating)
                     {
+                        t.Heated = heating;
                         t.temperature.SetTemp(temperature);
                     }
                 }

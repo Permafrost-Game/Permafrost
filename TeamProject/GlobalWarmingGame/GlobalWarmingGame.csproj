@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D2255AB6-74C7-4BAD-AE65-1A9026996D23}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GlobalWarmingGame</RootNamespace>
     <AssemblyName>GlobalWarmingGame</AssemblyName>
@@ -54,7 +54,6 @@
     <Compile Include="Interactions\Interactables\Environment\EnvironmentObject.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />

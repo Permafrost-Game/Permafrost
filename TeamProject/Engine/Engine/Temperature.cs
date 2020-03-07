@@ -12,7 +12,7 @@ namespace Engine
         private float value;
 
         public float Max { get; private set; } = 100;
-        public float Min { get; private set; } = -100;
+        public float Min { get; private set; } = -10;
 
         public float Value
         {

@@ -58,18 +58,17 @@ namespace Engine.TileGrid
         }
 
         #region Update Tiles Temperature
-        public void UpdateTilesTemperatures(GameTime gameTime) 
+        public void UpdateTilesTemperatures(GameTime gameTime, float globalTemperature) 
         {
             timeToTempTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if ((timeToTempTick) <= 0)
+            if (timeToTempTick <= 0)
             {
                 foreach (Tile tile in Tiles)
                 {
-                    //if tile is being heated by a structure
+                    //if tile is being heated by a structure it's temperature isn't affected by the cold
                     if (tile.Heated)
                     {
-                        //Console.WriteLine(tile.temperature.Value);
                         continue;
                     }
 
@@ -85,17 +84,17 @@ namespace Engine.TileGrid
                     current.temperature.Value = (sumTemperature / (count));
 
                     //Try to lower/raise the tile temp to the global temp
-                    if (tile.temperature.Value < -5/*ZoneManager.GlobalTemperature*/)
+                    if (tile.temperature.Value < globalTemperature)
                     {
                         float Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (-5/*ZoneManager.GlobalTemperature*/ - Temperature) / 8);
+                        tile.temperature.SetTemp(Temperature + (globalTemperature - Temperature) / 8);
                     }
-                    else if (tile.temperature.Value > -5/*ZoneManager.GlobalTemperature*/)
+                    else if (tile.temperature.Value > globalTemperature)
                     {
                         float Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (-5/*ZoneManager.GlobalTemperature*/ - Temperature) / 8);
+                        tile.temperature.SetTemp(Temperature + (globalTemperature - Temperature) / 8);
                     }
-                    //Console.WriteLine(tile.temperature.Value);
+
                 }
                 timeToTempTick = timeUntilTempTick;
             }
