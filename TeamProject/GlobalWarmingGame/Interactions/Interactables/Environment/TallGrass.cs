@@ -49,8 +49,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void Trim(Instruction instruction)
         {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4));
-            //Maybe destory the node or allow 3 more mine operations
+            Dispose();
+        }
+
+        private void Dispose()
+        {
             GameObjectManager.Remove(this);
+            this.InstructionTypes.Clear();
         }
 
         public object Reconstruct()

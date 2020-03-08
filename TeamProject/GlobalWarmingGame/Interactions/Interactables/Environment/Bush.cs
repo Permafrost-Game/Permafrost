@@ -57,10 +57,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         public Bush(Vector2 position, TextureTypes textureTypeHarvestable, TextureTypes textureTypeHarvested, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
         (
             position: position,
-            size: new Vector2(Textures.Map[textureTypeHarvestable].Width, Textures.Map[textureTypeHarvestable].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.Map[textureTypeHarvestable].Width / 2f, Textures.Map[textureTypeHarvestable].Height / 2f),
-            tag: "Bush",
             texture: Textures.Map[textureTypeHarvestable]
         )
         {
@@ -83,7 +79,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private void Chop(Instruction instruction)
         {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1));
-            GameObjectManager.Remove(this);
+            Dispose();
         }
 
         private void Forrage(Instruction instruction)
@@ -96,6 +92,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                 InstructionTypes.Remove(forrage);
                 timeUnitlHarvestable = timeToHarvestable;
             }
+        }
+
+        private void Dispose()
+        {
+            GameObjectManager.Remove(this);
+            this.InstructionTypes.Clear();
         }
 
         public void Update(GameTime gameTime)

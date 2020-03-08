@@ -64,8 +64,13 @@ namespace GlobalWarmingGame.Action
         public void Start() {
             if(!IsStarted)
             {
-                IsStarted = true;
-                OnStart.ForEach(e => e.Invoke(this));
+                if ((!(PassiveMember is IInteractable) || ((IInteractable)PassiveMember).InstructionTypes.Contains(Type)))
+                {
+                    IsStarted = true;
+                    OnStart.ForEach(e => e.Invoke(this));
+                }
+                else throw new InvalidInstruction(this, "Instruction is no longer valid");
+
             }
             //else throw new Exception("Instruction has allready started");
         }
@@ -91,7 +96,10 @@ namespace GlobalWarmingGame.Action
                 timeSpent += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if(timeSpent >= Type.TimeCost)
                 {
-                    Complete();
+                    if(!(PassiveMember is IInteractable) || ((IInteractable)PassiveMember).InstructionTypes.Contains(Type))
+                    {
+                        Complete();
+                    }
                 }
             }
         }
