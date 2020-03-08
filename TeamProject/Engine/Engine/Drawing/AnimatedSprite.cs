@@ -40,20 +40,17 @@ namespace Engine.Drawing
             }
         }
 
-
-
-        /// <summary>
-        /// Creates a new <see cref="AnimatedSprite"/> with a <paramref name="textureSet"/> 
-        /// </summary>
-        /// <param name="textureSet">A 2D array of textures, where the first dimension is for texture groups, and the seccond dimension is for animation frames</param>
-        /// <param name="frameTime">The time in ms between frames</param>
-        public AnimatedSprite(Vector2 position, Vector2 size, float rotation, Vector2 origin, string tag, float depth, Texture2D[][] textureSet, float frameTime, SpriteEffects spriteEffect = SpriteEffects.None) :
-            base(position, size, rotation, origin, tag, depth, textureSet[0][0], spriteEffect )
+        public AnimatedSprite(Vector2 position, Texture2D[][] textureSet, float rotation = 0f, string tag = "", float frameTime = 100f, SpriteEffects spriteEffect = SpriteEffects.None) :
+            this(position: position,
+                textureSet: textureSet,
+                size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
+                rotation: rotation,
+                origin: CalculateOrigin(new Vector2(textureSet[0][0].Width, textureSet[0][0].Height)),
+                tag: tag,
+                depth: CalculateDepth(position),
+                frameTime: frameTime,
+                spriteEffect: spriteEffect)
         {
-            this.isAnimated = true;
-            this.textureSet = textureSet;
-            this.frameTime = frameTime;
-            this.timeUntilNextFrame  = frameTime;
         }
 
         /// <summary>
@@ -61,13 +58,13 @@ namespace Engine.Drawing
         /// </summary>
         /// <param name="textureSet">A 2D array of textures, where the first dimension is for texture groups, and the seccond dimension is for animation frames</param>
         /// <param name="frameTime">The time in ms between frames</param>
-        public AnimatedSprite(Vector2 position, Vector2 size, float rotation, Vector2 origin, string tag, Texture2D[][] textureSet, float frameTime, SpriteEffects spriteEffect = SpriteEffects.None) :
-            base(position, size, rotation, origin, tag, textureSet[0][0], spriteEffect)
+        public AnimatedSprite(Vector2 position, Texture2D[][] textureSet, Vector2 size, float rotation = 0f, Vector2 origin = default, string tag = "", float depth = 0f, float frameTime = 100f, SpriteEffects spriteEffect = SpriteEffects.None) :
+            base(position, size, rotation, origin, tag, depth, textureSet[0][0], spriteEffect )
         {
             this.isAnimated = true;
             this.textureSet = textureSet;
             this.frameTime = frameTime;
-            this.timeUntilNextFrame = frameTime;
+            this.timeUntilNextFrame  = frameTime;
         }
 
         public virtual void Update(GameTime gameTime)

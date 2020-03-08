@@ -180,7 +180,8 @@ namespace GlobalWarmingGame
         bigStoneNode,
         tallGrass,
         towerC,
-        towerH
+        towerH,
+        storageUnit,
     }
 
     public enum TextureIconTypes

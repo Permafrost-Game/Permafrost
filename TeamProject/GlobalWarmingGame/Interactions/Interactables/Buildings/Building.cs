@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
+    [Obsolete]
     class Building
     {
         public int ID { get; }

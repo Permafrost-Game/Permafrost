@@ -263,7 +263,7 @@ namespace GlobalWarmingGame
         void UpdateColonistTemperatures(GameTime gameTime)
         {
             //Adjust the temperatures of the colonists
-            foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
+            foreach (Colonist colonist in GameObjectManager.Filter<Colonist>())
             {
                 float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 

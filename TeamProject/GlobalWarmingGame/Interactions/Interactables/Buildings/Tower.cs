@@ -41,10 +41,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public Tower(Vector2 position, TextureTypes capturedTextureType, TextureTypes hostileTextureType, bool captured = false) : base
         (
             position: position,
-            size: new Vector2(Textures.Map[hostileTextureType].Width, Textures.Map[hostileTextureType].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.Map[hostileTextureType].Width / 2f, Textures.Map[hostileTextureType].Height / 2f),
-            tag: "Farm",
             texture: Textures.Map[hostileTextureType]
         )
         {
