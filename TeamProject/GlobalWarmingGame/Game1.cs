@@ -254,10 +254,10 @@ namespace GlobalWarmingGame
             ShowPauseMenu();
             ShowMainUI();
             PauseGame();
+            GlobalCombatDetector.updateParticipants();
 
             keyboardInputHandler.Update(gameTime, gameState);
 
-            GlobalCombatDetector.updateParticipants();
             if (gameState == GameState.playing)
             {
                 
