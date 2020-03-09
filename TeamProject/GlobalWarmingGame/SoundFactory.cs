@@ -10,65 +10,45 @@ namespace GlobalWarmingGame
 {
     public static class SoundFactory
     {
-        public static Dictionary<string, SoundEffect> sounds;
-        public static Dictionary<string, Song> songs;
-        public static Song song; 
+        public static Dictionary<Sound, SoundEffect> sounds;
+        public static Dictionary<Songs, Song> songs;
         public static void Loadsounds(ContentManager content)
         {
-            sounds = new Dictionary<string, SoundEffect>();
-            songs = new Dictionary<string, Song>();
-            Song song = null;
-            songs.Add("menu",content.Load<Song>("sound/songs/menu"));
-            songs.Add("main",content.Load<Song>("sound/songs/ColdAtmosphericMusic"));
-            songs.Add("enemy_zone", content.Load<Song>("sound/songs/enemy_zone"));
-            sounds.Add("wood_chop", content.Load<SoundEffect>(@"sound/sounds/wood_chop"));
-            sounds.Add("rabbit_death", content.Load<SoundEffect>(@"sound/sounds/rabbit_death"));
-            sounds.Add("stone_pickup", content.Load<SoundEffect>(@"sound/sounds/stone_pickup"));
+            sounds = new Dictionary<Sound, SoundEffect>
+            {
+                { Sound.WoodChop, content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
+                { Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
+                { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") }
+            };
+            songs = new Dictionary<Songs, Song>
+            {
+                { Songs.Menu, content.Load<Song>("sound/songs/menu") },
+                { Songs.Main, content.Load<Song>("sound/songs/ColdAtmosphericMusic") },
+                { Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone") }
+            };
+
         }
-        static public void PlayGameSoundtrack()
+ 
+        public static void PlaySong(Songs songS)
         {
-            song = songs["main"];
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(song);
-            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
-        }
-        static public void PlayGameMenuSong()
-        {
-            song = songs["menu"];
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(song);
-            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
-        }
-        public static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
-        {
-            MediaPlayer.Volume -= 100f;
-            MediaPlayer.Play(song);
+            MediaPlayer.Play(songs[songS]);
         }
         public static void PlaySoundEffect(Sound sound)
         {
-            SoundEffect mySound = null;
-            switch (sound)
-            {
-                case Sound.wood_chop:
-                    mySound = sounds["wood_chop"];
-                    break;
-                case Sound.rabbit_death:
-                    mySound = sounds["rabbit_death"];
-                    break;
-                case Sound.stone_pickup:
-                    mySound = sounds["stone_pickup"];
-                    break;
-                default:
-                    throw new NotImplementedException(sound + " has not been implemented");
-            }
-             
-            mySound.Play();
+            sounds[sound].Play();
         } 
     }
 }
+public enum Songs
+{
+    Main, 
+    Menu, 
+    EnemyZone
+}
 public enum Sound
 {
-    wood_chop,
-    rabbit_death,
-    stone_pickup
+    WoodChop,
+    RabbitDeath,
+    StonePickup
 }

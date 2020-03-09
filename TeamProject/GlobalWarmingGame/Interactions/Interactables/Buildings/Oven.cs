@@ -28,10 +28,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public Oven(Vector2 position, Texture2D texture) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
-            rotation: 0f,
-            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
-            tag: "Oven",
             texture: texture
         )
         {

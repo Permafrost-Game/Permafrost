@@ -1,11 +1,16 @@
 ﻿using Engine;
 using Engine.PathFinding;
 using Engine.TileGrid;
+using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
+using SimplexNoise;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using IDrawable = Engine.Drawing.IDrawable;
 
@@ -17,14 +22,15 @@ namespace GlobalWarmingGame
     /// </summary>
     static class GameObjectManager
     {
-        private static readonly int seed = 255;
+        private static bool serialization;
+        private static IDictionary<Vector2, List<GameObject>> zoneMap;
+
+        public static int seed;
         private static TileSet tileSet;
 
         static Vector2 zonePos;
-        readonly static IDictionary<Vector2, Zone> zoneTable;
 
-        public static Zone CurrentZone { get => zoneTable[zonePos]; }
-
+        private static /* readonly */ List<GameObject> gameObjects;
 
         public static event EventHandler<GameObject> ObjectAdded = delegate { };
         public static event EventHandler<GameObject> ObjectRemoved = delegate { };
@@ -35,124 +41,186 @@ namespace GlobalWarmingGame
 
         static GameObjectManager()
         {
-            zoneTable = new Dictionary<Vector2, Zone>();
+            gameObjects = new List<GameObject>();
             Updatables = new List<IUpdatable>();
             Drawables = new List<IDrawable>();
             Interactables = new List<IInteractable>();
         }
 
-        [Obsolete]
-        public static string MapPath(Vector2 pos)
+        public static void Init(TileSet ts, int worldSeed, Vector2 currentZone, bool isSerialized = true)
         {
-            return string.Format(@"Content/maps/map1/{0}{1}.csv", pos.X, pos.Y);
-        }
-
-        static TileMap GenerateMap(Vector2 pos)
-        {
-            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 100, yOffset: (int)pos.Y * 100, width: 100, height: 100, tileSet);
-        }
-
-        public static void Init(TileSet ts)
-        {
+            if (!(serialization = isSerialized))
+            {
+                currentZone = Vector2.Zero;
+                zoneMap = new Dictionary<Vector2, List<GameObject>>();
+            }
 
             tileSet = ts;
 
+            seed = worldSeed;
+            zonePos = currentZone;
 
-            zonePos = Vector2.Zero;
-            
-            ZoneMap = GenerateMap(zonePos);
-            PathFinder.TileMap = ZoneMap;
-            zoneTable.Add(zonePos, Zone.GenerateZone(seed, ZoneMap, zonePos));
             SetZone(zonePos);
+
+            //private void Trim DoSomething()
+
+            //EnvironmentObject environmentObject= new EnvironmentObject(new Vector2(1750, 1750), TextureTypes.workBench);
+            //environmentObject.InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
         }
 
-        public static bool IsZone(Vector2 direction)
+        public static string ZoneFileName()
         {
-            Vector2 newZonePos = zonePos + direction;
-
-            return zoneTable.ContainsKey(newZonePos);
+            return String.Format("{0},{1}", zonePos.X, zonePos.Y);
         }
 
-        private static void SetZone(Vector2 position)
+        public static string ZoneFilePath()
         {
-            zonePos = position;
-            ZoneMap = GenerateMap(position);
-            Updatables = Filter<IUpdatable>();
-            Drawables = Filter<IDrawable>();
-            Interactables = Filter<IInteractable>();
+            return String.Format(@"{0}/{1}.json", @"Content/zones", ZoneFileName());
         }
-        public static void MoveZone(Vector2 direction)
+
+        public static void SaveZone()
         {
-            //if (isZone(direction))
+            if (!serialization)
             {
-                List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
-
-                foreach (Colonist colonist in colonists)
-                    GameObjectManager.Remove(colonist);
-
-                Vector2 newZonePos = zonePos + direction;
-
-                if (! zoneTable.ContainsKey(newZonePos))
-                {
-
-                    zoneTable.Add(newZonePos, Zone.GenerateZone(seed, GenerateMap(newZonePos), newZonePos));   
-                }
-
-                SetZone(newZonePos);
-
-                for (int i = 0; i < colonists.Count(); i++)
-                {
-                    Colonist colonist = (Colonist)colonists[i];
-                    colonist.Goals.Clear();
-                    colonist.Path.Clear();
-
-                    if (direction.X == 1 || direction.X == -1)
-                    {
-                        float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (tileSet.textureSize.X);
-                        float y = (ZoneMap.Size.Y / 2) * (tileSet.textureSize.Y)
-                            + (i * colonist.Size.Y) + (i * tileSet.textureSize.Y)
-                            - ((colonists.Count / 2) * colonist.Size.Y);
-
-                        colonist.Position = new Vector2(x, y);
-                    }
-                    else if (direction.Y == -1 || direction.Y == 1)
-                    {
-                        float x = (ZoneMap.Size.X / 2) * (tileSet.textureSize.X)
-                            + (i * colonist.Size.X) + (i * tileSet.textureSize.X)
-                            - ((colonists.Count / 2) * colonist.Size.X);
-                        float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (tileSet.textureSize.Y) : 0;
-
-                        colonist.Position = new Vector2(x, y);
-                    }
-
-                    GameObjectManager.Add(colonist);
-                }
-
-                if (direction.X == 1)
-                {
-                    Camera.Position = new Vector2(ZoneMap.Size.X * tileSet.textureSize.X, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
-                }
-
-                else if (direction.X == -1)
-                {
-                    Camera.Position = new Vector2(0, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
-                }
-
-                else if (direction.Y == -1)
-                {
-                    Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, 0);
-                } 
-
-                else if (direction.Y == 1)
-                {
-                    Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, ZoneMap.Size.Y * tileSet.textureSize.Y);
-                }
-                PathFinder.TileMap = ZoneMap;
+                zoneMap[zonePos] = gameObjects.ToList();
+            }
+            else
+            {
+                Console.WriteLine("Saving to " + ZoneFilePath());
+                Serializer.Serialize(ZoneFilePath(), gameObjects);
             }
         }
 
-        public static List<GameObject> Objects { get => CurrentZone.GameObjects.ToList(); }
+        private static TileMap GenerateMap(Vector2 pos)
+        {
+            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet);
+        }
+
+        private static void SetZone(Vector2 position, List<Colonist> colonists = null)
+        {
+            zonePos = position;
+            ZoneMap = GenerateMap(position);
+            PathFinder.TileMap = ZoneMap;
+
+            gameObjects.Clear();
+            Updatables.Clear();
+            Drawables.Clear();
+            Interactables.Clear();
+
+            if (colonists != null)
+                foreach (Colonist colonist in colonists)
+                    Add(colonist);
+                    
+
+            if (!serialization)
+            {
+                if (zoneMap.ContainsKey(zonePos))
+                {
+                    gameObjects = zoneMap[zonePos];
+                    if (colonists != null)
+                        foreach (Colonist colonist in colonists)
+                            Add(colonist);
+                    Updatables = Filter<IUpdatable>();
+                    Drawables = Filter<IDrawable>();
+                    Interactables = Filter<IInteractable>();
+                }
+                else
+                {
+
+                    ZoneGenerator.SpawnGameObjects(seed, zonePos);
+                    zoneMap.Add(zonePos, gameObjects);
+
+                    if (position == Vector2.Zero)
+                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+                }
+            }
+
+            else
+            {
+                try
+                {
+                    IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
+
+                    Console.WriteLine("Loading from " + ZoneFilePath());
+
+                    foreach (IEnumerable<object> objList in objs.Values)
+                        foreach (GameObject gameObject in objList)
+                            Add(gameObject);
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.WriteLine("Creating " + ZoneFilePath());
+
+                    ZoneGenerator.SpawnGameObjects(seed, zonePos);
+
+                    if (position == Vector2.Zero)
+                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+
+                    SaveZone();
+                }
+            }
+        }
+
+        public static void MoveZone(Vector2 direction)
+        {
+            List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
+
+            foreach (Colonist colonist in colonists)
+                GameObjectManager.Remove(colonist);
+
+            SaveZone();
+
+            for (int i = 0; i < colonists.Count(); i++)
+            {
+                Colonist colonist = (Colonist)colonists[i];
+                colonist.Goals.Clear();
+                colonist.Path.Clear();
+
+                if (direction.X == 1 || direction.X == -1)
+                {
+                    float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (tileSet.textureSize.X);
+                    float y = (ZoneMap.Size.Y / 2) * (tileSet.textureSize.Y)
+                        + (i * colonist.Size.Y) + (i * tileSet.textureSize.Y)
+                        - ((colonists.Count / 2) * colonist.Size.Y);
+
+                    colonist.Position = new Vector2(x, y);
+                }
+                else if (direction.Y == -1 || direction.Y == 1)
+                {
+                    float x = (ZoneMap.Size.X / 2) * (tileSet.textureSize.X)
+                        + (i * colonist.Size.X) + (i * tileSet.textureSize.X)
+                        - ((colonists.Count / 2) * colonist.Size.X);
+                    float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (tileSet.textureSize.Y) : 0;
+
+                    colonist.Position = new Vector2(x, y);
+                }
+            }
+
+            SetZone(zonePos + direction, colonists);
+
+            if (direction.X == 1)
+            {
+                Camera.Position = new Vector2(ZoneMap.Size.X * tileSet.textureSize.X, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
+            }
+
+            else if (direction.X == -1)
+            {
+                Camera.Position = new Vector2(0, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
+            }
+
+            else if (direction.Y == -1)
+            {
+                Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, 0);
+            }
+
+            else if (direction.Y == 1)
+            {
+                Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, ZoneMap.Size.Y * tileSet.textureSize.Y);
+            }
+        }
+
+        public static List<GameObject> Objects { get => gameObjects.ToList(); }
         public static List<IUpdatable> Updatables { get; private set; } = new List<IUpdatable>();
         public static List<IDrawable> Drawables { get; private set; } = new List<IDrawable>();
         public static List<IInteractable> Interactables { get; private set; } = new List<IInteractable>();
@@ -163,7 +231,7 @@ namespace GlobalWarmingGame
         /// <param name="gameObject">The GameObject to be Added</param>
         public static void Add(GameObject gameObject)
         {
-            CurrentZone.GameObjects.Add(gameObject);
+            gameObjects.Add(gameObject);
 
             if (gameObject is IDrawable d)
                 Drawables.Add(d);
@@ -183,7 +251,7 @@ namespace GlobalWarmingGame
         /// <param name="gameObject">The GameObject to be removed</param>
         public static void Remove(GameObject gameObject)
         {
-            CurrentZone.GameObjects.Remove(gameObject);
+            gameObjects.Remove(gameObject);
 
             if (gameObject is IDrawable d)
                 Drawables.Remove(d);
@@ -204,7 +272,7 @@ namespace GlobalWarmingGame
         /// <returns></returns>
         public static List<T> Filter<T>()
         {
-            return CurrentZone.GameObjects.OfType<T>().ToList();
+            return gameObjects.OfType<T>().ToList();
         }
 
         /// <summary>
@@ -212,11 +280,12 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <param name="tag"></param>
         /// <returns>GameObjects with the specified tag</returns>
+        [Obsolete]
         public static List<GameObject> GetObjectsByTag(string tag)
         {
             List<GameObject> go = new List<GameObject>();
 
-            foreach(GameObject o in CurrentZone.GameObjects)
+            foreach(GameObject o in gameObjects)
             {
                 if(o.Tag == tag)
                 {

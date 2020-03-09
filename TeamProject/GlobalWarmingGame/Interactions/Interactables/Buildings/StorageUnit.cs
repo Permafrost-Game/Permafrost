@@ -11,34 +11,23 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class StorageUnit : Sprite, IInteractable, IBuildable, IStorage
+    class StorageUnit : Sprite, IInteractable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4),
                                                                                                    new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 8)};
 
         public List<InstructionType> InstructionTypes { get; }
 
-        public Inventory Inventory { get; }
         
-        public StorageUnit(Vector2 position, Texture2D texture) : base
+        public StorageUnit(Vector2 position) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
-            rotation: 0f,
-            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
-            tag: "StorageUnit",
-            texture: texture
+            texture: Textures.Map[TextureTypes.storageUnit]
         )
         {
             InstructionTypes = new List<InstructionType>();
-            Inventory = new Inventory(100f);
-            //InstructionTypes.Add(new InstructionType("store", "Store", "Store items", onStart: Store));
         }
 
-        private void Store(IInstructionFollower follower)
-        {
-            //Open menu to either store or retrieve items
-        }
 
         public void Build()
         {

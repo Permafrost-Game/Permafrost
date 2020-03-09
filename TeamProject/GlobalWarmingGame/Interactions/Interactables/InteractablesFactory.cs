@@ -160,32 +160,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
             switch(interactable)
             {
                 case Interactable.Colonist:
-                    return new Colonist(position, textureSet["colonist"]);
-
+                    return new Colonist(position, TextureSetTypes.colonist);
                 case Interactable.Farm:
                     return new Farm(position, textures["farm"]);
-
                 case Interactable.Rabbit:
-                    return new Rabbit(position, textureSet["rabbit"]);
-
+                    return new Rabbit(position, TextureSetTypes.rabbit);
                 case Interactable.Bush:
-                    return new Bush(position, textures["bushH"], textures["bushN"]);
-
+                    return new Bush(position, TextureTypes.bushH, TextureTypes.bushN);
                 case Interactable.Tree:
-                    return new Tree(position, textures["tree"], textures["treeStump"]);
-
+                    return new Tree(position, TextureTypes.tree, TextureTypes.treeStump);
                 case Interactable.WorkBench:
                     return new WorkBench(position, textures["workBench"]);
 
                 case Interactable.StoneNodeSmall:
-                    return new SmallStoneNode(position, textures["stoneNodeSmall"]);
+                    return new SmallStoneNode(position, TextureTypes.smallStoneNode);
 
                 case Interactable.StoneNodeBig:
-                    return new BigStoneNode(position, textures["stoneNodeBig"]);
+                    return new BigStoneNode(position, TextureTypes.bigStoneNode);
 
                 case Interactable.TallGrass:
-                    return new TallGrass(position, textures["tallGrass"]);
-
+                    return new TallGrass(position, TextureTypes.tallGrass);
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
 
@@ -196,7 +190,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     
                 
                 case Interactable.Tower:
-                    return new Tower(position, textures["towerC"], textures["towerH"]);
+                    return new Tower(position, TextureTypes.towerC, TextureTypes.towerH);
                 
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");

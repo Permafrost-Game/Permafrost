@@ -10,13 +10,17 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    public class Bush : Sprite, IInteractable, IUpdatable
+    public class Bush : Sprite, IInteractable, IUpdatable, IReconstructable
     {
         private readonly InstructionType forrage;
-        private bool _isHarvestable;
+
+        [PFSerializable]
+        public bool _isHarvestable;
 
         private static readonly float timeToHarvestable = 6000f;
-        private float timeUnitlHarvestable;
+
+        [PFSerializable]
+        public float timeUnitlHarvestable;
 
         private readonly Texture2D textureHarvestable;
         private readonly Texture2D textureHarvested;
@@ -32,30 +36,50 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public List<InstructionType> InstructionTypes { get; }
 
-        public Bush(Vector2 position, Texture2D harvestable, Texture2D harvested) : base
-        (
-            position: position,
-            size: new Vector2(harvestable.Width, harvestable.Height),
-            rotation: 0f,
-            origin: new Vector2(harvestable.Width / 2f, harvestable.Height / 2f),
-            tag: "Bush",
-            texture: harvestable
-        )
+        [PFSerializable]
+        public Vector2 PFSPosition
         {
-            InstructionTypes = new List<InstructionType>();
-            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onComplete: Forrage);
-
-            this.textureHarvestable = harvestable;
-            this.textureHarvested = harvested;
-            IsHarvestable = true;
-            InstructionTypes.Add(forrage);
-            InstructionTypes.Add(new InstructionType("chop", "Chop", "Chop for wood", onComplete: Chop));
+            get { return Position; }
+            set { Position = value; }
         }
 
-        private void Chop(Instruction instruction) 
+        [PFSerializable]
+        public readonly int textureHarvestableID;
+
+        [PFSerializable]
+        public readonly int textureHarvestedID;
+
+        public Bush() : base(Vector2.Zero, Vector2.Zero)
+        {
+
+        }
+
+        public Bush(Vector2 position, TextureTypes textureTypeHarvestable, TextureTypes textureTypeHarvested, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
+        (
+            position: position,
+            texture: Textures.Map[textureTypeHarvestable]
+        )
+        {
+            textureHarvestableID = (int)textureTypeHarvestable;
+            textureHarvestedID = (int)textureTypeHarvested;
+
+            InstructionTypes = new List<InstructionType>();
+            forrage = new InstructionType("forrage", "Forrage", "Forrage for berries", onComplete: Forrage);
+            this.textureHarvestable = Textures.Map[textureTypeHarvestable];
+            this.textureHarvested = Textures.Map[textureTypeHarvested];
+
+            InstructionTypes.Add(new InstructionType("chop", "Chop", "Chop for wood", onComplete: Chop));
+
+            if (IsHarvestable = isHarvestable)
+                InstructionTypes.Add(forrage);
+            else
+                this.timeUnitlHarvestable = timeUnitlHarvestable;
+        }
+
+        private void Chop(Instruction instruction)
         {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 1));
-            GameObjectManager.Remove(this);
+            Dispose();
         }
 
         private void Forrage(Instruction instruction)
@@ -70,6 +94,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             }
         }
 
+        private void Dispose()
+        {
+            GameObjectManager.Remove(this);
+            this.InstructionTypes.Clear();
+        }
+
         public void Update(GameTime gameTime)
         {
             if(!IsHarvestable)
@@ -81,6 +111,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     IsHarvestable = true;
                 }
             }
+        }
+
+        public object Reconstruct()
+        {
+            return new Bush(PFSPosition, (TextureTypes)textureHarvestableID, (TextureTypes)textureHarvestedID, _isHarvestable, timeUnitlHarvestable);
         }
     }
 }

@@ -11,15 +11,31 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
-    public class Rabbit : PassiveAnimal
+    public class Rabbit : PassiveAnimal, IReconstructable
     {
         private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 
-        public Rabbit(Vector2 position, Texture2D[][] textureSet) : base
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        [PFSerializable]
+        public readonly int textureSetID;
+
+        public Rabbit() : this(Vector2.Zero, TextureSetTypes.rabbit)
+        {
+
+        }
+
+        public Rabbit(Vector2 position, TextureSetTypes textureSetType) : base
         (
-            position, "Rabbit", textureSet, 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
+            position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
         {
+            textureSetID = (int)textureSetType;
 
             this.InstructionTypes.Add(
                 new InstructionType("hunt", "Hunt", "Hunt the Rabbit", onComplete: Hunt)
@@ -29,9 +45,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         public void Hunt(Instruction instruction)
         {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
-            GameObjectManager.Remove(this);
-            SoundFactory.PlaySoundEffect(Sound.rabbit_death);
+            Dispose();
+            SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
         }
 
+        private void Dispose()
+        {
+            InstructionTypes.Clear();
+            GameObjectManager.Remove(this);
+        }
+
+        public object Reconstruct()
+        {
+            return new Rabbit(PFSPosition, (TextureSetTypes)textureSetID);
+        }
     }
 }
