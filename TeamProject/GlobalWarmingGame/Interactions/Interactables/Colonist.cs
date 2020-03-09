@@ -123,7 +123,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             else
                 this.inventory = inventory;
 
-            attackRange = 60;
+            attackRange = 70;
             AttackPower = 30;
             attackSpeed = 1000;
             lastPosition = position;
@@ -252,7 +252,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (enemy.Health > 0 & this.Health > 0)
                 {
                     inCombat = true;
-                    enemy.setInCombat(true);
+                  
                     ColonistAttack(gameTime);
                 }
                 else
@@ -386,15 +386,16 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (ColonistAttackSpeedControl(gameTime))
             {
                 this.isAttacking = true;
+                SoundFactory.PlaySoundEffect(Sound.slashSound);
                 enemy.Health = enemy.Health - this.AttackPower;
             }
-            //Console.WriteLine("Colonist hp: " + this.Health + " Enemy hp: " + enemy.Health);
+            
 
 
 
             if (enemy.Health <= 0)
             {
-                enemy.SetEnemyDead();
+                
                 this.inCombat = false;
                 this.isAttacking = false;
                 enemy = null;

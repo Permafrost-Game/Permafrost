@@ -30,9 +30,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             stillInCombat = false;
                 foreach (Enemy enemy in enemies) {
                 if (col.attackRange>DistanceBetweenCombatants(enemy.Position,col.Position)) {
-                    if (enemy.isInCombat) {
-                        stillInCombat = true;
-                    }
                     return enemy;
                 }
                 
@@ -101,23 +98,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (enemy.aggroRange > DistanceBetweenCombatants(enemy.Position, col.Position))
                 {
-                    if (!combatSoundPlaying && stillInCombat==true)
-                    {
-                        SoundFactory.PlaySong(Songs.InCombat);
-                        combatSoundPlaying = true;
-                        mainIsplaying = false;
-                    }
                     
                     return col;
 
                 }
-                if (!mainIsplaying && stillInCombat==false)
-                {
-
-                    SoundFactory.PlaySong(Songs.Main);
-                    mainIsplaying = true;
-                    combatSoundPlaying = false;
-                }
+               
 
 
 

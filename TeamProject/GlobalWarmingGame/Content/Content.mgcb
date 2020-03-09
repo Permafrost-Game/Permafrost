@@ -4898,6 +4898,12 @@
 /processorParam:Quality=Best
 /build:sound/sounds/bear_roar.wav
 
+#begin sound/sounds/colonist_slashing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/colonist_slashing.wav
+
 #begin sound/sounds/rabbit_death.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

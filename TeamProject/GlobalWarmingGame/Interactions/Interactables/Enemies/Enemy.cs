@@ -41,7 +41,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public bool targetToTheLeftBefore;
         public bool targetToTheLeftAfter;
         public bool flip;
-        
+        RandomAI ai = new RandomAI(70, 0);
+
 
         public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
@@ -102,7 +103,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 
                 Speed = 0.05f;
-                RandomAI ai = new RandomAI(70,0) ;
+                
                 Goals.Enqueue(this.Position + ai.RandomTranslation());
 
             }
@@ -235,7 +236,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                     {
                        
                         this.setInCombat(false);
-                }
+                     }
                 }
 
         }
@@ -257,7 +258,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 
                 this.setAttacking(false);
 
-                SoundFactory.PlaySong(Songs.Main);
+               // SoundFactory.PlaySong(Songs.Main);
                 GlobalCombatDetector.mainIsPlaying = true;
                 GlobalCombatDetector.combatSoundPlaying = false;
 
@@ -275,7 +276,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             EnemytimeToAttack = EnemytimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (EnemytimeToAttack > 500 & EnemytimeToAttack < 600)
+            if (EnemytimeToAttack > 500)
             {
                 this.setAttacking(false);
             }

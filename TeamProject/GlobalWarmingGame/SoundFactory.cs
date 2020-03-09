@@ -20,7 +20,8 @@ namespace GlobalWarmingGame
                 { Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
                 { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") },
                 { Sound.roaringBear, content.Load<SoundEffect>(@"sound/sounds/bear_roar") },
-                { Sound.robotShock, content.Load<SoundEffect>(@"sound/sounds/robot_electricity") }
+                { Sound.robotShock, content.Load<SoundEffect>(@"sound/sounds/robot_electricity") },
+                { Sound.slashSound, content.Load<SoundEffect>(@"sound/sounds/colonist_slashing") }
             };
             songs = new Dictionary<Songs, Song>
             {
@@ -56,5 +57,6 @@ public enum Sound
     RabbitDeath,
     StonePickup,
     roaringBear,
-    robotShock
+    robotShock,
+    slashSound
 }
