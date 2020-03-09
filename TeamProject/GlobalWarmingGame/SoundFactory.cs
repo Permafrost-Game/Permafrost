@@ -18,13 +18,16 @@ namespace GlobalWarmingGame
             {
                 { Sound.WoodChop, content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
                 { Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
-                { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") }
+                { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") },
+                { Sound.roaringBear, content.Load<SoundEffect>(@"sound/sounds/bear_roar") },
+                { Sound.robotShock, content.Load<SoundEffect>(@"sound/sounds/robot_electricity") }
             };
             songs = new Dictionary<Songs, Song>
             {
                 { Songs.Menu, content.Load<Song>("sound/songs/menu") },
                 { Songs.Main, content.Load<Song>("sound/songs/ColdAtmosphericMusic") },
-                { Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone") }
+                { Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone") },
+                { Songs.InCombat, content.Load<Song>("sound/songs/inCombat") }
             };
 
         }
@@ -44,11 +47,14 @@ public enum Songs
 {
     Main, 
     Menu, 
-    EnemyZone
+    EnemyZone,
+    InCombat
 }
 public enum Sound
 {
     WoodChop,
     RabbitDeath,
-    StonePickup
+    StonePickup,
+    roaringBear,
+    robotShock
 }

@@ -4880,17 +4880,35 @@
 /processorParam:Quality=Best
 /build:sound/songs/enemy_zone.mp3
 
+#begin sound/songs/inCombat.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/songs/inCombat.ogg
+
 #begin sound/songs/menu.ogg
 /importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:sound/songs/menu.ogg
 
+#begin sound/sounds/bear_roar.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/bear_roar.wav
+
 #begin sound/sounds/rabbit_death.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/sounds/rabbit_death.wav
+
+#begin sound/sounds/robot_electricity.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/robot_electricity.wav
 
 #begin sound/sounds/stone_pickup.wav
 /importer:WavImporter

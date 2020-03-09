@@ -13,19 +13,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     {
         
 
-        public Bear ( Vector2 position, Texture2D[][] textureSet): base ("Bear",1000, 70, 10, 300, position,textureSet)
+        public Bear ( Vector2 position, Texture2D[][] textureSet): base ("Bear",2000, 70, 10, 300, position,textureSet)
         {
            
         }
 
         public override void animateAttack()
         {
+
             if (targetInRange != null)
             {
 
                 isAnimated = true;
                 this.TextureGroupIndex = 3;
-               
+                
                 if (targetToTheLeftAfter != targetToTheLeftBefore) {
                     SpriteEffect = SpriteEffects.FlipHorizontally;
                     targetToTheLeftBefore = targetToTheLeftAfter;
@@ -58,6 +59,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             {
                 Goals.Enqueue(fakeRightXcoordinate);
             }
+        }
+
+   
+
+        internal override void attackingSound()
+        {
+            SoundFactory.PlaySoundEffect(Sound.roaringBear);
         }
     }
 }

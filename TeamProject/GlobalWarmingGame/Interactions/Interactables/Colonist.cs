@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
@@ -398,7 +398,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 this.inCombat = false;
                 this.isAttacking = false;
                 enemy = null;
-
+                
+                   
+                
             }
         }
 

@@ -34,13 +34,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
         
         public Boolean attacking=false;
     
-        private bool isInCombat=false;
+        public bool isInCombat=false;
  
         private double EnemytimeToAttack;
         public double aggroRange=200;
         public bool targetToTheLeftBefore;
         public bool targetToTheLeftAfter;
         public bool flip;
+        
 
         public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
         (
@@ -81,6 +82,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         public void SetEnemyDead(){
+            SoundFactory.PlaySong(Songs.Main);
+            GlobalCombatDetector.mainIsPlaying = true;
+            GlobalCombatDetector.combatSoundPlaying = false;
             GameObjectManager.Remove(this);
             
         }
@@ -91,15 +95,12 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
 
 
-
-
-
-
             target = GlobalCombatDetector.ColonistInAggroRange(this);
             targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
             
             if (target == null)
             {
+                
                 Speed = 0.05f;
                 RandomAI ai = new RandomAI(70,0) ;
                 Goals.Enqueue(this.Position + ai.RandomTranslation());
@@ -107,6 +108,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             }
             else
             {
+                
                 Speed = 0.2f;
                 ChaseColonist(target);
             }
@@ -192,14 +194,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
                  }
             }
-            
-
-           
-
-
-
-
-           
+       
             if (targetInRange != null)
             {
                
@@ -226,9 +221,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             this.setInCombat(false);
 
-            
-
-
                 
                 if (targetInRange != null)
                 {
@@ -246,22 +238,18 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 }
                 }
 
-
-            
         }
 
-        private void EnemyAttack(GameTime gameTime)
+        public virtual void EnemyAttack(GameTime gameTime)
         {
             if (EnemyAttackSpeedControl(gameTime))
             {
                 this.setAttacking(true);
+                this.attackingSound();
                 targetInRange.Health = target.Health - this.AttackPower;
 
             }
-
-
-
-
+            
 
             if (targetInRange.Health <= 0 || this.Health <= 0)
             {
@@ -269,12 +257,19 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 
                 this.setAttacking(false);
 
-                
+                SoundFactory.PlaySong(Songs.Main);
+                GlobalCombatDetector.mainIsPlaying = true;
+                GlobalCombatDetector.combatSoundPlaying = false;
+
                 this.setInCombat(false);
                 targetInRange = null;
                 
+                    
+                
             }
         }
+
+        internal abstract void attackingSound();
 
         private bool EnemyAttackSpeedControl(GameTime gameTime)
         {
@@ -289,8 +284,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 EnemytimeToAttack = 0;
                 return true;
-
-
 
             }
             return false;

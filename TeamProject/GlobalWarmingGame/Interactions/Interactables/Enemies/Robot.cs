@@ -13,15 +13,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     {
         
 
-        public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot", 10000, 70, 0, 500, position, textureSet)
+        public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot",5000, 70, 0, 500, position, textureSet)
         {
-            
-
-
-
-
-
-
+        
         }
 
         public override void animateAttack()
@@ -61,6 +55,17 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             {
                 Goals.Enqueue(fakeRightXcoordinate);
             }
+        }
+
+        internal override void attackingSound()
+        {
+            SoundFactory.PlaySoundEffect(Sound.robotShock);
+        }
+
+        public override void EnemyAttack(GameTime gameTime) {
+            Random dmg = new Random();
+            AttackPower = dmg.Next(20, 50);
+            base.EnemyAttack(gameTime);
         }
     }
 }

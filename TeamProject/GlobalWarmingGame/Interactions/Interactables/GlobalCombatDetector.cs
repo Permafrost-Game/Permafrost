@@ -14,21 +14,30 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
        public static List<Colonist> colonists;
         public static List<Enemy> enemies;
+        public static bool mainIsplaying { set; get; }
+        public static bool combatSoundPlaying { set; get; }
+        public static bool stillInCombat = false;
+        internal static bool mainIsPlaying;
 
         public static void Initialize() {
-
+            combatSoundPlaying = false;
+            mainIsplaying = true;
              colonists = GameObjectManager.Filter<Colonist>().ToList();
             enemies = GameObjectManager.Filter<Enemy>().ToList();
         }
 
-        public static Enemy FindColonistThreat (Colonist col) { 
+        public static Enemy FindColonistThreat (Colonist col) {
+            stillInCombat = false;
                 foreach (Enemy enemy in enemies) {
                 if (col.attackRange>DistanceBetweenCombatants(enemy.Position,col.Position)) {
-                  
+                    if (enemy.isInCombat) {
+                        stillInCombat = true;
+                    }
                     return enemy;
                 }
                 
                 }
+            
             return null;
         }
         public static Colonist FindEnemyThreat(Enemy enemy)
@@ -92,11 +101,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (enemy.aggroRange > DistanceBetweenCombatants(enemy.Position, col.Position))
                 {
-                    Console.WriteLine("Distance :" + DistanceBetweenCombatants(enemy.Position, col.Position));
+                    if (!combatSoundPlaying && stillInCombat==true)
+                    {
+                        SoundFactory.PlaySong(Songs.InCombat);
+                        combatSoundPlaying = true;
+                        mainIsplaying = false;
+                    }
+                    
                     return col;
 
                 }
-          
+                if (!mainIsplaying && stillInCombat==false)
+                {
+
+                    SoundFactory.PlaySong(Songs.Main);
+                    mainIsplaying = true;
+                    combatSoundPlaying = false;
+                }
+
+
+
             }
             return null;
         }
