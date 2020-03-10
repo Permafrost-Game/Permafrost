@@ -151,10 +151,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 //Console.WriteLine("Added "+ craftable.ID + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(craftable, 1));
             }
-            else
-            {
-                //ResourceNotification.Visible = true;
-            }
         }
 
         public void Build()

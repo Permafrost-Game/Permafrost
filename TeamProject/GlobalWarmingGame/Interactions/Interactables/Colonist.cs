@@ -77,20 +77,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
         #region Temperature
-
         public Temperature Temperature { get; set; } = new Temperature(38);
-        private readonly float CoreBodyTemperature = 38;
-        public int UpperComfortRange { get; private set; } = 40;
-        public int LowerComfortRange { get; private set; } = 15;
+        public float UpperComfortRange { get; private set; } = 50;
+        public float LowerComfortRange { get; private set; } = 15;
+        private float timeToFreezeCheck;
+        private readonly float timeUntillNextFreezeCheck = 2000f;
         #endregion
 
         #region Food
-        private static readonly float BASE_FOOD_CONSUMPTION = 60000f;
-        private float timeUntillFoodTick;
-        private float timeUntillTemperature = 2000f;
-        private float timeToTemperature;
-        private float timeUntilTemperatureUpdate = 2000f;
-        private float timeToTemperatureUpdate;
+        public int Hunger { get; private set; } = 0;
+        private float timeUntillNextHungerCheck;
+        private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
 
         #region PathFinding
@@ -125,10 +122,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Speed = 0.25f;
             MaxHealth = 100f;
             Health = MaxHealth;
-            Temperature.Value = CoreBodyTemperature;
-            timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
-            timeToTemperature = timeUntillTemperature;
-            timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+
+            timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
+            timeToFreezeCheck = timeUntillNextFreezeCheck;
 
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>();
@@ -151,8 +147,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public void OnGoalComplete(Vector2 completedGoal)
         {
-            if( Goals.Count == 0
-                && instructions.Count > 0 
+            if (Goals.Count == 0
+                && instructions.Count > 0
                 && completedGoal == (instructions.Peek().PassiveMember.Position)
                     )
             {
@@ -209,88 +205,93 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Peek().Update(gameTime);
             }
 
-
-
-            TemperatureCheck(gameTime);
+            FreezeCheck(gameTime);
             HungerCheck(gameTime);
         }
 
-
-
-        #region Colonist Temperature Check
-        private void TemperatureCheck(GameTime gameTime)
+        #region Colonist Freeze Check
+        /// <summary>
+        /// Is the colonist currently freezing to death?
+        /// </summary>
+        /// <param name="gameTime">game time</param>
+        private void FreezeCheck(GameTime gameTime)
         {
             //Temperature affecting colonist's health
-            timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperature < 0f)
+            timeToFreezeCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeToFreezeCheck < 0f)
             {
-                if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
+                if (Temperature.Value < LowerComfortRange || Temperature.Value > UpperComfortRange)
                 {
-                    //Health -= 1;
+                    Health -= 1;
                 }
-                timeToTemperature = timeUntillTemperature;
+                timeToFreezeCheck = timeUntillNextFreezeCheck;
             }
         }
         #endregion
 
         #region Colonist Hunger Check
+        /// <summary>
+        /// Is the colonist currently starving?
+        /// </summary>
+        /// <param name="gameTime">game time</param>
         private void HungerCheck(GameTime gameTime)
         {
-            //Temperature affecting food
-            timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
+            timeUntillNextHungerCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeUntillNextHungerCheck < 0)
+            {
+                //If colonist doesn't have food on them, they are starving -1 health
+                if (!Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+                {
+                    //If the colonist is hungry they take health damage and reset else increase hunger
+                    if (Hunger == 5)
+                    {
+                        Health -= 1;
+                    }
+                    else
+                    {
+                        Hunger++;
+                    }
+                }
+                else 
+                {
+                    //Food was eaten, reset hunger
+                    Hunger = 0;
+                }
 
-            if (foodFormula <= 0.25)
-            {
-                foodFormula = 0.25;
-            }
-            //TODO uncomment
-            // foodFormula is a multiplier on the timeUntillFoodTick
-            if ((timeUntillFoodTick * foodFormula) < 0)
-            {
-                FoodTick();
-                timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
-            }
-        }
-        private void FoodTick()
-        {
-            //If colonist doesn't have food on them, they are starving -1 health
-            ResourceItem food = new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1);
-            if (!Inventory.RemoveItem(food))
-            {
-                //TODO uncomment
-                //Health -= 1;
-            }
-            else
-            {
-                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
+                //If colonist's current temperature is lower than their acceptable lowerComfortRange
+                //they will have their next hunger check 40% faster
+                if (Temperature.Value < LowerComfortRange)
+                {
+                    timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION * 0.6f;
+                }
+                else 
+                {
+                    timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
+                }
             }
         }
         #endregion
 
         #region Update Temperature
-        public void UpdateTemp(float tileTemp, GameTime gameTime)
+        /// <summary>
+        /// Adjust the colonist's temperature based on the tile they are over and their lower comfort range
+        /// </summary>
+        /// <param name="tileTemp">temperature of the tile below the colonist</param>
+        public void UpdateTemp(float tileTemp)
         {
-            //Adjust the colonist's temperature based on the tile they are over
-            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTemperatureUpdate < 0f)
+            //If tile temperature is greater than the colonists temperature and greater than LowerComfortRange
+            //Increase the colonist's temperature by 2
+            //clamp the colonist's temperature with the tile's temperature as the max 
+            if (tileTemp > Temperature.Value && tileTemp > LowerComfortRange)
             {
-                if (tileTemp > CoreBodyTemperature)
-                {
-                    Temperature.Value = Temperature.Value + (tileTemp / 10);
-                    //Colonist's temperature should be able to be greater than the tile they are over
-                    Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                    //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
-                }
-                else
-                {
-                    Temperature.Value = Temperature.Value - 1;
-                    //Colonist's temperature should be able to be lower than the tile they are over
-                    Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                    //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
-                }
-
-                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+                Temperature.Value = MathHelper.Clamp(Temperature.Value + 2, Temperature.Min, tileTemp);
+            }
+            //If tile temperature is less than the colonists temperature and less than LowerComfortRange
+            //Decrease the colonist's temperature by 1
+            //clamp the colonist's temperature with the tile's temperature as the min
+            else if (tileTemp < Temperature.Value && tileTemp < LowerComfortRange)
+            {
+                Temperature.Value = MathHelper.Clamp(Temperature.Value - 1, tileTemp, Temperature.Max);
             }
         }
         #endregion

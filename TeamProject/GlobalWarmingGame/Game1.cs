@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using System.IO;
+using GlobalWarmingGame.Interactions;
 
 namespace GlobalWarmingGame
 {
@@ -36,7 +37,7 @@ namespace GlobalWarmingGame
         SpriteBatch spriteBatch;
 
         TileSet tileSet;
- 
+
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
@@ -59,7 +60,7 @@ namespace GlobalWarmingGame
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            
+
             Content.RootDirectory = "Content";
             gameState = GameState.mainmenu;
             SoundFactory.Loadsounds(Content);
@@ -149,7 +150,7 @@ namespace GlobalWarmingGame
                 tileSet = new TileSet(textureSet, new Vector2(32f));
 
                 GameObjectManager.Init(tileSet, seed, currentZone, false);
-                    
+
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
@@ -163,8 +164,8 @@ namespace GlobalWarmingGame
                 //All this code below is for testing and will eventually be replaced.
                 // Controller.LoadContent(Content);
 
-                
-               
+
+
                 logo = Content.Load<Texture2D>(@"logo");
 
                 MainMenu = new MainMenu(logo);
@@ -173,14 +174,14 @@ namespace GlobalWarmingGame
                 //Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
 
                 //GameObjectManager.Add(c1);
-                
+
                 ProcessMenuSelection();
 
                 /*
                 MainUI = new MainUI();
 
                 ProcessMenuSelection();
-                
+
 
                 string[] spawnables = new string[11];
                 spawnables[0] = "Colonist";
@@ -204,12 +205,12 @@ namespace GlobalWarmingGame
                 };
 
                  MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
-                
+
                 CollectiveInventory = new CollectiveInventory(MainUI);
                 */
 
             }
-            
+
         }
 
         protected override void UnloadContent()
@@ -240,38 +241,20 @@ namespace GlobalWarmingGame
 
             if (gameState == GameState.playing)
             {
-                
-                camera.Update(gameTime);
-                GameObjectManager.ZoneMap.Update(gameTime);
 
-                BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
-                UpdateColonistTemperatures(gameTime);
+                camera.Update(gameTime);
+
+                TemperatureManager.UpdateTemperature(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
-
-                UpdateColonistTemperatures(gameTime);
 
                 base.Update(gameTime);
             }
 
             previousKeyboardState = currentKeyboardState;
         }
-
-        #region Update Colonists Temperatures
-        void UpdateColonistTemperatures(GameTime gameTime)
-        {
-            //Adjust the temperatures of the colonists
-            foreach (Colonist colonist in GameObjectManager.Filter<Colonist>())
-            {
-                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
-
-                colonist.UpdateTemp(tileTemp, gameTime);
-                //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
-            }
-        }
-        #endregion
 
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
@@ -364,7 +347,7 @@ namespace GlobalWarmingGame
             }
 
             Controller.Draw(spriteBatch);
-            
+
 
             base.Draw(gameTime);
         }
@@ -523,4 +506,3 @@ namespace GlobalWarmingGame
 
     public enum GameState { mainmenu, playing, paused }
 }
- 

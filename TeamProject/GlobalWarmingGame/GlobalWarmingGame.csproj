@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D2255AB6-74C7-4BAD-AE65-1A9026996D23}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GlobalWarmingGame</RootNamespace>
     <AssemblyName>GlobalWarmingGame</AssemblyName>
@@ -54,10 +54,7 @@
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
     <Compile Include="Interactions\Interactables\Environment\EnvironmentObject.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\Building.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\BuildingManager.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\HeatTower.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
     <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
@@ -79,13 +76,14 @@
     <Compile Include="Resources\ResourceTypeFactory.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="StaticSerializationInfo.cs" />
+    <Compile Include="Interactions\TemperatureManager.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="UI\Controller.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="Interactions\PassiveAnimal.cs" />
-    <Compile Include="Interactions\IHeatable.cs" />
+    <Compile Include="Interactions\IHeatSource.cs" />
     <Compile Include="UI\ButtonHandler.cs" />
     <Compile Include="UI\ItemElement.cs" />
     <Compile Include="UI\KeyboardInputHandler.cs" />

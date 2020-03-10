@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions
 {
-    interface IHeatable
+    interface IHeatSource
     {
         Temperature Temperature { get; set; }
         bool Heating { get; }
