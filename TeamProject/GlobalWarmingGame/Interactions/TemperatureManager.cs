@@ -3,10 +3,6 @@ using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions
 {
@@ -16,7 +12,7 @@ namespace GlobalWarmingGame.Interactions
     /// </summary>
     public static class TemperatureManager
     {
-        public static Temperature GlobalTemperature { get; set; } = new Temperature(-5);
+        public static Temperature GlobalTemperature { get; set; } = new Temperature(-2);
 
         private static float timeToColonistTemperatureUpdate = 0f;
         private static readonly float timeUntilColonistTemperatureUpdate = 2000f;
@@ -55,10 +51,10 @@ namespace GlobalWarmingGame.Interactions
             //Adjust the temperatures of the colonists
             foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
             {
-                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
+                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).Temperature.Value;
 
                 colonist.UpdateTemp(tileTemp);
-                Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " health: " + colonist.Health + " hunger: " + colonist.Hunger);
+                //Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health + " hunger: " + colonist.Hunger);
             }
         }
         #endregion
@@ -69,12 +65,14 @@ namespace GlobalWarmingGame.Interactions
         /// </summary>
         private static void UpdateBuildingTemperatures()
         {
-            foreach (IHeatable heatable in GameObjectManager.Filter<IHeatable>())
+            foreach (IHeatSource heatSource in GameObjectManager.Filter<IHeatSource>())
             {
-                float temperature = heatable.Temperature.Value;
-                Vector2 position = ((GameObject)heatable).Position;
-                Vector2 size = ((GameObject)heatable).Size;
-                bool heating = heatable.Heating; //Is the building currently producing heat
+                float temperature = heatSource.Temperature.Value;
+                Vector2 position = ((GameObject)heatSource).Position;
+                Vector2 size = ((GameObject)heatSource).Size;
+
+                //True if the building is currently producing heat
+                bool heating = heatSource.Heating; 
                 HeatBuildingArea(position, size, temperature, heating, GameObjectManager.ZoneMap);
             }
         }
@@ -85,22 +83,28 @@ namespace GlobalWarmingGame.Interactions
         /// <param name="position"></param>
         /// <param name="size"></param>
         /// <param name="temperature"></param>
-        /// <param name="heating"></param>
+        /// <param name="heating">True if the building is currently producing heat</param>
         /// <param name="tileMap"></param>
         public static void HeatBuildingArea(Vector2 position, Vector2 size, float temperature, bool heating, TileMap tileMap)
         {
             float tileWidth = tileMap.Tiles[0, 0].Size.X;
+
             int numberOfTilesX = (int)(size.X / tileWidth);
             int numberOfTilesY = (int)(size.Y / tileWidth);
+
+            //Heat up all the tiles occupied by the texture's space
+            //From bottom left of the texture
             for (int y = 0; y < numberOfTilesY; y++)
             {
                 for (int x = 0; x < numberOfTilesX; x++)
                 {
-                    Tile t = tileMap.GetTileAtPosition(new Vector2(position.X + x * tileWidth, position.Y - y * tileWidth));
+                    //Position is offset in regards to temperature tests with objects
+                    Tile t = tileMap.GetTileAtPosition(new Vector2(position.X - (size.X / 2.5f) + x * tileWidth,
+                                                                   position.Y + (size.Y / 2.5f) - y * tileWidth));
                     if (heating)
                     {
                         t.Heated = heating;
-                        t.temperature.SetTemp(temperature);
+                        t.Temperature.Value = temperature;
                     }
                 }
             }

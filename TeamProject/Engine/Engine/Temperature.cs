@@ -25,7 +25,7 @@ namespace Engine
             SetTemp(t);
         }
 
-        public void SetTemp(float temp)
+        private void SetTemp(float temp)
         {
             value = MathHelper.Clamp(temp, Min, Max);
             value = (float)Math.Round(value, 2);

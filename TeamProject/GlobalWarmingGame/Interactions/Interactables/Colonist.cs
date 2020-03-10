@@ -126,7 +126,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             MaxHealth = 100f;
             Health = MaxHealth;
 
-            Temperature.Value = 37;
             timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
             timeToFreezeCheck = timeUntillNextFreezeCheck;
 
@@ -214,7 +213,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         /// <summary>
         /// Is the colonist currently freezing to death?
         /// </summary>
-        /// <param name="gameTime"></param>
+        /// <param name="gameTime">game time</param>
         private void FreezeCheck(GameTime gameTime)
         {
             //Temperature affecting colonist's health
@@ -234,7 +233,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         /// <summary>
         /// Is the colonist currently starving?
         /// </summary>
-        /// <param name="gameTime"></param>
+        /// <param name="gameTime">game time</param>
         private void HungerCheck(GameTime gameTime)
         {
             timeUntillNextHungerCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -275,26 +274,24 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Update Temperature
         /// <summary>
-        /// Adjust the colonist's temperature based on the tile they are over
+        /// Adjust the colonist's temperature based on the tile they are over and their lower comfort range
         /// </summary>
-        /// <param name="tileTemp"></param>
+        /// <param name="tileTemp">temperature of the tile below the colonist</param>
         public void UpdateTemp(float tileTemp)
         {
-            //If tile temperature is greater than the colonists temperature
+            //If tile temperature is greater than the colonists temperature and greater than LowerComfortRange
+            //Increase the colonist's temperature by 2
             //clamp the colonist's temperature with the tile's temperature as the max 
-            //else clamp the colonist's temperature with the tile's temperature as the min
-            if (tileTemp > Temperature.Value && tileTemp > 0)
+            if (tileTemp > Temperature.Value && tileTemp > LowerComfortRange)
             {
-                //Gain 1/10th of the tiles temperature.
-                Temperature.Value = Temperature.Value + (tileTemp / 10);
-                //Colonist's temperature should be able to be greater than the tile they are over
-                Temperature.Value = MathHelper.Clamp(Temperature.Value, Temperature.Min, tileTemp);
+                Temperature.Value = MathHelper.Clamp(Temperature.Value + 2, Temperature.Min, tileTemp);
             }
-            else if (tileTemp < Temperature.Value && tileTemp <= 0)
+            //If tile temperature is less than the colonists temperature and less than LowerComfortRange
+            //Decrease the colonist's temperature by 1
+            //clamp the colonist's temperature with the tile's temperature as the min
+            else if (tileTemp < Temperature.Value && tileTemp < LowerComfortRange)
             {
-                Temperature.Value = Temperature.Value - 1;
-                //Colonist's temperature should be able to be lower than the tile they are over
-                Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, Temperature.Max);
+                Temperature.Value = MathHelper.Clamp(Temperature.Value - 1, tileTemp, Temperature.Max);
             }
         }
         #endregion

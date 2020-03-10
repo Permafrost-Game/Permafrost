@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class Tower : Sprite, IInteractable, IReconstructable, IHeatable
+    public class Tower : Sprite, IInteractable, IReconstructable, IHeatSource
     {
         public Temperature Temperature { get; set; } = new Temperature(100);
         public bool Heating { get; private set; }
