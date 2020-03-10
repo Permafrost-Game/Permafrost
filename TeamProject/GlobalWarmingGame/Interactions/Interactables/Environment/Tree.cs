@@ -48,13 +48,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         }
 
-        public Tree(Vector2 position, TextureTypes textureTypeTree, TextureTypes textureTypeStump, bool choppable = true) : base
+        public Tree(Vector2 position, TextureTypes textureTypeTree = TextureTypes.Tree, TextureTypes textureTypeStump = TextureTypes.TreeStump, bool choppable = true) : base
         (
             position: position,
-            size: new Vector2(Textures.Map[textureTypeTree].Width, Textures.Map[textureTypeTree].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.Map[textureTypeTree].Width / 2f, Textures.Map[textureTypeTree].Height / 2f),
-            tag: "Tree",
             texture: Textures.Map[textureTypeTree]
         )
         {

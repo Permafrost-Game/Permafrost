@@ -26,13 +26,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         }
 
-        public SmallStoneNode(Vector2 position, TextureTypes textureType) : base
+        public SmallStoneNode(Vector2 position, TextureTypes textureType = TextureTypes.SmallStoneNode) : base
         (
             position: position,
-            size: new Vector2(Textures.Map[textureType].Width, Textures.Map[textureType].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.Map[textureType].Width / 2f, Textures.Map[textureType].Height / 2f),
-            tag: "StoneNode",
             texture: Textures.Map[textureType]
         )
         {

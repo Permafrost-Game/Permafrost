@@ -44,7 +44,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
             origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            tag: tag,
             depth: 0f,
             textureSet: textureSet,
             frameTime: 100f

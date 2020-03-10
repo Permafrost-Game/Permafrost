@@ -13,21 +13,15 @@ namespace Engine
         public Vector2 Origin { get; protected set; }
         public string Tag { get; protected set; }
 
-        public GameObject(Vector2 position, Vector2 size, float rotation, Vector2 Origin, string tag)
+        public GameObject(Vector2 position, Vector2 size, float rotation, Vector2 Origin)
         {
             this.Position = position;
             this.Size = size;
             this.Rotation = rotation;
             this.Origin = Origin;
-            this.Tag = tag;
         }
 
-        public GameObject(Vector2 position, Vector2 size, string tag) : this(position, size, 0, new Vector2(0), tag)
-        {
-
-        }
-
-        public GameObject(Vector2 position, Vector2 size) : this(position, size, null)
+        public GameObject(Vector2 position, Vector2 size) : this(position, size, 0, new Vector2(0))
         {
 
         }

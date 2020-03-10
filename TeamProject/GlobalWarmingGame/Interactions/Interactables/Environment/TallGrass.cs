@@ -28,13 +28,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        public TallGrass(Vector2 position, TextureTypes textureType) : base
+        public TallGrass(Vector2 position, TextureTypes textureType = TextureTypes.TallGrass) : base
         (
             position: position,
-            size: new Vector2(Textures.Map[textureType].Width, Textures.Map[textureType].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.Map[textureType].Width / 2f, Textures.Map[textureType].Height / 2f),
-            tag: "TallGrass",
             texture: Textures.Map[textureType]
         )
         {

@@ -35,7 +35,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             size: new Vector2(Textures.Map[textureType].Width, Textures.Map[textureType].Height),
             rotation: 0f,
             origin: new Vector2(Textures.Map[textureType].Width / 2f, Textures.Map[textureType].Height / 2f),
-            tag: "CoalNode",
             texture: Textures.Map[textureType]
         )
         {

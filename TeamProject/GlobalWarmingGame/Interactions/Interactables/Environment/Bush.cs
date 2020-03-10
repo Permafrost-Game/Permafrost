@@ -54,7 +54,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         }
 
-        public Bush(Vector2 position, TextureTypes textureTypeHarvestable, TextureTypes textureTypeHarvested, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
+        public Bush(Vector2 position, TextureTypes textureTypeHarvestable = TextureTypes.BushH, TextureTypes textureTypeHarvested = TextureTypes.BushN, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
         (
             position: position,
             texture: Textures.Map[textureTypeHarvestable]

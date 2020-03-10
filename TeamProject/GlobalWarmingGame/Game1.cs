@@ -25,7 +25,6 @@ namespace GlobalWarmingGame
     {
         const string SettingsPath = @"Content/settings.json";
 
-        // private bool isFullScreen = false;
         private float resolutionScale = 0.75f;
         private int seed = new System.Random().Next();
         private Vector2 currentZone = Vector2.Zero;

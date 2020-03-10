@@ -33,12 +33,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         [PFSerializable]
         public bool captured;
 
-        public Tower() : base(Vector2.Zero, Vector2.Zero)
-        {
+        public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        }
-
-        public Tower(Vector2 position, TextureTypes capturedTextureType, TextureTypes hostileTextureType, bool captured = false) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]

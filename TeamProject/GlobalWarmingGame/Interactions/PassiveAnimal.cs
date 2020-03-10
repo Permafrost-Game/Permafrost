@@ -27,7 +27,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
             origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            tag: tag,
             depth: 0.9f,
             textureSet: textureSet,
             frameTime: frameTime

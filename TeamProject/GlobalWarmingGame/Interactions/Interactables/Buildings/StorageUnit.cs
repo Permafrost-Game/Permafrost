@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class StorageUnit : Sprite, IInteractable, IBuildable
+    class StorageUnit : Sprite, IInteractable, IBuildable, IStorage
     {
         public List<ResourceItem> CraftingCosts { get; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4),
                                                                                       new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood),  8)};
@@ -22,12 +22,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public ResourceItem ResourceItem { get; private set; }
 
-        public StorageUnit(Vector2 position) : base
+        public Inventory Inventory { get; }
+
+        public StorageUnit(Vector2 position, TextureTypes textureType = TextureTypes.StorageUnit) : base
         (
             position: position,
-            texture: Textures.Map[TextureTypes.StorageUnit]
+            texture: Textures.Map[textureType]
         )
         {
+            Inventory = new Inventory();
             InstructionTypes = CreateSetResourceInstructionTypes();
         }
 

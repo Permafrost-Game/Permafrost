@@ -171,23 +171,23 @@ namespace GlobalWarmingGame.Interactions.Interactables
             switch(interactable)
             {
                 case Interactable.Colonist:
-                    return new Colonist(position, TextureSetTypes.colonist);
+                    return new Colonist(position);
                 case Interactable.Farm:
                     return new Farm(position, textures["farm"]);
                 case Interactable.Rabbit:
-                    return new Rabbit(position, TextureSetTypes.rabbit);
+                    return new Rabbit(position);
                 case Interactable.Bush:
-                    return new Bush(position, TextureTypes.BushH, TextureTypes.BushN);
+                    return new Bush(position);
                 case Interactable.Tree:
-                    return new Tree(position, TextureTypes.Tree, TextureTypes.TreeStump);
+                    return new Tree(position);
                 case Interactable.WorkBench:
                     return new WorkBench(position, textures["workBench"]);
                 case Interactable.StoneNodeSmall:
-                    return new SmallStoneNode(position, TextureTypes.SmallStoneNode);
+                    return new SmallStoneNode(position);
                 case Interactable.StoneNodeBig:
-                    return new BigStoneNode(position, TextureTypes.BigStoneNode);
+                    return new BigStoneNode(position);
                 case Interactable.TallGrass:
-                    return new TallGrass(position, TextureTypes.TallGrass);
+                    return new TallGrass(position);
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
                 case Interactable.Robot:
@@ -195,7 +195,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Bear:
                     return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
                 case Interactable.Tower:
-                    return new Tower(position, TextureTypes.TowerC, TextureTypes.TowerH);
+                    return new Tower(position);
                 case Interactable.Storage:
                     return new StorageUnit(position);
                 default:

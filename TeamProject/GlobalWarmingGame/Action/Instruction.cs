@@ -3,7 +3,6 @@ using GlobalWarmingGame.Interactions;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using static GlobalWarmingGame.Action.InstructionType;
 
 namespace GlobalWarmingGame.Action
 {
