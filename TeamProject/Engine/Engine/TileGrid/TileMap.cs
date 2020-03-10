@@ -86,12 +86,12 @@ namespace Engine.TileGrid
                         sumTemperature += t.Temperature.Value;
                     }
 
-                    sumTemperature /= adjacentTiles.Count;
+                    float averageTemperature = sumTemperature / adjacentTiles.Count;
 
                     //Adjust the temperature based on the global temperature
                     //Formula decreases temperature when sumTemperature > globalTemperature
                     //and increases the temperature when sumTemperature < globalTemperature
-                    tile.Temperature.Value = sumTemperature + ((globalTemperature - sumTemperature) / 256);
+                    tile.Temperature.Value = averageTemperature + ((globalTemperature - averageTemperature) / 128);
 
                 }
                 timeToTemperatureUpdate = timeUntilTemperatureUpdate;
