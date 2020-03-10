@@ -24,10 +24,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public CampFire(Vector2 position, Texture2D[][] textureSet) : base
         (
             position: position,
-            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
-            rotation: 0f,
-            origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            tag: "CampFire",
             textureSet: textureSet,
             frameTime: 50f
         )

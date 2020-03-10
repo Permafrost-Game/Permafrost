@@ -280,6 +280,7 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <param name="tag"></param>
         /// <returns>GameObjects with the specified tag</returns>
+        [Obsolete]
         public static List<GameObject> GetObjectsByTag(string tag)
         {
             List<GameObject> go = new List<GameObject>();

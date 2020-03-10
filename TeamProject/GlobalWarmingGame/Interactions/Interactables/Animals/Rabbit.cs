@@ -45,8 +45,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         public void Hunt(Instruction instruction)
         {
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
-            GameObjectManager.Remove(this);
+            Dispose();
             SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
+        }
+
+        private void Dispose()
+        {
+            InstructionTypes.Clear();
+            GameObjectManager.Remove(this);
         }
 
         public object Reconstruct()

@@ -45,6 +45,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Action\InvalidInstruction.cs" />
     <Compile Include="Action\IInstructionFollower.cs" />
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Interactions\IInteractable.cs" />
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatSource.cs" />
-    <Compile Include="Interactions\PassiveMovingInteractable.cs" />
     <Compile Include="UI\ButtonHandler.cs" />
     <Compile Include="UI\ItemElement.cs" />
     <Compile Include="UI\KeyboardInputHandler.cs" />

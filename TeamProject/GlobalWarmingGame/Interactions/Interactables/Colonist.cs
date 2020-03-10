@@ -14,6 +14,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
     {
+        private const float COLONIST_FRAME_TIME = 100f;
+        private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
+
         #region Instruction
 
         public List<InstructionType> InstructionTypes { get; }
@@ -93,21 +96,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public float Speed { get; set; }
         #endregion
 
-        public Colonist() : this(Vector2.Zero, TextureSetTypes.colonist)
-        {
+        public Colonist() : this(
+            position: Vector2.Zero,
+            textureSetType: TextureSetTypes.colonist) { }
 
-        }
-
-        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = null, int capacity = 100) : base
+        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
         (
             position: position,
-            size: new Vector2(Textures.MapSet[textureSetType][0][0].Width, Textures.MapSet[textureSetType][0][0].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.MapSet[textureSetType][0][0].Width / 2, Textures.MapSet[textureSetType][0][0].Height / 2),
-            tag: "Colonist",
-            depth: 0f,
             textureSet: Textures.MapSet[textureSetType],
-            frameTime: 100f
+            frameTime: COLONIST_FRAME_TIME
         )
         {
             textureSetID = (int)textureSetType;
@@ -156,12 +153,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     )
             {
                 Instruction currentInstruction = instructions.Peek();
-                currentInstruction.Start();
-                if (currentInstruction.Type.TimeCost > 0)
+                try
                 {
-                    TextureGroupIndex = 1;
-                    isAnimated = true;
+                    currentInstruction.Start();
                 }
+                catch (InvalidInstruction e)
+                {
+                    OnInstructionComplete(e.instruction);
+                }
+                
             }
         }
 
@@ -169,7 +169,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void Move(GameTime gameTime)
         {
             Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-            depth = (Position.Y + 0.5f + (Position.X + 0.5f / 2)) / 48000f; // "+ 0.5f" stops Z Fighting
+            UpdateDepth(0.5f);
         }
 
 
@@ -298,9 +298,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public void AddInstruction(Instruction instruction, int priority)
         {
+            instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
             instructions.Enqueue(instruction);
 
+        }
+
+        private void OnInstructionStart(Instruction instruction)
+        {
+            if (instructions.Peek() == instruction)
+            {
+                if (instruction.Type.TimeCost > 0)
+                {
+                    TextureGroupIndex = 1;
+                    isAnimated = true;
+                }
+            }
+            else
+            {
+                throw new Exception("Async instruction started");
+            }
         }
 
         private void OnInstructionComplete(Instruction instruction)
