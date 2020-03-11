@@ -65,8 +65,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
             if (Choppable)
             {
-                chop = new InstructionType("chop", "Chop", "Chop for wood", 0,
-                           new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1) }, onStart: StartChop, onComplete: EndChop, timeCost: 3500f);
+                chop = new InstructionType(
+                    id: "chop",
+                    name: "Chop",
+                    description: "Chop for wood",
+                    requiredResources: new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1) },
+                    onStart: StartChop,
+                    onComplete: EndChop,
+                    timeCost: 3500f
+                    );
                 InstructionTypes.Add(chop);
             }
         }

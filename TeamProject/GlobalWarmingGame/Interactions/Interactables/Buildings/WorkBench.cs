@@ -83,14 +83,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("craftaxe", "Axe", "Craft axe", 0, AxeCraftingCosts, onComplete: CraftAxe),
-                new InstructionType("crafthoe", "Hoe", "Craft hoe", 0, HoeCraftingCosts, onComplete: CraftHoe),
-                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", 0, PickaxeCosts, onComplete: CraftPickaxe),
-                new InstructionType("craftbackpack", "Backpack", "Craft backpack", 0, BackpackCraftingCosts, onComplete: CraftBackPack),
-                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", 0, BasicRifleCraftingCosts, onComplete: CraftBasicRifle),
-                new InstructionType("craftbow", "Bow", "Craft bow", 0, BowCraftingCosts, onComplete: CraftBow),
-                new InstructionType("craftcloth", "Cloth", "Craft cloth", 0, ClothCraftingCosts, onComplete: CraftCloth),
-                new InstructionType("craftcoat", "Coat", "Craft coat", 0, CoatCraftingCosts, onComplete: CraftCoat)
+                new InstructionType("craftaxe", "Axe", "Craft axe", 0, requiredResources: AxeCraftingCosts, onComplete: CraftAxe),
+                new InstructionType("crafthoe", "Hoe", "Craft hoe", 0, requiredResources: HoeCraftingCosts, onComplete: CraftHoe),
+                new InstructionType("craftpickaxe", "Pickaxe", "Craft pickaxe", 0, requiredResources: PickaxeCosts, onComplete: CraftPickaxe),
+                new InstructionType("craftbackpack", "Backpack", "Craft backpack", 0, requiredResources: BackpackCraftingCosts, onComplete: CraftBackPack),
+                new InstructionType("craftbasicrifle", "Basic Rifle", "Craft basic rifle", 0, requiredResources: BasicRifleCraftingCosts, onComplete: CraftBasicRifle),
+                new InstructionType("craftbow", "Bow", "Craft bow", 0, requiredResources: BowCraftingCosts, onComplete: CraftBow),
+                new InstructionType("craftcloth", "Cloth", "Craft cloth", 0, requiredResources: ClothCraftingCosts, onComplete: CraftCloth),
+                new InstructionType("craftcoat", "Coat", "Craft coat", 0, requiredResources: CoatCraftingCosts, onComplete: CraftCoat)
             };
         }
 

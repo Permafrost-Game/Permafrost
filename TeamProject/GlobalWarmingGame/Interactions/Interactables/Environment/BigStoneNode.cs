@@ -21,8 +21,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine stone", 0,
-                                       new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Pickaxe), 1)}, timeCost: 3000f, onStart: StartMine, onComplete: EndMine)
+                new InstructionType(
+                    id: "mine",
+                    name: "Mine",
+                    description: "Mine stone",
+                    requiredResources: new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Pickaxe), 1)},
+                    timeCost: 3000f,
+                    onStart: StartMine,
+                    onComplete: EndMine
+                    )
             };
         }
 

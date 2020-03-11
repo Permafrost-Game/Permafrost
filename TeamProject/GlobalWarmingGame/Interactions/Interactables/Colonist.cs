@@ -2,6 +2,7 @@
 using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
@@ -200,11 +201,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                if (Goals.Count == 0)
-                {
-                    Goals.Enqueue(instructions.Peek().PassiveMember.Position);
-                }
                 instructions.Peek().Update(gameTime);
+                if (instructions.Count > 0)
+                {
+                    if (Goals.Count == 0)
+                    {
+                        Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                    }
+                }
             }
 
 
@@ -293,8 +297,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
         #endregion
 
-        public void AddInstruction(Instruction instruction, int priority)
+        public void AddInstruction(Instruction instruction, int priority = 0)
         {
+            //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
             instructions.Enqueue(instruction);
@@ -317,13 +322,29 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+        private void CheckInventoryDump()
+        {
+            foreach(StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
+            {
+                if(storageUnit.ResourceItem != null && inventory.ContainsType(storageUnit.ResourceItem.ResourceType.ResourceID))
+                {
+                    AddInstruction(new Instruction(
+                        type: storageUnit.StoreInstruction,
+                        activeMember: this,
+                        passiveMember: storageUnit
+                        )
+                    );
+                }
+            }
+        }
+
         private void OnInstructionComplete(Instruction instruction)
         {
             if (instructions.Peek() == instruction)
             {
                 instructions.Dequeue();
-
                 TextureGroupIndex = 0;
+                CheckInventoryDump();
             }
             else
             {

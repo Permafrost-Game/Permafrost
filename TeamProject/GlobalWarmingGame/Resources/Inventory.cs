@@ -43,7 +43,7 @@ namespace GlobalWarmingGame.ResourceItems
         /// <returns>whether the item can be added</returns>
         public bool AddItem(ResourceItem item)
         {
-            if (CurrentLoad + item.Weight < Capacity)
+            if (CanAddItem(item))
             {
                 AddItemUnchecked(item);
                 return true;
@@ -51,6 +51,8 @@ namespace GlobalWarmingGame.ResourceItems
 
             return false;
         }
+
+        public bool CanAddItem(ResourceItem item) => CurrentLoad + item.Weight < Capacity;
 
         /// <summary>
         /// Adds <paramref name="item"/> to <see cref="Inventory.Resources"/> without checking load
@@ -64,9 +66,12 @@ namespace GlobalWarmingGame.ResourceItems
                 Resources[item.ResourceType.ResourceID].Weight += item.Weight;
                 
             }
-            else
+            else if(item.Weight > 0)
             {
                 Resources.Add(item.ResourceType.ResourceID, item.Clone());
+            } else
+            {
+                return;
             }
                 
             CurrentLoad += item.Weight;
@@ -111,6 +116,8 @@ namespace GlobalWarmingGame.ResourceItems
             return Resources.ContainsKey(resourceItem.ResourceType.ResourceID) ?
                 Resources[resourceItem.ResourceType.ResourceID].Weight >= resourceItem.Weight : false;
         }
+
+        public bool ContainsType(Resource resourceID) => Resources.ContainsKey(resourceID);
 
         /// <summary>
         /// Checks if all of <paramref name="resourceItem"/> are in the inventory.

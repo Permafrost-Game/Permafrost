@@ -2,7 +2,7 @@
 
 namespace GlobalWarmingGame.Resources
 {
-    interface IStorage
+    public interface IStorage
     {
         Inventory Inventory { get; }
     }

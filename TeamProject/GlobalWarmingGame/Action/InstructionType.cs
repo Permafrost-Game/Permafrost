@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace GlobalWarmingGame.Action
 {
     public delegate void InstructionEvent(Instruction instruction);
+    public delegate bool InstructionCondition(Instruction instruction);
 
     /// <summary>
     /// This class descrives a class of Instruction
@@ -15,10 +16,12 @@ namespace GlobalWarmingGame.Action
         public string Description { get; }
         public int Priority { get; }
         public float TimeCost { get; }
+        public bool RequireActiveMember { get; }
+        public bool IsAvailable { get; set; }
 
         public readonly InstructionEvent onStart;
         public readonly InstructionEvent onComplete;
-
+        public readonly InstructionCondition checkValidity;
 
         public List<ResourceItem> RequiredResources { get; }
 
@@ -30,16 +33,18 @@ namespace GlobalWarmingGame.Action
         /// <param name="timeCost">The time in ms that <see cref="Instruction"/>s of this type take to execute</param>
         /// <param name="onStart">The method that is called when the instruction has started</param>
         /// <param name="onComplete">The method that is called when the instruction has finnished</param>
-        public InstructionType(string id, string name, string description, int priority = 0, List<ResourceItem> requiredResources = null, float timeCost = 0, InstructionEvent onStart = default, InstructionEvent onComplete = default)
+        public InstructionType(string id, string name, string description, int priority = 0, bool requireActiveMember = true, List<ResourceItem> requiredResources = null, float timeCost = 0, InstructionEvent onStart = default, InstructionEvent onComplete = default, InstructionCondition checkValidity = default)
         {
             this.ID = id;
             this.Name = name;
             this.Description = description;
             this.Priority = priority;
+            this.RequireActiveMember = requireActiveMember;
             this.RequiredResources = requiredResources;
             this.TimeCost = timeCost;
             this.onStart = onStart;
             this.onComplete = onComplete;
+            this.checkValidity = checkValidity;
         }
         
     }

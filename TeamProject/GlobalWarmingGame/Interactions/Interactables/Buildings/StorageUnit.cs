@@ -1,8 +1,5 @@
-﻿
-using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
@@ -13,16 +10,16 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class StorageUnit : Sprite, IInteractable, IBuildable, IStorage
+    class StorageUnit : Sprite, IInteractable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4),
                                                                                       new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood),  8)};
 
-        public List<InstructionType> InstructionTypes { get; }
+        public List<InstructionType> InstructionTypes { get; private set; }
 
         public ResourceItem ResourceItem { get; private set; }
 
-        public Inventory Inventory { get; }
+        public InstructionType StoreInstruction { get; private set; }
 
         public StorageUnit(Vector2 position, TextureTypes textureType = TextureTypes.StorageUnit) : base
         (
@@ -30,8 +27,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             texture: Textures.Map[textureType]
         )
         {
-            Inventory = new Inventory();
-            InstructionTypes = CreateSetResourceInstructionTypes();
+            ResetState();
         }
 
         private List<InstructionType> CreateSetResourceInstructionTypes()
@@ -41,7 +37,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     id: r.ToString(),
                     name: $"Set {r.ToString()}",
                     description: $"Set {r.ToString()} as the active resource",
-                    requiredResources: new List<ResourceItem> { new ResourceItem(ResourceTypeFactory.GetResource(r)) },
+                    //requiredResources: new List<ResourceItem> { new ResourceItem(ResourceTypeFactory.GetResource(r)) },
                     onComplete: SetResource
                 )).ToList();
         }
@@ -49,9 +45,61 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void SetResource(Instruction instruction)
         {
-            if(instruction.Type.RequiredResources.Count != 1) throw new Exception($"{this.GetType().ToString()} expected RequiredResources.Count to be 1, but was {instruction.Type.RequiredResources.Count}");
-            ResourceItem = instruction.Type.RequiredResources[0];
+            //if(instruction.Type.RequiredResources.Count != 1) throw new Exception($"{this.GetType().ToString()} expected RequiredResources.Count to be 1, but was {instruction.Type.RequiredResources.Count}");
+            //ResourceItem = instruction.Type.RequiredResources[0];
+            Resource r = (Resource) Enum.Parse(typeof(Resource), instruction.Type.ID);
+            ResourceItem = new ResourceItem(ResourceTypeFactory.GetResource(r));
             InstructionTypes.Clear();
+
+            StoreInstruction = new InstructionType(
+                            id: "storeItems",
+                            name: $"Store {ResourceItem.ResourceType.displayName}",
+                            description: "",
+                            requiredResources: new List<ResourceItem> { new ResourceItem(ResourceTypeFactory.GetResource(ResourceItem.ResourceType.ResourceID), 1) },
+                            onStart: StoreItem
+                            );
+
+            InstructionTypes.Add(new InstructionType(
+                            id: "takeItems",
+                            name: $"Take All {ResourceItem.ResourceType.displayName}",
+                            description: "",
+                            onStart: TakeItems
+                            )
+                );
+        }
+
+        private void TakeItems(Instruction instruction)
+        {
+            Inventory inventory = instruction.ActiveMember.Inventory;
+            if (inventory.AddItem(ResourceItem))
+            {
+                ResetState();
+            }
+           
+        }
+        private void ResetState()
+        {
+            this.ResourceItem = null;
+            InstructionTypes = CreateSetResourceInstructionTypes();
+        }
+
+        private static void StoreItem(Instruction instruction)
+        {
+            StorageUnit storage = (StorageUnit)instruction.PassiveMember;
+
+            if(storage.ResourceItem != null)
+            {
+                Inventory inventory = instruction.ActiveMember.Inventory;
+                Resource resourceType = storage.ResourceItem.ResourceType.ResourceID;
+
+                if (inventory.Resources.ContainsKey(resourceType))
+                {
+                    ResourceItem item = inventory.Resources[resourceType];
+                    storage.ResourceItem.Weight += item.Weight;
+                    inventory.RemoveItem(item);
+                }
+            }
+            
         }
 
         public void Build()

@@ -52,6 +52,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             growing = true;
         }
 
+
         public void Update(GameTime gameTime)
         {
             if (growing == true)
