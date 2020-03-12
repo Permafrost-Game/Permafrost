@@ -18,8 +18,8 @@ namespace GlobalWarmingGame.UI
     internal static class View
     {
 
-        private static readonly Panel topPanel;
-        private static readonly Panel bottomPanel;
+        private static Panel topPanel;
+        private static Panel bottomPanel;
         private static Panel menu;
         private static readonly Dictionary<int, Panel> inventories;
         private static readonly Dictionary<int, Icon> inventoryButtons;
@@ -34,6 +34,19 @@ namespace GlobalWarmingGame.UI
             inventories = new Dictionary<int, Panel>();
             inventoryButtons = new Dictionary<int, Icon>();
 
+
+
+            //inventories = PrepareInventoryMenu();
+
+            UserInterface.Active.AddEntity(bottomPanel);
+            
+
+
+        }
+
+        internal static void Initialize()
+        {
+            //UserInterface.Initialize(content, "hd");
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
             {
@@ -49,18 +62,7 @@ namespace GlobalWarmingGame.UI
                 Opacity = 192,
                 Visible = true,
             };
-
-            //inventories = PrepareInventoryMenu();
-
-            UserInterface.Active.AddEntity(bottomPanel);
             #endregion
-
-
-        }
-
-        internal static void Initialize(ContentManager content)
-        {
-            //UserInterface.Initialize(content, "hd");
         }
 
         internal static void Update(GameTime gameTime)

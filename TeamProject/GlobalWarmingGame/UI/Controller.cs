@@ -35,9 +35,15 @@ namespace GlobalWarmingGame.UI
 
         public static void LoadContent(ContentManager content)
         {
-            View.Initialize(content);
+            
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
 
+           // AddDropDowns();
+        }
+
+        public static void Initialise()
+        {
+            View.Initialize();
             AddDropDowns();
         }
 

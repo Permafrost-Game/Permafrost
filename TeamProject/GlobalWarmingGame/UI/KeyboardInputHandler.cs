@@ -21,15 +21,15 @@ namespace GlobalWarmingGame.UI
             this.graphics = graphics;
         }
 
-        public void Update(GameTime gameTime, GameState gameState)
+        public void Update(GameTime gameTime, ref GameState gameState)
         {
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
-            CheckInput(gameState);
+            CheckInput(ref gameState);
         }
 
-        private void CheckInput(GameState gameState)
+        private void CheckInput(ref GameState gameState)
         {
             if (CheckKeyPress(Keys.F11))
                 graphics.ToggleFullScreen();
@@ -52,6 +52,14 @@ namespace GlobalWarmingGame.UI
                     GameObjectManager.MoveZone(new Vector2(1, 0));
                 else if (CheckKeyPress(Keys.J))
                     GameObjectManager.MoveZone(new Vector2(-1, 0));
+            }else if(gameState == GameState.intro)
+            {
+                if (CheckKeyPress(Keys.Escape))
+                {
+                    CutSceneFactory.StopVideo();
+                    Controller.Initialise();
+                    gameState = GameState.playing;
+                }
             }
 
             //else if (CheckKeyPress(Keys.F5))
