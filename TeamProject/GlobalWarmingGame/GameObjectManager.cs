@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Drawing;
 using Engine.PathFinding;
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
@@ -39,12 +40,15 @@ namespace GlobalWarmingGame
 
         public static TileMap ZoneMap { get; set; }
 
+        public static List<Tile> GreyTiles { get; private set; }
+
         static GameObjectManager()
         {
             gameObjects = new List<GameObject>();
             Updatables = new List<IUpdatable>();
             Drawables = new List<IDrawable>();
             Interactables = new List<IInteractable>();
+            GreyTiles = new List<Tile>();
         }
 
         public static void Init(TileSet ts, int worldSeed, Vector2 currentZone, bool isSerialized = true)
@@ -61,11 +65,6 @@ namespace GlobalWarmingGame
             zonePos = currentZone;
 
             SetZone(zonePos);
-
-            //private void Trim DoSomething()
-
-            //EnvironmentObject environmentObject= new EnvironmentObject(new Vector2(1750, 1750), TextureTypes.workBench);
-            //environmentObject.InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
         }
 
         public static string ZoneFileName()
@@ -93,7 +92,6 @@ namespace GlobalWarmingGame
 
         private static TileMap GenerateMap(Vector2 pos)
         {
-            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
             return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
@@ -159,6 +157,29 @@ namespace GlobalWarmingGame
 
                     SaveZone();
                 }
+            }
+
+            GreyTiles.Clear();
+
+            Vector2[] offsets =
+            {
+                new Vector2(-1, 0), // left
+                new Vector2(1, 0), // right
+                new Vector2(0, -1), // up
+                new Vector2(0, 1), // down
+
+                new Vector2(1, -1), // top right
+                new Vector2(-1, -1), // top left
+                new Vector2(1, 1), // top right
+                new Vector2(-1, 1) // top left
+            };
+
+            foreach (Vector2 offset in offsets)
+            {
+                TileMap greyTileMap = GenerateMap(zonePos + offset);
+
+                foreach (Tile tile in greyTileMap.Tiles)
+                    GreyTiles.Add(new Tile(tile.texture, tile.Position + ((offset * 100) * tile.Size), tile.Size, false, 0f));
             }
         }
 

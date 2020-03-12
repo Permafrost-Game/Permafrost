@@ -303,6 +303,9 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
+                foreach (Tile tile in GameObjectManager.GreyTiles)
+                    tile.DrawWithTint(spriteBatch, Color.Gray);
+
                 GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                 spriteBatch.End();
