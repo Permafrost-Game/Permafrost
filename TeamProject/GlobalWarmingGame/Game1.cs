@@ -228,7 +228,7 @@ namespace GlobalWarmingGame
                 */
 
             }
-            GlobalCombatDetector.Initialize();
+            
         }
 
         protected override void UnloadContent()

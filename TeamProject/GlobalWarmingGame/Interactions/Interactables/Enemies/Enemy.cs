@@ -12,289 +12,236 @@ using System.Linq;
 namespace GlobalWarmingGame.Interactions.Enemies
 {
     
-   public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
-    {
+public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
+{
         
-        public Colonist target=null;
-        public Colonist targetInRange=null;
-        Vector2 fakeLeftXcoordinate;
-        Vector2 fakeRightXcoordinate;
-        public float AttackPower { get; set; }
-        public float Health { get; set; }
-        public float attackRange { get; set; }
-        public string enemyTag { get; set; }
-        private double attackSpeed { get; set; }
-      
+    public Colonist target=null; //target is anything within aggro range
+    public Colonist targetInRange=null; //targetInRange is anything in attacking range
 
-        public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
-        public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
-        public Queue<Vector2> Path { get; set; }  = new Queue<Vector2>();
-        public float Speed { get; set; }
+    //declaring stats variables
+    public float AttackPower { get; set; }
+    public float Health { get; set; }
+    public float attackRange { get; set; }
+    public string enemyTag { get; set; }
+    private double attackSpeed { get; set; }
+    public float Speed { get; set; }
+    public double aggroRange = 200; // could be moved down(for now all enemies aggro at the same distance)
 
+    //initializing variables for instructions(right clicking an enemy allows you to attack it)
+    public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
+    public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
+    public Queue<Vector2> Path { get; set; }  = new Queue<Vector2>();
         
-        public Boolean attacking=false;
-    
-        public bool isInCombat=false;
- 
-        private double EnemytimeToAttack;
-        public double aggroRange=200;
-        public bool targetToTheLeftBefore;
-        public bool targetToTheLeftAfter;
-        public bool flip;
-        RandomAI ai = new RandomAI(70, 0);
+
+    //timing variables
+    public bool attacking=false;//determines if the enemy is attacking at the moment
+    public bool isInCombat=false;//shows if the enemy is fighting a colonist
+    private double timeToAttack; //a flag based on attack speed that tells the enemy to attack
+       
+    // variable for random movement of enemies
+    RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
-        public Enemy(String tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
-        (
-            position: position,
-            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
-            rotation: 0f,
-            origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            tag: tag,
-            depth: 0f,
-            textureSet: textureSet,
-            frameTime: 100f
+    public Enemy(string tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
+    (
+        //constructior setting game object details
+        position: position,
+        size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
+        rotation: 0f,
+        origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
+        tag: tag,
+        depth: 0f,
+        textureSet: textureSet,
+        frameTime: 100f
             
            
-        )
-        {
-            //generic stats:
-            Speed = 0.2f;
+    )
+    {
+
+        InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onComplete: EnemyAttacked));
+
+        //generic stats:
+        this.attackRange = aRange;
+        this.Health = maxHp;
+        this.AttackPower = aPower;
+        this.enemyTag = tag;
+        this.attackSpeed = aSpeed;
+        Speed = 0.2f;
+    }
+
+    private void EnemyAttacked(Instruction instruction)
+    {
+        //just makes the colonist to go to the enemy (fighting is automated anyway)
+    }
+
+    public void SetEnemyDead(){    
+        //remove the enemy from the game 
+        GameObjectManager.Remove(this); 
+    }
 
 
 
-            InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onComplete: EnemyAttacked));
-
+    private void Aggro() //this method makes the enemy attack colonists and roam if there isnt any
+    {
+        //using globalcombatdetector to determine nearby colonists
+        target = GlobalCombatDetector.ColonistInAggroRange(this);
+        targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
             
+        if (target == null)
+        {
+            isAnimated = true;
+            TextureGroupIndex = 1;
+            Speed = 0.05f;//decreasing the default speed when roaming (more natural)
+            Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
 
-         
-          
-            this.attackRange = aRange;
-            this.Health = maxHp;
-            this.AttackPower = aPower;
-            this.enemyTag = tag;
-            this.attackSpeed = aSpeed;
+        }
+        else
+        {
+                
+            Speed = 0.2f;//return to normal speed (seems like speeding up when moving from roaming to chasing)
+            ChaseColonist(target); //chase the found colonist
+        }
+    }
+
+    public abstract void AnimateAttack(); //absract method for animating attacks allows more customisation
        
+    //getters and setters
+    public double GetAttackSpeed() => attackSpeed;
+    public void SetAttacking(bool b) {
+        attacking = b;
+        if( b == false){
+            TextureGroupIndex = 1; //sets textures to normal when attacking is turned off
         }
+    }
+    public void SetInCombat(bool b)
+    {
+        isInCombat = b; 
+    }
 
-        private void EnemyAttacked(Instruction instruction)
+    protected abstract void ChaseColonist(Colonist colonist);//abstract to give more customisation
+
+    public virtual void EnemyAttack(GameTime gameTime) //virtual so it can be edited in subclasses
+    {
+        if (EnemyAttackSpeedControl(gameTime)) //checks if its allowed to attack yet
         {
-            Aggro();
+            this.SetAttacking(true); //flags for animation
+            this.AttackingSound(); //uses subclass implementation for attacking sound based on what enemy it is
+            targetInRange.Health = target.Health - this.AttackPower;
         }
-
-        public void SetEnemyDead(){
-            SoundFactory.PlaySong(Songs.Main);
-            GlobalCombatDetector.mainIsPlaying = true;
-            GlobalCombatDetector.combatSoundPlaying = false;
-            GameObjectManager.Remove(this);
-            
-        }
-
-
-
-        private void Aggro()
+        //quick check if target died after the last hit
+        if (targetInRange.Health <= 0 || this.Health <= 0)
         {
-
-
-            target = GlobalCombatDetector.ColonistInAggroRange(this);
-            targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
-            
-            if (target == null)
-            {
-                
-                Speed = 0.05f;
-                
-                Goals.Enqueue(this.Position + ai.RandomTranslation());
-
-            }
-            else
-            {
-                
-                Speed = 0.2f;
-                ChaseColonist(target);
-            }
-        }
-
-        public abstract void animateAttack();
-
-        public void setAttacking(Boolean b) {
-            attacking = b;
-            if( b == false){
-                TextureGroupIndex = 1;
-            }
-        }
-        public void setInCombat(Boolean b)
-        {
-            isInCombat = b;
-        }
-
-
-        protected abstract void ChaseColonist(Colonist colonist);
-        
-
-        //change random movement
-        public  void OnGoalComplete(Vector2 completedGoal){
-           //its ok
-        }
-
-        
-        public double getAttackSpeed() {
-            return attackSpeed;
-        }
-
-        public override void Update(GameTime gameTime){
-            Vector2 position1 = this.Position;
-            this.Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-            depth = (Position.X + (Position.Y / 2)) / 48000f;
-            Aggro();
-            
-            base.Update(gameTime);
-            
-            Vector2 delta = position1 - this.Position;
-
-            Math.Atan2(delta.X, delta.Y);
-            if (isInCombat)
-            {
-
-                if (targetInRange != null)
-                {
-
-                    SpriteEffect = targetInRange.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-
-                    targetToTheLeftBefore = targetToTheLeftAfter;
-                }
-
-                if (attacking)
-                {
-                    animateAttack();
-                }
-                else
-                {
-                
-                    isAnimated = true;
-                    TextureGroupIndex = 1;
-                   
-                }
-            }
-            else
-            {
-                
-                 if (delta.Equals(Vector2.Zero))
-                 {
-                     isAnimated = false;
-                 }
-                 else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
-                 {
-
-                     isAnimated = true;
-                     TextureGroupIndex = 1;
-                     SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                     
-                 }
-                 else
-                 {
-                     isAnimated = true;
-                     TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
-
-                 }
-            }
-       
-            if (targetInRange != null)
-            {
-               
-                PerformCombat(gameTime,targetInRange);
-            
-            }
-            else if(target!=null)
-            {
-                /*fakeLeftXcoordinate = new Vector2(target.Position.X -40,target.Position.Y);
-                fakeRightXcoordinate = new Vector2(target.Position.X + 40, target.Position.Y);
-                Goals.Clear();
-                if (this.Position.X < target.Position.X) { 
-                Goals.Enqueue(fakeLeftXcoordinate);
-                }
-                else
-                {
-                    Goals.Enqueue(fakeRightXcoordinate);
-                }*/
-                TextureGroupIndex = 1;
-                Goals.Clear();
-                ChaseColonist(target);
-            }
-        }
-
-        private void PerformCombat(GameTime gameTime,Colonist targetInRange)
-        {
-            this.setInCombat(false);
-
-                
-                if (targetInRange != null)
-                {
-
-                    if ( targetInRange.Health > 0 & this.Health > 0)
-                    {
-                        targetInRange.inCombat = true;
-                        this.setInCombat(true);
-                        EnemyAttack(gameTime);
-                    }
-                    else
-                    {
-                       
-                        this.setInCombat(false);
-                     }
-                }
-
-        }
-
-        public virtual void EnemyAttack(GameTime gameTime)
-        {
-            if (EnemyAttackSpeedControl(gameTime))
-            {
-                this.setAttacking(true);
-                this.attackingSound();
-                targetInRange.Health = target.Health - this.AttackPower;
-
-            }
-            
-
-            if (targetInRange.Health <= 0 || this.Health <= 0)
-            {
-              
-                
-                this.setAttacking(false);
-
-               // SoundFactory.PlaySong(Songs.Main);
-                GlobalCombatDetector.mainIsPlaying = true;
-                GlobalCombatDetector.combatSoundPlaying = false;
-
-                this.setInCombat(false);
-                targetInRange = null;
-                
-                    
-                
-            }
-        }
-
-        internal abstract void attackingSound();
-
-        private bool EnemyAttackSpeedControl(GameTime gameTime)
-        {
-            EnemytimeToAttack = EnemytimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (EnemytimeToAttack > 500)
-            {
-                this.setAttacking(false);
-            }
-
-            if (EnemytimeToAttack >= this.getAttackSpeed())
-            {
-                EnemytimeToAttack = 0;
-                return true;
-
-            }
-            return false;
+            this.SetAttacking(false);
+            this.SetInCombat(false);
 
         }
     }
+    private bool EnemyAttackSpeedControl(GameTime gameTime)
+    {
+        timeToAttack = timeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds; //counting how much time has passed since last attack
+
+        if (timeToAttack > 500) //if its been half a second already cancel the attacking 
+        {
+            this.SetAttacking(false);
+        }
+        if (timeToAttack >= this.GetAttackSpeed())
+        {
+            timeToAttack = 0; //reset the counter
+            return true; //attack speed is less or equal to the time passed since last attack, allow to hit again
+
+        }
+        return false;
+
+    }
+
+    public  void OnGoalComplete(Vector2 completedGoal){
+        //its ok
+    }
+
+    public override void Update(GameTime gameTime){
+        Vector2 position1 = this.Position; //getting the position before updating
+        this.Position += PathFindingHelper.CalculateNextMove(gameTime, this); //calculating next move
+        depth = (Position.X + (Position.Y / 2)) / 48000f; //depth
+            
+        base.Update(gameTime); //update the game
+
+        Aggro(); // enemy is agressive all the time
+
+        Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving
+        Math.Atan2(delta.X, delta.Y); // jedd's maths magic
+
+        if (isInCombat)
+        {
+            if (targetInRange != null)
+            {
+                SpriteEffect = targetInRange.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None; //face colonist
+            }
+            if (attacking)//flags if its time to attack
+            {
+                AnimateAttack();// animates attack
+            }
+            else
+            {
+                isAnimated = true;
+                TextureGroupIndex = 1; //setting bear to normal texture if its not attacking
+                   
+            }
+        }
+        else //if not in combat
+        {
+                if (delta.Equals(Vector2.Zero))
+                {
+                    isAnimated = false; //if the bear isnt going anywhere
+                }
+                else if (Math.Abs(delta.X) >= Math.Abs(delta.Y)) //some magic with jedd's code (it animates movement)
+                {
+                    isAnimated = true;
+                    TextureGroupIndex = 1;
+                    SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                }
+                else
+                {
+                    isAnimated = true;
+                    TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
+                }
+        }
+       
+        if (targetInRange != null)
+        {
+            PerformCombat(gameTime,targetInRange); // fight if theres anyone to fight      
+        }
+        else if(target!=null)
+        {
+            TextureGroupIndex = 1;
+            Goals.Clear();
+            ChaseColonist(target); //if there isnt anyone in attacking range then check if anyone is around and chase him
+        }
+    }
+
+    private void PerformCombat(GameTime gameTime,Colonist targetInRange)
+    {
+        this.SetInCombat(false);
+
+            if (targetInRange != null) //double checking if the target didnt disappear 
+            {
+
+                if ( targetInRange.Health > 0 && this.Health > 0)
+                {   //set flags for animation
+                    targetInRange.inCombat = true; 
+                    this.SetInCombat(true);
+                    EnemyAttack(gameTime); //actually try attacking
+                }
+                else
+                {
+                    this.SetInCombat(false); //suddenly there is no enemy anymore then set out of combat
+                    }
+            }
+
+    }
+
+    internal abstract void AttackingSound(); //woah sounds so cool
+
+        
+}
 }
 

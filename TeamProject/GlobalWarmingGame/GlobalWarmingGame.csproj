@@ -65,7 +65,6 @@
     <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
-    <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />
