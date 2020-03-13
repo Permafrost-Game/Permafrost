@@ -119,6 +119,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         public void setAttacking(Boolean b) {
             attacking = b;
+            if( b == false){
+                TextureGroupIndex = 1;
+            }
         }
         public void setInCombat(Boolean b)
         {
@@ -199,13 +202,12 @@ namespace GlobalWarmingGame.Interactions.Enemies
             if (targetInRange != null)
             {
                
-               
                 PerformCombat(gameTime,targetInRange);
             
             }
             else if(target!=null)
             {
-                fakeLeftXcoordinate = new Vector2(target.Position.X -40,target.Position.Y);
+                /*fakeLeftXcoordinate = new Vector2(target.Position.X -40,target.Position.Y);
                 fakeRightXcoordinate = new Vector2(target.Position.X + 40, target.Position.Y);
                 Goals.Clear();
                 if (this.Position.X < target.Position.X) { 
@@ -214,7 +216,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 else
                 {
                     Goals.Enqueue(fakeRightXcoordinate);
-                }
+                }*/
+                TextureGroupIndex = 1;
+                Goals.Clear();
+                ChaseColonist(target);
             }
         }
 

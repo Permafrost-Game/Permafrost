@@ -54,13 +54,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private bool _inCombat = false;
         public bool inCombat
         {
-            get { return _isAttacking; }
+            get { return _inCombat; }
             set
             {
                 _inCombat = value;
                 if (value == false)
                 {
-                    //TextureGroupIndex = 0;
+                    TextureGroupIndex = 0;
                 }
 
             }
@@ -198,7 +198,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (!isAttacking)
                 {
-                    //isAnimated = false;
+                    isAnimated = false;
                 }
             }
             else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
@@ -233,6 +233,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 performCombat(gameTime, enemy);
             }
+            else {
+                if (!this.isAttacking)
+                {
+                    this.isAttacking = false;
+                }
+            }
+           
 
             if (this.Health <= 0) {
                 GameObjectManager.Remove(this);
