@@ -21,47 +21,53 @@ namespace GlobalWarmingGame.UI
             this.graphics = graphics;
         }
 
-        public void Update(GameTime gameTime, ref GameState gameState)
+        public void Update(GameTime gameTime)
         {
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
-            CheckInput(ref gameState);
+            CheckInput();
         }
 
-        private void CheckInput(ref GameState gameState)
+        private void CheckInput()
         {
             if (CheckKeyPress(Keys.F11))
                 graphics.ToggleFullScreen();
 
-            if (gameState == GameState.playing)
+            switch (Game1.GameState)
             {
-                for (int keyCode = (int)Keys.D1; keyCode <= (int)Keys.D9; keyCode++)
-                {
-                    if (CheckKeyPress((Keys)keyCode))
+                case GameState.Playing:
+                    for (int keyCode = (int)Keys.D1; keyCode <= (int)Keys.D9; keyCode++)
                     {
-                        Controller.SelectInventory(keyCode - (int)Keys.D1);
+                        if (CheckKeyPress((Keys)keyCode))
+                        {
+                            Controller.SelectInventory(keyCode - (int)Keys.D1);
+                        }
                     }
-                }
 
-                if (CheckKeyPress(Keys.I))
-                    GameObjectManager.MoveZone(new Vector2(0, -1));
-                else if (CheckKeyPress(Keys.K))
-                    GameObjectManager.MoveZone(new Vector2(0, 1));
-                else if (CheckKeyPress(Keys.L))
-                    GameObjectManager.MoveZone(new Vector2(1, 0));
-                else if (CheckKeyPress(Keys.J))
-                    GameObjectManager.MoveZone(new Vector2(-1, 0));
-            }else if(gameState == GameState.intro)
-            {
-                if (CheckKeyPress(Keys.Escape))
-                {
-                    CutSceneFactory.StopVideo();
-                    Controller.Initialise();
-                    gameState = GameState.playing;
-                }
+
+                    if (CheckKeyPress(Keys.I))
+                        GameObjectManager.MoveZone(new Vector2(0, -1));
+                    else if (CheckKeyPress(Keys.K))
+                        GameObjectManager.MoveZone(new Vector2(0, 1));
+                    else if (CheckKeyPress(Keys.L))
+                        GameObjectManager.MoveZone(new Vector2(1, 0));
+                    else if (CheckKeyPress(Keys.J))
+                        GameObjectManager.MoveZone(new Vector2(-1, 0));
+
+                    if (CheckKeyPress(Keys.Escape))
+                        Game1.GameState = GameState.Paused;
+                    break;
+                case GameState.Paused:
+                    if (CheckKeyPress(Keys.Escape))
+                        Game1.GameState = GameState.Playing;
+                    break;
+                case GameState.Intro:
+                    if (CheckKeyPress(Keys.Escape))
+                        Game1.GameState = GameState.Playing;
+                    break;
+                
             }
-
             //else if (CheckKeyPress(Keys.F5))
             //    GameObjectManager.SaveZone();
             //else if (CheckKeyPress(Keys.F9))

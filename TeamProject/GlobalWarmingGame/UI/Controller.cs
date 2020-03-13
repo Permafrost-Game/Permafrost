@@ -25,29 +25,47 @@ namespace GlobalWarmingGame.UI
     static class Controller
     {
 
+        private static Texture2D mainMenuLogo;
+
         static Controller()
         {
             openInventories = new List<Inventory>();
-            
-            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
-            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
         }
 
         public static void LoadContent(ContentManager content)
         {
-            
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
-
-           // AddDropDowns();
+            mainMenuLogo = content.Load<Texture2D>(@"logo");
         }
 
-        public static void Initialise()
+        public static void CreateGameUI(float uiScale = 1f)
         {
-            View.Initialize();
+            View.Reset();
+            View.SetUIScale(uiScale);
+
+            View.CreateGameUI();
             AddDropDowns();
+            
+            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
+            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
+            InitaliseGameObjects();
         }
 
-        #region Event handlers
+
+        #region GameObject Event handlers
+
+        private static void InitaliseGameObjects()
+        {
+            foreach (GameObject o in GameObjectManager.Objects)
+            {
+                ObjectAddedEventHandler(null, o);
+            }
+        }
+
+        internal static void ResetUI()
+        {
+            View.Reset();
+        }
 
         /// <summary>
         /// Handles <see cref="GameObjectManager.ObjectAdded"/><br/>
@@ -65,6 +83,17 @@ namespace GlobalWarmingGame.UI
                 }
                 AddInventoryMenu(colonist);
             }
+        }
+
+        internal static void ShowPauseMenu(bool show = true)
+        {
+            View.SetPauseMenuVisiblity(show);
+        }
+
+        internal static void CreateMainMenu()
+        {
+            View.CreateMainMenuUI(mainMenuLogo);
+            View.SetMainMenuVisiblity(true);
         }
 
         /// <summary>

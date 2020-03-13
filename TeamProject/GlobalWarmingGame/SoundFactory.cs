@@ -37,7 +37,12 @@ namespace GlobalWarmingGame
         public static void PlaySoundEffect(Sound sound)
         {
             sounds[sound].Play();
-        } 
+        }
+
+        internal static void StopSong()
+        {
+            MediaPlayer.Stop();
+        }
     }
 }
 public enum Songs

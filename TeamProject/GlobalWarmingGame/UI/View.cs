@@ -1,6 +1,7 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,38 +16,57 @@ namespace GlobalWarmingGame.UI
     /// This class is for creating buttons and panels based on the information provided by <see cref="Controller"/>.<br/>
     /// This class should not reference any <see cref="GlobalWarmingGame"/> specific classes, and should be the only class referencing <see cref="GeonBit.UI"/> specific classes.<br/>
     /// </summary>
-    internal static class View
+    static class View
     {
+        static MainMenu MainMenu;
+        static PauseMenu PauseMenu;
 
         private static Panel topPanel;
         private static Panel bottomPanel;
         private static Panel menu;
-        private static readonly Dictionary<int, Panel> inventories;
-        private static readonly Dictionary<int, Icon> inventoryButtons;
+        private static Dictionary<int, Panel> inventories;
+        private static Dictionary<int, Icon> inventoryButtons;
 
         /// <summary>True if the current mouse position is over a UI entity</summary>
         internal static bool Hovering { get; set; }
 
         static View()
         {
-            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
-            
             inventories = new Dictionary<int, Panel>();
             inventoryButtons = new Dictionary<int, Icon>();
-
-
-
-            //inventories = PrepareInventoryMenu();
-
-            UserInterface.Active.AddEntity(bottomPanel);
-            
-
-
+            UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
         }
 
-        internal static void Initialize()
+        /// <summary>
+        /// Resets currently active UI elements
+        /// </summary>
+        internal static void Reset()
         {
-            //UserInterface.Initialize(content, "hd");
+            UserInterface.Active.Clear();
+            inventories = new Dictionary<int, Panel>();
+            inventoryButtons = new Dictionary<int, Icon>();
+        }
+
+        internal static void CreateMainMenuUI(Texture2D MainMenuLogo)
+        {
+            MainMenu = new MainMenu(MainMenuLogo);
+
+            MainMenu.MainToGame.OnClick = (Entity button) => {
+                Game1.GameState = GameState.Intro;
+            };
+            MainMenu.MainToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
+        }
+
+        internal static void CreateGameUI()
+        {
+            PauseMenu = new PauseMenu();
+
+            PauseMenu.PauseToGame.OnClick = (Entity button) => { Game1.GameState = GameState.Playing; };
+            PauseMenu.PauseToMain.OnClick = (Entity button) => { Game1.GameState = GameState.MainMenu; };
+            PauseMenu.PauseToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
+
+            UserInterface.Active.AddEntity(PauseMenu);
+
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
             {
@@ -62,7 +82,13 @@ namespace GlobalWarmingGame.UI
                 Opacity = 192,
                 Visible = true,
             };
+            UserInterface.Active.AddEntity(bottomPanel);
             #endregion
+        }
+
+        internal static void SetUIScale(float scale)
+        {
+            UserInterface.Active.GlobalScale = scale;
         }
 
         internal static void Update(GameTime gameTime)
@@ -70,6 +96,17 @@ namespace GlobalWarmingGame.UI
             Hovering = false;
             UserInterface.Active.Update(gameTime);
         }
+
+        internal static void SetMainMenuVisiblity(bool show)
+        {
+            MainMenu.Visible = show;
+        }
+
+        internal static void SetPauseMenuVisiblity(bool show)
+        {
+            PauseMenu.Visible = show;
+        }
+
         internal static void Draw(SpriteBatch spriteBatch)
         {
             UserInterface.Active.Draw(spriteBatch);
@@ -86,20 +123,24 @@ namespace GlobalWarmingGame.UI
         {
             if (menu != null) UserInterface.Active.RemoveEntity(menu);
 
-            menu = new Panel(new Vector2(150f, 75f + (options.Count * 30f)), PanelSkin.Default, Anchor.TopLeft, location.ToVector2());
+            menu = new Panel(new Vector2(190, 80f + (options.Count * 40f)), PanelSkin.Simple, Anchor.TopLeft, location.ToVector2() / UserInterface.Active.GlobalScale)
+            {
+                Opacity = 200
+            };
             UserInterface.Active.AddEntity(menu);
 
-            Label label = new Label(text, Anchor.TopCenter, new Vector2(500f, 50f))
+            Label label = new Label(text, Anchor.TopCenter, new Vector2(190f, 20f))
             {
-                Scale = 0.7f
+                Scale = 0.8f
             };
 
             menu.AddChild(label);
             int counter = 0;
             foreach (ButtonHandler<T> option in options)
             {
-                Button newButton = new Button(option.Tag.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(125f, 25f), new Vector2(0f, (counter + 1) * 30f));
-                newButton.ButtonParagraph.Scale = 0.5f;
+                Button newButton = new Button(option.Tag.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(175f, 30f), new Vector2(0f, (counter + 1f) * 40f));
+                newButton.ButtonParagraph.Scale = 0.85f;
+                //newButton.Scale = 2f;
                 newButton.Padding = Vector2.Zero;
                 menu.AddChild(newButton);
 

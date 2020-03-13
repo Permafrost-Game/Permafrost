@@ -43,8 +43,6 @@ namespace GlobalWarmingGame.UI.Menus
             PauseToQuit.ButtonParagraph.Scale = 0.8f;
             Menu.AddChild(PauseToQuit);
 
-            UserInterface.Active.AddEntity(Menu);
-
             Menu.Visible = false;
         }
     }

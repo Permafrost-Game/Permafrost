@@ -31,7 +31,6 @@ namespace GlobalWarmingGame
         private Vector2 currentZone = Vector2.Zero;
 
 
-
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -40,13 +39,61 @@ namespace GlobalWarmingGame
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
-        MainMenu MainMenu;
-        PauseMenu PauseMenu;
+        private static GameState _GameState;
+        public static GameState GameState
+        {
+            get { return _GameState; }
+            set
+            {
+                GameState previous = _GameState;
 
-        KeyboardState previousKeyboardState;
-        KeyboardState currentKeyboardState;
+                switch (previous)
+                {
+                    case GameState.MainMenu:
+                        SoundFactory.StopSong();
+                        Controller.ResetUI();
+                        break;
+                    case GameState.Paused:
+                        Controller.ShowPauseMenu(false);
+                        goto case GameState.Playing;
+                    case GameState.Playing:
+                        if (previous != GameState.Playing && previous != GameState.Paused)
+                        {
+                            SoundFactory.StopSong();
+                            Controller.ResetUI();
+                        }
+                        break;
+                    case GameState.Intro:
+                        CutSceneFactory.StopVideo();
+                        break;
+                }
 
-        public GameState gameState;
+                _GameState = value;
+
+                switch (value)
+                {
+                    case GameState.MainMenu:
+                        Controller.ResetUI();
+                        Controller.CreateMainMenu();
+                        SoundFactory.PlaySong(Songs.Menu);
+                        break;
+                    case GameState.Paused:
+                        Controller.ShowPauseMenu(true);
+                        goto case GameState.Playing;
+                    case GameState.Playing:
+                        if (previous != GameState.Playing && previous != GameState.Paused)
+                        {
+                            SoundFactory.PlaySong(Songs.Main);
+                            Controller.CreateGameUI();
+                        }
+                        break;
+                    case GameState.Intro:
+                        CutSceneFactory.PlayVideo(VideoN.Intro);
+                        break;
+                }
+
+            }
+        }
 
         List<Light> lightObjects;
 
@@ -61,7 +108,6 @@ namespace GlobalWarmingGame
             graphics = new GraphicsDeviceManager(this);
             
             Content.RootDirectory = "Content";
-            gameState = GameState.mainmenu;
         }
 
         protected override void Initialize()
@@ -107,7 +153,6 @@ namespace GlobalWarmingGame
 
             CutSceneFactory.LoadContent(Content);
             SoundFactory.Loadsounds(Content);
-            SoundFactory.PlaySong(Songs.Menu);
 
             //LIGHTING
             {
@@ -132,7 +177,6 @@ namespace GlobalWarmingGame
                 var textureSet = new Dictionary<int, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
-                //water.Name = "Non-Walkable";
 
                 textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
                 textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
@@ -161,56 +205,9 @@ namespace GlobalWarmingGame
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
-            //CREATING GAME OBJECTS
+            //Menu Setup
             {
-                //All this code below is for testing and will eventually be replaced.
-                // Controller.LoadContent(Content);
-
-                
-               
-                logo = Content.Load<Texture2D>(@"logo");
-
-                MainMenu = new MainMenu(logo);
-                PauseMenu = new PauseMenu();
-
-                //Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
-
-                //GameObjectManager.Add(c1);
-                
-                ProcessMenuSelection();
-
-                /*
-                MainUI = new MainUI();
-
-                ProcessMenuSelection();
-                
-
-                string[] spawnables = new string[11];
-                spawnables[0] = "Colonist";
-                spawnables[1] = "Rabbit";
-                spawnables[2] = "Farm";
-                spawnables[3] = "Tree";
-                spawnables[4] = "Bush";
-                spawnables[5] = "Workbench";
-                spawnables[6] = "Stone";
-                spawnables[7] = "Tall Grass";
-                spawnables[8] = "Robot";
-                spawnables[9] = "Polar Bear";
-                spawnables[10] = "campFire";
-
-                for (int i = 0; i < spawnables.Length; i++)
-                    MainUI.SpawnMenu.AddItem(spawnables[i]);
-
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => {
-                    ProcessSpawnables();
-                    //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
-                };
-
-                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
-                
-                CollectiveInventory = new CollectiveInventory(MainUI);
-                */
-
+                GameState = GameState.MainMenu;
             }
             
         }
@@ -234,16 +231,12 @@ namespace GlobalWarmingGame
         protected override void Update(GameTime gameTime)
         {
             Controller.Update(gameTime);
-            ShowMainMenu();
-            ShowPauseMenu();
-            ShowMainUI();
-            PauseGame();
-            //CutSceneFactory.Update(gameTime);
-            keyboardInputHandler.Update(gameTime, ref gameState);
 
-            if (gameState == GameState.playing)
+            keyboardInputHandler.Update(gameTime);
+
+            if (GameState == GameState.Playing)
             {
-                
+
                 camera.Update(gameTime);
                 GameObjectManager.ZoneMap.Update(gameTime);
 
@@ -258,9 +251,13 @@ namespace GlobalWarmingGame
 
                 base.Update(gameTime);
             }
-
-            previousKeyboardState = currentKeyboardState;
+            else if (GameState == GameState.Exiting)
+            {
+                Exit();
+            }
         }
+
+
 
         #region Update Colonists Temperatures
         void UpdateColonistTemperatures(GameTime gameTime)
@@ -271,7 +268,6 @@ namespace GlobalWarmingGame
                 float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
 
                 colonist.UpdateTemp(tileTemp, gameTime);
-                //Console.Out.WriteLine(colonist.Temperature.Value + " " + colonist.Health);
             }
         }
         #endregion
@@ -279,7 +275,7 @@ namespace GlobalWarmingGame
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-            if (gameState != GameState.intro)
+            if (GameState != GameState.Intro)
             {
                 //CALCULATE SHADOWS
                 foreach (Light light in lightObjects)
@@ -369,7 +365,8 @@ namespace GlobalWarmingGame
                     spriteBatch.End();
                     
                 }
-            }else if(gameState == GameState.intro)
+            }
+            else if(GameState == GameState.Intro)
             {
                 spriteBatch.Begin();
                 CutSceneFactory.Draw(spriteBatch, GraphicsDevice); 
@@ -409,136 +406,10 @@ namespace GlobalWarmingGame
         #endregion
 
         #region Menus
-        void PauseGame()
-        {
-            currentKeyboardState = Keyboard.GetState();
-
-            if (CheckKeyPress(Keys.Escape))
-            {
-                if (gameState == GameState.playing)
-                    gameState = GameState.paused;
-
-                else if (gameState == GameState.paused)
-                    gameState = GameState.playing;
-            }
-
-            //previousKeyboardState = currentKeyboardState;
-        }
-
-        bool CheckKeyPress(Keys key)
-        {
-            return previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
-        }
-
-        void ShowMainMenu()
-        {
-            if (gameState == GameState.mainmenu)
-            {
-                MainMenu.Menu.Visible = true;
-                PauseMenu.Menu.Visible = false;
-                //MainUI.TopPanel.Visible = false;
-                //MainUI.BottomPanel.Visible = false;
-            }
-
-            else
-                MainMenu.Menu.Visible = false;
-        }
-
-        void ShowPauseMenu()
-        {
-            if (gameState == GameState.paused)
-            {
-                MainMenu.Menu.Visible = false;
-                PauseMenu.Menu.Visible = true;
-                //MainUI.TopPanel.Visible = false;
-                //MainUI.BottomPanel.Visible = false;
-            }
-
-            else
-                PauseMenu.Menu.Visible = false;
-        }
-
-        void ShowMainUI()
-        {
-            if (gameState == GameState.playing)
-            {
-                MainMenu.Menu.Visible = false;
-                PauseMenu.Menu.Visible = false;
-                //MainUI.TopPanel.Visible = true;
-                //MainUI.BottomPanel.Visible = true;
-            }
-
-            else
-            {
-                //MainUI.TopPanel.Visible = false;
-                //MainUI.BottomPanel.Visible = false;
-            }
-        }
-
-        void ProcessMenuSelection()
-        {
-            MainMenu.MainToGame.OnClick = (Entity button) => { 
-                gameState = GameState.intro; 
-                CutSceneFactory.PlayVideo(VideoN.Intro); 
-                SoundFactory.PlaySong(Songs.Main); 
-                
-            };
-            MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
-
-            PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
-            PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
-            PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
-        }
-
-        /*
-        void ProcessSpawnables()
-        {
-            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - camera.Position;
-
-            switch (MainUI.SpawnMenu.SelectedIndex)
-            {
-                case 0:
-
-                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.Colonist, position));
-                    break;
-                case 1:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, position));
-                    break;
-                case 2:
-                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.Farm,position));
-                    break;
-                case 3:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, position));
-                    break;
-                case 4:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, position));
-                    break;
-                case 5:
-                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.WorkBench,position));
-                    break;
-                case 6:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, position));
-                    break;
-                case 7:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, position));
-                    break;
-                case 8:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot, position));
-                    break;
-                case 9:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, position));
-                    break;
-                case 10:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.CampFire, position));
-                    break;
-            }
-
-            //MainUI.SpawnMenu.DontKeepSelection = true;
-        }*/
 
         #endregion
     }
 
-    public enum GameState { mainmenu, playing, paused, intro }
+    public enum GameState { MainMenu, Playing, Paused, Intro, Exiting }
 }
  
