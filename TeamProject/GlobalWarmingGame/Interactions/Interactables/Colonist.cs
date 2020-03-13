@@ -146,6 +146,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             this.Rotation = 1.5f;
             ColonistDead = true;
+            GameObjectManager.Remove(this);
 
             #region Start 2 Seconds Delay for 'Animation'
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
@@ -198,6 +199,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (!isAttacking)
                 {
+                    TextureGroupIndex = 0;
                     isAnimated = false;
                 }
             }
@@ -226,6 +228,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else {
                 combatModeOn = false;
+                
             }
 
 
@@ -233,16 +236,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 performCombat(gameTime, enemy);
             }
-            else {
-                if (!this.isAttacking)
-                {
-                    this.isAttacking = false;
-                }
-            }
+            
            
 
             if (this.Health <= 0) {
-                GameObjectManager.Remove(this);
+                this.setDead();
             }
 
             TemperatureCheck(gameTime);
@@ -252,22 +250,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void performCombat(GameTime gameTime, Enemy enemy)
         {
-            if (enemy != null)
-            {
 
+            
 
-                if (enemy.Health > 0 & this.Health > 0)
+                if (enemy.Health > 0 && this.Health > 0)
                 {
                     inCombat = true;
                   
                     ColonistAttack(gameTime);
                 }
-                else
-                {
-                    this.inCombat = false;
+            
 
-                }
-            }
         }
 
             #region Colonist Temperature Check
@@ -379,6 +372,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (!inCombat)
                 {
                     TextureGroupIndex = 0;
+                    
                 }
             }
             else
@@ -395,21 +389,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 this.isAttacking = true;
                 SoundFactory.PlaySoundEffect(Sound.slashSound);
                 enemy.Health = enemy.Health - this.AttackPower;
+                if (enemy.Health<=0)
+                {
+                    this.inCombat = false;
+                    this.isAttacking = false;
+
+                }
             }
             
-
-
-
-            if (enemy.Health <= 0)
-            {
-                
-                this.inCombat = false;
-                this.isAttacking = false;
-                enemy = null;
-                
-                   
-                
-            }
         }
 
         private bool ColonistAttackSpeedControl(GameTime gameTime)
@@ -419,7 +406,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
             if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
             {
-                this.isAttacking = false;
+                isAttacking = false;
+                TextureGroupIndex = 2;
             }
             if (ColonistimeToAttack >= this.attackSpeed)
             {
