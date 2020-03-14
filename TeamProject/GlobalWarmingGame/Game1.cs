@@ -147,15 +147,21 @@ namespace GlobalWarmingGame
 
                 Controller.LoadContent(Content);
 
-                tileSet = new TileSet(textureSet, new Vector2(32f));
-
-                GameObjectManager.Init(tileSet, seed, currentZone, false);
+                GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
 
 
-                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+
+                GameObjectManager.ZoneMap = GameObjectManager.GenerateMap(currentZone);
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
 
+
+
                 GameObjectManager.Camera = camera;
+                GameObjectManager.Init(seed, currentZone, GraphicsDevice, spriteBatch, false);
+
+
+                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap 
+
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
@@ -303,8 +309,8 @@ namespace GlobalWarmingGame
                     transformMatrix: camera.Transform
                 );
 
-                foreach (Tile tile in GameObjectManager.GreyTiles)
-                    tile.DrawWithTint(spriteBatch, Color.Gray);
+                Vector2 zoneSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size;
+                spriteBatch.Draw(GameObjectManager.GreyTiles, new Rectangle((int)-zoneSize.X, (int)-zoneSize.Y, GameObjectManager.GreyTiles.Width, GameObjectManager.GreyTiles.Height), Color.Gray);
 
                 GameObjectManager.ZoneMap.Draw(spriteBatch);
 

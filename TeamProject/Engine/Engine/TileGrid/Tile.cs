@@ -46,14 +46,5 @@ namespace Engine.TileGrid
                 color: Color.White
                 );
         }
-        public void DrawWithTint(SpriteBatch spriteBatch, Color tint)
-        {
-            spriteBatch.Draw(
-                texture: texture,
-                destinationRectangle: destinationRectangle,
-                sourceRectangle: sourceRectangle,
-                color: tint
-                );
-        }
     }
 }
