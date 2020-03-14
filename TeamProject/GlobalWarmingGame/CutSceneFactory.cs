@@ -13,7 +13,6 @@ namespace GlobalWarmingGame
     static class CutSceneFactory  
     {
         private static Dictionary<VideoN, Video> cutScenes;
-        private static Texture2D videoTexture;
         private static VideoPlayer vp;
         private static Video video; 
         public static void LoadContent(ContentManager content)
@@ -28,36 +27,21 @@ namespace GlobalWarmingGame
         public static void PlayVideo(VideoN vid)
         {
             video = cutScenes[vid];
-            try
-            {
-                vp.Play(video);
-            }
-            catch (Exception)
-            {
 
-            }
+            vp.Play(video);
         }
         public static void StopVideo()
         {
             vp.Stop();
         }
-        public static void Update(GameTime gameTime)
-        {
-            if (vp.State == MediaState.Playing)
-            {
-                videoTexture = vp.GetTexture();
-            }
-        }
+
         public static void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            Texture2D texture = null;
+            Texture2D texture;
             if (vp.State != MediaState.Stopped)
             {
                 texture = vp.GetTexture();
-                if (texture != null)
-                {
-                    spriteBatch.Draw(texture, graphicsDevice.Viewport.Bounds, Color.White);
-                }
+                spriteBatch.Draw(texture, graphicsDevice.Viewport.Bounds, Color.White);
             }
         }
     }
