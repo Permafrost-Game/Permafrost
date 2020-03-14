@@ -1,6 +1,5 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
-using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -35,6 +34,11 @@ namespace GlobalWarmingGame.UI
         {
             inventories = new Dictionary<int, Panel>();
             inventoryButtons = new Dictionary<int, Icon>();
+        }
+
+        internal static void Initalise(ContentManager content)
+        {
+            UserInterface.Initialize(content, "hd");
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
         }
 

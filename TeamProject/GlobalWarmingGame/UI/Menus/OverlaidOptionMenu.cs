@@ -1,6 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-
-using GeonBit.UI.Entities;
+﻿using GeonBit.UI.Entities;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI.Menus

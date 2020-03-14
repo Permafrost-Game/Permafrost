@@ -32,6 +32,11 @@ namespace GlobalWarmingGame.UI
             openInventories = new List<Inventory>();
         }
 
+        public static void Initalise(ContentManager content)
+        {
+            View.Initalise(content);
+        }
+
         public static void LoadContent(ContentManager content)
         {
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");

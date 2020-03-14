@@ -1,21 +1,15 @@
 ﻿using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
+using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
-using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using System.IO;
-using GlobalWarmingGame.Interactions;
 
 namespace GlobalWarmingGame
 {
@@ -139,7 +133,7 @@ namespace GlobalWarmingGame
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
 
-            UserInterface.Initialize(Content, "hd");
+            Controller.Initalise(Content);
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;

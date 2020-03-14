@@ -1,5 +1,4 @@
-﻿using Engine;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace GlobalWarmingGame.UI
