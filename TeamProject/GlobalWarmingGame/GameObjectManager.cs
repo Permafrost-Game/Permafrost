@@ -94,7 +94,7 @@ namespace GlobalWarmingGame
         private static TileMap GenerateMap(Vector2 pos)
         {
             //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
         private static void SetZone(Vector2 position, List<Colonist> colonists = null)

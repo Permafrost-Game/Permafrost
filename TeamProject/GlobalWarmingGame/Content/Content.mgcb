@@ -3,7 +3,7 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:DesktopGL
+/platform:Windows
 /config:
 /profile:Reach
 /compress:False
@@ -13,6 +13,11 @@
 /reference:..\..\packages\GeonBit.UI.3.4.0.1\lib\geonbitui\DataTypes.dll
 
 #---------------------------------- Content ---------------------------------#
+
+#begin cutscenes/0000000.wmv
+/importer:WmvImporter
+/processor:VideoProcessor
+/build:cutscenes/0000000.wmv
 
 #begin GeonBit.UI/themes/editor/effects/disabled.fx
 /importer:EffectImporter

@@ -25,23 +25,53 @@ namespace GlobalWarmingGame.UI
     static class Controller
     {
 
+        private static Texture2D mainMenuLogo;
+
         static Controller()
         {
             openInventories = new List<Inventory>();
-            
-            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
-            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
+        }
+
+        public static void Initalise(ContentManager content)
+        {
+            View.Initalise(content);
         }
 
         public static void LoadContent(ContentManager content)
         {
-            View.Initialize(content);
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
-
-            AddDropDowns();
+            mainMenuLogo = content.Load<Texture2D>(@"logo");
         }
 
-        #region Event handlers
+        public static void CreateGameUI(float uiScale = 1f)
+        {
+            openInventories.Clear();
+            View.Reset();
+            View.SetUIScale(uiScale);
+
+            View.CreateGameUI();
+            AddDropDowns();
+            
+            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
+            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
+            InitaliseGameObjects();
+        }
+
+
+        #region GameObject Event handlers
+
+        private static void InitaliseGameObjects()
+        {
+            foreach (GameObject o in GameObjectManager.Objects)
+            {
+                ObjectAddedEventHandler(null, o);
+            }
+        }
+
+        internal static void ResetUI()
+        {
+            View.Reset();
+        }
 
         /// <summary>
         /// Handles <see cref="GameObjectManager.ObjectAdded"/><br/>
@@ -60,6 +90,18 @@ namespace GlobalWarmingGame.UI
                 AddInventoryMenu(colonist);
             }
         }
+
+        internal static void ShowPauseMenu(bool show = true) => View.SetPauseMenuVisiblity(show);
+
+        internal static void ShowSettingsMenu(bool show = true) => View.SetSettingsMenuVisiblity(show);
+
+        internal static void CreateMainMenu()
+        {
+            View.CreateMainMenuUI(mainMenuLogo);
+            View.SetMainMenuVisiblity(true);
+        }
+
+        
 
         /// <summary>
         /// Handles <see cref="GameObjectManager.ObjectRemoved"/><br/>
@@ -306,8 +348,14 @@ namespace GlobalWarmingGame.UI
             View.Update(gameTime);
             currentMouseState = Mouse.GetState();
 
-            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
-                OnClick();
+            switch(Game1.GameState)
+            {
+                case GameState.Playing:
+                    if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
+                        OnClick();
+                    break;
+            }
+            
 
             previousMouseState = currentMouseState;
 

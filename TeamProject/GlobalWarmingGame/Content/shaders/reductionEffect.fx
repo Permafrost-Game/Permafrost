@@ -13,6 +13,13 @@
 // This shader was created by Catalin ZZ 
 // Source http://www.catalinzima.com/xna/samples/shader-based-dynamic-2d-smooth-shadows/
 
+#if OPENGL
+    #define VS_SHADERMODEL vs_3_0
+    #define PS_SHADERMODEL ps_3_0
+#else
+    #define VS_SHADERMODEL vs_4_0_level_9_1
+    #define PS_SHADERMODEL ps_4_0_level_9_1
+#endif
 
 texture SourceTexture; 
           
@@ -68,8 +75,8 @@ technique HorizontalReduction
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 VS();
-        PixelShader  = compile ps_3_0 HorizontalReductionPS();
+        VertexShader = compile VS_SHADERMODEL VS();
+        PixelShader  = compile PS_SHADERMODEL HorizontalReductionPS();
     }
 }
 
@@ -77,7 +84,7 @@ technique Copy
 {
     pass P0
     {          
-        VertexShader = compile vs_3_0 VS();
-        PixelShader  = compile ps_3_0 CopyPS();
+        VertexShader = compile VS_SHADERMODEL VS();
+        PixelShader  = compile PS_SHADERMODEL CopyPS();
     }
 }

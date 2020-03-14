@@ -44,7 +44,7 @@ namespace Engine.TileGrid
                     string key = rows[y].Split(',')[x];
                     Texture2D texture = tileSet.tileSetTextures[Int32.Parse(key)];
 
-                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("textures/tiles/main_tileset/water"));
+                    tiles[x,y] = new Tile(texture, position, tileSet.textureSize, !texture.Name.Equals("textures/tiles/main_tileset/water"),-2);
                     
                     
                 }

@@ -22,9 +22,9 @@ namespace GlobalWarmingGame
             };
             songs = new Dictionary<Songs, Song>
             {
-                { Songs.Menu, content.Load<Song>("sound/songs/menu") },
-                { Songs.Main, content.Load<Song>("sound/songs/ColdAtmosphericMusic") },
-                { Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone") }
+                { Songs.Menu, content.Load<Song>(@"sound/songs/menu") },
+                { Songs.Main, content.Load<Song>(@"sound/songs/ColdAtmosphericMusic") },
+                { Songs.EnemyZone, content.Load<Song>(@"sound/songs/enemy_zone") }
             };
 
         }
@@ -37,7 +37,12 @@ namespace GlobalWarmingGame
         public static void PlaySoundEffect(Sound sound)
         {
             sounds[sound].Play();
-        } 
+        }
+
+        internal static void StopSong()
+        {
+            MediaPlayer.Stop();
+        }
     }
 }
 public enum Songs
