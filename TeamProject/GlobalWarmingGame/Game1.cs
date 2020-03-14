@@ -39,6 +39,13 @@ namespace GlobalWarmingGame
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
+        List<Light> lightObjects;
+        private bool lighting = true;
+        ShadowmapResolver shadowmapResolver;
+        QuadRenderComponent quadRender;
+        RenderTarget2D screenShadows;
+        Texture2D ambiantLight;
+
         private static GameState _GameState;
         public static GameState GameState
         {
@@ -56,8 +63,11 @@ namespace GlobalWarmingGame
                     case GameState.Paused:
                         Controller.ShowPauseMenu(false);
                         goto case GameState.Playing;
+                    case GameState.Settings:
+                        Controller.ShowSettingsMenu(false);
+                        goto case GameState.Playing;
                     case GameState.Playing:
-                        if (previous != GameState.Playing && previous != GameState.Paused)
+                        if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.StopSong();
                             Controller.ResetUI();
@@ -80,8 +90,11 @@ namespace GlobalWarmingGame
                     case GameState.Paused:
                         Controller.ShowPauseMenu(true);
                         goto case GameState.Playing;
+                    case GameState.Settings:
+                        Controller.ShowSettingsMenu(true);
+                        goto case GameState.Playing;
                     case GameState.Playing:
-                        if (previous != GameState.Playing && previous != GameState.Paused)
+                        if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.PlaySong(Songs.Main);
                             Controller.CreateGameUI();
@@ -95,13 +108,7 @@ namespace GlobalWarmingGame
             }
         }
 
-        List<Light> lightObjects;
-
-        ShadowmapResolver shadowmapResolver;
-        QuadRenderComponent quadRender;
-        RenderTarget2D screenShadows;
-        Texture2D ambiantLight;
-        Texture2D logo;
+        
 
         public Game1()
         {
@@ -275,102 +282,108 @@ namespace GlobalWarmingGame
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-            if (GameState != GameState.Intro)
+            GraphicsDevice.Clear(Color.Black);
+
+            switch (GameState)
             {
-                //CALCULATE SHADOWS
-                foreach (Light light in lightObjects)
-                {
-                    GraphicsDevice.SetRenderTarget(light.RenderTarget);
-                    GraphicsDevice.Clear(Color.Transparent);
-                    DrawShadowCasters(light);
-
-                    shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.Position);
-                }
-
-                //DRAW LIGHTS
-                {
-                    GraphicsDevice.SetRenderTarget(screenShadows);
-                    GraphicsDevice.Clear(Color.Black);
-
-                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
-                    foreach (Light light in lightObjects)
+                case GameState.Paused:
+                case GameState.Settings:
+                case GameState.Playing:
+                    //CALCULATE SHADOWS
+                    if (lighting)
                     {
-                        light.Draw(spriteBatch);
+                        foreach (Light light in lightObjects)
+                        {
+                            GraphicsDevice.SetRenderTarget(light.RenderTarget);
+                            GraphicsDevice.Clear(Color.Transparent);
+                            DrawShadowCasters(light);
+
+                            shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.Position);
+                        }
+                        //DRAW LIGHTS
+                        {
+                            GraphicsDevice.SetRenderTarget(screenShadows);
+                            GraphicsDevice.Clear(Color.Black);
+
+                            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
+                            foreach (Light light in lightObjects)
+                            {
+                                light.Draw(spriteBatch);
+                            }
+
+                            spriteBatch.End();
+
+
+                            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+                            spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                            spriteBatch.End();
+
+                            GraphicsDevice.SetRenderTarget(null);
+                            GraphicsDevice.Clear(Color.Black);
+                        }
                     }
 
-                    spriteBatch.End();
-
-
-                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-                    spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    spriteBatch.End();
-
-                    GraphicsDevice.SetRenderTarget(null);
-                    GraphicsDevice.Clear(Color.Black);
-                }
-
-                //DRAW BACKGROUND
-                {
-                    spriteBatch.Begin(
-                        sortMode: SpriteSortMode.Deferred,
-                        blendState: BlendState.Opaque,
-                        samplerState: SamplerState.PointClamp,
-                        depthStencilState: null,
-                        rasterizerState: null,
-                        effect: null,
-                        transformMatrix: camera.Transform
-                    );
-
-                    GameObjectManager.ZoneMap.Draw(spriteBatch);
-
-                    spriteBatch.End();
-                }
-
-                //DRAW SHADOWS
-                {
-                    BlendState blendState = new BlendState()
+                    //DRAW BACKGROUND
                     {
-                        ColorSourceBlend = Blend.DestinationColor,
-                        ColorDestinationBlend = Blend.SourceColor
-                    };
+                        spriteBatch.Begin(
+                            sortMode: SpriteSortMode.Deferred,
+                            samplerState: SamplerState.PointClamp,
+                            transformMatrix: camera.Transform
+                        );
 
-                    spriteBatch.Begin(
-                        sortMode: SpriteSortMode.Immediate,
-                        blendState: blendState,
-                        depthStencilState: null,
-                        rasterizerState: null,
-                        effect: null,
-                        transformMatrix: null
-                    );
-                    spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+                        GameObjectManager.ZoneMap.Draw(spriteBatch);
+
+                        spriteBatch.End();
+                    }
+
+                    //DRAW SHADOWS
+                    if(lighting) {
+                        BlendState blendState = new BlendState()
+                        {
+                            ColorSourceBlend = Blend.DestinationColor,
+                            ColorDestinationBlend = Blend.SourceColor
+                        };
+
+                        spriteBatch.Begin(
+                            sortMode: SpriteSortMode.Immediate,
+                            blendState: blendState,
+                            depthStencilState: null,
+                            rasterizerState: null,
+                            effect: null,
+                            transformMatrix: null
+                        );
+                        spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+                        spriteBatch.End();
+                    }
+
+                    //DRAW FORGROUND
+                    {
+                        spriteBatch.Begin(
+                            sortMode: SpriteSortMode.FrontToBack,
+                            blendState: BlendState.AlphaBlend,
+                            samplerState: SamplerState.PointClamp,
+                            transformMatrix: camera.Transform
+                        );
+
+                        foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
+                            drawable.Draw(spriteBatch);
+
+
+                        spriteBatch.End();
+
+                    }
+                   
+                    break;
+                case GameState.Intro:
+                    spriteBatch.Begin();
+                    CutSceneFactory.Draw(spriteBatch, GraphicsDevice);
                     spriteBatch.End();
-                }
 
-                //DRAW FORGROUND
-                {
-                    spriteBatch.Begin(
-                        sortMode: SpriteSortMode.FrontToBack,
-                        blendState: BlendState.AlphaBlend,
-                        samplerState: SamplerState.PointClamp,
-                        depthStencilState: null,
-                        rasterizerState: null,
-                        effect: null,
-                        transformMatrix: camera.Transform
-                    );
+                    break;
+                default:
+                    GraphicsDevice.Clear(Color.Black);
 
-                    foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
-                        drawable.Draw(spriteBatch);
-
-                    
-                    spriteBatch.End();
-                    
-                }
-            }
-            else if(GameState == GameState.Intro)
-            {
-                spriteBatch.Begin();
-                CutSceneFactory.Draw(spriteBatch, GraphicsDevice); 
-                spriteBatch.End();
+                    break;
             }
 
             Controller.Draw(spriteBatch);
@@ -410,6 +423,6 @@ namespace GlobalWarmingGame
         #endregion
     }
 
-    public enum GameState { MainMenu, Playing, Paused, Intro, Exiting }
+    public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting }
 }
  

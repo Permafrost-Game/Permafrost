@@ -109,6 +109,8 @@
     <Compile Include="UI\KeyboardInputHandler.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\MainUI.cs" />
+    <Compile Include="UI\Menus\SettingsMenu.cs" />
+    <Compile Include="UI\Menus\OverlaidOptionMenu.cs" />
     <Compile Include="UI\Menus\PauseMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

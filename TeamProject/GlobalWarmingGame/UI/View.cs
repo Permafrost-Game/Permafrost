@@ -18,8 +18,9 @@ namespace GlobalWarmingGame.UI
     /// </summary>
     static class View
     {
-        static MainMenu MainMenu;
-        static PauseMenu PauseMenu;
+        private static MainMenu MainMenu;
+        private static PauseMenu PauseMenu;
+        private static SettingsMenu SettingsMenu;
 
         private static Panel topPanel;
         private static Panel bottomPanel;
@@ -50,22 +51,28 @@ namespace GlobalWarmingGame.UI
         internal static void CreateMainMenuUI(Texture2D MainMenuLogo)
         {
             MainMenu = new MainMenu(MainMenuLogo);
-
-            MainMenu.MainToGame.OnClick = (Entity button) => {
-                Game1.GameState = GameState.Intro;
-            };
+            
+            MainMenu.MainToIntro.OnClick = (Entity button) => Game1.GameState = GameState.Intro;
+            MainMenu.MainToGame.OnClick = (Entity button) => Game1.GameState = GameState.Playing;
             MainMenu.MainToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
+
+            UserInterface.Active.AddEntity(MainMenu);
         }
 
         internal static void CreateGameUI()
         {
-            PauseMenu = new PauseMenu();
-
-            PauseMenu.PauseToGame.OnClick = (Entity button) => { Game1.GameState = GameState.Playing; };
-            PauseMenu.PauseToMain.OnClick = (Entity button) => { Game1.GameState = GameState.MainMenu; };
-            PauseMenu.PauseToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
+            PauseMenu = new PauseMenu
+            {
+                Visible = false
+            };
 
             UserInterface.Active.AddEntity(PauseMenu);
+
+            SettingsMenu = new SettingsMenu
+            {
+                Visible = false
+            };
+            UserInterface.Active.AddEntity(SettingsMenu);
 
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -86,6 +93,8 @@ namespace GlobalWarmingGame.UI
             #endregion
         }
 
+        
+
         internal static void SetUIScale(float scale)
         {
             UserInterface.Active.GlobalScale = scale;
@@ -97,15 +106,9 @@ namespace GlobalWarmingGame.UI
             UserInterface.Active.Update(gameTime);
         }
 
-        internal static void SetMainMenuVisiblity(bool show)
-        {
-            MainMenu.Visible = show;
-        }
-
-        internal static void SetPauseMenuVisiblity(bool show)
-        {
-            PauseMenu.Visible = show;
-        }
+        internal static void SetMainMenuVisiblity(bool show)     => MainMenu.Visible = show;
+        internal static void SetPauseMenuVisiblity(bool show)    => PauseMenu.Visible = show;
+        internal static void SetSettingsMenuVisiblity(bool show) => SettingsMenu.Visible = show;
 
         internal static void Draw(SpriteBatch spriteBatch)
         {
@@ -138,9 +141,9 @@ namespace GlobalWarmingGame.UI
             int counter = 0;
             foreach (ButtonHandler<T> option in options)
             {
-                Button newButton = new Button(option.Tag.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(175f, 30f), new Vector2(0f, (counter + 1f) * 40f));
+                Button newButton = new Button(option.ToString(), ButtonSkin.Default, Anchor.TopCenter, new Vector2(175f, 30f), new Vector2(0f, (counter + 1f) * 40f));
                 newButton.ButtonParagraph.Scale = 0.85f;
-                //newButton.Scale = 2f;
+
                 newButton.Padding = Vector2.Zero;
                 menu.AddChild(newButton);
 
@@ -173,7 +176,7 @@ namespace GlobalWarmingGame.UI
 
             foreach (ButtonHandler<T> option in options)
             {
-                menu.AddItem(option.Tag.ToString());
+                menu.AddItem(option.ToString());
             }
 
             topPanel.AddChild(menu);
@@ -182,7 +185,7 @@ namespace GlobalWarmingGame.UI
             {
                 foreach (ButtonHandler<T> option in options)
                 {
-                    if (option.Tag.ToString().Equals(menu.SelectedValue))
+                    if (option.ToString().Equals(menu.SelectedValue))
                     {
                         option.action(option.Tag);
                         break;

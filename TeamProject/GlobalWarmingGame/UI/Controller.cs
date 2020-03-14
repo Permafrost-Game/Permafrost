@@ -40,6 +40,7 @@ namespace GlobalWarmingGame.UI
 
         public static void CreateGameUI(float uiScale = 1f)
         {
+            openInventories.Clear();
             View.Reset();
             View.SetUIScale(uiScale);
 
@@ -85,16 +86,17 @@ namespace GlobalWarmingGame.UI
             }
         }
 
-        internal static void ShowPauseMenu(bool show = true)
-        {
-            View.SetPauseMenuVisiblity(show);
-        }
+        internal static void ShowPauseMenu(bool show = true) => View.SetPauseMenuVisiblity(show);
+
+        internal static void ShowSettingsMenu(bool show = true) => View.SetSettingsMenuVisiblity(show);
 
         internal static void CreateMainMenu()
         {
             View.CreateMainMenuUI(mainMenuLogo);
             View.SetMainMenuVisiblity(true);
         }
+
+        
 
         /// <summary>
         /// Handles <see cref="GameObjectManager.ObjectRemoved"/><br/>
@@ -336,8 +338,14 @@ namespace GlobalWarmingGame.UI
             View.Update(gameTime);
             currentMouseState = Mouse.GetState();
 
-            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
-                OnClick();
+            switch(Game1.GameState)
+            {
+                case GameState.Playing:
+                    if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
+                        OnClick();
+                    break;
+            }
+            
 
             previousMouseState = currentMouseState;
 

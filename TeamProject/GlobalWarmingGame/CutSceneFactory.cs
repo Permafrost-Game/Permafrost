@@ -32,7 +32,7 @@ namespace GlobalWarmingGame
             {
                 vp.Play(video);
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
