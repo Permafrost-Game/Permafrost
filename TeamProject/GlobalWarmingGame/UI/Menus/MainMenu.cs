@@ -9,8 +9,8 @@ namespace GlobalWarmingGame.UI.Menus
     class MainMenu : Entity
     {
         public Panel Menu { get; private set; }
+        public Button MainToIntro { get; private set; }
         public Button MainToGame { get; private set; }
-        public Button MainToOptions { get; private set; }
         public Button MainToQuit { get; private set; }
 
         public MainMenu(Texture2D texture)
@@ -23,16 +23,16 @@ namespace GlobalWarmingGame.UI.Menus
             Image img = new Image(texture);
             frame.AddChild(img);
 
-            MainToGame = new Button("Start Game", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 185));
-            Menu.AddChild(MainToGame);
+            MainToIntro = new Button("New Game", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 185));
+            Menu.AddChild(MainToIntro);
 
-            MainToOptions = new Button("Options", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 110));
-            Menu.AddChild(MainToOptions);
+            MainToGame = new Button("Load Game", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 110));
+            Menu.AddChild(MainToGame);
 
             MainToQuit = new Button("Quit", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 35));
             Menu.AddChild(MainToQuit);
 
-            UserInterface.Active.AddEntity(Menu);
+            this.AddChild(Menu);
         }
     }
 }
