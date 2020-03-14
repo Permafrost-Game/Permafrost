@@ -38,13 +38,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("trim", "Trim grass", "Trim grass", onComplete: Trim)
+                new InstructionType(
+                    id: "trim",
+                    name:"Trim grass",
+                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    onComplete: Trim
+                    )
             };
         }
 
         private void Trim(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Fibers, 4));
             Dispose();
         }
 

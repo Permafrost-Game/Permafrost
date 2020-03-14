@@ -44,7 +44,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public void Hunt(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 2));
             Dispose();
             SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
         }

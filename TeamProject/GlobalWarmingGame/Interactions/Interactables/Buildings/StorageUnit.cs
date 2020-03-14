@@ -12,8 +12,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class StorageUnit : Sprite, IInteractable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 4),
-                                                                                      new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood),  8)};
+        public List<ResourceItem> CraftingCosts { get; } = new List<ResourceItem>() { new ResourceItem(Resource.Stone, 4),
+                                                                                      new ResourceItem(Resource.Wood,  8)};
 
         public List<InstructionType> InstructionTypes { get; private set; }
 
@@ -38,6 +38,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     name: $"Set {r.ToString()}",
                     description: $"Set {r.ToString()} as the active resource",
                     //requiredResources: new List<ResourceItem> { new ResourceItem(ResourceTypeFactory.GetResource(r)) },
+                    checkValidity: (Instruction i) => ResourceItem == null,
                     onComplete: SetResource
                 )).ToList();
         }
@@ -48,14 +49,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             //if(instruction.Type.RequiredResources.Count != 1) throw new Exception($"{this.GetType().ToString()} expected RequiredResources.Count to be 1, but was {instruction.Type.RequiredResources.Count}");
             //ResourceItem = instruction.Type.RequiredResources[0];
             Resource r = (Resource) Enum.Parse(typeof(Resource), instruction.Type.ID);
-            ResourceItem = new ResourceItem(ResourceTypeFactory.GetResource(r));
+            ResourceItem = new ResourceItem(r);
             InstructionTypes.Clear();
 
             StoreInstruction = new InstructionType(
                             id: "storeItems",
                             name: $"Store {ResourceItem.ResourceType.displayName}",
                             description: "",
-                            requiredResources: new List<ResourceItem> { new ResourceItem(ResourceTypeFactory.GetResource(ResourceItem.ResourceType.ResourceID), 1) },
+                            requiredResources: new List<ResourceItem> { new ResourceItem(ResourceItem.ResourceType, 1) },
+                            //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(ResourceItem.ResourceType.ResourceID),
                             onStart: StoreItem
                             );
 

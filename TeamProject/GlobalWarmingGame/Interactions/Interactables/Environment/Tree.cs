@@ -70,6 +70,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     name: "Chop",
                     description: "Chop for wood",
                     requiredResources: new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1) },
+                    //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(Resource.Axe),
                     onStart: StartChop,
                     onComplete: EndChop,
                     timeCost: 3500f
@@ -85,9 +86,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         }
         private void EndChop(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Wood, 4));
             Choppable = false;
-            InstructionTypes.Remove(chop);        
+            InstructionTypes.Remove(chop);
         }
 
         public object Reconstruct()

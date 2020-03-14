@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Farm : Sprite, IInteractable, IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 4)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -31,8 +31,21 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         )
         {
             InstructionTypes = new List<InstructionType>();
-            plant = new InstructionType("plant", "Plant", "Plant", timeCost: 3000f, onComplete: Plant);
-            harvest = new InstructionType("harvest", "Harvest", "Harvest", timeCost: 3000f, onComplete: Harvest);
+            plant = new InstructionType(
+                id: "plant",
+                name: "Plant",
+                description: "Plant",
+                checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                timeCost: 3000f,
+                onComplete: Plant
+                );
+            harvest = new InstructionType(
+                id: "harvest",
+                name: "Harvest",
+                description: "Harvest",
+                checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                timeCost: 3000f,
+                onComplete: Harvest);
 
             timeUntilGrown = 20000f;
             InstructionTypes.Add(plant);
@@ -40,7 +53,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Harvest(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 10));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 10));
 
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);

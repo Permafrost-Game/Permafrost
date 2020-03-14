@@ -42,13 +42,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine coal", onComplete: Mine)
+                new InstructionType(
+                    id: "mine",
+                    name: "Mine",
+                    description: "Mine coal",
+                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    onComplete: Mine)
             };
         }
 
         private void Mine(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Coal), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Coal, 4));
             //Maybe destory the node or allow 3 more mine operations
         }
 

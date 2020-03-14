@@ -36,7 +36,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType("mine", "Mine", "Mine stone", timeCost: 500f, onStart: StartMine, onComplete: EndMine)
+                new InstructionType(
+                    id: "mine",
+                    name: "Mine",
+                    timeCost: 500f,
+                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    onStart: StartMine,
+                    onComplete: EndMine
+                    )
             };
         }
 
@@ -49,7 +56,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private void EndMine(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.StonePickup);
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Stone, 2));
             Dispose();
         }
 

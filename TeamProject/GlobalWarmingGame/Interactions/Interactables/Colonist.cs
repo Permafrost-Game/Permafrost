@@ -251,7 +251,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (timeUntillNextHungerCheck < 0)
             {
                 //If colonist doesn't have food on them, they are starving -1 health
-                if (!Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+                if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
                 {
                     //If the colonist is hungry they take health damage and reset else increase hunger
                     if (Hunger == 5)

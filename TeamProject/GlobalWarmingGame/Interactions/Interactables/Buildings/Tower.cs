@@ -57,7 +57,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
             else
             {
-                InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onComplete: Capture));
+                InstructionTypes.Add(new InstructionType(
+                    id: "capture",
+                    name: "Capture",
+                    description: "Capture",
+                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    onComplete: Capture)
+                    );
                 Heating = false;
             }
         }
