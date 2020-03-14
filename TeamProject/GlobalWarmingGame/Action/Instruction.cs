@@ -9,7 +9,7 @@ namespace GlobalWarmingGame.Action
     /// <summary>
     /// An Instruction descrives a instance interaction between two interactable objects.
     /// </summary>
-    public class Instruction : IComparable<Instruction>, IUpdatable
+    public class Instruction : IComparable<Instruction>, Engine.IUpdatable
     {
         public InstructionType Type { get; set; }
         public IInstructionFollower ActiveMember { get; set; }

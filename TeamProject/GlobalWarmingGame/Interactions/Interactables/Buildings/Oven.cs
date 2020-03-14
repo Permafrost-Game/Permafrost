@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class Oven : Sprite, IInteractable, IUpdatable, IBuildable
+    class Oven : Sprite, IInteractable, Engine.IUpdatable, IBuildable
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.MachineParts, 6),
                                                                                                    new ResourceItem(Resource.Stone, 4),

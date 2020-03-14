@@ -465,7 +465,7 @@ namespace GlobalWarmingGame.UI
         private static void InventoryChangeCallBack(object sender, ResourceItem item)
         {
             string op = item.Weight >= 0 ? "+" : "";
-            View.ResourceTransactionMessage(((GameObject)sender).Position, $"{op} {item.Weight} {item.ResourceType.displayName}");
+            GameObjectManager.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
             UpdateInventoryMenu((IStorage)sender);
         }
 

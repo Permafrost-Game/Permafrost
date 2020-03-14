@@ -10,7 +10,7 @@ namespace Engine.Drawing
     /// When <see cref="AnimatedSprite.isAnimated"/> is true, the <c>Texture2D[]</c> of index <see cref="AnimatedSprite.currentTextureGroupIndex"/> in <see cref="AnimatedSprite.textureSet"/><br/>
     /// which contains animation frames, will be drawn every frame. After <see cref="AnimatedSprite.frameTime"/>, the next texture in the array will be used, looping back round
     /// </summary>
-    public class AnimatedSprite : Sprite, IUpdatable
+    public class AnimatedSprite : Sprite, Engine.IUpdatable
     {
         
         /// <summary>The time in ms between animation frames</summary>

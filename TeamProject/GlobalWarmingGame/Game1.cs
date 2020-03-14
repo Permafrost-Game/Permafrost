@@ -243,7 +243,7 @@ namespace GlobalWarmingGame
                 TemperatureManager.UpdateTemperature(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
-                foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
+                foreach (Engine.IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
 
                 base.Update(gameTime);
