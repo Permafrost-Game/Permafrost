@@ -25,10 +25,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public WorkBench(Vector2 position, Texture2D texture) : base
         (
             position: position,
-            size: new Vector2(texture.Width, texture.Height),
-            rotation: 0f,
-            origin: new Vector2(texture.Width / 2f, texture.Height / 2f),
-            tag: "WorkBench",
             texture: texture
         )
         {
@@ -154,10 +150,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 }
                 //Console.WriteLine("Added "+ craftable.ID + " amount: " + 1);
                 colonist.Inventory.AddItem(new ResourceItem(craftable, 1));
-            }
-            else
-            {
-                //ResourceNotification.Visible = true;
             }
         }
 

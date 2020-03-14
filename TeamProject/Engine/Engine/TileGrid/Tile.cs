@@ -10,26 +10,25 @@ namespace Engine.TileGrid
     /// </summary>
     public class Tile : GameObject, Engine.Drawing.IDrawable
     {
-
         private readonly Texture2D texture;
         public new Vector2 Position { get; }
-        public Temperature temperature;
+        public Temperature Temperature { get; set; }
         public bool Heated { get; set; }
 
         public string Type { get; }
-        private readonly int tag = -1;
         public bool Walkable { get; }
 
         private readonly Rectangle sourceRectangle;
         private readonly Rectangle destinationRectangle;
-        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable) : base(position, size)
+        public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, float initialTemperature) : base(position, size)
         {
             this.Type = texture.Name;
 
             this.Position = position;
             this.texture = texture;
             this.Walkable = walkable;
-            temperature = new Temperature(-5/*ZoneManager.GlobalTemperature*/);//TODO fix this
+
+            Temperature = new Temperature(initialTemperature);
 
             sourceRectangle = new Rectangle(
                                  location: new Point((int) position.X % texture.Width, (int)position.Y % texture.Height),
@@ -46,24 +45,6 @@ namespace Engine.TileGrid
                 sourceRectangle: sourceRectangle,
                 color: Color.White
                 );
-        }
-
-        public override bool Equals(object t)
-        {
-            if (t is Tile tile)
-            {
-                if (this.Size.Equals(tile.Size) && this.Position.Equals(tile.Position))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        ///<summary>Unique hashcode based on tag</summary>
-        public override int GetHashCode()
-        {
-            return (base.GetHashCode() + tag);
         }
     }
 }

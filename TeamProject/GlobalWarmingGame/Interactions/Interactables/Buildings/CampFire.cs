@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatable
+    public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatSource
     {
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 2), new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);
@@ -24,10 +24,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public CampFire(Vector2 position, Texture2D[][] textureSet) : base
         (
             position: position,
-            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
-            rotation: 0f,
-            origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            tag: "CampFire",
             textureSet: textureSet,
             frameTime: 50f
         )

@@ -22,7 +22,7 @@ namespace Engine.TileGrid
         /// <param name="height">The number of tiles to be generated in the Y direction</param>
         /// <param name="tileSet">The TileSet that is to be used</param>
         /// <returns>A TileMap</returns>
-        public static TileMap GenerateTileMap(int seed, float scale, int xOffset, int yOffset, int width, int height, TileSet tileSet)
+        public static TileMap GenerateTileMap(int seed, float scale, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
         {
             Noise.Seed = seed;
             Tile[,] tiles = new Tile[width, height];
@@ -41,7 +41,8 @@ namespace Engine.TileGrid
                                 texture: tileSet.tileSetTextures[counter],
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
-                                walkable: !tileSet.tileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water")
+                                walkable: !tileSet.tileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water"),
+                                globalTemperature
                                 );
                             break;
                         }
@@ -53,7 +54,8 @@ namespace Engine.TileGrid
                                 texture: tileSet.tileSetTextures[0],
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
-                                walkable: true
+                                walkable: true,
+                                globalTemperature
                                 );
                     }
 

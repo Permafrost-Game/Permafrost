@@ -80,7 +80,11 @@ namespace GlobalWarmingGame
 
         public static void SaveZone()
         {
-            if (serialization)
+            if (!serialization)
+            {
+                zoneMap[zonePos] = gameObjects.ToList();
+            }
+            else
             {
                 Console.WriteLine("Saving to " + ZoneFilePath());
                 Serializer.Serialize(ZoneFilePath(), gameObjects);
@@ -90,7 +94,7 @@ namespace GlobalWarmingGame
         private static TileMap GenerateMap(Vector2 pos)
         {
             //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
         private static void SetZone(Vector2 position, List<Colonist> colonists = null)
@@ -107,16 +111,25 @@ namespace GlobalWarmingGame
             if (colonists != null)
                 foreach (Colonist colonist in colonists)
                     Add(colonist);
+                    
 
             if (!serialization)
             {
                 if (zoneMap.ContainsKey(zonePos))
+                {
                     gameObjects = zoneMap[zonePos];
+                    if (colonists != null)
+                        foreach (Colonist colonist in colonists)
+                            Add(colonist);
+                    Updatables = Filter<IUpdatable>();
+                    Drawables = Filter<IDrawable>();
+                    Interactables = Filter<IInteractable>();
+                }
                 else
                 {
-                    zoneMap.Add(zonePos, gameObjects);
 
                     ZoneGenerator.SpawnGameObjects(seed, zonePos);
+                    zoneMap.Add(zonePos, gameObjects);
 
                     if (position == Vector2.Zero)
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
@@ -267,6 +280,7 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <param name="tag"></param>
         /// <returns>GameObjects with the specified tag</returns>
+        [Obsolete]
         public static List<GameObject> GetObjectsByTag(string tag)
         {
             List<GameObject> go = new List<GameObject>();

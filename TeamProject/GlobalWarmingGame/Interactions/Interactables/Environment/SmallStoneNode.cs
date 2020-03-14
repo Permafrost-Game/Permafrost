@@ -54,7 +54,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             SoundFactory.PlaySoundEffect(Sound.StonePickup);
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 2));
+            Dispose();
+        }
+
+        private void Dispose()
+        {
             GameObjectManager.Remove(this);
+            this.InstructionTypes.Clear();
         }
 
         public object Reconstruct()

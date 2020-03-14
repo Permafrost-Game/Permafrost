@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using System.IO;
+using GlobalWarmingGame.Interactions;
 
 namespace GlobalWarmingGame
 {
@@ -35,7 +36,7 @@ namespace GlobalWarmingGame
         SpriteBatch spriteBatch;
 
         TileSet tileSet;
- 
+
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
@@ -113,7 +114,7 @@ namespace GlobalWarmingGame
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            
+
             Content.RootDirectory = "Content";
         }
 
@@ -203,7 +204,7 @@ namespace GlobalWarmingGame
                 tileSet = new TileSet(textureSet, new Vector2(32f));
 
                 GameObjectManager.Init(tileSet, seed, currentZone, false);
-                    
+
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
@@ -216,7 +217,7 @@ namespace GlobalWarmingGame
             {
                 GameState = GameState.MainMenu;
             }
-            
+
         }
 
         protected override void UnloadContent()
@@ -245,16 +246,12 @@ namespace GlobalWarmingGame
             {
 
                 camera.Update(gameTime);
-                GameObjectManager.ZoneMap.Update(gameTime);
 
-                BuildingManager.UpdateBuildingTemperatures(gameTime, GameObjectManager.ZoneMap);
-                UpdateColonistTemperatures(gameTime);
+                TemperatureManager.UpdateTemperature(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
-
-                UpdateColonistTemperatures(gameTime);
 
                 base.Update(gameTime);
             }
@@ -264,20 +261,6 @@ namespace GlobalWarmingGame
             }
         }
 
-
-
-        #region Update Colonists Temperatures
-        void UpdateColonistTemperatures(GameTime gameTime)
-        {
-            //Adjust the temperatures of the colonists
-            foreach (Colonist colonist in GameObjectManager.GetObjectsByTag("Colonist"))
-            {
-                float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).temperature.Value;
-
-                colonist.UpdateTemp(tileTemp, gameTime);
-            }
-        }
-        #endregion
 
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
@@ -425,4 +408,3 @@ namespace GlobalWarmingGame
 
     public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting }
 }
- 
