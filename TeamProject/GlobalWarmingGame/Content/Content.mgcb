@@ -4868,17 +4868,17 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
-#begin sound/songs/ColdAtmosphericMusic.mp3
-/importer:Mp3Importer
+#begin sound/songs/ColdAtmosphericMusic.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/songs/ColdAtmosphericMusic.mp3
+/build:sound/songs/ColdAtmosphericMusic.ogg
 
-#begin sound/songs/enemy_zone.mp3
-/importer:Mp3Importer
+#begin sound/songs/enemy_zone.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/songs/enemy_zone.mp3
+/build:sound/songs/enemy_zone.ogg
 
 #begin sound/songs/menu.ogg
 /importer:OggImporter

@@ -334,6 +334,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         passiveMember: storageUnit
                         )
                     );
+                    break;
                 }
             }
         }
