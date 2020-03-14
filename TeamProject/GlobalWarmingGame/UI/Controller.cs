@@ -419,8 +419,9 @@ namespace GlobalWarmingGame.UI
         /// and calls <see cref="View.UpdateInventoryMenu"/>
         /// </summary>
         /// <param name="inventory">The <see cref="Inventory"/> to be updated</param>
-        private static void UpdateInventoryMenu(Inventory inventory)
+        private static void UpdateInventoryMenu(IStorage storage)
         {
+            Inventory inventory = storage.Inventory;
             IEnumerable<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString()));
             View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
@@ -436,8 +437,8 @@ namespace GlobalWarmingGame.UI
                 Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
                 View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, SelectInventory), icon: icon);
                 openInventories.Add(storage.Inventory);
-                storage.Inventory.InventoryChange += InventoryChangeCallBack;
-                UpdateInventoryMenu(storage.Inventory);
+                storage.InventoryChange += InventoryChangeCallBack;
+                UpdateInventoryMenu(storage);
             }
         }
 
@@ -450,7 +451,7 @@ namespace GlobalWarmingGame.UI
             if(openInventories.Contains(storage.Inventory))
             {
                 openInventories.Remove(storage.Inventory);
-                storage.Inventory.InventoryChange -= InventoryChangeCallBack;
+                storage.InventoryChange -= InventoryChangeCallBack;
                 View.RemoveInventory(storage.Inventory.GetHashCode());
             }
             
@@ -461,9 +462,11 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void InventoryChangeCallBack(object sender, EventArgs e)
+        private static void InventoryChangeCallBack(object sender, ResourceItem item)
         {
-            UpdateInventoryMenu((Inventory)sender);
+            string op = item.Weight >= 0 ? "+" : "";
+            View.ResourceTransactionMessage(((GameObject)sender).Position, $"{op} {item.Weight} {item.ResourceType.displayName}");
+            UpdateInventoryMenu((IStorage)sender);
         }
 
         /// <summary>

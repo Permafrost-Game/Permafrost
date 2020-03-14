@@ -8,7 +8,7 @@ namespace GlobalWarmingGame.ResourceItems
 {
     public class Inventory : IReconstructable
     {
-        public event EventHandler InventoryChange = delegate { };
+        public event EventHandler<ResourceItem> InventoryChange = delegate { };
 
         public Dictionary<Resource, ResourceItem> Resources { get; private set; }
 
@@ -64,31 +64,21 @@ namespace GlobalWarmingGame.ResourceItems
             if (Resources.ContainsKey(item.ResourceType.ResourceID))
             {
                 Resources[item.ResourceType.ResourceID].Weight += item.Weight;
-                
+                if (Resources[item.ResourceType.ResourceID].Weight <= 0)
+                {
+                    Resources.Remove(item.ResourceType.ResourceID);
+                }
             }
             else if(item.Weight > 0)
             {
                 Resources.Add(item.ResourceType.ResourceID, item.Clone());
-            } else
-            {
-                return;
             }
+            
                 
             CurrentLoad += item.Weight;
-            InventoryChange.Invoke(this, new EventArgs());
+            InventoryChange.Invoke(this, item);
         }
 
-
-        private void RemoveItemUnchecked(ResourceItem item)
-        { 
-            Resources[item.ResourceType.ResourceID].Weight -= item.Weight;
-
-            if(Resources[item.ResourceType.ResourceID].Weight <= 0)
-                Resources.Remove(item.ResourceType.ResourceID);
-
-            CurrentLoad -= item.Weight;
-            InventoryChange.Invoke(this, new EventArgs());
-        }
 
         /// <summary>
         /// Removes <paramref name="item"/> from the <see cref="Inventory"/>
@@ -99,7 +89,9 @@ namespace GlobalWarmingGame.ResourceItems
         {
             if (Contains(item))
             {
-                RemoveItemUnchecked(item);
+                ResourceItem invertedItem = item.Clone();
+                invertedItem.Weight = -item.Weight;
+                AddItemUnchecked(invertedItem);
                 return true;
             }
 

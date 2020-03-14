@@ -25,6 +25,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         [PFSerializable]
         public readonly Inventory inventory;
+        public event EventHandler<ResourceItem> InventoryChange = delegate { };
 
         public Inventory Inventory { get => inventory; }
 
@@ -113,6 +114,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             else
                 this.inventory = inventory;
 
+            this.inventory.InventoryChange += InvokeInventoryChange;
+            
+
             attackRange = 60;
             AttackPower = 30;
             attackSpeed = 1000;
@@ -128,6 +132,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>();
 
+        }
+
+        private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
+        {
+            InventoryChange.Invoke(this, resourceItem);
         }
 
         internal void setDead()

@@ -328,6 +328,24 @@ namespace GlobalWarmingGame.UI
             
         }
 
-        
+        internal static void ResourceTransactionMessage(Vector2 location, string message)
+        {
+            //Console.WriteLine(location.X + location.Y + message);
+
+
+            Entity p = new Paragraph(
+                text: message,
+                anchor: Anchor.TopLeft,
+                offset: new Vector2(0)//location / UserInterface.Active.GlobalScale
+                );
+
+
+            UserInterface.Active.AddEntity(p);
+
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            {
+                UserInterface.Active.RemoveEntity(p);
+            });
+        }
     }
 }
