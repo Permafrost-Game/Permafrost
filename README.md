@@ -1,5 +1,5 @@
 # Permafrost Game
-Permafrost is a stratergy game made with cross platform MonoGame.
+Permafrost is a stratergy game for Windows made with MonoGame.
 
 This game is made for Team 2's submission for CS2010.
 
@@ -8,7 +8,7 @@ This game is currently in development and will be relesed in March 2020 for Wind
 Pre-release versions can be [downloaded here](https://github.com/Permafrost-Game/Permafrost/releases/latest).
 
 ## Concept
-Permafrost is a single player strategy game where a player controls a groupof characters with the aim to manage resources to achieve survival. Our concept is, top down colony management and survival game set in a distant future. The player will be expected to use gameplay mechanics to manage resources within the colony. Progression will be met with increased difficulty with random enemy encounters and changes to weather conditions.
+Permafrost is a single player strategy game where a player controls a group of characters with the aim to manage resources to achieve survival. Our concept is, top down colony management and survival game set in a distant future. The player will be expected to use gameplay mechanics to manage resources within the colony. Progression will be met with increased difficulty with random enemy encounters and changes to weather conditions.
 ## Story
 Permafrost is set in a post-apocalyptic future. In an attempt to save the world from global warming, humanity built a global system of cooling towers. This however, allowed the AI controlling the towers to overthrow humanity by freezing the earth. The gameis set after these events in a hostile frozen wasteland, with humankind fighting for survival. From there the emergent story will be the focus as every game decision is up to the player.The game will start with an introductory cutscene explaining the events leading the present day.
 ## Graphics
