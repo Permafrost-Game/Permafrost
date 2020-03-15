@@ -158,6 +158,7 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
         base.Update(gameTime); //update the game
             if (this.Health <= 0) {
                 this.SetEnemyDead();
+                return;
             }
         Aggro(); // enemy is agressive all the time
 
@@ -221,7 +222,7 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
 
                 if ( targetInRange.Health > 0 && this.Health > 0)
                 {   //set flags for animation
-                    targetInRange.inCombat = true; 
+                    targetInRange.InCombat = true; 
                     this.SetInCombat(true);
                     EnemyAttack(gameTime); //actually try attacking
                 }

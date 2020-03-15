@@ -44,17 +44,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Combat
         public float Health { get; set; }
-        public int attackSpeed { get; set; }
+        public int AttackSpeed { get; set; }
         public float AttackPower { get; set; }
-        public float attackRange { get; set; }
+        public float AttackRange { get; set; }
         public float MaxHealth { get; private set; }
-        public bool ColonistDead { get; set; } = false;
+
+        private bool toBeRemoved = false;
+        private bool isDead = false;
         private bool combatModeOn = false;
         public Vector2 lastPosition;
         Enemy enemy = null;
 
         private bool _inCombat = false;
-        public bool inCombat
+        public bool InCombat
         {
             get { return _inCombat; }
             set
@@ -124,9 +126,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             this.inventory.InventoryChange += InvokeInventoryChange;
             
 
-            attackRange = 70;
+            AttackRange = 70;
             AttackPower = 30;
-            attackSpeed = 1000;
+            AttackSpeed = 1000;
             lastPosition = position;
 
 
@@ -147,20 +149,21 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InventoryChange.Invoke(this, resourceItem);
         }
 
-        internal void setDead()
+        internal void SetDead()
         {
             this.Rotation = 1.5f;
-            ColonistDead = true;
-                if (!deathSoundPlayed) { 
-            SoundFactory.PlaySoundEffect(Sound.colonistDying);
-                    deathSoundPlayed = true;
-                }
-                #region Start 2 Seconds Delay for 'Animation'
-                Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            this.isDead = true;
+            isAnimated = false;
+            if (!deathSoundPlayed)
+            { 
+                SoundFactory.PlaySoundEffect(Sound.colonistDying);
+                deathSoundPlayed = true;
+            }
+
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                GameObjectManager.Remove(this);
+                toBeRemoved = true;
             });
-            #endregion
         }
 
 
@@ -194,6 +197,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public override void Update(GameTime gameTime)
         {
+            if(toBeRemoved)
+            {
+                GameObjectManager.Remove(this);
+                return;
+            }
+
             Vector2 lastPosition = this.Position;
             Move(gameTime);
             base.Update(gameTime);
@@ -206,8 +215,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (!isAttacking)
                 {
-                    TextureGroupIndex = 0;
-                    isAnimated = false;
+                    //TextureGroupIndex = 0;
+                    //isAnimated = false;
                 }
             }
             else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
@@ -227,25 +236,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         Goals.Enqueue(instructions.Peek().PassiveMember.Position);
                     }
                 }
-                if (enemy != null)
-                {
-                    combatModeOn = true;
-                    SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                }
-                else
-                {
-                    combatModeOn = false;
+            }
 
-                }
-                if (combatModeOn)
-                {
-                    performCombat(gameTime, enemy);
-                }
+            if (enemy != null)
+            {
+                combatModeOn = true;
+                SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+            else
+            {
+                combatModeOn = false;
 
-                if (this.Health <= 0)
-                {
-                    this.setDead();
-                }
+            }
+            if (combatModeOn)
+            {
+                PerformCombat(gameTime, enemy);
+            }
+
+            if (this.Health <= 0 && !isDead)
+            {
+                this.SetDead();
             }
 
             FreezeCheck(gameTime);
@@ -253,14 +263,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        private void performCombat(GameTime gameTime, Enemy enemy)
+        private void PerformCombat(GameTime gameTime, Enemy enemy)
         {
 
             
 
                 if (enemy.Health > 0 && this.Health > 0)
                 {
-                    inCombat = true;
+                    InCombat = true;
                   
                     ColonistAttack(gameTime);
                 }
@@ -403,7 +413,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 instructions.Dequeue();
                 CheckInventoryDump();
-                if (!inCombat)
+                if (!InCombat)
                 {
                     TextureGroupIndex = 0;
                     
@@ -425,7 +435,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 enemy.Health = enemy.Health - this.AttackPower;
                 if (enemy.Health<=0)
                 {
-                    this.inCombat = false;
+                    this.InCombat = false;
                     this.isAttacking = false;
 
                 }
@@ -443,7 +453,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 isAttacking = false;
                 TextureGroupIndex = 2;
             }
-            if (ColonistimeToAttack >= this.attackSpeed)
+            if (ColonistimeToAttack >= this.AttackSpeed)
             {
                 ColonistimeToAttack = 0;
                 return true;

@@ -17,7 +17,7 @@ public static List<Enemy> enemies = GameObjectManager.Filter<Enemy>().ToList();
 
 public static Enemy FindColonistThreat (Colonist col) {
         foreach (Enemy enemy in enemies) {
-        if (col.attackRange>DistanceBetweenCombatants(enemy.Position,col.Position)) {
+        if (col.AttackRange>DistanceBetweenCombatants(enemy.Position,col.Position)) {
             return enemy;
         }    
         } 
