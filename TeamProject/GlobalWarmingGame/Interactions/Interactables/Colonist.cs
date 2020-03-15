@@ -13,419 +13,419 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
-{
-    private const float COLONIST_FRAME_TIME = 100f;
-    private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
-
-    #region Instruction
-
-    public List<InstructionType> InstructionTypes { get; }
-    private readonly Queue<Instruction> instructions;
-
-    [PFSerializable]
-    public readonly Inventory inventory;
-
-    public Inventory Inventory { get => inventory; }
-
-    [PFSerializable]
-    public readonly int textureSetID;
-
-    [PFSerializable]
-    public Vector2 PFSPosition
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage
     {
-        get { return Position; }
-        set { Position = value; }
-    }
+        private const float COLONIST_FRAME_TIME = 100f;
+        private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
 
-    #endregion
+        #region Instruction
 
-    #region Combat
-    public float Health { get; set; }
-    public int attackSpeed { get; set; }
-    public float AttackPower { get; set; }
-    public float attackRange { get; set; }
-    public float MaxHealth { get; private set; }
-    public bool ColonistDead { get; set; } = false;
-    private bool combatModeOn = false;
-    public Vector2 lastPosition;
-    Enemy enemy = null;
+        public List<InstructionType> InstructionTypes { get; }
+        private readonly Queue<Instruction> instructions;
 
-    private bool _inCombat = false;
-    public bool inCombat
-    {
-        get { return _inCombat; }
-        set
+        [PFSerializable]
+        public readonly Inventory inventory;
+
+        public Inventory Inventory { get => inventory; }
+
+        [PFSerializable]
+        public readonly int textureSetID;
+
+        [PFSerializable]
+        public Vector2 PFSPosition
         {
-            _inCombat = value;
-            if (value == false)
-            {
-                TextureGroupIndex = 0;
-            }
-
+            get { return Position; }
+            set { Position = value; }
         }
-    }
-    private bool _isAttacking = false;
-    public bool isAttacking
-    {
-        get { return _isAttacking; }
-        set
-        {
-            _isAttacking = value;
-            isAnimated = true;
-            SpriteEffect = SpriteEffects.None;
 
-            TextureGroupIndex = _isAttacking ? 1 : 0;
-
-        }
-    }
-    #endregion
-
-    #region Temperature
-
-    public Temperature Temperature { get; set; } = new Temperature(38);
-    private readonly float CoreBodyTemperature = 38;
-    public int UpperComfortRange { get; private set; } = 40;
-    public int LowerComfortRange { get; private set; } = 15;
-    #endregion
-
-    #region Food
-    private static readonly float BASE_FOOD_CONSUMPTION = 60000f;
-    private float timeUntillFoodTick;
-    private float timeUntillTemperature = 2000f;
-    private float timeToTemperature;
-    private float timeUntilTemperatureUpdate = 2000f;
-    private float timeToTemperatureUpdate;
-        private bool deathSoundPlayed;
         #endregion
 
-        #region PathFinding
-        public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
-    public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
-    public float Speed { get; set; }
-    public double ColonistimeToAttack { get; private set; }
-    #endregion
+        #region Combat
+        public float Health { get; set; }
+        public int attackSpeed { get; set; }
+        public float AttackPower { get; set; }
+        public float attackRange { get; set; }
+        public float MaxHealth { get; private set; }
+        public bool ColonistDead { get; set; } = false;
+        private bool combatModeOn = false;
+        public Vector2 lastPosition;
+        Enemy enemy = null;
 
-    public Colonist() : this(
-        position: Vector2.Zero,
-        textureSetType: TextureSetTypes.colonist) { }
-
-    public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
-    (
-        position: position,
-        textureSet: Textures.MapSet[textureSetType],
-        frameTime: COLONIST_FRAME_TIME
-    )
-    {
-        textureSetID = (int)textureSetType;
-
-        if (inventory == null)
-            this.inventory = new Inventory(capacity);
-        else
-            this.inventory = inventory;
-
-        attackRange = 70;
-        AttackPower = 30;
-        attackSpeed = 1000;
-        lastPosition = position;
-
-
-        Speed = 0.25f;
-        MaxHealth = 100f;
-        Health = MaxHealth;
-        Temperature.Value = CoreBodyTemperature;
-        timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
-        timeToTemperature = timeUntillTemperature;
-        timeToTemperatureUpdate = timeUntilTemperatureUpdate;
-
-        instructions = new Queue<Instruction>();
-        InstructionTypes = new List<InstructionType>();
-
-    }
-
-    internal void setDead()
-    {
-        this.Rotation = 1.5f;
-        ColonistDead = true;
-            if (!deathSoundPlayed) { 
-        SoundFactory.PlaySoundEffect(Sound.colonistDying);
-                deathSoundPlayed = true;
-            }
-            #region Start 2 Seconds Delay for 'Animation'
-            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+        private bool _inCombat = false;
+        public bool inCombat
         {
-            GameObjectManager.Remove(this);
-        });
+            get { return _inCombat; }
+            set
+            {
+                _inCombat = value;
+                if (value == false)
+                {
+                    TextureGroupIndex = 0;
+                }
+
+            }
+        }
+        private bool _isAttacking = false;
+        public bool isAttacking
+        {
+            get { return _isAttacking; }
+            set
+            {
+                _isAttacking = value;
+                isAnimated = true;
+                SpriteEffect = SpriteEffects.None;
+
+                TextureGroupIndex = _isAttacking ? 1 : 0;
+
+            }
+        }
         #endregion
-    }
 
+        #region Temperature
 
-    public void OnGoalComplete(Vector2 completedGoal)
-    {
-        if (Goals.Count == 0
-            && instructions.Count > 0
-            && completedGoal == (instructions.Peek().PassiveMember.Position)
-                )
+        public Temperature Temperature { get; set; } = new Temperature(38);
+        private readonly float CoreBodyTemperature = 38;
+        public int UpperComfortRange { get; private set; } = 40;
+        public int LowerComfortRange { get; private set; } = 15;
+        #endregion
+
+        #region Food
+        private static readonly float BASE_FOOD_CONSUMPTION = 60000f;
+        private float timeUntillFoodTick;
+        private float timeUntillTemperature = 2000f;
+        private float timeToTemperature;
+        private float timeUntilTemperatureUpdate = 2000f;
+        private float timeToTemperatureUpdate;
+            private bool deathSoundPlayed;
+            #endregion
+
+            #region PathFinding
+            public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
+        public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
+        public float Speed { get; set; }
+        public double ColonistimeToAttack { get; private set; }
+        #endregion
+
+        public Colonist() : this(
+            position: Vector2.Zero,
+            textureSetType: TextureSetTypes.colonist) { }
+
+        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        (
+            position: position,
+            textureSet: Textures.MapSet[textureSetType],
+            frameTime: COLONIST_FRAME_TIME
+        )
         {
-            Instruction currentInstruction = instructions.Peek();
-            try
-            {
-                currentInstruction.Start();
-            }
-            catch (InvalidInstruction e)
-            {
-                OnInstructionComplete(e.instruction);
-            }
-                
-        }
-    }
+            textureSetID = (int)textureSetType;
+
+            if (inventory == null)
+                this.inventory = new Inventory(capacity);
+            else
+                this.inventory = inventory;
+
+            attackRange = 70;
+            AttackPower = 30;
+            attackSpeed = 1000;
+            lastPosition = position;
 
 
-    private void Move(GameTime gameTime)
-    {
-        Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-        UpdateDepth(0.5f);
-    }
-
-
-    public override void Update(GameTime gameTime)
-    {
-        Vector2 lastPosition = this.Position;
-        Move(gameTime);
-        base.Update(gameTime);
-        enemy = GlobalCombatDetector.FindColonistThreat(this);
-
-        Vector2 delta = lastPosition - this.Position;
-
-
-        if (delta.Equals(Vector2.Zero))
-        {
-            if (!isAttacking)
-            {
-                TextureGroupIndex = 0;
-                isAnimated = false;
-            }
-        }
-        else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
-        {
-            isAnimated = true;
-            TextureGroupIndex = 2;
-            SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        }
-
-        if (instructions.Count > 0)
-        {
-            if (Goals.Count == 0)
-            {
-                Goals.Enqueue(instructions.Peek().PassiveMember.Position);
-            }
-            instructions.Peek().Update(gameTime);
-        }
-
-           
-
-        if (enemy!=null)
-        {
-            combatModeOn = true;
-            SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        }
-        else {
-            combatModeOn = false;
-                
-        }
-
-
-        if (combatModeOn)
-        {
-            performCombat(gameTime, enemy);
-        }
-            
-           
-
-        if (this.Health <= 0) {
-            this.setDead();
-        }
-
-        TemperatureCheck(gameTime);
-        HungerCheck(gameTime);
-
-    }
-
-    private void performCombat(GameTime gameTime, Enemy enemy)
-    {
-
-            
-
-            if (enemy.Health > 0 && this.Health > 0)
-            {
-                inCombat = true;
-                  
-                ColonistAttack(gameTime);
-            }
-            
-
-    }
-
-        #region Colonist Temperature Check
-    private void TemperatureCheck(GameTime gameTime)
-    {
-        //Temperature affecting colonist's health
-        timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-        if (timeToTemperature < 0f)
-        {
-            if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
-            {
-                //Health -= 1;
-            }
-            timeToTemperature = timeUntillTemperature;
-        }
-    }
-    #endregion
-
-    #region Colonist Hunger Check
-    private void HungerCheck(GameTime gameTime)
-    {
-        //Temperature affecting food
-        timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-        Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
-
-        if (foodFormula <= 0.25)
-        {
-            foodFormula = 0.25;
-        }
-        //TODO uncomment
-        // foodFormula is a multiplier on the timeUntillFoodTick
-        if ((timeUntillFoodTick * foodFormula) < 0)
-        {
-            FoodTick();
+            Speed = 0.25f;
+            MaxHealth = 100f;
+            Health = MaxHealth;
+            Temperature.Value = CoreBodyTemperature;
             timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
-        }
-    }
-    private void FoodTick()
-    {
-        //If colonist doesn't have food on them, they are starving -1 health
-        ResourceItem food = new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1);
-        if (!Inventory.RemoveItem(food))
-        {
-            //TODO uncomment
-            //Health -= 1;
-        }
-        else
-        {
-            //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
-        }
-    }
-    #endregion
+            timeToTemperature = timeUntillTemperature;
+            timeToTemperatureUpdate = timeUntilTemperatureUpdate;
 
-    #region Update Temperature
-    public void UpdateTemp(float tileTemp, GameTime gameTime)
-    {
-        //Adjust the colonist's temperature based on the tile they are over
-        timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-        if (timeToTemperatureUpdate < 0f)
+            instructions = new Queue<Instruction>();
+            InstructionTypes = new List<InstructionType>();
+
+        }
+
+        internal void setDead()
         {
-            if (tileTemp > CoreBodyTemperature)
+            this.Rotation = 1.5f;
+            ColonistDead = true;
+                if (!deathSoundPlayed) { 
+            SoundFactory.PlaySoundEffect(Sound.colonistDying);
+                    deathSoundPlayed = true;
+                }
+                #region Start 2 Seconds Delay for 'Animation'
+                Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                Temperature.Value = Temperature.Value + (tileTemp / 10);
-                //Colonist's temperature should be able to be greater than the tile they are over
-                Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
-                //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                GameObjectManager.Remove(this);
+            });
+            #endregion
+        }
+
+
+        public void OnGoalComplete(Vector2 completedGoal)
+        {
+            if (Goals.Count == 0
+                && instructions.Count > 0
+                && completedGoal == (instructions.Peek().PassiveMember.Position)
+                    )
+            {
+                Instruction currentInstruction = instructions.Peek();
+                try
+                {
+                    currentInstruction.Start();
+                }
+                catch (InvalidInstruction e)
+                {
+                    OnInstructionComplete(e.instruction);
+                }
+                
+            }
+        }
+
+
+        private void Move(GameTime gameTime)
+        {
+            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+            UpdateDepth(0.5f);
+        }
+
+
+        public override void Update(GameTime gameTime)
+        {
+            Vector2 lastPosition = this.Position;
+            Move(gameTime);
+            base.Update(gameTime);
+            enemy = GlobalCombatDetector.FindColonistThreat(this);
+
+            Vector2 delta = lastPosition - this.Position;
+
+
+            if (delta.Equals(Vector2.Zero))
+            {
+                if (!isAttacking)
+                {
+                    TextureGroupIndex = 0;
+                    isAnimated = false;
+                }
+            }
+            else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
+            {
+                isAnimated = true;
+                TextureGroupIndex = 2;
+                SpriteEffect = (delta.X > 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+
+            if (instructions.Count > 0)
+            {
+                if (Goals.Count == 0)
+                {
+                    Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                }
+                instructions.Peek().Update(gameTime);
+            }
+
+           
+
+            if (enemy!=null)
+            {
+                combatModeOn = true;
+                SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+            else {
+                combatModeOn = false;
+                
+            }
+
+
+            if (combatModeOn)
+            {
+                performCombat(gameTime, enemy);
+            }
+            
+           
+
+            if (this.Health <= 0) {
+                this.setDead();
+            }
+
+            TemperatureCheck(gameTime);
+            HungerCheck(gameTime);
+
+        }
+
+        private void performCombat(GameTime gameTime, Enemy enemy)
+        {
+
+            
+
+                if (enemy.Health > 0 && this.Health > 0)
+                {
+                    inCombat = true;
+                  
+                    ColonistAttack(gameTime);
+                }
+            
+
+        }
+
+            #region Colonist Temperature Check
+        private void TemperatureCheck(GameTime gameTime)
+        {
+            //Temperature affecting colonist's health
+            timeToTemperature -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeToTemperature < 0f)
+            {
+                if (Temperature.Value < (LowerComfortRange - 5) || Temperature.Value > (UpperComfortRange + 10))
+                {
+                    //Health -= 1;
+                }
+                timeToTemperature = timeUntillTemperature;
+            }
+        }
+        #endregion
+
+        #region Colonist Hunger Check
+        private void HungerCheck(GameTime gameTime)
+        {
+            //Temperature affecting food
+            timeUntillFoodTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            Double foodFormula = (1 + Temperature.Value / CoreBodyTemperature);
+
+            if (foodFormula <= 0.25)
+            {
+                foodFormula = 0.25;
+            }
+            //TODO uncomment
+            // foodFormula is a multiplier on the timeUntillFoodTick
+            if ((timeUntillFoodTick * foodFormula) < 0)
+            {
+                FoodTick();
+                timeUntillFoodTick = BASE_FOOD_CONSUMPTION;
+            }
+        }
+        private void FoodTick()
+        {
+            //If colonist doesn't have food on them, they are starving -1 health
+            ResourceItem food = new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1);
+            if (!Inventory.RemoveItem(food))
+            {
+                //TODO uncomment
+                //Health -= 1;
             }
             else
             {
-                Temperature.Value = Temperature.Value - 1;
-                //Colonist's temperature should be able to be lower than the tile they are over
-                Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
-                //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
-            }
-
-            timeToTemperatureUpdate = timeUntilTemperatureUpdate;
-        }
-    }
-    #endregion
-    public void AddInstruction(Instruction instruction, int priority)
-    {
-        instruction.OnStart.Add(OnInstructionStart);
-        instruction.OnComplete.Add(OnInstructionComplete);
-        instructions.Enqueue(instruction);
-
-    }
-
-    private void OnInstructionStart(Instruction instruction)
-    {
-        if (instructions.Peek() == instruction)
-        {
-            if (instruction.Type.TimeCost > 0)
-            {
-                TextureGroupIndex = 1;
-                isAnimated = true;
+                //((DisplayLabel)GameObjectManager.GetObjectsByTag("lblFood")[0]).Value -= 1;
             }
         }
-        else
-        {
-            throw new Exception("Async instruction started");
-        }
-    }
+        #endregion
 
-    private void OnInstructionComplete(Instruction instruction)
-    {
-        if (instructions.Peek() == instruction)
+        #region Update Temperature
+        public void UpdateTemp(float tileTemp, GameTime gameTime)
         {
-            instructions.Dequeue();
-            if (!inCombat)
+            //Adjust the colonist's temperature based on the tile they are over
+            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeToTemperatureUpdate < 0f)
             {
-                TextureGroupIndex = 0;
+                if (tileTemp > CoreBodyTemperature)
+                {
+                    Temperature.Value = Temperature.Value + (tileTemp / 10);
+                    //Colonist's temperature should be able to be greater than the tile they are over
+                    Temperature.Value = MathHelper.Clamp(Temperature.Value, -100, tileTemp);
+                    //Console.Out.WriteLine("Greater" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                }
+                else
+                {
+                    Temperature.Value = Temperature.Value - 1;
+                    //Colonist's temperature should be able to be lower than the tile they are over
+                    Temperature.Value = MathHelper.Clamp(Temperature.Value, tileTemp, 100);
+                    //Console.Out.WriteLine("Lower" + Temperature.Value + " t:" + tileTemp + " core: " + CoreBodyTemperature + " h: " + Health);
+                }
+
+                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+            }
+        }
+        #endregion
+        public void AddInstruction(Instruction instruction, int priority)
+        {
+            instruction.OnStart.Add(OnInstructionStart);
+            instruction.OnComplete.Add(OnInstructionComplete);
+            instructions.Enqueue(instruction);
+
+        }
+
+        private void OnInstructionStart(Instruction instruction)
+        {
+            if (instructions.Peek() == instruction)
+            {
+                if (instruction.Type.TimeCost > 0)
+                {
+                    TextureGroupIndex = 1;
+                    isAnimated = true;
+                }
+            }
+            else
+            {
+                throw new Exception("Async instruction started");
+            }
+        }
+
+        private void OnInstructionComplete(Instruction instruction)
+        {
+            if (instructions.Peek() == instruction)
+            {
+                instructions.Dequeue();
+                if (!inCombat)
+                {
+                    TextureGroupIndex = 0;
                     
+                }
             }
-        }
-        else
-        {
-            throw new Exception("Async instruction completed");
-        }
-    }
-
-    private void ColonistAttack(GameTime gameTime)
-    {
-
-        if (ColonistAttackSpeedControl(gameTime))
-        {
-            this.isAttacking = true;
-            SoundFactory.PlaySoundEffect(Sound.slashSound);
-            enemy.Health = enemy.Health - this.AttackPower;
-            if (enemy.Health<=0)
+            else
             {
-                this.inCombat = false;
-                this.isAttacking = false;
-
+                throw new Exception("Async instruction completed");
             }
         }
+
+        private void ColonistAttack(GameTime gameTime)
+        {
+
+            if (ColonistAttackSpeedControl(gameTime))
+            {
+                this.isAttacking = true;
+                SoundFactory.PlaySoundEffect(Sound.slashSound);
+                enemy.Health = enemy.Health - this.AttackPower;
+                if (enemy.Health<=0)
+                {
+                    this.inCombat = false;
+                    this.isAttacking = false;
+
+                }
+            }
             
-    }
-
-    private bool ColonistAttackSpeedControl(GameTime gameTime)
-    {
-        ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
-        if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
-        {
-            isAttacking = false;
-            TextureGroupIndex = 2;
         }
-        if (ColonistimeToAttack >= this.attackSpeed)
-        {
-            ColonistimeToAttack = 0;
-            return true;
 
+        private bool ColonistAttackSpeedControl(GameTime gameTime)
+        {
+            ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
+            if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
+            {
+                isAttacking = false;
+                TextureGroupIndex = 2;
+            }
+            if (ColonistimeToAttack >= this.attackSpeed)
+            {
+                ColonistimeToAttack = 0;
+                return true;
+
+
+
+            }
+            return false;
 
 
         }
-        return false;
-
 
     }
-
-}
 }
 
 
