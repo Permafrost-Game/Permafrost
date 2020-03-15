@@ -56,5 +56,10 @@ public class Bear : Enemy
     {
         SoundFactory.PlaySoundEffect(Sound.roaringBear);
     }
-}
+
+        internal override void DeathSound()
+        {
+            SoundFactory.PlaySoundEffect(Sound.bearDying);
+        }
+    }
 }

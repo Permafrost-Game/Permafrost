@@ -96,10 +96,11 @@ public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IIn
     private float timeToTemperature;
     private float timeUntilTemperatureUpdate = 2000f;
     private float timeToTemperatureUpdate;
-    #endregion
+        private bool deathSoundPlayed;
+        #endregion
 
-    #region PathFinding
-    public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
+        #region PathFinding
+        public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
     public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
     public float Speed { get; set; }
     public double ColonistimeToAttack { get; private set; }
@@ -146,10 +147,12 @@ public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IIn
     {
         this.Rotation = 1.5f;
         ColonistDead = true;
-        GameObjectManager.Remove(this);
-
-        #region Start 2 Seconds Delay for 'Animation'
-        Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            if (!deathSoundPlayed) { 
+        SoundFactory.PlaySoundEffect(Sound.colonistDying);
+                deathSoundPlayed = true;
+            }
+            #region Start 2 Seconds Delay for 'Animation'
+            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
         {
             GameObjectManager.Remove(this);
         });

@@ -59,5 +59,10 @@ public override void EnemyAttack(GameTime gameTime) {
     AttackPower = dmg.Next(20, 50);
     base.EnemyAttack(gameTime);
 }
-}
+
+        internal override void DeathSound()
+        {
+            SoundFactory.PlaySoundEffect(Sound.robotBreak);
+        }
+    }
 }

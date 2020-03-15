@@ -21,14 +21,17 @@ namespace GlobalWarmingGame
                 { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") },
                 { Sound.roaringBear, content.Load<SoundEffect>(@"sound/sounds/bear_roar") },
                 { Sound.robotShock, content.Load<SoundEffect>(@"sound/sounds/robot_electricity") },
-                { Sound.slashSound, content.Load<SoundEffect>(@"sound/sounds/colonist_slashing") }
+                { Sound.slashSound, content.Load<SoundEffect>(@"sound/sounds/colonist_slashing") },
+                { Sound.colonistDying, content.Load<SoundEffect>(@"sound/sounds/colonist_death") },
+                { Sound.bearDying, content.Load<SoundEffect>(@"sound/sounds/bear_death") },
+                { Sound.robotBreak, content.Load<SoundEffect>(@"sound/sounds/robot_death") }
             };
             songs = new Dictionary<Songs, Song>
             {
                 { Songs.Menu, content.Load<Song>("sound/songs/menu") },
                 { Songs.Main, content.Load<Song>("sound/songs/ColdAtmosphericMusic") },
                 { Songs.EnemyZone, content.Load<Song>("sound/songs/enemy_zone") },
-                { Songs.InCombat, content.Load<Song>("sound/songs/inCombat") }
+                
             };
 
         }
@@ -48,8 +51,7 @@ public enum Songs
 {
     Main, 
     Menu, 
-    EnemyZone,
-    InCombat
+    EnemyZone
 }
 public enum Sound
 {
@@ -58,5 +60,8 @@ public enum Sound
     StonePickup,
     roaringBear,
     robotShock,
-    slashSound
+    slashSound,
+    colonistDying,
+    bearDying,
+    robotBreak
 }

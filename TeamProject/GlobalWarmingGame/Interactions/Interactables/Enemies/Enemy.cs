@@ -76,6 +76,7 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
 
     public void SetEnemyDead(){    
         //remove the enemy from the game 
+        this.DeathSound();
         GameObjectManager.Remove(this); 
     }
 
@@ -164,7 +165,9 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
         depth = (Position.X + (Position.Y / 2)) / 48000f; //depth
             
         base.Update(gameTime); //update the game
-
+            if (this.Health <= 0) {
+                this.SetEnemyDead();
+            }
         Aggro(); // enemy is agressive all the time
 
         Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving
@@ -240,8 +243,9 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
     }
 
     internal abstract void AttackingSound(); //woah sounds so cool
+    internal abstract void DeathSound(); //woah sounds so cool
 
-        
-}
+
+    }
 }
 
