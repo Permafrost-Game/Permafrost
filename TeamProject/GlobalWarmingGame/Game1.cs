@@ -11,16 +11,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 
-using GeonBit.UI;
-using GeonBit.UI.Entities;
-using GlobalWarmingGame.UI.Menus;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
-using GlobalWarmingGame.Interactions.Interactables.Environment;
-using GlobalWarmingGame.Interactions.Interactables.Animals;
-using GlobalWarmingGame.Interactions.Enemies;
-using GlobalWarmingGame.UI;
-using GlobalWarmingGame.Interactions.Interactables.Enemies;
-
 namespace GlobalWarmingGame
 {
     /// <summary>

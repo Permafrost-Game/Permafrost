@@ -15,17 +15,16 @@ namespace GlobalWarmingGame.Interactions.Enemies
 public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
 {
         
-    public Colonist target=null; //target is anything within aggro range
-    public Colonist targetInRange=null; //targetInRange is anything in attacking range
+    private Colonist target=null; //target is anything within aggro range
+    private Colonist targetInRange=null; //targetInRange is anything in attacking range
 
     //declaring stats variables
     public float AttackPower { get; set; }
     public float Health { get; set; }
-    public float attackRange { get; set; }
-    public string enemyTag { get; set; }
-    private double attackSpeed { get; set; }
+    public float AttackRange { get; set; }
+    private double AttackSpeed { get; set; }
     public float Speed { get; set; }
-    public double aggroRange = 200; // could be moved down(for now all enemies aggro at the same distance)
+    public readonly double aggroRange = 200; // could be moved down(for now all enemies aggro at the same distance)
 
     //initializing variables for instructions(right clicking an enemy allows you to attack it)
     public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
@@ -37,35 +36,27 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
     public bool attacking=false;//determines if the enemy is attacking at the moment
     public bool isInCombat=false;//shows if the enemy is fighting a colonist
     private double timeToAttack; //a flag based on attack speed that tells the enemy to attack
-       
-    // variable for random movement of enemies
-    RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
+
+        // variable for random movement of enemies
+    private readonly RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
-    public Enemy(string tag, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
+    public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
     (
         //constructior setting game object details
         position: position,
-        size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
-        rotation: 0f,
-        origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-        tag: tag,
-        depth: 0f,
         textureSet: textureSet,
         frameTime: 100f
-            
-           
     )
     {
 
-        InstructionTypes.Add(new InstructionType("attack", "Attack " + tag, "Attack the " + tag, onComplete: EnemyAttacked));
+        InstructionTypes.Add(new InstructionType("attack", $"Attack {name}", onComplete: EnemyAttacked));
 
         //generic stats:
-        this.attackRange = aRange;
+        this.AttackRange = aRange;
         this.Health = maxHp;
         this.AttackPower = aPower;
-        this.enemyTag = tag;
-        this.attackSpeed = aSpeed;
+        this.AttackSpeed = aSpeed;
         Speed = 0.2f;
     }
 
@@ -107,7 +98,7 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
     public abstract void AnimateAttack(); //absract method for animating attacks allows more customisation
        
     //getters and setters
-    public double GetAttackSpeed() => attackSpeed;
+    public double GetAttackSpeed() => AttackSpeed;
     public void SetAttacking(bool b) {
         attacking = b;
         if( b == false){
@@ -139,7 +130,7 @@ public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFind
     }
     private bool EnemyAttackSpeedControl(GameTime gameTime)
     {
-        timeToAttack = timeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds; //counting how much time has passed since last attack
+        timeToAttack += gameTime.ElapsedGameTime.TotalMilliseconds; //counting how much time has passed since last attack
 
         if (timeToAttack > 500) //if its been half a second already cancel the attacking 
         {

@@ -27,7 +27,7 @@ public static Colonist FindEnemyThreat(Enemy enemy)
 {
     foreach (Colonist col in colonists)
     {
-        if (enemy.attackRange > DistanceBetweenCombatants(enemy.Position, col.Position))
+        if (enemy.AttackRange > DistanceBetweenCombatants(enemy.Position, col.Position))
         {
             return col;
         }          
