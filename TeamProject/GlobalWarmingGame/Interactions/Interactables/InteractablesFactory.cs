@@ -1,6 +1,7 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -191,9 +192,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
                 case Interactable.Robot:
-                    return new Enemy("Robot", 5000, 60, 0, 500, position, textureSet["robot"]);
+                    return new Robot(position, textureSet["robot"]);
                 case Interactable.Bear:
-                    return new Enemy("Bear", 1000, 60, 10, 300, position, textureSet["bear"]);
+                    return new Bear(position, textureSet["bear"]);
+                    
+                
                 case Interactable.Tower:
                     return new Tower(position);
                 case Interactable.Storage:

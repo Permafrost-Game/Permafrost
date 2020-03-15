@@ -232,6 +232,7 @@ namespace GlobalWarmingGame
         protected override void Update(GameTime gameTime)
         {
             Controller.Update(gameTime);
+            GlobalCombatDetector.UpdateParticipants();
 
             keyboardInputHandler.Update(gameTime);
 

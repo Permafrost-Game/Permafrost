@@ -67,6 +67,7 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
+    <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
     <Compile Include="CutSceneFactory.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
@@ -74,10 +75,11 @@
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Bear.cs" />
+    <Compile Include="Interactions\Interactables\Enemies\Robot.cs" />
     <Compile Include="Interactions\Interactables\Colonist.cs" />
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
-    <Compile Include="Interactions\Interactables\Enemies\Combat.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
     <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />

@@ -42,7 +42,7 @@ namespace Engine.TileGrid
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
                                 walkable: !tileSet.tileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water"),
-                                globalTemperature
+                                initialTemperature: globalTemperature
                                 );
                             break;
                         }
@@ -55,7 +55,7 @@ namespace Engine.TileGrid
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
                                 walkable: true,
-                                globalTemperature
+                                initialTemperature: globalTemperature
                                 );
                     }
 
