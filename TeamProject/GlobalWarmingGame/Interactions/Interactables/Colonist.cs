@@ -5,7 +5,6 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -70,7 +69,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
         private bool _isAttacking = false;
-        public bool isAttacking
+        public bool IsAttacking
         {
             get { return _isAttacking; }
             set
@@ -213,7 +212,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (delta.Equals(Vector2.Zero))
             {
-                if (!isAttacking)
+                if (!IsAttacking)
                 {
                     //TextureGroupIndex = 0;
                     //isAnimated = false;
@@ -430,13 +429,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (ColonistAttackSpeedControl(gameTime))
             {
-                this.isAttacking = true;
+                this.IsAttacking = true;
                 SoundFactory.PlaySoundEffect(Sound.slashSound);
-                enemy.Health = enemy.Health - this.AttackPower;
+                enemy.Health -= this.AttackPower;
                 if (enemy.Health<=0)
                 {
                     this.InCombat = false;
-                    this.isAttacking = false;
+                    this.IsAttacking = false;
 
                 }
             }
@@ -445,12 +444,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private bool ColonistAttackSpeedControl(GameTime gameTime)
         {
-            ColonistimeToAttack = ColonistimeToAttack + gameTime.ElapsedGameTime.TotalMilliseconds;
+            ColonistimeToAttack += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
             if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
             {
-                isAttacking = false;
+                IsAttacking = false;
                 TextureGroupIndex = 2;
             }
             if (ColonistimeToAttack >= this.AttackSpeed)
