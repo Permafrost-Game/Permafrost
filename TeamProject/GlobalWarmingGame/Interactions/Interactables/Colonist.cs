@@ -64,6 +64,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (value == false)
                 {
                     TextureGroupIndex = 0;
+                    IsAttacking = false;
                 }
 
             }
@@ -212,10 +213,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (delta.Equals(Vector2.Zero))
             {
-                if (!IsAttacking)
+                if (!IsAttacking && instructions.Count==0)
                 {
-                    //TextureGroupIndex = 0;
-                    //isAnimated = false;
+                    TextureGroupIndex = 0;
+                    
+                   
                 }
             }
             else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
@@ -244,8 +246,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else
             {
-                combatModeOn = false;
-
+                if (combatModeOn)
+                {
+                    IsAttacking = false;
+                    combatModeOn = false;
+                }
+                
             }
             if (combatModeOn)
             {
@@ -436,6 +442,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 {
                     this.InCombat = false;
                     this.IsAttacking = false;
+
 
                 }
             }
