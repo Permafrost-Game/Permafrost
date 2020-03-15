@@ -16,7 +16,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class CampFire : AnimatedSprite, IInteractable, IBuildable, IHeatSource
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 2), new ResourceItem(ResourceTypeFactory.GetResource(Resource.Fibers), 1) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 2), new ResourceItem(Resource.Fibers, 1) };
         public Temperature Temperature { get; set; } = new Temperature(50);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }

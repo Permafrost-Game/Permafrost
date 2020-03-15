@@ -11,9 +11,9 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class Farm : Sprite, IInteractable, IUpdatable, IBuildable
+    public class Farm : Sprite, IInteractable, Engine.IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 4)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -26,34 +26,48 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public Farm(Vector2 position, Texture2D texture) : base
         (
             position: position,
+            depth: CalculateDepth(position, -1),
             texture: texture
         )
         {
             InstructionTypes = new List<InstructionType>();
-            plant = new InstructionType("plant", "Plant", "Plant", onComplete: Plant);
-            harvest = new InstructionType("harvest", "Harvest", "Harvest", onComplete: Harvest);
+            plant = new InstructionType(
+                id: "plant",
+                name: "Plant",
+                description: "Plant",
+                checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                timeCost: 3000f,
+                onComplete: Plant
+                );
+            harvest = new InstructionType(
+                id: "harvest",
+                name: "Harvest",
+                description: "Harvest",
+                checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                timeCost: 3000f,
+                onComplete: Harvest);
+
             timeUntilGrown = 20000f;
             InstructionTypes.Add(plant);
         }
 
         private void Harvest(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 10));
-            //Harvest wheat
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 10));
+
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);
         }
 
         private void Plant(Instruction instruction)
         {
-            //Plant wheat seeds
             InstructionTypes.Remove(plant);
             growing = true;
         }
 
+
         public void Update(GameTime gameTime)
         {
-            //Grow crops over time
             if (growing == true)
             {
                 timeUntilGrown -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;

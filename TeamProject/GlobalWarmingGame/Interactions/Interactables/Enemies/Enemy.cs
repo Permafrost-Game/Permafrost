@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 {
     //add animated sprite instead of aggressive movement
     //add random movement using randomAI class
-    public class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
+    public class Enemy : AnimatedSprite, Engine.IUpdatable,IInteractable,IPathFindable
     {
         List<GameObject> colonists;
         GameTime duration;
@@ -44,7 +44,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
             size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
             rotation: 0f,
             origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            tag: tag,
             depth: 0f,
             textureSet: textureSet,
             frameTime: 100f

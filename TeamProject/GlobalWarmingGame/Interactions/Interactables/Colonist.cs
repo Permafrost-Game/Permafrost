@@ -2,6 +2,7 @@
 using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
@@ -24,6 +25,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         [PFSerializable]
         public readonly Inventory inventory;
+        public event EventHandler<ResourceItem> InventoryChange = delegate { };
 
         public Inventory Inventory { get => inventory; }
 
@@ -96,11 +98,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public float Speed { get; set; }
         #endregion
 
-        public Colonist() : this(
-            position: Vector2.Zero,
-            textureSetType: TextureSetTypes.colonist) { }
+        public Colonist() : this(position: Vector2.Zero) { }
 
-        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        public Colonist(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.colonist, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
         (
             position: position,
             textureSet: Textures.MapSet[textureSetType],
@@ -113,6 +113,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 this.inventory = new Inventory(capacity);
             else
                 this.inventory = inventory;
+
+            this.inventory.InventoryChange += InvokeInventoryChange;
+            
 
             attackRange = 60;
             AttackPower = 30;
@@ -129,6 +132,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             instructions = new Queue<Instruction>();
             InstructionTypes = new List<InstructionType>();
 
+        }
+
+        private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
+        {
+            InventoryChange.Invoke(this, resourceItem);
         }
 
         internal void setDead()
@@ -198,11 +206,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                if (Goals.Count == 0)
-                {
-                    Goals.Enqueue(instructions.Peek().PassiveMember.Position);
-                }
                 instructions.Peek().Update(gameTime);
+                if (instructions.Count > 0)
+                {
+                    if (Goals.Count == 0)
+                    {
+                        Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                    }
+                }
             }
 
             FreezeCheck(gameTime);
@@ -240,7 +251,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (timeUntillNextHungerCheck < 0)
             {
                 //If colonist doesn't have food on them, they are starving -1 health
-                if (!Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+                if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
                 {
                     //If the colonist is hungry they take health damage and reset else increase hunger
                     if (Hunger == 5)
@@ -296,8 +307,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
         #endregion
 
-        public void AddInstruction(Instruction instruction, int priority)
+        public void AddInstruction(Instruction instruction, int priority = 0)
         {
+            //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
             instructions.Enqueue(instruction);
@@ -320,13 +332,30 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+        private void CheckInventoryDump()
+        {
+            foreach(StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
+            {
+                if(storageUnit.ResourceItem != null && inventory.ContainsType(storageUnit.ResourceItem.ResourceType.ResourceID))
+                {
+                    AddInstruction(new Instruction(
+                        type: storageUnit.StoreInstruction,
+                        activeMember: this,
+                        passiveMember: storageUnit
+                        )
+                    );
+                    break;
+                }
+            }
+        }
+
         private void OnInstructionComplete(Instruction instruction)
         {
             if (instructions.Peek() == instruction)
             {
                 instructions.Dequeue();
-
                 TextureGroupIndex = 0;
+                CheckInventoryDump();
             }
             else
             {

@@ -103,6 +103,7 @@
     <Compile Include="Interactions\PassiveAnimal.cs" />
     <Compile Include="Interactions\IHeatSource.cs" />
     <Compile Include="UI\ButtonHandler.cs" />
+    <Compile Include="UI\InventoryTransactionMessage.cs" />
     <Compile Include="UI\ItemElement.cs" />
     <Compile Include="UI\KeyboardInputHandler.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />

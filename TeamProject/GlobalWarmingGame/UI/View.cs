@@ -327,7 +327,5 @@ namespace GlobalWarmingGame.UI
             inventories.Remove(id);
             
         }
-
-        
     }
 }

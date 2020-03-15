@@ -174,7 +174,7 @@ namespace GlobalWarmingGame.UI
                         {
                             building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, building.CraftingCosts, onComplete: Build),
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, requiredResources: building.CraftingCosts, onComplete: Build),
                                                                                        activeMember,
                                                                                        (GameObject)building), IssueInstructionCallback));
                         } 
@@ -187,7 +187,7 @@ namespace GlobalWarmingGame.UI
                 } 
                 else if (objectClicked is IStorage)
                 {
-                    options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, null, objectClicked), ViewInventoryCallback));
+                    options.Add(new ButtonHandler<Instruction>(new Instruction(VIEW_INVENTORY, passiveMember: objectClicked), ViewInventoryCallback));
                 }
             }
 
@@ -228,26 +228,31 @@ namespace GlobalWarmingGame.UI
         }
 
         /// <summary>
-        /// Adds the instruction to the active member of the instruction.
+        /// 
         /// </summary>
-        /// <param name="instruction">the instruction to be issued</param>
+        /// <param name="instruction"></param>
         private static void ViewInventoryCallback(Instruction instruction)
         {
 
             if (instruction.PassiveMember is IStorage storage)
             {
-                if (!openInventories.Contains(storage.Inventory))
-                {
-                    AddInventoryMenu(storage);
-                }
-                else
-                {
-                    SelectInventory(storage.Inventory);
-                }
+                ShowInventory(storage);
             }
             else
             {
                 throw new InvalidInstructionMemberTypeException(instruction, instruction.PassiveMember, typeof(IStorage));
+            }
+        }
+
+        private static void ShowInventory(IStorage storage)
+        {
+            if (!openInventories.Contains(storage.Inventory))
+            {
+                AddInventoryMenu(storage);
+            }
+            else
+            {
+                SelectInventory(storage.Inventory);
             }
         }
 
@@ -414,8 +419,9 @@ namespace GlobalWarmingGame.UI
         /// and calls <see cref="View.UpdateInventoryMenu"/>
         /// </summary>
         /// <param name="inventory">The <see cref="Inventory"/> to be updated</param>
-        private static void UpdateInventoryMenu(Inventory inventory)
+        private static void UpdateInventoryMenu(IStorage storage)
         {
+            Inventory inventory = storage.Inventory;
             IEnumerable<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString()));
             View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
@@ -431,8 +437,8 @@ namespace GlobalWarmingGame.UI
                 Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
                 View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, SelectInventory), icon: icon);
                 openInventories.Add(storage.Inventory);
-                storage.Inventory.InventoryChange += InventoryChangeCallBack;
-                UpdateInventoryMenu(storage.Inventory);
+                storage.InventoryChange += InventoryChangeCallBack;
+                UpdateInventoryMenu(storage);
             }
         }
 
@@ -445,7 +451,7 @@ namespace GlobalWarmingGame.UI
             if(openInventories.Contains(storage.Inventory))
             {
                 openInventories.Remove(storage.Inventory);
-                storage.Inventory.InventoryChange -= InventoryChangeCallBack;
+                storage.InventoryChange -= InventoryChangeCallBack;
                 View.RemoveInventory(storage.Inventory.GetHashCode());
             }
             
@@ -456,9 +462,11 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void InventoryChangeCallBack(object sender, EventArgs e)
+        private static void InventoryChangeCallBack(object sender, ResourceItem item)
         {
-            UpdateInventoryMenu((Inventory)sender);
+            string op = item.Weight >= 0 ? "+" : "";
+            GameObjectManager.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
+            UpdateInventoryMenu((IStorage)sender);
         }
 
         /// <summary>
