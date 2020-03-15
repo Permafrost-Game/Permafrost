@@ -85,11 +85,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 TextureGroupIndex = 1;
                 Speed = 0.05f;//decreasing the default speed when roaming (more natural)
                 Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
-
             }
             else
             {
-                
                 Speed = 0.2f;//return to normal speed (seems like speeding up when moving from roaming to chasing)
                 ChaseColonist(target); //chase the found colonist
             }
@@ -205,8 +203,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 PerformCombat(gameTime,targetInRange); // fight if theres anyone to fight      
             }
-            else if(target!=null)
+            else if(target!=null && targetInRange==null)
             {
+                SetInCombat(false);
                 TextureGroupIndex = 1;
                 Goals.Clear();
                 ChaseColonist(target); //if there isnt anyone in attacking range then check if anyone is around and chase him
