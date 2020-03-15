@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class Tower : Sprite, IInteractable, IReconstructable
-       {
+    public class Tower : Sprite, IInteractable, IReconstructable, IHeatSource
+    {
+        public Temperature Temperature { get; set; } = new Temperature(100);
+        public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get;}
         private readonly Texture2D hostileTexture;
         private readonly Texture2D capturedTexture;
@@ -33,12 +35,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         [PFSerializable]
         public bool captured;
 
-        public Tower() : base(Vector2.Zero, Vector2.Zero)
-        {
+        public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        }
-
-        public Tower(Vector2 position, TextureTypes capturedTextureType, TextureTypes hostileTextureType, bool captured = false) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]
@@ -52,9 +51,21 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             InstructionTypes = new List<InstructionType>();
 
             if (this.captured = captured)
+            {
                 Texture = capturedTexture;
+                Heating = true;
+            }
             else
-                InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onComplete: Capture));
+            {
+                InstructionTypes.Add(new InstructionType(
+                    id: "capture",
+                    name: "Capture",
+                    description: "Capture",
+                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    onComplete: Capture)
+                    );
+                Heating = false;
+            }
         }
 
         private void Capture(Instruction instruction)
@@ -63,6 +74,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             InstructionTypes.Clear();
             this.Texture = capturedTexture;
             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + 32)));
+            Heating = true;
         }
 
         public object Reconstruct()

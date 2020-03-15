@@ -67,7 +67,7 @@ namespace Engine.PathFinding
 
                 closedDictionary.Add(current, currentTotalCost);
 
-                if (current.Equals(goal))
+                if (current == goal)
                 {
                     return BuildPath(current, closedDictionary);
                 }
@@ -92,7 +92,7 @@ namespace Engine.PathFinding
                     else
                     {
                         //Version of neighbour already in the open dictionary
-                        Tile openNeighbour = openDictionary.FirstOrDefault(x => x.Key.Equals(neighbour)).Key;
+                        Tile openNeighbour = openDictionary.FirstOrDefault(x => x.Key == neighbour).Key;
 
                         //If the new fromStartTileCost for neighbour is less than the old cost
                         if (neighbourTiles[neighbour].FromStart < openDictionary[openNeighbour].FromStart)

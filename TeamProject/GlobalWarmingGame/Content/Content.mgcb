@@ -3,7 +3,7 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:DesktopGL
+/platform:Windows
 /config:
 /profile:Reach
 /compress:False
@@ -13,6 +13,11 @@
 /reference:..\..\packages\GeonBit.UI.3.4.0.1\lib\geonbitui\DataTypes.dll
 
 #---------------------------------- Content ---------------------------------#
+
+#begin cutscenes/0000000.wmv
+/importer:WmvImporter
+/processor:VideoProcessor
+/build:cutscenes/0000000.wmv
 
 #begin GeonBit.UI/themes/editor/effects/disabled.fx
 /importer:EffectImporter
@@ -4868,17 +4873,17 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
-#begin sound/songs/ColdAtmosphericMusic.mp3
-/importer:Mp3Importer
+#begin sound/songs/ColdAtmosphericMusic.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/songs/ColdAtmosphericMusic.mp3
+/build:sound/songs/ColdAtmosphericMusic.ogg
 
-#begin sound/songs/enemy_zone.mp3
-/importer:Mp3Importer
+#begin sound/songs/enemy_zone.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/songs/enemy_zone.mp3
+/build:sound/songs/enemy_zone.ogg
 
 #begin sound/songs/inCombat.ogg
 /importer:OggImporter
@@ -5581,6 +5586,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
+
+#begin textures/interactables/buildings/storage/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/storage/sprite0.png
 
 #begin textures/interactables/buildings/tower/tower.png
 /importer:TextureImporter

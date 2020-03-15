@@ -8,12 +8,12 @@ namespace Engine.TileGrid
     /// <summary>
     /// This is class will store a 2D array of <see cref="Tile"/>
     /// </summary>
-    public class TileMap : Engine.Drawing.IDrawable, IUpdatable
+    public class TileMap : Engine.Drawing.IDrawable
     {
         public Tile[,] Tiles { get; }
 
-        private float timeToTempTick;
-        private readonly float timeUntilTempTick = 2000f;
+        private float timeToTemperatureUpdate;
+        private readonly float timeUntilTemperatureUpdate = 2000f;
 
         public Vector2 Size
         {
@@ -23,7 +23,7 @@ namespace Engine.TileGrid
         public TileMap(Tile[,] tiles)
         {
             this.Tiles = tiles;
-            timeToTempTick = timeUntilTempTick;
+            timeToTemperatureUpdate = timeUntilTemperatureUpdate;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -57,55 +57,52 @@ namespace Engine.TileGrid
             return t;
         }
 
-        public void Update(GameTime gameTime)
-        {
-            UpdateTilesTemperatures(gameTime);
-        }
-
         #region Update Tiles Temperature
-        private void UpdateTilesTemperatures(GameTime gameTime) 
+        /// <summary>
+        /// Update each tile's temperature
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="globalTemperature"></param>
+        public void UpdateTilesTemperatures(GameTime gameTime, float globalTemperature) 
         {
-            timeToTempTick -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if ((timeToTempTick) <= 0)
+            if (timeToTemperatureUpdate <= 0)
             {
                 foreach (Tile tile in Tiles)
                 {
-                    //if tile is being heated by a structure
+                    //if tile is being heated by a structure it's temperature isn't affected by the cold
                     if (tile.Heated)
                     {
-                        //Console.WriteLine(tile.temperature.Value);
                         continue;
                     }
 
-                    Tile current = tile;
-                    float sumTemperature = current.temperature.Value;
-                    float count = 1;
-                    foreach (Tile adjT in AdjacentTiles(tile))
+                    //Calculate new temperature as an average of surrounding tiles
+                    List<Tile> adjacentTiles = AdjacentTiles(tile);
+                    float sumTemperature = 0;
+
+                    foreach (Tile t in adjacentTiles)
                     {
-                        sumTemperature += adjT.temperature.Value;
-                        count++;
+                        sumTemperature += t.Temperature.Value;
                     }
 
-                    current.temperature.Value = (sumTemperature / (count));
+                    float averageTemperature = sumTemperature / adjacentTiles.Count;
 
-                    //Try to lower/raise the tile temp to the global temp
-                    if (tile.temperature.Value < -5/*ZoneManager.GlobalTemperature*/)
-                    {
-                        float Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (-5/*ZoneManager.GlobalTemperature*/ - Temperature) / 8);
-                    }
-                    else if (tile.temperature.Value > -5/*ZoneManager.GlobalTemperature*/)
-                    {
-                        float Temperature = tile.temperature.Value;
-                        tile.temperature.SetTemp(Temperature + (-5/*ZoneManager.GlobalTemperature*/ - Temperature) / 8);
-                    }
-                    //Console.WriteLine(tile.temperature.Value);
+                    //Adjust the temperature based on the global temperature
+                    //Formula decreases temperature when sumTemperature > globalTemperature
+                    //and increases the temperature when sumTemperature < globalTemperature
+                    tile.Temperature.Value = averageTemperature + ((globalTemperature - averageTemperature) / 128);
+
                 }
-                timeToTempTick = timeUntilTempTick;
+                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
             }
         }
 
+        /// <summary>
+        /// Calculate the adjacent tiles to the center tile
+        /// </summary>
+        /// <param name="tile">Center tile</param>
+        /// <returns>List of adjacent tiles</returns>
         private List<Tile> AdjacentTiles(Tile tile) 
         {
             List<Tile> adjTiles = new List<Tile>();
