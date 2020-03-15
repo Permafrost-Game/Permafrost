@@ -123,6 +123,9 @@
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.4.0.1\lib\geonbitui\DataTypes.dll</HintPath>
     </Reference>
+    <Reference Include="FastNoise">
+      <HintPath>C:\Users\Mehdi\Desktop\FastNoise.dll</HintPath>
+    </Reference>
     <Reference Include="GeonBit.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.4.0.1\lib\geonbitui\GeonBit.UI.dll</HintPath>
     </Reference>

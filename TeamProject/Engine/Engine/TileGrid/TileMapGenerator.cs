@@ -24,18 +24,22 @@ namespace Engine.TileGrid
         /// <returns>A TileMap</returns>
         public static TileMap GenerateTileMap(int seed, float scale, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
         {
-            Noise.Seed = seed;
             Tile[,] tiles = new Tile[width, height];
+
+            //1st Pass: Terrain
+            FastNoise noise = new FastNoise(seed);
+            noise.SetNoiseType(FastNoise.NoiseType.PerlinFractal);
+            noise.SetFrequency(0.015f);
 
             for (var x = 0; x < width; x++)
                 for (var y = 0; y < height; y++)
                 {
-                    float value = Noise.CalcPixel2D(x + xOffset, y + yOffset, scale);
+                    float value = noise.GetNoise(x + xOffset, y + yOffset) + 0.25f;
                     int tileCount = tileSet.tileSetTextures.Count - 1; //-1 because of texture 0 is for errors
 
                     for (int counter = 1; counter <= tileCount; counter++)
                     {
-                        if (value <= (255f / tileCount) * counter)
+                        if (value <= (0.75f / tileCount) * counter)
                         {
                             tiles[x, y] = new Tile(
                                 texture: tileSet.tileSetTextures[counter],
@@ -58,12 +62,33 @@ namespace Engine.TileGrid
                                 globalTemperature
                                 );
                     }
-
                 }
-                    
+
+            //2nd Pass: Rivers
+            noise = new FastNoise(seed * 5);
+            noise.SetNoiseType(FastNoise.NoiseType.PerlinFractal);
+            noise.SetFrequency(0.01f);
+            noise.SetFractalType(FastNoise.FractalType.Billow);
+            noise.SetFractalOctaves(1);
+
+            for (var x = 0; x < width; x++)
+                for (var y = 0; y < height; y++)
+                {
+                    float value = noise.GetNoise(x + xOffset, y + yOffset) + 1;
+
+                    if (value < 0.025f)
+                    {
+                        tiles[x, y] = new Tile(
+                            texture: tileSet.tileSetTextures[5],
+                            position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
+                            size: tileSet.textureSize,
+                            walkable: false,
+                            globalTemperature
+                            );
+                    }
+                }
 
             return new TileMap(tiles);
         }
-
     }
 }
