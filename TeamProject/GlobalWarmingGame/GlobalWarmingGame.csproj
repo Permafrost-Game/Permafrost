@@ -67,6 +67,11 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
+    <Compile Include="Interactions\Event\EventFactory.cs" />
+    <Compile Include="Interactions\Event\EventManager.cs" />
+    <Compile Include="Interactions\Event\Events\EventColonistJoin.cs" />
+    <Compile Include="Interactions\Event\Events\EventBearAttack.cs" />
+    <Compile Include="Interactions\Event\Events\IEvent.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
     <Compile Include="CutSceneFactory.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />

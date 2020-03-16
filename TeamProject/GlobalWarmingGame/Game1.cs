@@ -2,6 +2,7 @@
 using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Event;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
@@ -242,6 +243,7 @@ namespace GlobalWarmingGame
                 camera.Update(gameTime);
 
                 TemperatureManager.UpdateTemperature(gameTime);
+                EventManager.UpdateEventTime(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (Engine.IUpdatable updatable in GameObjectManager.Updatables.ToArray())
