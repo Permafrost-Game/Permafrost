@@ -18,6 +18,7 @@ namespace GlobalWarmingGame.UI
     static class View
     {
         private static MainMenu MainMenu;
+        private static LoadMenu LoadMenu;
         private static PauseMenu PauseMenu;
         private static SettingsMenu SettingsMenu;
 
@@ -60,7 +61,11 @@ namespace GlobalWarmingGame.UI
             MainMenu.MainToGame.OnClick = (Entity button) => Game1.GameState = GameState.Playing;
             MainMenu.MainToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
 
-            UserInterface.Active.AddEntity(MainMenu);
+            //UserInterface.Active.AddEntity(MainMenu);
+
+
+            LoadMenu = new LoadMenu();
+            UserInterface.Active.AddEntity(LoadMenu);
         }
 
         internal static void CreateGameUI()
