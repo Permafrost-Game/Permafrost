@@ -68,5 +68,6 @@ public enum Sound
     slashSound,
     colonistDying,
     bearDying,
-    robotBreak
+    robotBreak,
+    looting
 }

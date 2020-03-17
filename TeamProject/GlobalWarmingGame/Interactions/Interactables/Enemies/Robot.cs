@@ -1,14 +1,15 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     public class Robot : Enemy
     {
         
-
         public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot",5000, 70, 0, 500, position, textureSet)
         {
         
@@ -59,6 +60,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         internal override void DeathSound()
         {
             SoundFactory.PlaySoundEffect(Sound.robotBreak);
+        }
+        internal override List<ResourceItem> Loot()
+        {
+            List<ResourceItem> loot = new List<ResourceItem>();
+            loot.Add(new ResourceItem(Resource.Pickaxe, 2));
+            return loot;
         }
     }
 }

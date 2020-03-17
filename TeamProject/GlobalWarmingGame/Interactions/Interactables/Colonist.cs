@@ -154,12 +154,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             this.Rotation = 1.5f;
             this.isDead = true;
             isAnimated = false;
+            //new Loot(this.Position);
             if (!deathSoundPlayed)
             { 
                 SoundFactory.PlaySoundEffect(Sound.colonistDying);
                 deathSoundPlayed = true;
             }
-
+            
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
                 toBeRemoved = true;
@@ -176,8 +177,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 Instruction currentInstruction = instructions.Peek();
                 try
-                {
-                    currentInstruction.Start();
+                {                         
+                        currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
@@ -190,8 +191,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void Move(GameTime gameTime)
         {
-            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-            UpdateDepth(0.5f);
+            if (!isDead)
+            {
+                Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+                UpdateDepth(0.5f);
+            }
         }
 
 
@@ -199,6 +203,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if(toBeRemoved)
             {
+                List<ResourceItem> droppedItems= new List<ResourceItem>();
+                foreach (ResourceItem item in inventory.Resources.Values) {
+                    droppedItems.Add(item);
+                }
+                GameObjectManager.Add(new Loot(droppedItems, this.Position));
                 GameObjectManager.Remove(this);
                 return;
             }
