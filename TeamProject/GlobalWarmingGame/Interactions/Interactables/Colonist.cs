@@ -203,6 +203,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if(toBeRemoved)
             {
+                List<ResourceItem> droppedItems= new List<ResourceItem>();
+                foreach (ResourceItem item in inventory.Resources.Values) {
+                    droppedItems.Add(item);
+                }
+                GameObjectManager.Add(new Loot(droppedItems, this.Position));
                 GameObjectManager.Remove(this);
                 return;
             }

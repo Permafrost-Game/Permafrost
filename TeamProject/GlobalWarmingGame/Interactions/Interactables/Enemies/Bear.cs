@@ -57,7 +57,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             List<ResourceItem> loot = new List<ResourceItem>();
             loot.Add(new ResourceItem(Resource.Food, 2));
-            loot.Add(new ResourceItem(Resource.Axe, 2));
+            loot.Add(new ResourceItem(Resource.Axe, 98));
+            loot.Add(new ResourceItem(Resource.Pickaxe, 50));
             return loot;
         }
     }

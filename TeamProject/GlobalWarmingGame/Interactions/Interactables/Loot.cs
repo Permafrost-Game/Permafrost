@@ -85,7 +85,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 lootDrop.Remove(i);
             }
-            if (failedToAdd || lootDrop.Count==0)
+            if (!failedToAdd || lootDrop.Count==0)
             {
                 Dispose();
             }
