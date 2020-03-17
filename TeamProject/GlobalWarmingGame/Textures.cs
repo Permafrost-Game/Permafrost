@@ -34,6 +34,8 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.TowerC,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
             Map.Add(TextureTypes.TowerH,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
             Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
+            Map.Add(TextureTypes.loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
+            
 
             #endregion
 
@@ -42,6 +44,7 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.wood, contentManager.Load<Texture2D>(@"textures/icons/wood"));
             MapIcon.Add(TextureIconTypes.fibers, contentManager.Load<Texture2D>(@"textures/icons/fibers"));
             MapIcon.Add(TextureIconTypes.apple, contentManager.Load<Texture2D>(@"textures/icons/apple"));
+            
 
             /* todo */
             MapIcon.Add(TextureIconTypes.coal, null);
@@ -192,6 +195,7 @@ namespace GlobalWarmingGame
         TowerC,
         TowerH,
         StorageUnit,
+        loot,
     }
 
     public enum TextureIconTypes

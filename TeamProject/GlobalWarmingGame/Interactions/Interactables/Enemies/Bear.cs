@@ -1,6 +1,8 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
@@ -50,6 +52,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         internal override void DeathSound()
         {
             SoundFactory.PlaySoundEffect(Sound.bearDying);
+        }
+        internal override List<ResourceItem> Loot()
+        {
+            List<ResourceItem> loot = new List<ResourceItem>();
+            loot.Add(new ResourceItem(Resource.Food, 2));
+            loot.Add(new ResourceItem(Resource.Axe, 2));
+            return loot;
         }
     }
 }

@@ -3,6 +3,7 @@ using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,9 +19,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         public static Dictionary<string, Texture2D> textures;
         public static Dictionary<string, Texture2D[][]> textureSet;
+        
+         
 
         public static void LoadContent(ContentManager contentManager)
         {
+            
             textures = new Dictionary<string, Texture2D>
             {
                 { "farm", contentManager.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0") },
@@ -33,7 +37,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 { "stoneNodeBig", contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1") },
                 { "tallGrass", contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass") },
                 { "towerH", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower") },
-                { "towerC", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower") }
+                { "towerC", contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower") },
+                { "loot", contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag") }
             };
 
             textureSet = new Dictionary<string, Texture2D[][]>
@@ -169,6 +174,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         /// <returns></returns>
         public static IInteractable MakeInteractable(Interactable interactable, Vector2 position)
         {
+
             switch(interactable)
             {
                 case Interactable.Colonist:
@@ -187,6 +193,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new SmallStoneNode(position);
                 case Interactable.StoneNodeBig:
                     return new BigStoneNode(position);
+                case Interactable.loot:
+                    List<ResourceItem> loot = new List<ResourceItem>();
+                    loot.Add(new ResourceItem(Resource.Stone, 2));
+                    return new Loot(loot, position);
                 case Interactable.TallGrass:
                     return new TallGrass(position);
                 case Interactable.CampFire:
@@ -224,4 +234,5 @@ public enum Interactable
     Colonist,
     Tower,
     Storage,
+    loot,
 }

@@ -5671,6 +5671,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/grass/tallgrass.png
 
+#begin textures/interactables/environment/loot/loot-bag.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/loot/loot-bag.png
+
 #begin textures/interactables/environment/stone/sprite_0.png
 /importer:TextureImporter
 /processor:TextureProcessor

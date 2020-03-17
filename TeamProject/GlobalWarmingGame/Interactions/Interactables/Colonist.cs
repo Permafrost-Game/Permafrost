@@ -154,6 +154,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             this.Rotation = 1.5f;
             this.isDead = true;
             isAnimated = false;
+            //new Loot(this.Position);
             if (!deathSoundPlayed)
             { 
                 SoundFactory.PlaySoundEffect(Sound.colonistDying);
