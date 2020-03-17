@@ -18,7 +18,7 @@ namespace GlobalWarmingGame.UI
     static class View
     {
         private static MainMenu MainMenu;
-        private static LoadMenu LoadMenu;
+        private static LoadMenu<string> LoadMenu;
         private static PauseMenu PauseMenu;
         private static SettingsMenu SettingsMenu;
 
@@ -64,7 +64,23 @@ namespace GlobalWarmingGame.UI
             //UserInterface.Active.AddEntity(MainMenu);
 
 
-            LoadMenu = new LoadMenu();
+            LoadMenu = new LoadMenu<string>();
+
+            LoadMenu.AddSave(
+                name: "Save1",
+                playTime: new TimeSpan(49, 4, 20),
+                numberOfTowersCaptured: 1,
+                onClick: new ButtonHandler<string>("Save1", null),
+                onDelete: new ButtonHandler<string>("Save1", null)
+                );
+            LoadMenu.AddSave(
+                name: "Save2",
+                playTime: new TimeSpan(0, 4, 20),
+                numberOfTowersCaptured: 32,
+                onClick: new ButtonHandler<string>("Save2", null),
+                onDelete: new ButtonHandler<string>("Save2", null)
+                );
+
             UserInterface.Active.AddEntity(LoadMenu);
         }
 
