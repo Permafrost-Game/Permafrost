@@ -109,6 +109,7 @@
     <Compile Include="UI\InventoryTransactionMessage.cs" />
     <Compile Include="UI\ItemElement.cs" />
     <Compile Include="UI\KeyboardInputHandler.cs" />
+    <Compile Include="UI\Menus\DeleteConfirmationDialogue.cs" />
     <Compile Include="UI\Menus\LoadMenu.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\SettingsMenu.cs" />

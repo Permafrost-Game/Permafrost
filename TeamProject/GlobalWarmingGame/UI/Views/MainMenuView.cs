@@ -12,7 +12,7 @@ namespace GlobalWarmingGame.UI.Views
     class MainMenuView<S>
     {
         private MainMenu mainMenu;
-        private LoadMenu<S> loadMenu;
+        private LoadMenu<S,ButtonHandler<S>> loadMenu;
 
         /// <summary>True if the current mouse position is over a UI entity</summary>
         internal bool Hovering { get; set; }
@@ -33,17 +33,19 @@ namespace GlobalWarmingGame.UI.Views
             UserInterface.Active.Clear();
         }
 
-        internal void CreateUI(Texture2D MainMenuLogo)
+
+        internal delegate void NewGame();
+        internal void CreateUI(Texture2D MainMenuLogo, NewGame newGame)
         {
             mainMenu = new MainMenu(MainMenuLogo);
 
-            mainMenu.MainToIntro.OnClick = (Entity button) => Game1.GameState = GameState.Intro;
+            mainMenu.MainToIntro.OnClick = (Entity button) => { newGame(); };
             mainMenu.MainToLoad.OnClick = (Entity button) => { SetLoadMenuVisiblity(true);  SetMainMenuVisiblity(false); };
             mainMenu.MainToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
 
             UserInterface.Active.AddEntity(mainMenu);
 
-            loadMenu = new LoadMenu<S>()
+            loadMenu = new LoadMenu<S, ButtonHandler<S>>()
             {
                 Visible = false
             };
@@ -53,21 +55,53 @@ namespace GlobalWarmingGame.UI.Views
 
         internal void CreateLoadMenu()
         {
-            loadMenu = new LoadMenu<S>();
+            loadMenu = new LoadMenu<S, ButtonHandler<S>>();
             UserInterface.Active.AddEntity(loadMenu);
         }
 
-        internal void AddLoadSaveGame(string name, TimeSpan playTime, int numberOfTowersCaptured, ButtonHandler<S> onLoad, ButtonHandler<S> onDelete)
+
+        /// <summary>
+        /// Adds a load save option
+        /// </summary>
+        /// <param name="text">The text that is to be displayed</param>
+        /// <param name="onLoad"></param>
+        /// <param name="onDelete"></param>
+        internal void AddLoadSaveGame(string text, ButtonHandler<S> onLoad, ButtonHandler<S> onDelete)
         {
             loadMenu.AddLoadSaveGame(
-                name: name,
-                playTime: playTime,
-                numberOfTowersCaptured: numberOfTowersCaptured,
+                text: text,
                 onClick: onLoad,
-                onDelete: onDelete
+                onDelete: new ButtonHandler<ButtonHandler<S>>(onDelete, CreateDeleteMenu)
                 );
         }
 
+        /// <summary>
+        /// Creates a <see cref="DeleteConfirmationDialogue"/> screen
+        /// </summary>
+        /// <param name="onDelete"></param>
+        private void CreateDeleteMenu(ButtonHandler<S> onDelete)
+        {
+            SetLoadMenuVisiblity(false);
+            DeleteConfirmationDialogue conf = new DeleteConfirmationDialogue(onDelete.Tag.ToString(), new Vector2(600,400), Anchor.Center);
+
+            conf.Cancel.OnClick = (Entity e) =>
+            {
+                SetLoadMenuVisiblity(true);
+                UserInterface.Active.RemoveEntity(conf);
+            };
+            conf.Delete.OnClick = (Entity e) =>
+            {
+                SetLoadMenuVisiblity(true);
+                onDelete.action(onDelete.Tag);
+                UserInterface.Active.RemoveEntity(conf);
+            };
+            UserInterface.Active.AddEntity(conf);
+        }
+
+        /// <summary>
+        /// Removes the UI for a SaveGame
+        /// </summary>
+        /// <param name="tag"></param>
         internal void RemoveSaveGame(S tag)
         {
             loadMenu.RemoveSave(tag);

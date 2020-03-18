@@ -78,7 +78,7 @@ namespace GlobalWarmingGame
                 switch (value)
                 {
                     case GameState.MainMenu:
-                        //GameUIController.ResetUI();
+                        GameUIController.ResetUI();
                         MainMenuUIController.CreateUI();
                         SoundFactory.PlaySong(Songs.Menu);
                         break;
@@ -254,6 +254,10 @@ namespace GlobalWarmingGame
             else if (GameState == GameState.Exiting)
             {
                 Exit();
+            }
+            else if (GameState == GameState.MainMenu)
+            {
+                MainMenuUIController.Update(gameTime);
             }
         }
 
