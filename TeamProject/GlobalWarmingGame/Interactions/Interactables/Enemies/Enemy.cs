@@ -51,7 +51,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         )
         {
 
-            InstructionTypes.Add(new InstructionType("Shoot", $"Shoot {name}", onStart: Shoot));
+            //InstructionTypes.Add(new InstructionType("Shoot", $"Shoot {name}", onStart: Shoot));
 
             //generic stats:
             this.AttackRange = aRange;
@@ -61,10 +61,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Speed = 0.2f;
         }
 
-        private void EnemyAttacked(Instruction instruction)
-        {
-            //just makes the colonist to go to the enemy (fighting is automated anyway)
-        }
+       
 
         private void Shoot(Instruction instruction)
         {
