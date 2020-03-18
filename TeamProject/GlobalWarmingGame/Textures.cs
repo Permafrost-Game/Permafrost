@@ -55,9 +55,9 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
             MapIcon.Add(TextureIconTypes.pickaxe, contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
 
+            MapIcon.Add(TextureIconTypes.Shotgun, contentManager.Load<Texture2D>(@"textures/icons/Shotgun"));
             /* todo */
             MapIcon.Add(TextureIconTypes.backpack, null);
-            MapIcon.Add(TextureIconTypes.basicRifle, null);
             MapIcon.Add(TextureIconTypes.bow, null);
             MapIcon.Add(TextureIconTypes.cloth, null);
             MapIcon.Add(TextureIconTypes.coat, null);
@@ -82,6 +82,14 @@ namespace GlobalWarmingGame
                     new Texture2D[]{
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite1"),
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist3"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist5")
                     }
                });
 
@@ -214,7 +222,8 @@ namespace GlobalWarmingGame
         basicRifle,
         bow,
         cloth,
-        coat
+        coat,
+        Shotgun
     }
 
     public enum TextureSetTypes
