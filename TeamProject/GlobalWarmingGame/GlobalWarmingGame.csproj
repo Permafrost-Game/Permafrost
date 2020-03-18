@@ -90,6 +90,7 @@
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
+    <Compile Include="Interactions\Interactables\Loot.cs" />
     <Compile Include="SoundFactory.cs" />
     <Compile Include="ISerializationInfo.cs" />
     <Compile Include="Resources\IStorage.cs" />
