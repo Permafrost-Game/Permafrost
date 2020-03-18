@@ -1,15 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GeonBit.UI.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using GeonBit.UI.Entities;
-using GeonBit.UI;
 
 namespace GlobalWarmingGame.UI.Menus
 {
     class MainMenu : Entity
     {
         public Button MainToIntro { get; private set; }
-        public Button MainToGame { get; private set; }
+        public Button MainToLoad { get; private set; }
         public Button MainToQuit { get; private set; }
 
         private const float MARGIN = 35f;
@@ -32,8 +30,8 @@ namespace GlobalWarmingGame.UI.Menus
             MainToIntro = new Button("New Game", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f) * --numberOfButtons));
             menu.AddChild(MainToIntro);
 
-            MainToGame = new Button("Load Game", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f) * --numberOfButtons));
-            menu.AddChild(MainToGame);
+            MainToLoad = new Button("Load Game", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f) * --numberOfButtons));
+            menu.AddChild(MainToLoad);
 
             MainToQuit = new Button("Quit", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f)  * --numberOfButtons));
             menu.AddChild(MainToQuit);

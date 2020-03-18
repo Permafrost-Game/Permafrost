@@ -8,9 +8,9 @@ namespace GlobalWarmingGame.UI.Menus
     class LoadMenu<T> : Entity
     {
 
-        private class LoadSaveEntity : Entity
+        private class SaveGameEntity : Entity
         {
-            public LoadSaveEntity(ButtonHandler<T> onClick, ButtonHandler<T> onDelete, string saveName, TimeSpan playTime, int numberOfTowersCaptured, Vector2 size = default, Anchor anchor = Anchor.Auto, Vector2 offset = default) :
+            public SaveGameEntity(ButtonHandler<T> onClick, ButtonHandler<T> onDelete, string saveName, TimeSpan playTime, int numberOfTowersCaptured, Vector2 size = default, Anchor anchor = Anchor.Auto, Vector2 offset = default) :
                 base(size, anchor, offset)
             {
 
@@ -37,20 +37,19 @@ namespace GlobalWarmingGame.UI.Menus
                 };
                 p.AddChild(delete);
 
-
-
-
             }
 
         }
 
 
         private readonly Panel menu;
-        private readonly Dictionary<T, LoadSaveEntity> saveEntries;
+        private readonly Dictionary<T, SaveGameEntity> saveEntries;
+
+        public Button LoadToMain { get; private set; }
 
         public LoadMenu()
         {
-            saveEntries = new Dictionary<T, LoadSaveEntity>();
+            saveEntries = new Dictionary<T, SaveGameEntity>();
 
             menu = new Panel(Vector2.Zero, PanelSkin.Simple, Anchor.Center);
             this.AddChild(menu);
@@ -61,6 +60,13 @@ namespace GlobalWarmingGame.UI.Menus
             };
             menu.AddChild(title);
 
+            LoadToMain = new Button(
+                text: "Main Menu",
+                size: new Vector2(300,75),
+                offset: new Vector2(50),
+                anchor: Anchor.BottomLeft
+                );
+           this.AddChild(LoadToMain);
 
 
 
@@ -74,9 +80,9 @@ namespace GlobalWarmingGame.UI.Menus
         /// <param name="numberOfTowersCaptured">The number of towers that have been captured</param>
         /// <param name="onClick">When the load button is clicked</param>
         /// <param name="onDelete">When the delete save button is clicked</param>
-        public void AddSave(string name, TimeSpan playTime, int numberOfTowersCaptured, ButtonHandler<T> onClick, ButtonHandler<T> onDelete)
+        public void AddLoadSaveGame(string name, TimeSpan playTime, int numberOfTowersCaptured, ButtonHandler<T> onClick, ButtonHandler<T> onDelete)
         {
-            LoadSaveEntity LoadSave = new LoadSaveEntity(onClick, onDelete, name, playTime, numberOfTowersCaptured, new Vector2(0, 200));
+            SaveGameEntity LoadSave = new SaveGameEntity(onClick, onDelete, name, playTime, numberOfTowersCaptured, new Vector2(0, 200));
             saveEntries.Add(onClick.Tag, LoadSave);
             menu.AddChild(LoadSave);
         }
@@ -90,7 +96,7 @@ namespace GlobalWarmingGame.UI.Menus
         {
             if(saveEntries.ContainsKey(tag))
             {
-                LoadSaveEntity e = saveEntries[tag];
+                SaveGameEntity e = saveEntries[tag];
                 saveEntries.Remove(tag);
                 menu.RemoveChild(e);
                 return true;

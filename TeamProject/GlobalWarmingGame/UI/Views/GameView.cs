@@ -8,36 +8,34 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GlobalWarmingGame.UI
+namespace GlobalWarmingGame.UI.Views
 {
     /// <summary>
     /// This class is for implementation specific UI, in this case <see cref="GeonBit.UI"/> <br/>
-    /// This class is for creating buttons and panels based on the information provided by <see cref="Controller"/>.<br/>
+    /// This class is for creating buttons and panels based on the information provided by <see cref="GameUIController"/>.<br/>
     /// This class should not reference any <see cref="GlobalWarmingGame"/> specific classes, and should be the only class referencing <see cref="GeonBit.UI"/> specific classes.<br/>
     /// </summary>
-    static class View
+    class GameView
     {
-        private static MainMenu MainMenu;
-        private static LoadMenu<string> LoadMenu;
-        private static PauseMenu PauseMenu;
-        private static SettingsMenu SettingsMenu;
+        private PauseMenu PauseMenu;
+        private SettingsMenu SettingsMenu;
 
-        private static Panel topPanel;
-        private static Panel bottomPanel;
-        private static Panel menu;
-        private static Dictionary<int, Panel> inventories;
-        private static Dictionary<int, Icon> inventoryButtons;
+        private Panel topPanel;
+        private Panel bottomPanel;
+        private Panel menu;
+        private Dictionary<int, Panel> inventories;
+        private Dictionary<int, Icon> inventoryButtons;
 
         /// <summary>True if the current mouse position is over a UI entity</summary>
-        internal static bool Hovering { get; set; }
+        internal bool Hovering { get; set; }
 
-        static View()
+        public GameView()
         {
             inventories = new Dictionary<int, Panel>();
             inventoryButtons = new Dictionary<int, Icon>();
         }
 
-        internal static void Initalise(ContentManager content)
+        internal void Initalise(ContentManager content)
         {
             UserInterface.Initialize(content, "hd");
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
@@ -46,45 +44,14 @@ namespace GlobalWarmingGame.UI
         /// <summary>
         /// Resets currently active UI elements
         /// </summary>
-        internal static void Reset()
+        internal void Reset()
         {
             UserInterface.Active.Clear();
             inventories = new Dictionary<int, Panel>();
             inventoryButtons = new Dictionary<int, Icon>();
         }
 
-        internal static void CreateMainMenuUI(Texture2D MainMenuLogo)
-        {
-            MainMenu = new MainMenu(MainMenuLogo);
-            
-            MainMenu.MainToIntro.OnClick = (Entity button) => Game1.GameState = GameState.Intro;
-            MainMenu.MainToGame.OnClick = (Entity button) => Game1.GameState = GameState.Playing;
-            MainMenu.MainToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
-
-            //UserInterface.Active.AddEntity(MainMenu);
-
-
-            LoadMenu = new LoadMenu<string>();
-
-            LoadMenu.AddSave(
-                name: "Save1",
-                playTime: new TimeSpan(49, 4, 20),
-                numberOfTowersCaptured: 1,
-                onClick: new ButtonHandler<string>("Save1", null),
-                onDelete: new ButtonHandler<string>("Save1", null)
-                );
-            LoadMenu.AddSave(
-                name: "Save2",
-                playTime: new TimeSpan(0, 4, 20),
-                numberOfTowersCaptured: 32,
-                onClick: new ButtonHandler<string>("Save2", null),
-                onDelete: new ButtonHandler<string>("Save2", null)
-                );
-
-            UserInterface.Active.AddEntity(LoadMenu);
-        }
-
-        internal static void CreateGameUI()
+        internal void CreateUI()
         {
             PauseMenu = new PauseMenu
             {
@@ -120,22 +87,21 @@ namespace GlobalWarmingGame.UI
 
         
 
-        internal static void SetUIScale(float scale)
+        internal void SetUIScale(float scale)
         {
             UserInterface.Active.GlobalScale = scale;
         }
 
-        internal static void Update(GameTime gameTime)
+        internal void Update(GameTime gameTime)
         {
             Hovering = false;
             UserInterface.Active.Update(gameTime);
         }
 
-        internal static void SetMainMenuVisiblity(bool show)     => MainMenu.Visible = show;
-        internal static void SetPauseMenuVisiblity(bool show)    => PauseMenu.Visible = show;
-        internal static void SetSettingsMenuVisiblity(bool show) => SettingsMenu.Visible = show;
+        internal void SetPauseMenuVisiblity(bool show)    => PauseMenu.Visible = show;
+        internal void SetSettingsMenuVisiblity(bool show) => SettingsMenu.Visible = show;
 
-        internal static void Draw(SpriteBatch spriteBatch)
+        internal void Draw(SpriteBatch spriteBatch)
         {
             UserInterface.Active.Draw(spriteBatch);
         }
@@ -147,7 +113,7 @@ namespace GlobalWarmingGame.UI
         /// <param name="text">The label of the menu</param>
         /// <param name="location">the screenspace location of the menu</param>
         /// <param name="options">the elements of the menu</param>
-        internal static void CreateMenu<T>(string text, Point location, List<ButtonHandler<T>> options)
+        internal void CreateMenu<T>(string text, Point location, List<ButtonHandler<T>> options)
         {
             if (menu != null) UserInterface.Active.RemoveEntity(menu);
 
@@ -190,7 +156,7 @@ namespace GlobalWarmingGame.UI
         /// <typeparam name="T">Type of <see cref="ButtonHandler{T}"/></typeparam>
         /// <param name="text">The label of the dropdown button</param>
         /// <param name="options">The elements of the drop down</param>
-        internal static void CreateDropDown<T>(string text, List<ButtonHandler<T>> options)
+        internal void CreateDropDown<T>(string text, List<ButtonHandler<T>> options)
         {
             DropDown menu = new DropDown(new Vector2(225f, 75f), Anchor.CenterLeft, new Vector2(250f * topPanel.Children.Count, 4f), PanelSkin.ListBackground, PanelSkin.ListBackground, true)
             {
@@ -227,7 +193,7 @@ namespace GlobalWarmingGame.UI
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal static void Notification<T>(string text, List<T> list = null) 
+        internal void Notification<T>(string text, List<T> list = null) 
         {
             string notificatonText = text;
 
@@ -266,7 +232,7 @@ namespace GlobalWarmingGame.UI
         /// <param name="buttonHandler">The <see cref="ButtonHandler{T}"/> that handles the OnClick event</param>
         /// <param name="visible">whether the inventory menu should be visible on creation</param>
         /// <param name="icon">A custom <see cref="Texture2D"/> that is to be used, if null then <see cref="IconType.Sack"/> will be used</param>
-        internal static void AddInventory<T>(ButtonHandler<T> buttonHandler, bool visible = false, Texture2D icon = default)
+        internal void AddInventory<T>(ButtonHandler<T> buttonHandler, bool visible = false, Texture2D icon = default)
         {
             bool customIcon = icon != default;
             Icon inventoryButton = new Icon(customIcon ? IconType.None : IconType.Sack, Anchor.BottomLeft, 1f, true, new Vector2(64f * inventories.Count, 0f)) ;
@@ -296,7 +262,7 @@ namespace GlobalWarmingGame.UI
         /// <param name="id">The unique ID of the inventory menu (eg hashcode)</param>
         /// <param name="items">Items that are to be added to the inventory menu</param>
         /// <example><c>View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);</c></example>
-        internal static void UpdateInventoryMenu(int id, IEnumerable<ItemElement> items)
+        internal void UpdateInventoryMenu(int id, IEnumerable<ItemElement> items)
         {
             inventories[id].ClearChildren();
             foreach (ItemElement i in items)
@@ -310,7 +276,7 @@ namespace GlobalWarmingGame.UI
             }
         }
 
-        private static Entity CreateInventoryElement(ItemElement i)
+        private Entity CreateInventoryElement(ItemElement i)
         {
             Icon slot = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);
             if (i.Texture != null) slot.Texture = i.Texture;
@@ -325,7 +291,7 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="id">The unique id (eg hashcode) of the inventory  that is to be made visible</param>
         /// <example><c>View.SetInventoryVisible(inventory.GetHashCode());</c></example>
-        internal static void SetInventoryVisiblity(int id)
+        internal void SetInventoryVisiblity(int id)
         {
             foreach (Entity panel in inventories.Values)
             {
@@ -339,7 +305,7 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         /// <param name="id">The unique id (eg hashcode) of the inventory  that is to be removed</param>
         /// <example><c>View.RemoveInventory(inventory.GetHashCode());</c></example>
-        internal static void RemoveInventory(int id)
+        internal void RemoveInventory(int id)
         {
             bottomPanel.RemoveChild(inventoryButtons[id]);
             inventoryButtons.Remove(id);
