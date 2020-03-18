@@ -55,9 +55,9 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
             MapIcon.Add(TextureIconTypes.pickaxe, contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
 
+            MapIcon.Add(TextureIconTypes.Shotgun, contentManager.Load<Texture2D>(@"textures/icons/Shotgun"));
             /* todo */
             MapIcon.Add(TextureIconTypes.backpack, null);
-            MapIcon.Add(TextureIconTypes.basicRifle, null);
             MapIcon.Add(TextureIconTypes.bow, null);
             MapIcon.Add(TextureIconTypes.cloth, null);
             MapIcon.Add(TextureIconTypes.coat, null);
@@ -222,7 +222,8 @@ namespace GlobalWarmingGame
         basicRifle,
         bow,
         cloth,
-        coat
+        coat,
+        Shotgun
     }
 
     public enum TextureSetTypes

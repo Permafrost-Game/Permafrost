@@ -4939,6 +4939,12 @@
 /processorParam:Quality=Best
 /build:sound/sounds/robot_electricity.wav
 
+#begin sound/sounds/shotgun-shot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/shotgun-shot.wav
+
 #begin sound/sounds/stone_pickup.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -5034,6 +5040,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/icons/pickaxe.png
+
+#begin textures/icons/Shotgun.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/Shotgun.png
 
 #begin textures/icons/stone.png
 /importer:TextureImporter
