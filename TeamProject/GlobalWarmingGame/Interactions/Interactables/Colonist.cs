@@ -69,6 +69,27 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             }
         }
+        private bool _ranged = false;
+        public bool ranged
+        {
+            get { return _ranged; }
+            set
+            {
+                _ranged = value;
+                if (value == false)
+                {
+                    AttackRange = 70;
+                    AttackPower = 30;
+                    AttackSpeed = 1000;
+                }
+                else {
+                    AttackRange = 200;
+                    AttackPower = 45;
+                    AttackSpeed = 2000;
+                }
+
+            }
+        }
         private bool _isAttacking = false;
         public bool IsAttacking
         {
@@ -78,9 +99,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 _isAttacking = value;
                 isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-
-                TextureGroupIndex = _isAttacking ? 1 : 0;
-
+                if (ranged)
+                {
+                    TextureGroupIndex = _isAttacking ? 3 : 0;
+                }
+                else {
+                    TextureGroupIndex = _isAttacking ? 1 : 0;
+                }
             }
         }
         #endregion
@@ -99,6 +124,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
         private bool deathSoundPlayed;
+        
 
         #region PathFinding
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
@@ -147,6 +173,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
+            if (inventory.ContainsType(Resource.Pickaxe))
+            {
+                ranged = true;
+            }
+            else {
+                ranged = false;
+            }
         }
 
         internal void SetDead()

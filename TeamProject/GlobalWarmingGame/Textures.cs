@@ -79,6 +79,14 @@ namespace GlobalWarmingGame
                     new Texture2D[]{
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite1"),
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist3"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist5")
                     }
                });
 
