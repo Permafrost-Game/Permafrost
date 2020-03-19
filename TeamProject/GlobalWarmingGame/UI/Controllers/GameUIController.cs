@@ -6,6 +6,7 @@ using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
+using GlobalWarmingGame.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,43 +14,41 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static GlobalWarmingGame.Action.InstructionType;
 
-namespace GlobalWarmingGame.UI
+namespace GlobalWarmingGame.UI.Controllers
 {
     /// <summary>
     /// The controller class controlls the logic behind the UI<br/>
     /// Communicates with the <see cref="View"/> to display menus<br/>
     /// This is the only class that should interface with <see cref="View"/><br/>
     /// </summary>
-    static class Controller
+    static class GameUIController
     {
+        private static GameView view;
 
-        private static Texture2D mainMenuLogo;
-
-        static Controller()
+        static GameUIController()
         {
             openInventories = new List<Inventory>();
         }
 
         public static void Initalise(ContentManager content)
         {
-            View.Initalise(content);
+            view = new GameView();
+            view.Initalise(content);
         }
 
         public static void LoadContent(ContentManager content)
         {
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
-            mainMenuLogo = content.Load<Texture2D>(@"logo");
         }
 
-        public static void CreateGameUI(float uiScale = 1f)
+        public static void CreateUI(float uiScale = 1f)
         {
             openInventories.Clear();
-            View.Reset();
-            View.SetUIScale(uiScale);
+            view.Reset();
+            view.SetUIScale(uiScale);
 
-            View.CreateGameUI();
+            view.CreateUI();
             AddDropDowns();
             
             GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
@@ -70,7 +69,7 @@ namespace GlobalWarmingGame.UI
 
         internal static void ResetUI()
         {
-            View.Reset();
+            view.Reset();
         }
 
         /// <summary>
@@ -91,15 +90,11 @@ namespace GlobalWarmingGame.UI
             }
         }
 
-        internal static void ShowPauseMenu(bool show = true) => View.SetPauseMenuVisiblity(show);
+        internal static void ShowPauseMenu(bool show = true) => view.SetPauseMenuVisiblity(show);
 
-        internal static void ShowSettingsMenu(bool show = true) => View.SetSettingsMenuVisiblity(show);
+        internal static void ShowSettingsMenu(bool show = true) => view.SetSettingsMenuVisiblity(show);
 
-        internal static void CreateMainMenu()
-        {
-            View.CreateMainMenuUI(mainMenuLogo);
-            View.SetMainMenuVisiblity(true);
-        }
+
 
         
 
@@ -218,7 +213,7 @@ namespace GlobalWarmingGame.UI
                 }
                 else 
                 {
-                    View.Notification("Missing items:", instruction.Type.RequiredResources);
+                    view.Notification("Missing items:", instruction.Type.RequiredResources);
                 }
             }
             else
@@ -283,7 +278,7 @@ namespace GlobalWarmingGame.UI
         private static void AddDropDowns()
         {
             //Buildings drop down
-            View.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
+            view.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
             {
                 new ButtonHandler<Interactable>(Interactable.CampFire,  SelectBuildableCallback),
                 new ButtonHandler<Interactable>(Interactable.Farm,      SelectBuildableCallback),
@@ -291,7 +286,7 @@ namespace GlobalWarmingGame.UI
             });
 
             //Spawnables drop down
-            View.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
+            view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
         }
 
@@ -345,7 +340,7 @@ namespace GlobalWarmingGame.UI
 
         public static void Update(GameTime gameTime)
         {
-            View.Update(gameTime);
+            view.Update(gameTime);
             currentMouseState = Mouse.GetState();
 
             switch(Game1.GameState)
@@ -366,7 +361,7 @@ namespace GlobalWarmingGame.UI
         /// <param name="spriteBatch"></param>
         public static void Draw(SpriteBatch spriteBatch)
         {
-            View.Draw(spriteBatch);
+            view.Draw(spriteBatch);
         }
 
         /// <summary>
@@ -374,7 +369,7 @@ namespace GlobalWarmingGame.UI
         /// </summary>
         private static void OnClick()
         {
-            if (!View.Hovering)
+            if (!view.Hovering)
             {
                 Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
@@ -382,7 +377,7 @@ namespace GlobalWarmingGame.UI
                 List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
                 if (options != null && (options.Count > 0 || objectClicked is IInteractable))
                 {
-                    View.CreateMenu("Choose Action", currentMouseState.Position, options);
+                    view.CreateMenu("Choose Action", currentMouseState.Position, options);
                 }
             }
         }
@@ -423,7 +418,7 @@ namespace GlobalWarmingGame.UI
         {
             Inventory inventory = storage.Inventory;
             IEnumerable<ItemElement> ItemElements = inventory.Resources.Values.Select(i => new ItemElement(i.ResourceType.Texture, i.Weight.ToString()));
-            View.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
+            view.UpdateInventoryMenu(inventory.GetHashCode(), ItemElements);
         }
 
         /// <summary>
@@ -435,7 +430,7 @@ namespace GlobalWarmingGame.UI
             if (!openInventories.Contains(storage.Inventory))
             {
                 Texture2D icon = storage is Colonist ? colonistInventoryIcon : null;
-                View.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, SelectInventory), icon: icon);
+                view.AddInventory(new ButtonHandler<Inventory>(storage.Inventory, SelectInventory), icon: icon);
                 openInventories.Add(storage.Inventory);
                 storage.InventoryChange += InventoryChangeCallBack;
                 UpdateInventoryMenu(storage);
@@ -452,7 +447,7 @@ namespace GlobalWarmingGame.UI
             {
                 openInventories.Remove(storage.Inventory);
                 storage.InventoryChange -= InventoryChangeCallBack;
-                View.RemoveInventory(storage.Inventory.GetHashCode());
+                view.RemoveInventory(storage.Inventory.GetHashCode());
             }
             
         }
@@ -488,7 +483,7 @@ namespace GlobalWarmingGame.UI
         /// <param name="inventory"></param>
         private static void SelectInventory(Inventory inventory)
         {
-            View.SetInventoryVisiblity(inventory.GetHashCode());
+            view.SetInventoryVisiblity(inventory.GetHashCode());
             foreach (Colonist colonist in GameObjectManager.Filter<Colonist>() )
             {
                 if(colonist.Inventory == inventory)

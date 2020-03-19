@@ -5,6 +5,7 @@ using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -52,19 +53,19 @@ namespace GlobalWarmingGame
                 {
                     case GameState.MainMenu:
                         SoundFactory.StopSong();
-                        Controller.ResetUI();
+                        //GameUIController.ResetUI();
                         break;
                     case GameState.Paused:
-                        Controller.ShowPauseMenu(false);
+                        GameUIController.ShowPauseMenu(false);
                         goto case GameState.Playing;
                     case GameState.Settings:
-                        Controller.ShowSettingsMenu(false);
+                        GameUIController.ShowSettingsMenu(false);
                         goto case GameState.Playing;
                     case GameState.Playing:
                         if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.StopSong();
-                            Controller.ResetUI();
+                            GameUIController.ResetUI();
                         }
                         break;
                     case GameState.Intro:
@@ -77,21 +78,21 @@ namespace GlobalWarmingGame
                 switch (value)
                 {
                     case GameState.MainMenu:
-                        Controller.ResetUI();
-                        Controller.CreateMainMenu();
+                        GameUIController.ResetUI();
+                        MainMenuUIController.CreateUI();
                         SoundFactory.PlaySong(Songs.Menu);
                         break;
                     case GameState.Paused:
-                        Controller.ShowPauseMenu(true);
+                        GameUIController.ShowPauseMenu(true);
                         goto case GameState.Playing;
                     case GameState.Settings:
-                        Controller.ShowSettingsMenu(true);
+                        GameUIController.ShowSettingsMenu(true);
                         goto case GameState.Playing;
                     case GameState.Playing:
                         if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.PlaySong(Songs.Main);
-                            Controller.CreateGameUI();
+                            GameUIController.CreateUI();
                         }
                         break;
                     case GameState.Intro:
@@ -132,7 +133,7 @@ namespace GlobalWarmingGame
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
 
-            Controller.Initalise(Content);
+            GameUIController.Initalise(Content);
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
@@ -192,7 +193,8 @@ namespace GlobalWarmingGame
 
                 ResourceTypeFactory.Init();
 
-                Controller.LoadContent(Content);
+                GameUIController.LoadContent(Content);
+                MainMenuUIController.LoadContent(Content);
 
                 tileSet = new TileSet(textureSet, new Vector2(32f));
 
@@ -231,7 +233,7 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            Controller.Update(gameTime);
+            GameUIController.Update(gameTime);
             GlobalCombatDetector.UpdateParticipants();
 
             keyboardInputHandler.Update(gameTime);
@@ -252,6 +254,10 @@ namespace GlobalWarmingGame
             else if (GameState == GameState.Exiting)
             {
                 Exit();
+            }
+            else if (GameState == GameState.MainMenu)
+            {
+                MainMenuUIController.Update(gameTime);
             }
         }
 
@@ -349,7 +355,8 @@ namespace GlobalWarmingGame
                         spriteBatch.End();
 
                     }
-                   
+
+                    GameUIController.Draw(spriteBatch);
                     break;
                 case GameState.Intro:
                     spriteBatch.Begin();
@@ -357,13 +364,14 @@ namespace GlobalWarmingGame
                     spriteBatch.End();
 
                     break;
+                case GameState.MainMenu:
+                    MainMenuUIController.Draw(spriteBatch);
+                    break;
                 default:
                     GraphicsDevice.Clear(Color.Black);
 
                     break;
             }
-
-            Controller.Draw(spriteBatch);
 
             base.Draw(gameTime);
 
