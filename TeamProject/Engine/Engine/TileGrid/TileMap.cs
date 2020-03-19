@@ -41,6 +41,7 @@ namespace Engine.TileGrid
         /// <returns>The <see cref="Engine.TileGrid.Tile"/> within the region of <paramref name="position"/></returns>
         public Tile GetTileAtPosition(Vector2 position)
         {
+
             Vector2 tileSize = Tiles[0, 0].Size;
             int x = (Int32) Math.Round(position.X / tileSize.X);
             int y = (Int32) Math.Round(position.Y / tileSize.Y);

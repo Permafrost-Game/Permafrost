@@ -335,21 +335,21 @@ namespace GlobalWarmingGame.UI
 
                     Vector2 newPositionClicked = new Vector2(positionClicked.X + (tileSize.X / 2), positionClicked.Y + (tileSize.Y / 2));
 
-                    if (positionClicked.Y >= 0 && positionClicked.Y < bounds.Y)
+                    if (newPositionClicked.Y >= 0 && newPositionClicked.Y < bounds.Y)
                     {
-                        if (positionClicked.X < 0)
+                        if (newPositionClicked.X < 0)
                             objectClicked = ObjectClicked(new Vector2(0, positionClicked.Y).ToPoint());
 
-                        else if (positionClicked.X > bounds.X)
+                        else if (newPositionClicked.X > bounds.X)
                             objectClicked = ObjectClicked(new Vector2(bounds.X - tileSize.X, positionClicked.Y).ToPoint());
                     }
 
-                    else if (positionClicked.X >= 0 && positionClicked.X < bounds.X)
+                    else if (newPositionClicked.X >= 0 && newPositionClicked.X < bounds.X)
                     {
-                        if (positionClicked.Y < 0)
+                        if (newPositionClicked.Y < 0)
                             objectClicked = ObjectClicked(new Vector2(positionClicked.X, 0).ToPoint());
 
-                        else if (positionClicked.Y > bounds.Y)
+                        else if (newPositionClicked.Y > bounds.Y)
                             objectClicked = ObjectClicked(new Vector2(positionClicked.X, bounds.Y - tileSize.Y).ToPoint());
                     }
                 }
