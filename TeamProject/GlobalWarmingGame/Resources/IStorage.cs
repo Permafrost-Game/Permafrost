@@ -1,9 +1,13 @@
 ﻿using GlobalWarmingGame.ResourceItems;
+using System;
 
 namespace GlobalWarmingGame.Resources
 {
-    interface IStorage
+    public interface IStorage
     {
+
+        event EventHandler<ResourceItem> InventoryChange;
+
         Inventory Inventory { get; }
     }
 }

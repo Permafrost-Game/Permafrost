@@ -1,12 +1,10 @@
 ﻿using GlobalWarmingGame.Action;
-using GlobalWarmingGame.ResourceItems;
-using System.Collections.Generic;
+using GlobalWarmingGame.Resources;
 
 namespace GlobalWarmingGame.Interactions
 {
-    public interface IInstructionFollower
+    public interface IInstructionFollower : IStorage
     {
-        Inventory Inventory { get; }
         void AddInstruction(Instruction instruction, int priority);
 
        

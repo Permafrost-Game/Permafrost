@@ -1,38 +1,42 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GeonBit.UI.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using GeonBit.UI.Entities;
-using GeonBit.UI;
 
 namespace GlobalWarmingGame.UI.Menus
 {
     class MainMenu : Entity
     {
-        public Panel Menu { get; private set; }
-        public Button MainToGame { get; private set; }
-        public Button MainToOptions { get; private set; }
+        public Button MainToIntro { get; private set; }
+        public Button MainToLoad { get; private set; }
         public Button MainToQuit { get; private set; }
+
+        private const float MARGIN = 35f;
+        private static readonly Vector2 BUTTON_SIZE = new Vector2(300f, 50f);
+        private static readonly Vector2 IMAGE_SIZE = new Vector2(400, 400);
 
         public MainMenu(Texture2D texture)
         {
-            Menu = new Panel(new Vector2(0,0), PanelSkin.Simple, Anchor.Center);
+            Panel menu = new Panel(Vector2.Zero, PanelSkin.Simple, Anchor.Center);
+            this.AddChild(menu);
 
-            Panel frame = new Panel(new Vector2(400, 400), PanelSkin.Golden, Anchor.TopCenter, new Vector2(0, 35));
-            Menu.AddChild(frame);
+            Panel frame = new Panel(IMAGE_SIZE, PanelSkin.Golden, Anchor.TopCenter, new Vector2(0, MARGIN));
+            menu.AddChild(frame);
 
             Image img = new Image(texture);
             frame.AddChild(img);
 
-            MainToGame = new Button("Start Game", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 185));
-            Menu.AddChild(MainToGame);
+            int numberOfButtons = 3;
 
-            MainToOptions = new Button("Options", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 110));
-            Menu.AddChild(MainToOptions);
+            MainToIntro = new Button("New Game", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f) * --numberOfButtons));
+            menu.AddChild(MainToIntro);
 
-            MainToQuit = new Button("Quit", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(300, 50), new Vector2(0, 35));
-            Menu.AddChild(MainToQuit);
+            MainToLoad = new Button("Load Game", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f) * --numberOfButtons));
+            menu.AddChild(MainToLoad);
 
-            UserInterface.Active.AddEntity(Menu);
+            MainToQuit = new Button("Quit", ButtonSkin.Default, Anchor.BottomCenter, BUTTON_SIZE, new Vector2(0, MARGIN + (BUTTON_SIZE.Y * 1.5f)  * --numberOfButtons));
+            menu.AddChild(MainToQuit);
+
+            
         }
     }
 }

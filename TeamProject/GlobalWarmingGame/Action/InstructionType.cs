@@ -1,11 +1,11 @@
-﻿using GlobalWarmingGame.Interactions;
-using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.ResourceItems;
-using System;
+﻿using GlobalWarmingGame.ResourceItems;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Action
 {
+    public delegate void InstructionEvent(Instruction instruction);
+    public delegate bool InstructionCondition(Instruction instruction);
+
     /// <summary>
     /// This class descrives a class of Instruction
     /// </summary>
@@ -16,25 +16,23 @@ namespace GlobalWarmingGame.Action
         public string Description { get; }
         public int Priority { get; }
         public float TimeCost { get; }
-
-        public delegate void InstructionEvent(Instruction instruction);
+        public bool IsAvailable { get; set; }
 
         public readonly InstructionEvent onStart;
         public readonly InstructionEvent onComplete;
-
+        public readonly InstructionCondition checkValidity;
 
         public List<ResourceItem> RequiredResources { get; }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="id">Unique ID</param>
         /// <param name="name">Display name</param>
         /// <param name="description">Display description</param>
-        /// <param name="onComplete">The method that is called when the instruction has started</param>
-        /// /// <param name="onCompletee">The method that is called when the instruction has started</param>
-        public InstructionType(string id, string name, string description, int priority = 0, List<ResourceItem> requiredResources = null, float timeCost = 0, InstructionEvent onStart = default, InstructionEvent onComplete = default)
+        /// <param name="priority">The priority  given to <see cref="Instruction"/>s of this type</param> //TODO: range
+        /// <param name="requiredResources">The resources required to start <see cref="Instruction"/>s of this type</param>
+        /// <param name="timeCost">The time in ms that <see cref="Instruction"/>s of this type take to execute</param>
+        /// <param name="onStart">The method that is called when the instruction has started</param>
+        /// <param name="onComplete">The method that is called when the instruction has finnished</param>
+        public InstructionType(string id, string name, string description = "", int priority = 0, List<ResourceItem> requiredResources = null, float timeCost = 0, InstructionEvent onStart = default, InstructionEvent onComplete = default, InstructionCondition checkValidity = default)
         {
             this.ID = id;
             this.Name = name;
@@ -42,9 +40,9 @@ namespace GlobalWarmingGame.Action
             this.Priority = priority;
             this.RequiredResources = requiredResources;
             this.TimeCost = timeCost;
-
             this.onStart = onStart;
             this.onComplete = onComplete;
+            this.checkValidity = checkValidity;
         }
         
     }

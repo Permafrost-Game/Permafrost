@@ -48,13 +48,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         }
 
-        public Tree(Vector2 position, TextureTypes textureTypeTree, TextureTypes textureTypeStump, bool choppable = true) : base
+        public Tree(Vector2 position, TextureTypes textureTypeTree = TextureTypes.Tree, TextureTypes textureTypeStump = TextureTypes.TreeStump, bool choppable = true) : base
         (
             position: position,
-            size: new Vector2(Textures.Map[textureTypeTree].Width, Textures.Map[textureTypeTree].Height),
-            rotation: 0f,
-            origin: new Vector2(Textures.Map[textureTypeTree].Width / 2f, Textures.Map[textureTypeTree].Height / 2f),
-            tag: "Tree",
             texture: Textures.Map[textureTypeTree]
         )
         {
@@ -69,8 +65,16 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
             if (Choppable)
             {
-                chop = new InstructionType("chop", "Chop", "Chop for wood", 0,
-                           new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1) }, onStart: StartChop, onComplete: EndChop, timeCost: 3500f);
+                chop = new InstructionType(
+                    id: "chop",
+                    name: "Chop",
+                    description: "Chop for wood",
+                    requiredResources: new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Axe), 1) },
+                    //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(Resource.Axe),
+                    onStart: StartChop,
+                    onComplete: EndChop,
+                    timeCost: 3500f
+                    );
                 InstructionTypes.Add(chop);
             }
         }
@@ -82,9 +86,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         }
         private void EndChop(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Wood), 4));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Wood, 4));
             Choppable = false;
-            InstructionTypes.Remove(chop);        
+            InstructionTypes.Remove(chop);
         }
 
         public object Reconstruct()

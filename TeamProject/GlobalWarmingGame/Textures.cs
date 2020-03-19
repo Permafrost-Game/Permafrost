@@ -21,22 +21,30 @@ namespace GlobalWarmingGame
 
         public static void LoadContent(ContentManager contentManager)
         {
-            Map.Add(TextureTypes.farm, contentManager.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"));
-            Map.Add(TextureTypes.bushH, contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0"));
-            Map.Add(TextureTypes.bushN, contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1"));
-            Map.Add(TextureTypes.tree, contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
-            Map.Add(TextureTypes.treeStump, contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
-            Map.Add(TextureTypes.workBench, contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
-            Map.Add(TextureTypes.smallStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
-            Map.Add(TextureTypes.bigStoneNode, contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
-            Map.Add(TextureTypes.tallGrass, contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
-            Map.Add(TextureTypes.towerC, contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
-            Map.Add(TextureTypes.towerH, contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
+            #region Textures
+            Map.Add(TextureTypes.Farm,              contentManager.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"));
+            Map.Add(TextureTypes.BushH,             contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0"));
+            Map.Add(TextureTypes.BushN,             contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1"));
+            Map.Add(TextureTypes.Tree,              contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
+            Map.Add(TextureTypes.TreeStump,         contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
+            Map.Add(TextureTypes.WorkBench,         contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
+            Map.Add(TextureTypes.SmallStoneNode,    contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
+            Map.Add(TextureTypes.BigStoneNode,      contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
+            Map.Add(TextureTypes.TallGrass,         contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
+            Map.Add(TextureTypes.TowerC,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
+            Map.Add(TextureTypes.TowerH,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
+            Map.Add(TextureTypes.loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
+            
 
+            #endregion
+
+            #region Icon
             MapIcon.Add(TextureIconTypes.stone, contentManager.Load<Texture2D>(@"textures/icons/stone"));
             MapIcon.Add(TextureIconTypes.wood, contentManager.Load<Texture2D>(@"textures/icons/wood"));
             MapIcon.Add(TextureIconTypes.fibers, contentManager.Load<Texture2D>(@"textures/icons/fibers"));
             MapIcon.Add(TextureIconTypes.apple, contentManager.Load<Texture2D>(@"textures/icons/apple"));
+            
 
             /* todo */
             MapIcon.Add(TextureIconTypes.coal, null);
@@ -47,13 +55,16 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
             MapIcon.Add(TextureIconTypes.pickaxe, contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
 
+            MapIcon.Add(TextureIconTypes.Shotgun, contentManager.Load<Texture2D>(@"textures/icons/Shotgun"));
             /* todo */
             MapIcon.Add(TextureIconTypes.backpack, null);
-            MapIcon.Add(TextureIconTypes.basicRifle, null);
             MapIcon.Add(TextureIconTypes.bow, null);
             MapIcon.Add(TextureIconTypes.cloth, null);
             MapIcon.Add(TextureIconTypes.coat, null);
 
+            #endregion
+
+            #region TextureSet
             MapSet.Add(TextureSetTypes.colonist, new Texture2D[][]{
                     new Texture2D[]
                     {
@@ -71,6 +82,14 @@ namespace GlobalWarmingGame
                     new Texture2D[]{
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite1"),
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist3"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist5")
                     }
                });
 
@@ -165,23 +184,26 @@ namespace GlobalWarmingGame
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite7"),
                     }
             });
+
+            #endregion
         }
     }
 
     public enum TextureTypes
     {
-        farm,
-        bushH,
-        bushN,
-        tree,
-        treeStump,
-        workBench,
-        smallStoneNode,
-        bigStoneNode,
-        tallGrass,
-        towerC,
-        towerH,
-        storageUnit,
+        Farm,
+        BushH,
+        BushN,
+        Tree,
+        TreeStump,
+        WorkBench,
+        SmallStoneNode,
+        BigStoneNode,
+        TallGrass,
+        TowerC,
+        TowerH,
+        StorageUnit,
+        loot,
     }
 
     public enum TextureIconTypes
@@ -200,7 +222,8 @@ namespace GlobalWarmingGame
         basicRifle,
         bow,
         cloth,
-        coat
+        coat,
+        Shotgun
     }
 
     public enum TextureSetTypes

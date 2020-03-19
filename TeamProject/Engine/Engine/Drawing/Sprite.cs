@@ -47,21 +47,44 @@ namespace Engine.Drawing
 
         #region Constructors
 
-        public Sprite(Vector2 position, Texture2D texture, float rotation = 0f, string tag = "", SpriteEffects spriteEffect = SpriteEffects.None) :
+        public Sprite(Vector2 position, Texture2D texture, float rotation = 0f, SpriteEffects spriteEffect = SpriteEffects.None) :
         this(
             position: position,
             size: new Vector2(texture.Width, texture.Height),
             rotation: rotation,
             origin: CalculateOrigin(new Vector2(texture.Width, texture.Height)),
-            tag: tag,
             depth: CalculateDepth(position),
             texture: texture,
             spriteEffect: spriteEffect
             ) { }
 
+        public Sprite(Vector2 position, Vector2 size, Texture2D texture, float rotation = 0f, SpriteEffects spriteEffect = SpriteEffects.None) :
+        this(
+            position: position,
+            size: size,
+            rotation: rotation,
+            origin: CalculateOrigin(size),
+            depth: CalculateDepth(position),
+            texture: texture,
+            spriteEffect: spriteEffect
+            )
+        { }
 
-        public Sprite(Vector2 position, Vector2 size, float rotation = 0f, Vector2 origin = default, string tag = "", float depth = 0f, Texture2D texture = default, SpriteEffects spriteEffect = SpriteEffects.None) :
-            base(position, size, rotation, origin, tag)
+        public Sprite(Vector2 position, Texture2D texture, float depth, float rotation = 0f, SpriteEffects spriteEffect = SpriteEffects.None) :
+        this(
+            position: position,
+            size: new Vector2(texture.Width, texture.Height),
+            rotation: rotation,
+            origin: CalculateOrigin(new Vector2(texture.Width, texture.Height)),
+            depth: depth,
+            texture: texture,
+            spriteEffect: spriteEffect
+            )
+        { }
+
+
+        public Sprite(Vector2 position, Vector2 size, float rotation = 0f, Vector2 origin = default, float depth = 0f, Texture2D texture = default, SpriteEffects spriteEffect = SpriteEffects.None) :
+            base(position, size, rotation, origin)
         {
             this.depth = depth;
             this.Texture = texture;

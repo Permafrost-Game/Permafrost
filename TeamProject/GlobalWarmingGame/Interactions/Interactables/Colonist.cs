@@ -2,8 +2,9 @@
 using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, IUpdatable, IStorage, IReconstructable
+    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
@@ -24,6 +25,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         [PFSerializable]
         public readonly Inventory inventory;
+        public event EventHandler<ResourceItem> InventoryChange = delegate { };
 
         public Inventory Inventory { get => inventory; }
 
@@ -41,37 +43,69 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Combat
         public float Health { get; set; }
-        public int attackSpeed { get; set; }
+        public int AttackSpeed { get; set; }
         public float AttackPower { get; set; }
-        public float attackRange { get; set; }
+        public float AttackRange { get; set; }
         public float MaxHealth { get; private set; }
-        public bool ColonistDead { get; set; } = false;
+
+        private bool toBeRemoved = false;
+        private bool isDead = false;
+        private bool combatModeOn = false;
+        public Vector2 lastPosition;
+        Enemy enemy = null;
 
         private bool _inCombat = false;
-        public bool inCombat
+        public bool InCombat
         {
-            get { return _isAttacking; }
+            get { return _inCombat; }
             set
             {
                 _inCombat = value;
                 if (value == false)
                 {
-                    //TextureGroupIndex = 0;
+                    TextureGroupIndex = 0;
+                    IsAttacking = false;
+                }
+
+            }
+        }
+        private bool _ranged = false;
+        public bool ranged
+        {
+            get { return _ranged; }
+            set
+            {
+                _ranged = value;
+                if (value == false)
+                {
+                    AttackRange = 70;
+                    AttackPower = 30;
+                    AttackSpeed = 1000;
+                }
+                else {
+                    AttackRange = 350;
+                    AttackPower = 45;
+                    AttackSpeed = 1500;
                 }
 
             }
         }
         private bool _isAttacking = false;
-        public bool isAttacking
+        public bool IsAttacking
         {
             get { return _isAttacking; }
             set
             {
                 _isAttacking = value;
-                //isAnimated = true;
+                isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-                //TextureGroupIndex = _isAttacking ? 1 : 0;
-
+                if (ranged)
+                {
+                    TextureGroupIndex = _isAttacking ? 3 : 0;
+                }
+                else {
+                    TextureGroupIndex = _isAttacking ? 1 : 0;
+                }
             }
         }
         #endregion
@@ -89,18 +123,20 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private float timeUntillNextHungerCheck;
         private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
+        private bool deathSoundPlayed;
+        public bool HasRangedItem { get; set; } = false;
+
 
         #region PathFinding
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
         public Queue<Vector2> Path { get; set; } = new Queue<Vector2>();
         public float Speed { get; set; }
+        public double ColonistimeToAttack { get; private set; }
         #endregion
 
-        public Colonist() : this(
-            position: Vector2.Zero,
-            textureSetType: TextureSetTypes.colonist) { }
+        public Colonist() : this(position: Vector2.Zero) { }
 
-        public Colonist(Vector2 position, TextureSetTypes textureSetType, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        public Colonist(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.colonist, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
         (
             position: position,
             textureSet: Textures.MapSet[textureSetType],
@@ -114,9 +150,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             else
                 this.inventory = inventory;
 
-            attackRange = 60;
+            this.inventory.InventoryChange += InvokeInventoryChange;
+            
+
+            AttackRange = 70;
             AttackPower = 30;
-            attackSpeed = 1000;
+            AttackSpeed = 1000;
+            lastPosition = position;
 
 
             Speed = 0.25f;
@@ -131,17 +171,34 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        internal void setDead()
+        private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
+        {
+            InventoryChange.Invoke(this, resourceItem);
+            if (inventory.ContainsType(Resource.Shotgun))
+            {
+                ranged = true;
+            }
+            else {
+                ranged= false;
+            }
+        }
+
+        internal void SetDead()
         {
             this.Rotation = 1.5f;
-            ColonistDead = true;
-
-            #region Start 2 Seconds Delay for 'Animation'
+            this.isDead = true;
+            isAnimated = false;
+           
+            if (!deathSoundPlayed)
+            { 
+                SoundFactory.PlaySoundEffect(Sound.colonistDying);
+                deathSoundPlayed = true;
+            }
+            
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                GameObjectManager.Remove(this);
+                toBeRemoved = true;
             });
-            #endregion
         }
 
 
@@ -154,8 +211,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 Instruction currentInstruction = instructions.Peek();
                 try
-                {
-                    currentInstruction.Start();
+                {                         
+                        currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
@@ -168,25 +225,42 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void Move(GameTime gameTime)
         {
-            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-            UpdateDepth(0.5f);
+            if (!isDead)
+            {
+                Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+                UpdateDepth(0.5f);
+            }
         }
 
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 position1 = Position;
+            if(toBeRemoved)
+            {
+                List<ResourceItem> droppedItems= new List<ResourceItem>();
+                foreach (ResourceItem item in inventory.Resources.Values) {
+                    droppedItems.Add(item);
+                }
+                GameObjectManager.Add(new Loot(droppedItems, this.Position));
+                GameObjectManager.Remove(this);
+                return;
+            }
+
+            Vector2 lastPosition = this.Position;
             Move(gameTime);
             base.Update(gameTime);
+            enemy = GlobalCombatDetector.FindColonistThreat(this);
 
-            Vector2 delta = position1 - Position;
+            Vector2 delta = lastPosition - this.Position;
 
 
             if (delta.Equals(Vector2.Zero))
             {
-                if (!isAttacking)
+                if (!IsAttacking && instructions.Count==0)
                 {
-                    //isAnimated = false;
+                    TextureGroupIndex = 0;
+                    
+                   
                 }
             }
             else if (Math.Abs(delta.X) >= Math.Abs(delta.Y))
@@ -198,15 +272,59 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                if (Goals.Count == 0)
-                {
-                    Goals.Enqueue(instructions.Peek().PassiveMember.Position);
-                }
                 instructions.Peek().Update(gameTime);
+                if (instructions.Count > 0)
+                {
+                    if (Goals.Count == 0)
+                    {
+                        Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                    }
+                }
+            }
+
+            if (enemy != null)
+            {
+                combatModeOn = true;
+                SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            }
+            else
+            {
+                if (combatModeOn)
+                {
+                    IsAttacking = false;
+                    combatModeOn = false;
+                }
+                
+            }
+            if (combatModeOn)
+            {
+                
+                PerformCombat(gameTime, enemy);
+            }
+
+            if (this.Health <= 0 && !isDead)
+            {
+                this.SetDead();
             }
 
             FreezeCheck(gameTime);
             HungerCheck(gameTime);
+
+        }
+
+        private void PerformCombat(GameTime gameTime, Enemy enemy)
+        {
+
+            
+
+                if (enemy.Health > 0 && this.Health > 0)
+                {
+                    InCombat = true;
+                  
+                    ColonistAttack(gameTime);
+                }
+            
+
         }
 
         #region Colonist Freeze Check
@@ -240,7 +358,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (timeUntillNextHungerCheck < 0)
             {
                 //If colonist doesn't have food on them, they are starving -1 health
-                if (!Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+                if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
                 {
                     //If the colonist is hungry they take health damage and reset else increase hunger
                     if (Hunger == 5)
@@ -296,8 +414,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
         #endregion
 
-        public void AddInstruction(Instruction instruction, int priority)
+        public void AddInstruction(Instruction instruction, int priority = 0)
         {
+            //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
             instructions.Enqueue(instruction);
@@ -320,13 +439,34 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+        private void CheckInventoryDump()
+        {
+            foreach(StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
+            {
+                if(storageUnit.ResourceItem != null && inventory.ContainsType(storageUnit.ResourceItem.ResourceType.ResourceID))
+                {
+                    AddInstruction(new Instruction(
+                        type: storageUnit.StoreInstruction,
+                        activeMember: this,
+                        passiveMember: storageUnit
+                        )
+                    );
+                    break;
+                }
+            }
+        }
+
         private void OnInstructionComplete(Instruction instruction)
         {
             if (instructions.Peek() == instruction)
             {
                 instructions.Dequeue();
-
-                TextureGroupIndex = 0;
+                CheckInventoryDump();
+                if (!InCombat)
+                {
+                    TextureGroupIndex = 0;
+                    
+                }
             }
             else
             {
@@ -334,6 +474,61 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+        private void ColonistAttack(GameTime gameTime)
+        {
+
+            if (ColonistAttackSpeedControl(gameTime))
+            {
+                instructions.Clear();
+                Goals.Clear();
+                this.IsAttacking = true;
+                playAttackingSound();
+                enemy.Health -= this.AttackPower;
+                if (enemy.Health<=0)
+                {
+                    this.InCombat = false;
+                    this.IsAttacking = false;
+
+
+                }
+            }
+            
+        }
+
+        private void playAttackingSound()
+        {
+            if (ranged)
+            {
+                SoundFactory.PlaySoundEffect(Sound.Shotgun);
+            }
+            else
+            {
+                SoundFactory.PlaySoundEffect(Sound.slashSound);
+            }
+        }
+
+        private bool ColonistAttackSpeedControl(GameTime gameTime)
+        {
+            ColonistimeToAttack += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            // Console.WriteLine(gameTime.ElapsedGameTime.TotalMilliseconds);
+            if (ColonistimeToAttack > 500 & ColonistimeToAttack < 600)
+            {
+                IsAttacking = false;
+                TextureGroupIndex = 2;
+            }
+            if (ColonistimeToAttack >= this.AttackSpeed)
+            {
+                ColonistimeToAttack = 0;
+                return true;
+
+
+
+            }
+            return false;
+
+
+        }
         public object Reconstruct()
         {
             return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);
@@ -341,3 +536,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
     }
 }
+
+
+

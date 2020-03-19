@@ -17,7 +17,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             size: new Vector2(Textures.Map[defaultTextureType].Width, Textures.Map[defaultTextureType].Height),
             rotation: 0f,
             origin: new Vector2(Textures.Map[defaultTextureType].Width / 2f, Textures.Map[defaultTextureType].Height / 2f),
-            tag: "Environmental",
             texture: Textures.Map[defaultTextureType]
         )
         {

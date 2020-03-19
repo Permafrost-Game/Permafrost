@@ -15,7 +15,7 @@ namespace Engine.Lighting
             set => base.Position = value;
         }
 
-        public Light(Vector2 position, GraphicsDevice graphicsDevice, float radius, Color color, string tag = "") : base(position, Vector2.Zero, tag)
+        public Light(Vector2 position, GraphicsDevice graphicsDevice, float radius, Color color) : base(position, Vector2.Zero)
         {
             float baseSize = radius * 2f;
 

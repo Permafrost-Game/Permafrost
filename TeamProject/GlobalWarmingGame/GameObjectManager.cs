@@ -50,7 +50,7 @@ namespace GlobalWarmingGame
         static GameObjectManager()
         {
             gameObjects = new List<GameObject>();
-            Updatables = new List<IUpdatable>();
+            Updatables = new List<Engine.IUpdatable>();
             Drawables = new List<IDrawable>();
             Interactables = new List<IInteractable>();
         }
@@ -134,7 +134,7 @@ namespace GlobalWarmingGame
                     if (colonists != null)
                         foreach (Colonist colonist in colonists)
                             Add(colonist);
-                    Updatables = Filter<IUpdatable>();
+                    Updatables = Filter<Engine.IUpdatable>();
                     Drawables = Filter<IDrawable>();
                     Interactables = Filter<IInteractable>();
                 }
@@ -275,7 +275,7 @@ namespace GlobalWarmingGame
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }
-        public static List<IUpdatable> Updatables { get; private set; } = new List<IUpdatable>();
+        public static List<Engine.IUpdatable> Updatables { get; private set; } = new List<Engine.IUpdatable>();
         public static List<IDrawable> Drawables { get; private set; } = new List<IDrawable>();
         public static List<IInteractable> Interactables { get; private set; } = new List<IInteractable>();
 
@@ -290,7 +290,7 @@ namespace GlobalWarmingGame
             if (gameObject is IDrawable d)
                 Drawables.Add(d);
 
-            if (gameObject is IUpdatable u)
+            if (gameObject is Engine.IUpdatable u)
                 Updatables.Add(u);
 
             if (gameObject is IInteractable i)
@@ -310,7 +310,7 @@ namespace GlobalWarmingGame
             if (gameObject is IDrawable d)
                 Drawables.Remove(d);
 
-            if (gameObject is IUpdatable u)
+            if (gameObject is Engine.IUpdatable u)
                 Updatables.Remove(u);
 
             if (gameObject is IInteractable i)

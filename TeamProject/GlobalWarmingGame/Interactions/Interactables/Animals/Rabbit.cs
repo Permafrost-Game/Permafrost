@@ -25,12 +25,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         [PFSerializable]
         public readonly int textureSetID;
 
-        public Rabbit() : this(Vector2.Zero, TextureSetTypes.rabbit)
+        public Rabbit() : this(Vector2.Zero)
         {
 
         }
 
-        public Rabbit(Vector2 position, TextureSetTypes textureSetType) : base
+        public Rabbit(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.rabbit) : base
         (
             position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
@@ -44,7 +44,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public void Hunt(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 2));
             Dispose();
             SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
         }

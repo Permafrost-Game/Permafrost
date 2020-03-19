@@ -1,21 +1,16 @@
 ﻿using Engine;
 using Engine.Lighting;
 using Engine.TileGrid;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
+using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
-using GlobalWarmingGame.UI.Menus;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using System.IO;
-using GlobalWarmingGame.Interactions;
 
 namespace GlobalWarmingGame
 {
@@ -26,11 +21,9 @@ namespace GlobalWarmingGame
     {
         const string SettingsPath = @"Content/settings.json";
 
-        // private bool isFullScreen = false;
         private float resolutionScale = 0.75f;
         private int seed = new System.Random().Next();
         private Vector2 currentZone = Vector2.Zero;
-
 
 
         readonly GraphicsDeviceManager graphics;
@@ -41,30 +34,82 @@ namespace GlobalWarmingGame
         Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
-        MainMenu MainMenu;
-        PauseMenu PauseMenu;
-
-        KeyboardState previousKeyboardState;
-        KeyboardState currentKeyboardState;
-
-        GameState gameState;
-
         List<Light> lightObjects;
-
+        private bool lighting = true;
         ShadowmapResolver shadowmapResolver;
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
         Texture2D ambiantLight;
-        Texture2D logo;
+
+        private static GameState _GameState;
+        public static GameState GameState
+        {
+            get { return _GameState; }
+            set
+            {
+                GameState previous = _GameState;
+
+                switch (previous)
+                {
+                    case GameState.MainMenu:
+                        SoundFactory.StopSong();
+                        //GameUIController.ResetUI();
+                        break;
+                    case GameState.Paused:
+                        GameUIController.ShowPauseMenu(false);
+                        goto case GameState.Playing;
+                    case GameState.Settings:
+                        GameUIController.ShowSettingsMenu(false);
+                        goto case GameState.Playing;
+                    case GameState.Playing:
+                        if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
+                        {
+                            SoundFactory.StopSong();
+                            GameUIController.ResetUI();
+                        }
+                        break;
+                    case GameState.Intro:
+                        CutSceneFactory.StopVideo();
+                        break;
+                }
+
+                _GameState = value;
+
+                switch (value)
+                {
+                    case GameState.MainMenu:
+                        GameUIController.ResetUI();
+                        MainMenuUIController.CreateUI();
+                        SoundFactory.PlaySong(Songs.Menu);
+                        break;
+                    case GameState.Paused:
+                        GameUIController.ShowPauseMenu(true);
+                        goto case GameState.Playing;
+                    case GameState.Settings:
+                        GameUIController.ShowSettingsMenu(true);
+                        goto case GameState.Playing;
+                    case GameState.Playing:
+                        if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
+                        {
+                            SoundFactory.PlaySong(Songs.Main);
+                            GameUIController.CreateUI();
+                        }
+                        break;
+                    case GameState.Intro:
+                        CutSceneFactory.PlayVideo(VideoN.Intro);
+                        break;
+                }
+
+            }
+        }
+
+        
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
-            gameState = GameState.mainmenu;
-            SoundFactory.Loadsounds(Content);
-            SoundFactory.PlaySong(Songs.Menu);
         }
 
         protected override void Initialize()
@@ -88,7 +133,7 @@ namespace GlobalWarmingGame
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
 
-            UserInterface.Initialize(Content, "hd");
+            GameUIController.Initalise(Content);
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
@@ -100,12 +145,16 @@ namespace GlobalWarmingGame
         #region Load Content
         protected override void LoadContent()
         {
+
             //INITALISING GAME COMPONENTS
             {
                 spriteBatch = new SpriteBatch(GraphicsDevice);
                 ambiantLight = new Texture2D(GraphicsDevice, 1, 1);
                 ambiantLight.SetData(new Color[] { Color.DimGray });
             }
+
+            CutSceneFactory.LoadContent(Content);
+            SoundFactory.Loadsounds(Content);
 
             //LIGHTING
             {
@@ -130,7 +179,6 @@ namespace GlobalWarmingGame
                 var textureSet = new Dictionary<int, Texture2D>();
 
                 Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
-                //water.Name = "Non-Walkable";
 
                 textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
                 textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
@@ -145,7 +193,8 @@ namespace GlobalWarmingGame
 
                 ResourceTypeFactory.Init();
 
-                Controller.LoadContent(Content);
+                GameUIController.LoadContent(Content);
+                MainMenuUIController.LoadContent(Content);
 
                 GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
 
@@ -160,56 +209,9 @@ namespace GlobalWarmingGame
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
-            //CREATING GAME OBJECTS
+            //Menu Setup
             {
-                //All this code below is for testing and will eventually be replaced.
-                // Controller.LoadContent(Content);
-
-
-
-                logo = Content.Load<Texture2D>(@"logo");
-
-                MainMenu = new MainMenu(logo);
-                PauseMenu = new PauseMenu();
-
-                //Colonist c1 = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size / 2);
-
-                //GameObjectManager.Add(c1);
-
-                ProcessMenuSelection();
-
-                /*
-                MainUI = new MainUI();
-
-                ProcessMenuSelection();
-
-
-                string[] spawnables = new string[11];
-                spawnables[0] = "Colonist";
-                spawnables[1] = "Rabbit";
-                spawnables[2] = "Farm";
-                spawnables[3] = "Tree";
-                spawnables[4] = "Bush";
-                spawnables[5] = "Workbench";
-                spawnables[6] = "Stone";
-                spawnables[7] = "Tall Grass";
-                spawnables[8] = "Robot";
-                spawnables[9] = "Polar Bear";
-                spawnables[10] = "campFire";
-
-                for (int i = 0; i < spawnables.Length; i++)
-                    MainUI.SpawnMenu.AddItem(spawnables[i]);
-
-                MainUI.SpawnMenu.OnValueChange = (Entity e) => {
-                    ProcessSpawnables();
-                    //Console.WriteLine(ZoneManager.CurrentZone.TileMap.Size);
-                };
-
-                 MainUI.SpawnMenu.OnValueChange = (Entity e) => { ProcessSpawnables(); };
-
-                CollectiveInventory = new CollectiveInventory(MainUI);
-                */
-
+                GameState = GameState.MainMenu;
             }
 
         }
@@ -232,15 +234,12 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            Controller.Update(gameTime);
-            ShowMainMenu();
-            ShowPauseMenu();
-            ShowMainUI();
-            PauseGame();
+            GameUIController.Update(gameTime);
+            GlobalCombatDetector.UpdateParticipants();
 
-            keyboardInputHandler.Update(gameTime, gameState);
+            keyboardInputHandler.Update(gameTime);
 
-            if (gameState == GameState.playing)
+            if (GameState == GameState.Playing)
             {
 
                 camera.Update(gameTime);
@@ -248,112 +247,138 @@ namespace GlobalWarmingGame
                 TemperatureManager.UpdateTemperature(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
-                foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
+                foreach (Engine.IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
 
                 base.Update(gameTime);
             }
-
-            previousKeyboardState = currentKeyboardState;
+            else if (GameState == GameState.Exiting)
+            {
+                Exit();
+            }
+            else if (GameState == GameState.MainMenu)
+            {
+                MainMenuUIController.Update(gameTime);
+            }
         }
+
 
         #region Drawing and Lighting
         protected override void Draw(GameTime gameTime)
         {
-            //CALCULATE SHADOWS
-            foreach (Light light in lightObjects)
+            GraphicsDevice.Clear(Color.Black);
+
+            switch (GameState)
             {
-                GraphicsDevice.SetRenderTarget(light.RenderTarget);
-                GraphicsDevice.Clear(Color.Transparent);
-                DrawShadowCasters(light);
+                case GameState.Paused:
+                case GameState.Settings:
+                case GameState.Playing:
+                    //CALCULATE SHADOWS
+                    if (lighting)
+                    {
+                        foreach (Light light in lightObjects)
+                        {
+                            GraphicsDevice.SetRenderTarget(light.RenderTarget);
+                            GraphicsDevice.Clear(Color.Transparent);
+                            DrawShadowCasters(light);
 
-                shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.Position);
-            }
+                            shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.Position);
+                        }
+                        //DRAW LIGHTS
+                        {
+                            GraphicsDevice.SetRenderTarget(screenShadows);
+                            GraphicsDevice.Clear(Color.Black);
 
-            //DRAW LIGHTS
-            {
-                GraphicsDevice.SetRenderTarget(screenShadows);
-                GraphicsDevice.Clear(Color.Black);
+                            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
+                            foreach (Light light in lightObjects)
+                            {
+                                light.Draw(spriteBatch);
+                            }
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
-                foreach (Light light in lightObjects)
-                {
-                    light.Draw(spriteBatch);
-                }
-
-                spriteBatch.End();
+                            spriteBatch.End();
 
 
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-                spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                spriteBatch.End();
+                            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+                            spriteBatch.Draw(ambiantLight, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                            spriteBatch.End();
 
-                GraphicsDevice.SetRenderTarget(null);
-                GraphicsDevice.Clear(Color.Black);
-            }
+                            GraphicsDevice.SetRenderTarget(null);
+                            GraphicsDevice.Clear(Color.Black);
+                        }
+                    }
 
-            //DRAW BACKGROUND
-            {
-                spriteBatch.Begin(
-                    sortMode: SpriteSortMode.Deferred,
-                    blendState: BlendState.Opaque,
-                    samplerState: SamplerState.PointClamp,
-                    depthStencilState: null,
-                    rasterizerState: null,
-                    effect: null,
-                    transformMatrix: camera.Transform
-                );
+                    //DRAW BACKGROUND
+                    {
+                        spriteBatch.Begin(
+                            sortMode: SpriteSortMode.Deferred,
+                            samplerState: SamplerState.PointClamp,
+                            transformMatrix: camera.Transform
+                        );
 
                 Vector2 zoneSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size;
                 spriteBatch.Draw(GameObjectManager.GreyTiles, new Rectangle((int)-zoneSize.X, (int)-zoneSize.Y, GameObjectManager.GreyTiles.Width, GameObjectManager.GreyTiles.Height), Color.Gray);
 
                 GameObjectManager.ZoneMap.Draw(spriteBatch);
 
-                spriteBatch.End();
+                        spriteBatch.End();
+                    }
+
+                    //DRAW SHADOWS
+                    if(lighting) {
+                        BlendState blendState = new BlendState()
+                        {
+                            ColorSourceBlend = Blend.DestinationColor,
+                            ColorDestinationBlend = Blend.SourceColor
+                        };
+
+                        spriteBatch.Begin(
+                            sortMode: SpriteSortMode.Immediate,
+                            blendState: blendState,
+                            depthStencilState: null,
+                            rasterizerState: null,
+                            effect: null,
+                            transformMatrix: null
+                        );
+                        spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
+                        spriteBatch.End();
+                    }
+
+                    //DRAW FORGROUND
+                    {
+                        spriteBatch.Begin(
+                            sortMode: SpriteSortMode.FrontToBack,
+                            blendState: BlendState.AlphaBlend,
+                            samplerState: SamplerState.PointClamp,
+                            transformMatrix: camera.Transform
+                        );
+
+                        foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
+                            drawable.Draw(spriteBatch);
+
+
+                        spriteBatch.End();
+
+                    }
+
+                    GameUIController.Draw(spriteBatch);
+                    break;
+                case GameState.Intro:
+                    spriteBatch.Begin();
+                    CutSceneFactory.Draw(spriteBatch, GraphicsDevice);
+                    spriteBatch.End();
+
+                    break;
+                case GameState.MainMenu:
+                    MainMenuUIController.Draw(spriteBatch);
+                    break;
+                default:
+                    GraphicsDevice.Clear(Color.Black);
+
+                    break;
             }
-
-            //DRAW SHADOWS
-            {
-                BlendState blendState = new BlendState()
-                {
-                    ColorSourceBlend = Blend.DestinationColor,
-                    ColorDestinationBlend = Blend.SourceColor
-                };
-
-                spriteBatch.Begin(
-                    sortMode: SpriteSortMode.Immediate,
-                    blendState: blendState,
-                    depthStencilState: null,
-                    rasterizerState: null,
-                    effect: null,
-                    transformMatrix: null
-                );
-                spriteBatch.Draw(screenShadows, Vector2.Zero, Color.White);
-                spriteBatch.End();
-            }
-
-            //DRAW FORGROUND
-            {
-                spriteBatch.Begin(
-                    sortMode: SpriteSortMode.FrontToBack,
-                    blendState: BlendState.AlphaBlend,
-                    samplerState: SamplerState.PointClamp,
-                    depthStencilState: null,
-                    rasterizerState: null,
-                    effect: null,
-                    transformMatrix: camera.Transform
-                );
-
-                foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
-                    drawable.Draw(spriteBatch);
-
-                spriteBatch.End();
-            }
-
-            Controller.Draw(spriteBatch);
-
 
             base.Draw(gameTime);
+
         }
 
         private void DrawShadowCasters(Light light)
@@ -383,130 +408,9 @@ namespace GlobalWarmingGame
         #endregion
 
         #region Menus
-        void PauseGame()
-        {
-            currentKeyboardState = Keyboard.GetState();
-
-            if (CheckKeyPress(Keys.Escape))
-            {
-                if (gameState == GameState.playing)
-                    gameState = GameState.paused;
-
-                else if (gameState == GameState.paused)
-                    gameState = GameState.playing;
-            }
-
-            //previousKeyboardState = currentKeyboardState;
-        }
-
-        bool CheckKeyPress(Keys key)
-        {
-            return previousKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
-        }
-
-        void ShowMainMenu()
-        {
-            if (gameState == GameState.mainmenu)
-            {
-                MainMenu.Menu.Visible = true;
-                PauseMenu.Menu.Visible = false;
-                //MainUI.TopPanel.Visible = false;
-                //MainUI.BottomPanel.Visible = false;
-            }
-
-            else
-                MainMenu.Menu.Visible = false;
-        }
-
-        void ShowPauseMenu()
-        {
-            if (gameState == GameState.paused)
-            {
-                MainMenu.Menu.Visible = false;
-                PauseMenu.Menu.Visible = true;
-                //MainUI.TopPanel.Visible = false;
-                //MainUI.BottomPanel.Visible = false;
-            }
-
-            else
-                PauseMenu.Menu.Visible = false;
-        }
-
-        void ShowMainUI()
-        {
-            if (gameState == GameState.playing)
-            {
-                MainMenu.Menu.Visible = false;
-                PauseMenu.Menu.Visible = false;
-                //MainUI.TopPanel.Visible = true;
-                //MainUI.BottomPanel.Visible = true;
-            }
-
-            else
-            {
-                //MainUI.TopPanel.Visible = false;
-                //MainUI.BottomPanel.Visible = false;
-            }
-        }
-
-        void ProcessMenuSelection()
-        {
-            MainMenu.MainToGame.OnClick = (Entity button) => { gameState = GameState.playing;  SoundFactory.PlaySong(Songs.Main); };
-            MainMenu.MainToQuit.OnClick = (Entity button) => Exit();
-
-            PauseMenu.PauseToGame.OnClick = (Entity button) => { gameState = GameState.playing; };
-            PauseMenu.PauseToMain.OnClick = (Entity button) => { gameState = GameState.mainmenu; };
-            PauseMenu.PauseToQuit.OnClick = (Entity button) => Exit();
-        }
-
-        /*
-        void ProcessSpawnables()
-        {
-            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].size - camera.Position;
-
-            switch (MainUI.SpawnMenu.SelectedIndex)
-            {
-                case 0:
-
-                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.Colonist, position));
-                    break;
-                case 1:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, position));
-                    break;
-                case 2:
-                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.Farm,position));
-                    break;
-                case 3:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, position));
-                    break;
-                case 4:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, position));
-                    break;
-                case 5:
-                    GameObjectManager.Add((GameObject) InteractablesFactory.MakeInteractable(Interactable.WorkBench,position));
-                    break;
-                case 6:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNode, position));
-                    break;
-                case 7:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, position));
-                    break;
-                case 8:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot, position));
-                    break;
-                case 9:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, position));
-                    break;
-                case 10:
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.CampFire, position));
-                    break;
-            }
-
-            //MainUI.SpawnMenu.DontKeepSelection = true;
-        }*/
 
         #endregion
     }
 
-    public enum GameState { mainmenu, playing, paused }
+    public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting }
 }
