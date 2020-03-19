@@ -326,6 +326,34 @@ namespace GlobalWarmingGame.UI
                 Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
+                if (objectClicked == null)
+                {
+                    Console.WriteLine(positionClicked);
+
+                    Vector2 bounds = new Vector2(((GameObjectManager.ZoneMap.Size.X) * 32f) , (GameObjectManager.ZoneMap.Size.Y) * 32f);
+                    Vector2 tileSize = GameObjectManager.ZoneMap.Tiles[0, 0].Size;
+
+                    Vector2 newPositionClicked = new Vector2(positionClicked.X + (tileSize.X / 2), positionClicked.Y + (tileSize.Y / 2));
+
+                    if (positionClicked.Y >= 0 && positionClicked.Y < bounds.Y)
+                    {
+                        if (positionClicked.X < 0)
+                            objectClicked = ObjectClicked(new Vector2(0, positionClicked.Y).ToPoint());
+
+                        else if (positionClicked.X > bounds.X)
+                            objectClicked = ObjectClicked(new Vector2(bounds.X - tileSize.X, positionClicked.Y).ToPoint());
+                    }
+
+                    else if (positionClicked.X >= 0 && positionClicked.X < bounds.X)
+                    {
+                        if (positionClicked.Y < 0)
+                            objectClicked = ObjectClicked(new Vector2(positionClicked.X, 0).ToPoint());
+
+                        else if (positionClicked.Y > bounds.Y)
+                            objectClicked = ObjectClicked(new Vector2(positionClicked.X, bounds.Y - tileSize.Y).ToPoint());
+                    }
+                }
+
                 List<ButtonHandler<Instruction>> options = GenerateInstructionOptions(objectClicked, SelectedColonist);
                 if (options != null && (options.Count > 0 || objectClicked is IInteractable))
                 {

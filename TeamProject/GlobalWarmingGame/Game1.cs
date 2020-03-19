@@ -149,16 +149,11 @@ namespace GlobalWarmingGame
 
                 GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
 
-
-
                 GameObjectManager.ZoneMap = GameObjectManager.GenerateMap(currentZone);
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
 
-
-
                 GameObjectManager.Camera = camera;
                 GameObjectManager.Init(seed, currentZone, GraphicsDevice, spriteBatch, false);
-
 
                 //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap 
 
