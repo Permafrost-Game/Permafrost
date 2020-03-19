@@ -29,9 +29,6 @@ namespace GlobalWarmingGame
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        TileSet tileSet;
-
-        Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
         List<Light> lightObjects;
@@ -196,15 +193,11 @@ namespace GlobalWarmingGame
                 GameUIController.LoadContent(Content);
                 MainMenuUIController.LoadContent(Content);
 
-                tileSet = new TileSet(textureSet, new Vector2(32f));
+                GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
+                GameObjectManager.GraphicsDevice = GraphicsDevice;
 
-                GameObjectManager.Init(tileSet, seed, currentZone, false);
+                // GameObjectManager.Init(seed, currentZone, false);
 
-
-                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
-                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
-
-                GameObjectManager.Camera = camera;
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
@@ -241,7 +234,7 @@ namespace GlobalWarmingGame
             if (GameState == GameState.Playing)
             {
 
-                camera.Update(gameTime);
+                GameObjectManager.Camera.Update(gameTime);
 
                 TemperatureManager.UpdateTemperature(gameTime);
 
@@ -288,7 +281,7 @@ namespace GlobalWarmingGame
                             GraphicsDevice.SetRenderTarget(screenShadows);
                             GraphicsDevice.Clear(Color.Black);
 
-                            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
+                            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: GameObjectManager.Camera.Transform);
                             foreach (Light light in lightObjects)
                             {
                                 light.Draw(spriteBatch);
@@ -311,7 +304,7 @@ namespace GlobalWarmingGame
                         spriteBatch.Begin(
                             sortMode: SpriteSortMode.Deferred,
                             samplerState: SamplerState.PointClamp,
-                            transformMatrix: camera.Transform
+                            transformMatrix: GameObjectManager.Camera.Transform
                         );
 
                         GameObjectManager.ZoneMap.Draw(spriteBatch);
@@ -345,7 +338,7 @@ namespace GlobalWarmingGame
                             sortMode: SpriteSortMode.FrontToBack,
                             blendState: BlendState.AlphaBlend,
                             samplerState: SamplerState.PointClamp,
-                            transformMatrix: camera.Transform
+                            transformMatrix: GameObjectManager.Camera.Transform
                         );
 
                         foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
