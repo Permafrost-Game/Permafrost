@@ -70,7 +70,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             captured = true;
             InstructionTypes.Clear();
             this.Texture = capturedTexture;
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + 32)));
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
             Heating = true;
         }
 

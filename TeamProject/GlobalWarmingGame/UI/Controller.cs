@@ -100,9 +100,6 @@ namespace GlobalWarmingGame.UI
 
             if (objectClicked != null)
             {
-                options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
-
-
 
                 if (objectClicked is IInteractable interactable)
                 {
@@ -122,13 +119,15 @@ namespace GlobalWarmingGame.UI
                         else if (tile.Position.Y == 0)
                             options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelNorth), activeMember, objectClicked), IssueInstructionCallback));
 
-                        else if (tile.Position.X >= ((GameObjectManager.ZoneMap.Size.X - 1) * 32f))
+                        else if (tile.Position.X >= ((GameObjectManager.ZoneMap.Size.X - 1) * GameObjectManager.ZoneMap.TileSize.X))
                             options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelEast), activeMember, objectClicked), IssueInstructionCallback));
 
-                        else if (tile.Position.Y >= ((GameObjectManager.ZoneMap.Size.Y - 1) * 32f))
+                        else if (tile.Position.Y >= ((GameObjectManager.ZoneMap.Size.Y - 1) * GameObjectManager.ZoneMap.TileSize.Y))
                             options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelSouth), activeMember, objectClicked), IssueInstructionCallback));
+                        else
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
-                        else if (constructingMode)
+                        if (constructingMode)
                         {
                             building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
 
@@ -328,9 +327,7 @@ namespace GlobalWarmingGame.UI
 
                 if (objectClicked == null)
                 {
-                    Console.WriteLine(positionClicked);
-
-                    Vector2 bounds = new Vector2(((GameObjectManager.ZoneMap.Size.X) * 32f) , (GameObjectManager.ZoneMap.Size.Y) * 32f);
+                    Vector2 bounds = new Vector2(((GameObjectManager.ZoneMap.Size.X) * GameObjectManager.ZoneMap.TileSize.X) , (GameObjectManager.ZoneMap.Size.Y) * GameObjectManager.ZoneMap.TileSize.Y);
                     Vector2 tileSize = GameObjectManager.ZoneMap.Tiles[0, 0].Size;
 
                     Vector2 newPositionClicked = new Vector2(positionClicked.X + (tileSize.X / 2), positionClicked.Y + (tileSize.Y / 2));
