@@ -69,6 +69,27 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             }
         }
+        private bool _ranged = false;
+        public bool ranged
+        {
+            get { return _ranged; }
+            set
+            {
+                _ranged = value;
+                if (value == false)
+                {
+                    AttackRange = 70;
+                    AttackPower = 30;
+                    AttackSpeed = 1000;
+                }
+                else {
+                    AttackRange = 350;
+                    AttackPower = 45;
+                    AttackSpeed = 1500;
+                }
+
+            }
+        }
         private bool _isAttacking = false;
         public bool IsAttacking
         {
@@ -78,9 +99,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 _isAttacking = value;
                 isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-
-                TextureGroupIndex = _isAttacking ? 1 : 0;
-
+                if (ranged)
+                {
+                    TextureGroupIndex = _isAttacking ? 3 : 0;
+                }
+                else {
+                    TextureGroupIndex = _isAttacking ? 1 : 0;
+                }
             }
         }
         #endregion
@@ -99,6 +124,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
         private bool deathSoundPlayed;
+        public bool HasRangedItem { get; set; } = false;
+
 
         #region PathFinding
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
@@ -147,6 +174,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
+            if (inventory.ContainsType(Resource.Shotgun))
+            {
+                ranged = true;
+            }
+            else {
+                ranged= false;
+            }
         }
 
         internal void SetDead()
@@ -154,12 +188,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
             this.Rotation = 1.5f;
             this.isDead = true;
             isAnimated = false;
+           
             if (!deathSoundPlayed)
             { 
                 SoundFactory.PlaySoundEffect(Sound.colonistDying);
                 deathSoundPlayed = true;
             }
-
+            
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
                 toBeRemoved = true;
@@ -176,8 +211,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 Instruction currentInstruction = instructions.Peek();
                 try
-                {
-                    currentInstruction.Start();
+                {                         
+                        currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
@@ -190,8 +225,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void Move(GameTime gameTime)
         {
-            Position += PathFindingHelper.CalculateNextMove(gameTime, this);
-            UpdateDepth(0.5f);
+            if (!isDead)
+            {
+                Position += PathFindingHelper.CalculateNextMove(gameTime, this);
+                UpdateDepth(0.5f);
+            }
         }
 
 
@@ -199,6 +237,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if(toBeRemoved)
             {
+                List<ResourceItem> droppedItems= new List<ResourceItem>();
+                foreach (ResourceItem item in inventory.Resources.Values) {
+                    droppedItems.Add(item);
+                }
+                GameObjectManager.Add(new Loot(droppedItems, this.Position));
                 GameObjectManager.Remove(this);
                 return;
             }
@@ -255,6 +298,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             if (combatModeOn)
             {
+                
                 PerformCombat(gameTime, enemy);
             }
 
@@ -435,8 +479,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (ColonistAttackSpeedControl(gameTime))
             {
+                instructions.Clear();
+                Goals.Clear();
                 this.IsAttacking = true;
-                SoundFactory.PlaySoundEffect(Sound.slashSound);
+                playAttackingSound();
                 enemy.Health -= this.AttackPower;
                 if (enemy.Health<=0)
                 {
@@ -447,6 +493,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
             }
             
+        }
+
+        private void playAttackingSound()
+        {
+            if (ranged)
+            {
+                SoundFactory.PlaySoundEffect(Sound.Shotgun);
+            }
+            else
+            {
+                SoundFactory.PlaySoundEffect(Sound.slashSound);
+            }
         }
 
         private bool ColonistAttackSpeedControl(GameTime gameTime)

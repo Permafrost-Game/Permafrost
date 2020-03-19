@@ -3,6 +3,7 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -50,7 +51,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         )
         {
 
-            InstructionTypes.Add(new InstructionType("attack", $"Attack {name}", onComplete: EnemyAttacked));
+            //InstructionTypes.Add(new InstructionType("Shoot", $"Shoot {name}", onStart: Shoot));
 
             //generic stats:
             this.AttackRange = aRange;
@@ -60,15 +61,20 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Speed = 0.2f;
         }
 
-        private void EnemyAttacked(Instruction instruction)
+       
+
+        private void Shoot(Instruction instruction)
         {
-            //just makes the colonist to go to the enemy (fighting is automated anyway)
+            
         }
+
 
         public void SetEnemyDead(){    
             //remove the enemy from the game 
             this.DeathSound();
-            GameObjectManager.Remove(this); 
+            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+            GameObjectManager.Remove(this);
+            
         }
 
 
@@ -234,7 +240,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         internal abstract void AttackingSound(); //woah sounds so cool
-        internal abstract void DeathSound(); //woah sounds so cool
+        internal abstract void DeathSound();
+        internal abstract List<ResourceItem> Loot();
 
 
     }
