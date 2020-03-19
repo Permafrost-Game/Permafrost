@@ -107,8 +107,10 @@ namespace GlobalWarmingGame
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-
+            graphics = new GraphicsDeviceManager(this)
+            {
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
