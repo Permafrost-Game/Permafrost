@@ -17,8 +17,8 @@ namespace GlobalWarmingGame.Interactions.Event
         //Random number generator based off the seed
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
-        private static float timeToEvent = 0f;
-        private static readonly float timeUntilEvent = 5000f;
+        private static float timeToEvent = 60000f;
+        private static readonly float timeUntilEvent = 60000f;
 
         /// <summary>
         /// A method in the game's update loop that is called every frame
@@ -32,7 +32,7 @@ namespace GlobalWarmingGame.Interactions.Event
             //If its time for a new event create a new random event, trigger it and add it to the active events list
             if (timeToEvent < 0f)
             {
-                IEvent randomEvent = EventFactory.CreateEvent(Event.ColonistJoin);
+                IEvent randomEvent = EventFactory.CreateEvent(Event.Random);
                 randomEvent.Trigger();
                 if (!randomEvent.Complete)
                 {
@@ -64,19 +64,19 @@ namespace GlobalWarmingGame.Interactions.Event
             {
                 case 0:
                     //north edge (adjusted by 32, 1 tile)
-                    location = new Vector2(rand.Next(32, 3168), 32);
+                    location = new Vector2(1568, 32);
                     break;
                 case 1:
                     //west edge (adjusted by 32, 1 tile)
-                    location = new Vector2(32, rand.Next(32, 3168));
+                    location = new Vector2(32, 1568);
                     break;
                 case 2:
                     //south edge (adjusted by 32, 1 tile)
-                    location = new Vector2(rand.Next(32, 3168), 3168);
+                    location = new Vector2(1568, 3168);
                     break;
                 case 3:
                     //east edge (adjusted by 32, 1 tile)
-                    location = new Vector2(3168, rand.Next(32, 3168));
+                    location = new Vector2(3168, 1568);
                     break;
             }
             return location;

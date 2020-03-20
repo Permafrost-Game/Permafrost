@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             //Create a new colonist at the edge of the map
             Vector2 colonistSpawnLocation = EventManager.RandomEdgeSpawnLocation();
 
-            if (!eventTileMap.GetTileAtPosition(colonistSpawnLocation).Walkable)
+            if (eventTileMap.GetTileAtPosition(colonistSpawnLocation).Walkable)
             {
                 Colonist newColonist = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, colonistSpawnLocation);
                 GameObjectManager.Add(newColonist);
