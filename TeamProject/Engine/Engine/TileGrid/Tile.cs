@@ -11,30 +11,27 @@ namespace Engine.TileGrid
     public class Tile : GameObject, Engine.Drawing.IDrawable
     {
         private readonly Texture2D texture;
-        public new Vector2 Position { get; }
         public Temperature Temperature { get; set; }
         public bool Heated { get; set; }
-
         public string Type { get; }
         public bool Walkable { get; }
 
-        private readonly Rectangle sourceRectangle;
-        private readonly Rectangle destinationRectangle;
+        private Rectangle sourceRectangle;
+        private Rectangle destinationRectangle;
         public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, float initialTemperature) : base(position, size)
         {
             this.Type = texture.Name;
 
-            this.Position = position;
             this.texture = texture;
             this.Walkable = walkable;
 
-            Temperature = new Temperature(initialTemperature);
+            Temperature = new Temperature(0);
 
             sourceRectangle = new Rectangle(
-                                 location: new Point((int) position.X % texture.Width, (int)position.Y % texture.Height),
-                                 size: Size.ToPoint()
-                                 );
-            destinationRectangle = new Rectangle((base.Position - Size / 2).ToPoint(), Size.ToPoint());
+                        location: new Point((int)Position.X % texture.Width, (int)Position.Y % texture.Height),
+                        size: Size.ToPoint()
+                        );
+            destinationRectangle = new Rectangle((Position - Size / 2).ToPoint(), Size.ToPoint());
         }
 
         public void Draw(SpriteBatch spriteBatch)

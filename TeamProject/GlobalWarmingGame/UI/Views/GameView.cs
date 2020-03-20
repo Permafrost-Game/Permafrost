@@ -1,4 +1,5 @@
-﻿using GeonBit.UI;
+﻿using Engine.TileGrid;
+using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
@@ -20,6 +21,7 @@ namespace GlobalWarmingGame.UI.Views
         private PauseMenu PauseMenu;
         private SettingsMenu SettingsMenu;
 
+        private Paragraph temperatureReadout;
         private Panel topPanel;
         private Panel bottomPanel;
         private Panel menu;
@@ -37,7 +39,7 @@ namespace GlobalWarmingGame.UI.Views
 
         internal void Initalise(ContentManager content)
         {
-            UserInterface.Initialize(content, "hd");
+            UserInterface.Initialize(content, "main");
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
         }
 
@@ -65,6 +67,9 @@ namespace GlobalWarmingGame.UI.Views
                 Visible = false
             };
             UserInterface.Active.AddEntity(SettingsMenu);
+
+            temperatureReadout = new Paragraph("", Anchor.TopLeft);
+            UserInterface.Active.AddEntity(temperatureReadout);
 
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -313,6 +318,13 @@ namespace GlobalWarmingGame.UI.Views
             inventories[id].Dispose();
             inventories.Remove(id);
             
+        }
+
+
+        internal void UpdateTemp(string text, Vector2 position)
+        {
+            temperatureReadout.Text = text;
+            temperatureReadout.Offset = position + new Vector2(30);
         }
     }
 }
