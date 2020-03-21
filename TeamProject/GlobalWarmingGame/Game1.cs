@@ -74,7 +74,7 @@ namespace GlobalWarmingGame
                 }
 
                 _GameState = value;
-
+                
                 switch (value)
                 {
                     case GameState.MainMenu:

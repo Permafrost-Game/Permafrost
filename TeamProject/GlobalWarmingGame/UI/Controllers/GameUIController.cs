@@ -363,14 +363,16 @@ namespace GlobalWarmingGame.UI.Controllers
         {
             Tile t = GameObjectManager.ZoneMap.GetTileAtPosition(gameHover);
             string temp = string.Empty;
+
             if (t != null)
             {
-                 if (t.Temperature.Value == 0)
+                int temperature = (int)Math.Round(t.Temperature.Value);
+                if (temperature == 0)
                     temp = "±";
-                 else if (t.Temperature.Value > 0)
+                 else if (temperature > 0)
                     temp = "+";
 
-                temp += (float)Math.Round(t.Temperature.Value, 2) + "°C";
+                temp += $"{temperature}°C";
             }
             view.UpdateTemp(temp, screenHover);
         }

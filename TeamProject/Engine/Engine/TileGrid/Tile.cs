@@ -25,7 +25,7 @@ namespace Engine.TileGrid
             this.texture = texture;
             this.Walkable = walkable;
 
-            Temperature = new Temperature(0);
+            Temperature = new Temperature(initialTemperature);
 
             sourceRectangle = new Rectangle(
                         location: new Point((int)Position.X % texture.Width, (int)Position.Y % texture.Height),
