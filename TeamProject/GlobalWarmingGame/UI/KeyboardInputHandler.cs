@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GlobalWarmingGame.UI.Controllers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace GlobalWarmingGame.UI
@@ -40,7 +41,7 @@ namespace GlobalWarmingGame.UI
                     {
                         if (CheckKeyPress((Keys)keyCode))
                         {
-                            Controller.SelectInventory(keyCode - (int)Keys.D1);
+                            GameUIController.SelectInventory(keyCode - (int)Keys.D1);
                         }
                     }
 

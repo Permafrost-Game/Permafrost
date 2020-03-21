@@ -13,8 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     class Forge : Sprite, IInteractable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.MachineParts), 10),
-                                                                                                   new ResourceItem(ResourceTypeFactory.GetResource(Resource.Stone), 6) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.MachineParts, 10),
+                                                                                                   new ResourceItem(Resource.Stone, 6) };
         public List<InstructionType> InstructionTypes { get; }
 
         public Forge(Vector2 position, Texture2D texture) : base

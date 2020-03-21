@@ -57,7 +57,7 @@ namespace Engine
             GetInput(gameTime);
 
             Vector2 clampSize = ClampSize;
-            Zoom = MathHelper.Clamp(Zoom, 1f, 5.0f); // Clamps Zoom value
+            Zoom = MathHelper.Clamp(Zoom, 0.5f, 5.0f); // Clamps Zoom value
             _position.X = MathHelper.Clamp(Position.X, 0f, clampSize.X ); // Clamps camera position on X
             _position.Y = MathHelper.Clamp(Position.Y, 0f, clampSize.Y ); // Clamps camera position on Y
 

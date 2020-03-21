@@ -3,14 +3,13 @@ using GlobalWarmingGame.Interactions;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using static GlobalWarmingGame.Action.InstructionType;
 
 namespace GlobalWarmingGame.Action
 {
     /// <summary>
     /// An Instruction descrives a instance interaction between two interactable objects.
     /// </summary>
-    public class Instruction : IComparable<Instruction>, IUpdatable
+    public class Instruction : IComparable<Instruction>, Engine.IUpdatable
     {
         public InstructionType Type { get; set; }
         public IInstructionFollower ActiveMember { get; set; }
@@ -22,6 +21,11 @@ namespace GlobalWarmingGame.Action
         public readonly List<InstructionEvent> OnStart;
         public readonly List<InstructionEvent> OnComplete;
 
+        public bool IsValid
+        {
+            get { return Type.checkValidity != null ? Type.checkValidity(this) : true; }
+        }
+
         private float timeSpent;
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace GlobalWarmingGame.Action
         /// <param name="activeMember">the active member of the instruction, the <see cref="IInstructionFollower"/></param>
         /// <param name="passiveMember">the target member of the instruction</param>
         /// <param name="priorityOverride">the priority of the instruction, overriding the priority from the <see cref="InstructionType"/></param>
-        public Instruction(InstructionType type, IInstructionFollower activeMember, GameObject passiveMember, int priorityOverride)
+        public Instruction(InstructionType type, int priorityOverride, IInstructionFollower activeMember = null, GameObject passiveMember = null)
         {
             Type = type;
             ActiveMember = activeMember;
@@ -56,7 +60,7 @@ namespace GlobalWarmingGame.Action
         /// <param name="type">the <see cref="InstructionType"/> of the instruction</param>
         /// <param name="activeMember">the active member of the instruction, the <see cref="IInstructionFollower"/></param>
         /// <param name="passiveMember">the target member of the instruction</param>
-        public Instruction(InstructionType type, IInstructionFollower activeMember, GameObject passiveMember) : this (type, activeMember, passiveMember, type.Priority) { }
+        public Instruction(InstructionType type, IInstructionFollower activeMember = null, GameObject passiveMember = null) : this (type, type.Priority, activeMember, passiveMember) { }
 
         /// <summary>
         /// Starts the instruction
@@ -64,7 +68,7 @@ namespace GlobalWarmingGame.Action
         public void Start() {
             if(!IsStarted)
             {
-                if ((!(PassiveMember is IInteractable) || ((IInteractable)PassiveMember).InstructionTypes.Contains(Type)))
+                if(IsValid)
                 {
                     IsStarted = true;
                     OnStart.ForEach(e => e.Invoke(this));
@@ -72,7 +76,6 @@ namespace GlobalWarmingGame.Action
                 else throw new InvalidInstruction(this, "Instruction is no longer valid");
 
             }
-            //else throw new Exception("Instruction has allready started");
         }
 
         private void Complete()
@@ -96,7 +99,7 @@ namespace GlobalWarmingGame.Action
                 timeSpent += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if(timeSpent >= Type.TimeCost)
                 {
-                    if(!(PassiveMember is IInteractable) || ((IInteractable)PassiveMember).InstructionTypes.Contains(Type))
+                    if (IsValid)
                     {
                         Complete();
                     }

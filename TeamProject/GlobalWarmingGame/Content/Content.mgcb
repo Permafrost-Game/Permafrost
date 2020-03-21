@@ -4873,17 +4873,23 @@
 /processorParam:DebugMode=Auto
 /build:shaders/resolveShadowsEffect.fx
 
-#begin sound/songs/ColdAtmosphericMusic.mp3
-/importer:Mp3Importer
+#begin sound/songs/ColdAtmosphericMusic.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/songs/ColdAtmosphericMusic.mp3
+/build:sound/songs/ColdAtmosphericMusic.ogg
 
-#begin sound/songs/enemy_zone.mp3
-/importer:Mp3Importer
+#begin sound/songs/enemy_zone.ogg
+/importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/songs/enemy_zone.mp3
+/build:sound/songs/enemy_zone.ogg
+
+#begin sound/songs/inCombat.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/songs/inCombat.ogg
 
 #begin sound/songs/menu.ogg
 /importer:OggImporter
@@ -4891,11 +4897,53 @@
 /processorParam:Quality=Best
 /build:sound/songs/menu.ogg
 
+#begin sound/sounds/bear_death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/bear_death.wav
+
+#begin sound/sounds/bear_roar.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/bear_roar.wav
+
+#begin sound/sounds/colonist_death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/colonist_death.wav
+
+#begin sound/sounds/colonist_slashing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/colonist_slashing.wav
+
 #begin sound/sounds/rabbit_death.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/sounds/rabbit_death.wav
+
+#begin sound/sounds/robot_death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/robot_death.wav
+
+#begin sound/sounds/robot_electricity.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/robot_electricity.wav
+
+#begin sound/sounds/shotgun-shot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/sounds/shotgun-shot.wav
 
 #begin sound/sounds/stone_pickup.wav
 /importer:WavImporter
@@ -4992,6 +5040,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/icons/pickaxe.png
+
+#begin textures/icons/Shotgun.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/icons/Shotgun.png
 
 #begin textures/icons/stone.png
 /importer:TextureImporter
@@ -5172,6 +5232,66 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/animals/colonist/attackingColonist5.png
+
+#begin textures/interactables/animals/colonist/shotgunColonist1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/shotgunColonist1.png
+
+#begin textures/interactables/animals/colonist/shotgunColonist2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/shotgunColonist2.png
+
+#begin textures/interactables/animals/colonist/shotgunColonist3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/shotgunColonist3.png
+
+#begin textures/interactables/animals/colonist/shotgunColonist4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/shotgunColonist4.png
+
+#begin textures/interactables/animals/colonist/shotgunColonist5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/colonist/shotgunColonist5.png
 
 #begin textures/interactables/animals/colonist/sprite0.png
 /importer:TextureImporter
@@ -5545,6 +5665,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/farm/sprite0.png
 
+#begin textures/interactables/buildings/storage/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/storage/sprite0.png
+
 #begin textures/interactables/buildings/tower/tower.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -5616,6 +5748,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/grass/tallgrass.png
+
+#begin textures/interactables/environment/loot/loot-bag.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/environment/loot/loot-bag.png
 
 #begin textures/interactables/environment/stone/sprite_0.png
 /importer:TextureImporter

@@ -35,12 +35,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         [PFSerializable]
         public bool captured;
 
-        public Tower() : base(Vector2.Zero, Vector2.Zero)
-        {
+        public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        }
-
-        public Tower(Vector2 position, TextureTypes capturedTextureType, TextureTypes hostileTextureType, bool captured = false) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]
@@ -60,7 +57,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
             else
             {
-                InstructionTypes.Add(new InstructionType("capture", "Capture", "Capture", onComplete: Capture));
+                InstructionTypes.Add(new InstructionType(
+                    id: "capture",
+                    name: "Capture",
+                    description: "Capture",
+                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    onComplete: Capture)
+                    );
                 Heating = false;
             }
         }
@@ -70,7 +73,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             captured = true;
             InstructionTypes.Clear();
             this.Texture = capturedTexture;
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + 32)));
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
             Heating = true;
         }
 

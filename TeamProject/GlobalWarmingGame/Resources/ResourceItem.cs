@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlobalWarmingGame.Resources;
+using System;
 
 namespace GlobalWarmingGame.ResourceItems
 {
@@ -20,6 +21,10 @@ namespace GlobalWarmingGame.ResourceItems
             this.ResourceType = Type;
             this.Weight = weight;
         }
+
+        public ResourceItem(Resource TypeID, int weight = 0)
+        : this (ResourceTypeFactory.GetResource(TypeID), weight)
+        { }
 
         public ResourceItem Clone()
         {

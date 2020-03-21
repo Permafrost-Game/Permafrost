@@ -5,6 +5,7 @@ using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -20,7 +21,6 @@ namespace GlobalWarmingGame
     {
         const string SettingsPath = @"Content/settings.json";
 
-        // private bool isFullScreen = false;
         private float resolutionScale = 0.75f;
         private int seed = new System.Random().Next();
         private Vector2 currentZone = Vector2.Zero;
@@ -53,19 +53,19 @@ namespace GlobalWarmingGame
                 {
                     case GameState.MainMenu:
                         SoundFactory.StopSong();
-                        Controller.ResetUI();
+                        //GameUIController.ResetUI();
                         break;
                     case GameState.Paused:
-                        Controller.ShowPauseMenu(false);
+                        GameUIController.ShowPauseMenu(false);
                         goto case GameState.Playing;
                     case GameState.Settings:
-                        Controller.ShowSettingsMenu(false);
+                        GameUIController.ShowSettingsMenu(false);
                         goto case GameState.Playing;
                     case GameState.Playing:
                         if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.StopSong();
-                            Controller.ResetUI();
+                            GameUIController.ResetUI();
                         }
                         break;
                     case GameState.Intro:
@@ -78,21 +78,21 @@ namespace GlobalWarmingGame
                 switch (value)
                 {
                     case GameState.MainMenu:
-                        Controller.ResetUI();
-                        Controller.CreateMainMenu();
+                        GameUIController.ResetUI();
+                        MainMenuUIController.CreateUI();
                         SoundFactory.PlaySong(Songs.Menu);
                         break;
                     case GameState.Paused:
-                        Controller.ShowPauseMenu(true);
+                        GameUIController.ShowPauseMenu(true);
                         goto case GameState.Playing;
                     case GameState.Settings:
-                        Controller.ShowSettingsMenu(true);
+                        GameUIController.ShowSettingsMenu(true);
                         goto case GameState.Playing;
                     case GameState.Playing:
                         if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.PlaySong(Songs.Main);
-                            Controller.CreateGameUI();
+                            GameUIController.CreateUI();
                         }
                         break;
                     case GameState.Intro:
@@ -107,8 +107,10 @@ namespace GlobalWarmingGame
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-
+            graphics = new GraphicsDeviceManager(this)
+            {
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -133,7 +135,7 @@ namespace GlobalWarmingGame
             graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
             graphics.ApplyChanges();
 
-            Controller.Initalise(Content);
+            GameUIController.Initalise(Content);
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
@@ -193,17 +195,19 @@ namespace GlobalWarmingGame
 
                 ResourceTypeFactory.Init();
 
-                Controller.LoadContent(Content);
+                GameUIController.LoadContent(Content);
+                MainMenuUIController.LoadContent(Content);
 
-                tileSet = new TileSet(textureSet, new Vector2(32f));
+                GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
 
-                GameObjectManager.Init(tileSet, seed, currentZone, false);
-
-
-                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap };
+                GameObjectManager.ZoneMap = GameObjectManager.GenerateMap(currentZone);
                 camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
 
                 GameObjectManager.Camera = camera;
+                GameObjectManager.Init(seed, currentZone, GraphicsDevice, spriteBatch, false);
+
+                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap 
+
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
 
@@ -232,7 +236,8 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            Controller.Update(gameTime);
+            GameUIController.Update(gameTime);
+            GlobalCombatDetector.UpdateParticipants();
 
             keyboardInputHandler.Update(gameTime);
 
@@ -244,7 +249,7 @@ namespace GlobalWarmingGame
                 TemperatureManager.UpdateTemperature(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
-                foreach (IUpdatable updatable in GameObjectManager.Updatables.ToArray())
+                foreach (Engine.IUpdatable updatable in GameObjectManager.Updatables.ToArray())
                     updatable.Update(gameTime);
 
                 base.Update(gameTime);
@@ -252,6 +257,10 @@ namespace GlobalWarmingGame
             else if (GameState == GameState.Exiting)
             {
                 Exit();
+            }
+            else if (GameState == GameState.MainMenu)
+            {
+                MainMenuUIController.Update(gameTime);
             }
         }
 
@@ -308,7 +317,10 @@ namespace GlobalWarmingGame
                             transformMatrix: camera.Transform
                         );
 
-                        GameObjectManager.ZoneMap.Draw(spriteBatch);
+                Vector2 zoneSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size;
+                spriteBatch.Draw(GameObjectManager.GreyTiles, new Rectangle((int)-zoneSize.X, (int)-zoneSize.Y, GameObjectManager.GreyTiles.Width, GameObjectManager.GreyTiles.Height), Color.Gray);
+
+                GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                         spriteBatch.End();
                     }
@@ -349,7 +361,8 @@ namespace GlobalWarmingGame
                         spriteBatch.End();
 
                     }
-                   
+
+                    GameUIController.Draw(spriteBatch);
                     break;
                 case GameState.Intro:
                     spriteBatch.Begin();
@@ -357,13 +370,14 @@ namespace GlobalWarmingGame
                     spriteBatch.End();
 
                     break;
+                case GameState.MainMenu:
+                    MainMenuUIController.Draw(spriteBatch);
+                    break;
                 default:
                     GraphicsDevice.Clear(Color.Black);
 
                     break;
             }
-
-            Controller.Draw(spriteBatch);
 
             base.Draw(gameTime);
 

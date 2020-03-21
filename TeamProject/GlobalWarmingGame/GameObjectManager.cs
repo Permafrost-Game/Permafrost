@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Drawing;
 using Engine.PathFinding;
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
@@ -6,6 +7,7 @@ using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SimplexNoise;
 using System;
@@ -26,7 +28,7 @@ namespace GlobalWarmingGame
         private static IDictionary<Vector2, List<GameObject>> zoneMap;
 
         public static int seed;
-        private static TileSet tileSet;
+        public static TileSet TileSet { get; set; }
 
         static Vector2 zonePos;
 
@@ -39,33 +41,45 @@ namespace GlobalWarmingGame
 
         public static TileMap ZoneMap { get; set; }
 
+        private static GraphicsDevice graphicsDevice;
+        private static SpriteBatch spriteBatch;
+
+        public static Vector2 GreyTilesSize { get; private set; }
+        public static RenderTarget2D GreyTiles { get; private set; }
+
         static GameObjectManager()
         {
             gameObjects = new List<GameObject>();
-            Updatables = new List<IUpdatable>();
+            Updatables = new List<Engine.IUpdatable>();
             Drawables = new List<IDrawable>();
             Interactables = new List<IInteractable>();
         }
 
-        public static void Init(TileSet ts, int worldSeed, Vector2 currentZone, bool isSerialized = true)
+        public static void Init(int worldSeed, Vector2 currentZone, GraphicsDevice graphics, SpriteBatch sb, bool isSerialized = true)
         {
+            graphicsDevice = graphics;
+            spriteBatch = sb;
+
+            GreyTilesSize = ZoneMap.Size * ZoneMap.Tiles[0, 0].Size * 3;
+
+            GreyTiles = new RenderTarget2D(
+                graphicsDevice,
+                (int)GreyTilesSize.X,
+                (int)GreyTilesSize.Y,
+                false,
+                graphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
             if (!(serialization = isSerialized))
             {
                 currentZone = Vector2.Zero;
                 zoneMap = new Dictionary<Vector2, List<GameObject>>();
             }
 
-            tileSet = ts;
-
             seed = worldSeed;
             zonePos = currentZone;
 
             SetZone(zonePos);
-
-            //private void Trim DoSomething()
-
-            //EnvironmentObject environmentObject= new EnvironmentObject(new Vector2(1750, 1750), TextureTypes.workBench);
-            //environmentObject.InstructionTypes.Add(new InstructionType("mine", "Mine", "Mine stone", onStart: Mine));
         }
 
         public static string ZoneFileName()
@@ -91,10 +105,9 @@ namespace GlobalWarmingGame
             }
         }
 
-        private static TileMap GenerateMap(Vector2 pos)
+        public static TileMap GenerateMap(Vector2 pos)
         {
-            //return TileMapParser.parseTileMap(MapPath(pos), tileSet);
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, tileSet, TemperatureManager.GlobalTemperature.Value);
+            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, TileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
         private static void SetZone(Vector2 position, List<Colonist> colonists = null)
@@ -121,7 +134,7 @@ namespace GlobalWarmingGame
                     if (colonists != null)
                         foreach (Colonist colonist in colonists)
                             Add(colonist);
-                    Updatables = Filter<IUpdatable>();
+                    Updatables = Filter<Engine.IUpdatable>();
                     Drawables = Filter<IDrawable>();
                     Interactables = Filter<IInteractable>();
                 }
@@ -160,6 +173,47 @@ namespace GlobalWarmingGame
                     SaveZone();
                 }
             }
+
+            graphicsDevice.SetRenderTarget(GreyTiles);
+            graphicsDevice.Clear(Color.Transparent);
+
+            Vector2[] greyZonePositions =
+            {
+                new Vector2(-1, 0), // left
+                new Vector2(1, 0), // right
+                new Vector2(0, -1), // up
+                new Vector2(0, 1), // down
+                new Vector2(1, -1), // top right
+                new Vector2(-1, -1), // top left
+                new Vector2(1, 1), // top right
+                new Vector2(-1, 1) // top left
+            };
+
+            spriteBatch.Begin(
+                sortMode: SpriteSortMode.Deferred,
+                blendState: BlendState.Opaque,
+                samplerState: SamplerState.PointClamp,
+                depthStencilState: null,
+                rasterizerState: null,
+                effect: null
+            );
+
+            foreach (Vector2 greyZonePos in greyZonePositions)
+            {
+                TileMap greyTileMap = GenerateMap(new Vector2(greyZonePos.X + zonePos.X, greyZonePos.Y + zonePos.Y));
+
+                foreach (Tile tile in greyTileMap.Tiles)
+                {
+                    Vector2 offset = new Vector2(greyZonePos.X + 1, greyZonePos.Y + 1);
+                    Vector2 newPosition = new Vector2(tile.Position.X + (greyTileMap.Size.X * tile.Size.X * offset.X), tile.Position.Y + (greyTileMap.Size.Y * tile.Size.Y * offset.Y));
+
+                    Tile offsettedTile = new Tile(tile.texture, newPosition, tile.Size, false, 0f);
+                    offsettedTile.Draw(spriteBatch);
+                }
+            }
+
+            spriteBatch.End();
+            graphicsDevice.SetRenderTarget(null);
         }
 
         public static void MoveZone(Vector2 direction)
@@ -179,19 +233,19 @@ namespace GlobalWarmingGame
 
                 if (direction.X == 1 || direction.X == -1)
                 {
-                    float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (tileSet.textureSize.X);
-                    float y = (ZoneMap.Size.Y / 2) * (tileSet.textureSize.Y)
-                        + (i * colonist.Size.Y) + (i * tileSet.textureSize.Y)
+                    float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (TileSet.textureSize.X);
+                    float y = (ZoneMap.Size.Y / 2) * (TileSet.textureSize.Y)
+                        + (i * colonist.Size.Y) + (i * TileSet.textureSize.Y)
                         - ((colonists.Count / 2) * colonist.Size.Y);
 
                     colonist.Position = new Vector2(x, y);
                 }
                 else if (direction.Y == -1 || direction.Y == 1)
                 {
-                    float x = (ZoneMap.Size.X / 2) * (tileSet.textureSize.X)
-                        + (i * colonist.Size.X) + (i * tileSet.textureSize.X)
+                    float x = (ZoneMap.Size.X / 2) * (TileSet.textureSize.X)
+                        + (i * colonist.Size.X) + (i * TileSet.textureSize.X)
                         - ((colonists.Count / 2) * colonist.Size.X);
-                    float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (tileSet.textureSize.Y) : 0;
+                    float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (TileSet.textureSize.Y) : 0;
 
                     colonist.Position = new Vector2(x, y);
                 }
@@ -201,27 +255,27 @@ namespace GlobalWarmingGame
 
             if (direction.X == 1)
             {
-                Camera.Position = new Vector2(ZoneMap.Size.X * tileSet.textureSize.X, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
+                Camera.Position = new Vector2(ZoneMap.Size.X * TileSet.textureSize.X, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
             }
 
             else if (direction.X == -1)
             {
-                Camera.Position = new Vector2(0, (ZoneMap.Size.Y * tileSet.textureSize.Y) / 2);
+                Camera.Position = new Vector2(0, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
             }
 
             else if (direction.Y == -1)
             {
-                Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, 0);
+                Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, 0);
             }
 
             else if (direction.Y == 1)
             {
-                Camera.Position = new Vector2((ZoneMap.Size.Y * tileSet.textureSize.Y) / 2, ZoneMap.Size.Y * tileSet.textureSize.Y);
+                Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, ZoneMap.Size.Y * TileSet.textureSize.Y);
             }
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }
-        public static List<IUpdatable> Updatables { get; private set; } = new List<IUpdatable>();
+        public static List<Engine.IUpdatable> Updatables { get; private set; } = new List<Engine.IUpdatable>();
         public static List<IDrawable> Drawables { get; private set; } = new List<IDrawable>();
         public static List<IInteractable> Interactables { get; private set; } = new List<IInteractable>();
 
@@ -236,7 +290,7 @@ namespace GlobalWarmingGame
             if (gameObject is IDrawable d)
                 Drawables.Add(d);
 
-            if (gameObject is IUpdatable u)
+            if (gameObject is Engine.IUpdatable u)
                 Updatables.Add(u);
 
             if (gameObject is IInteractable i)
@@ -256,7 +310,7 @@ namespace GlobalWarmingGame
             if (gameObject is IDrawable d)
                 Drawables.Remove(d);
 
-            if (gameObject is IUpdatable u)
+            if (gameObject is Engine.IUpdatable u)
                 Updatables.Remove(u);
 
             if (gameObject is IInteractable i)
