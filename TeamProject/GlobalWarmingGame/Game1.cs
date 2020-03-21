@@ -49,7 +49,7 @@ namespace GlobalWarmingGame
                 {
                     case GameState.MainMenu:
                         SoundFactory.StopSong();
-                        //GameUIController.ResetUI();
+                        MainMenuUIController.ClearUI();
                         break;
                     case GameState.Paused:
                         GameUIController.ShowPauseMenu(false);
@@ -61,7 +61,7 @@ namespace GlobalWarmingGame
                         if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.StopSong();
-                            GameUIController.ResetUI();
+                            GameUIController.ClearUI();
                         }
                         break;
                     case GameState.Intro:
@@ -79,7 +79,7 @@ namespace GlobalWarmingGame
                             || previous == GameState.Settings)
                             MainMenuUIController.UnloadSave();
 
-                        GameUIController.ResetUI();
+                        GameUIController.ClearUI();
                         MainMenuUIController.CreateUI();
                         SoundFactory.PlaySong(Songs.Menu);
                         break;

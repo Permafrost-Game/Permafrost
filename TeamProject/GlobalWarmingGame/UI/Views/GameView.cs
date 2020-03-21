@@ -44,7 +44,7 @@ namespace GlobalWarmingGame.UI.Views
         /// <summary>
         /// Resets currently active UI elements
         /// </summary>
-        internal void Reset()
+        internal void Clear()
         {
             UserInterface.Active.Clear();
             inventories = new Dictionary<int, Panel>();

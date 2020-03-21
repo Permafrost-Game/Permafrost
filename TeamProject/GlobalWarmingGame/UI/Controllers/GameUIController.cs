@@ -45,7 +45,7 @@ namespace GlobalWarmingGame.UI.Controllers
         public static void CreateUI(float uiScale = 1f)
         {
             openInventories.Clear();
-            view.Reset();
+            view.Clear();
             view.SetUIScale(uiScale);
 
             view.CreateUI();
@@ -67,9 +67,10 @@ namespace GlobalWarmingGame.UI.Controllers
             }
         }
 
-        internal static void ResetUI()
+        internal static void ClearUI()
         {
-            view.Reset();
+            view.Clear();
+            SelectedColonist = null;
         }
 
         /// <summary>

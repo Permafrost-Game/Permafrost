@@ -14,9 +14,6 @@ namespace GlobalWarmingGame.UI.Controllers
     /// </summary>
     static class MainMenuUIController
     { 
-        //Change genric parameter "string" to what ever you want to use to identify different save files.
-        //Could be an enum, could be a class, could be a folder directory . What ever you need to load a specific save.
-        //You will also need to change "string" in other places in this class only.
         private static MainMenuView<int> view;
         private static Texture2D mainMenuLogo;
 
@@ -69,11 +66,6 @@ namespace GlobalWarmingGame.UI.Controllers
             view.CreateUI(mainMenuLogo, NewGame);
             view.SetMainMenuVisiblity(true);
 
-            //Add your saves from a file here
-            //If playtime or numberOfTowersCaptured aren't stored, we can either remove them, or just set them to default values for now and we will fix that in the future.
-
-            //int save = 1;
-            //AddSave(save, new TimeSpan(1, 20, 0), 1);
 
             if (Directory.Exists(SavesPath))
             {
@@ -108,11 +100,16 @@ namespace GlobalWarmingGame.UI.Controllers
                 );
         }
 
+        internal static void ClearUI()
+        {
+            view?.Clear();
+        }
+
         private static void NewGame()
         {
             //User has selected a New Game be created, You might have to move some code from Game1 that does this, or just keep that code in Game1.
 
-            Game1.GameState = GameState.Intro;
+            
 
         if (!Directory.Exists(SavesPath))
             Directory.CreateDirectory(SavesPath);
@@ -145,13 +142,14 @@ namespace GlobalWarmingGame.UI.Controllers
             GameObjectManager.Init(currentSaveID, seed, currentZone, true);
 
             hasBeenLoaded = true;
+
+            Game1.GameState = GameState.Intro;
         }
 
         private static void LoadSaveGame(int saveGame)
         {
-            //Insert code to load a save file. Setup GameObject manager etc..
 
-            Game1.GameState = GameState.Playing;
+            
 
             currentSaveID = saveGame;
 
@@ -168,6 +166,8 @@ namespace GlobalWarmingGame.UI.Controllers
             GameObjectManager.Init(saveGame, seed, currentZone, true);
 
             hasBeenLoaded = true;
+
+            Game1.GameState = GameState.Playing;
         }
 
         public static void UnloadSave()
@@ -184,8 +184,6 @@ namespace GlobalWarmingGame.UI.Controllers
 
         private static void DeleteSaveGame(int saveGame)
         {
-            //Insert code to delete the save files, Perhaps just rename the files to an invalid name eg prefix with an underscore so that the user can recover deleted files, Up to you.
-
             view.RemoveSaveGame(saveGame);
             Directory.Delete(string.Format(@"{0}/{1}", SavesPath, saveGame), true); 
         }
