@@ -41,6 +41,8 @@ namespace GlobalWarmingGame
 
         public static TileMap ZoneMap { get; set; }
 
+        private static int saveID;
+
         static GameObjectManager()
         {
             gameObjects = new List<GameObject>();
@@ -49,8 +51,10 @@ namespace GlobalWarmingGame
             Interactables = new List<IInteractable>();
         }
 
-        public static void Init(int worldSeed, Vector2 currentZone, bool isSerialized = true)
+        public static void Init(int currentSaveID, int worldSeed, Vector2 currentZone, bool isSerialized = true)
         {
+            saveID = currentSaveID;
+
             if (!(serialization = isSerialized))
             {
                 currentZone = Vector2.Zero;
@@ -72,7 +76,7 @@ namespace GlobalWarmingGame
 
         public static string ZoneFilePath()
         {
-            return String.Format(@"{0}/{1}.json", @"Content/zones", ZoneFileName());
+            return String.Format(@"Content/saves/{0}/zones/{1}.json", saveID, ZoneFileName());
         }
 
         public static void SaveZone()
@@ -197,24 +201,16 @@ namespace GlobalWarmingGame
             SetZone(zonePos + direction, colonists);
 
             if (direction.X == 1)
-            {
                 Camera.Position = new Vector2(ZoneMap.Size.X * TileSet.textureSize.X, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
-            }
 
             else if (direction.X == -1)
-            {
                 Camera.Position = new Vector2(0, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
-            }
 
             else if (direction.Y == -1)
-            {
                 Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, 0);
-            }
 
             else if (direction.Y == 1)
-            {
                 Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, ZoneMap.Size.Y * TileSet.textureSize.Y);
-            }
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }

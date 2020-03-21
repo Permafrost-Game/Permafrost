@@ -9,6 +9,7 @@ using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -22,8 +23,6 @@ namespace GlobalWarmingGame
         const string SettingsPath = @"Content/settings.json";
 
         private float resolutionScale = 0.75f;
-        private int seed = new System.Random().Next();
-        private Vector2 currentZone = Vector2.Zero;
 
 
         readonly GraphicsDeviceManager graphics;
@@ -75,6 +74,11 @@ namespace GlobalWarmingGame
                 switch (value)
                 {
                     case GameState.MainMenu:
+                        if (previous == GameState.Playing
+                            || previous == GameState.Paused
+                            || previous == GameState.Settings)
+                            MainMenuUIController.UnloadSave();
+
                         GameUIController.ResetUI();
                         MainMenuUIController.CreateUI();
                         SoundFactory.PlaySong(Songs.Menu);
@@ -119,11 +123,6 @@ namespace GlobalWarmingGame
                     graphics.ToggleFullScreen();
 
                 resolutionScale = float.Parse(settings["resolutionScale"]);
-
-                seed = int.Parse(settings["seed"]);
-
-                string[] zoneCoords = settings["currentZone"].Split(',');
-                currentZone = new Vector2(int.Parse(zoneCoords[0]), int.Parse(zoneCoords[1]));
             }
 
             graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
@@ -210,14 +209,12 @@ namespace GlobalWarmingGame
 
         protected override void UnloadContent()
         {
-            GameObjectManager.SaveZone();
+            MainMenuUIController.UnloadSave();
 
             var settingsData = JsonConvert.SerializeObject(new
             {
                 isFullScreen = graphics.IsFullScreen,
                 resolutionScale,
-                seed,
-                currentZone = GameObjectManager.ZoneFileName()
             }, Formatting.Indented);
 
             System.IO.File.WriteAllText(SettingsPath, settingsData);
@@ -233,6 +230,7 @@ namespace GlobalWarmingGame
 
             if (GameState == GameState.Playing)
             {
+                MainMenuUIController.GameTime += gameTime.ElapsedGameTime;
 
                 GameObjectManager.Camera.Update(gameTime);
 

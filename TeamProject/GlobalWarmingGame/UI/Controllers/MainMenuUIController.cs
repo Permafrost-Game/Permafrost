@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GlobalWarmingGame.UI.Controllers
@@ -23,6 +24,14 @@ namespace GlobalWarmingGame.UI.Controllers
 
         private static Random random = new Random();
 
+        private static int currentSaveID;
+
+        public static TimeSpan GameTime { get; set; }
+
+        private static double savePlayTime = 0;
+
+        private static bool hasBeenLoaded = false;
+
         public static void LoadContent(ContentManager content)
         {
             mainMenuLogo = content.Load<Texture2D>(@"logo");
@@ -31,6 +40,21 @@ namespace GlobalWarmingGame.UI.Controllers
         private static int GetCurrentSaveID(string saveDir)
         {
             return int.Parse(saveDir.Remove(0, saveDir.LastIndexOf(System.IO.Path.DirectorySeparatorChar) + 1));
+        }
+
+        private static string GetSavePath(int saveID)
+        {
+            return string.Format(@"{0}/{1}/save.json", SavesPath, saveID);
+        }
+
+        private static string GenerateSaveData()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                seed = GameObjectManager.seed,
+                currentZone = GameObjectManager.ZoneFileName(),
+                playTime = savePlayTime + GameTime.TotalMilliseconds
+            }, Formatting.Indented);
         }
 
         //private static string GetSaveFilePath(string saveDir, int saveID)
@@ -51,9 +75,17 @@ namespace GlobalWarmingGame.UI.Controllers
             //int save = 1;
             //AddSave(save, new TimeSpan(1, 20, 0), 1);
 
-            foreach (string saveDir in Directory.GetDirectories(SavesPath))
-                AddSave(GetCurrentSaveID(saveDir), new TimeSpan(1, 20, 0), 1);
+            if (Directory.Exists(SavesPath))
+            {
+                foreach (string saveDir in Directory.GetDirectories(SavesPath))
+                {
+                    int saveID = GetCurrentSaveID(saveDir);
+                    var save = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(GetSavePath(saveID)));
 
+                    TimeSpan playTime = TimeSpan.FromMilliseconds(Double.Parse(save["playTime"]));
+                    AddSave(saveID, playTime, 0);
+                }
+            }
         }
 
         /// <summary>
@@ -97,23 +129,22 @@ namespace GlobalWarmingGame.UI.Controllers
                     highestSaveID = currentSaveID;
             }
 
-            int newSaveID = highestSaveID + 1;
+            currentSaveID = highestSaveID + 1;
 
-            string newSaveDir = string.Format(@"{0}/{1}", SavesPath, newSaveID);
+            string newSaveDir = string.Format(@"{0}/{1}", SavesPath, currentSaveID);
             Directory.CreateDirectory(newSaveDir);
+            Directory.CreateDirectory(string.Format(@"{0}/zones", newSaveDir));
 
             int seed = random.Next();
             Vector2 currentZone = Vector2.Zero;
 
-            var saveData = JsonConvert.SerializeObject(new
-            {
-                seed,
-                currentZone,
-            }, Formatting.Indented);
+            var saveData = GenerateSaveData();
 
             System.IO.File.WriteAllText(string.Format(@"{0}/save.json", newSaveDir), saveData);
 
-            GameObjectManager.Init(seed, currentZone, false);
+            GameObjectManager.Init(currentSaveID, seed, currentZone, true);
+
+            hasBeenLoaded = true;
         }
 
         private static void LoadSaveGame(int saveGame)
@@ -122,16 +153,41 @@ namespace GlobalWarmingGame.UI.Controllers
 
             Game1.GameState = GameState.Playing;
 
-            GameObjectManager.Init(1, Vector2.Zero, false);
+            currentSaveID = saveGame;
+
+            string savePath = GetSavePath(saveGame);
+            var save = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(savePath));
+
+            savePlayTime = double.Parse(save["playTime"]);
+
+            int seed = int.Parse(save["seed"]);
+
+            string[] zoneCoords = save["currentZone"].Split(',');
+            Vector2 currentZone = new Vector2(int.Parse(zoneCoords[0]), int.Parse(zoneCoords[1]));
+
+            GameObjectManager.Init(saveGame, seed, currentZone, true);
+
+            hasBeenLoaded = true;
         }
 
+        public static void UnloadSave()
+        {
+            if (hasBeenLoaded)
+            {
+                GameObjectManager.SaveZone();
+
+                var saveData = GenerateSaveData();
+
+                System.IO.File.WriteAllText(GetSavePath(currentSaveID), saveData);
+            }
+        }
 
         private static void DeleteSaveGame(int saveGame)
         {
             //Insert code to delete the save files, Perhaps just rename the files to an invalid name eg prefix with an underscore so that the user can recover deleted files, Up to you.
 
-
             view.RemoveSaveGame(saveGame);
+            Directory.Delete(string.Format(@"{0}/{1}", SavesPath, saveGame), true); 
         }
 
 
