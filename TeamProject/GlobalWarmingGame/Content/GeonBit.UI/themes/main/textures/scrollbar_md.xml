@@ -4,7 +4,7 @@
   <!-- metadata about this texture. for more info, take a look at the TextureData class in code. -->
   <Asset Type="GeonBit.UI.DataTypes.TextureData">
     <FrameWidth>0.0</FrameWidth>
-    <FrameHeight>0.14</FrameHeight>
+    <FrameHeight>0.3</FrameHeight>
   </Asset>
 
 </XnaContent>

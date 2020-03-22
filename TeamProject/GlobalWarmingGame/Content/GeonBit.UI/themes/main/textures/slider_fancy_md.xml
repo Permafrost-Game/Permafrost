@@ -3,7 +3,7 @@
 
   <!-- metadata about this texture. for more info, take a look at the TextureData class in code. -->
   <Asset Type="GeonBit.UI.DataTypes.TextureData">
-    <FrameWidth>0.14</FrameWidth>
+    <FrameWidth>0.28</FrameWidth>
     <FrameHeight>0.0</FrameHeight>
   </Asset>
 
