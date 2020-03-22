@@ -24,7 +24,6 @@ namespace GlobalWarmingGame
 
         private float resolutionScale = 0.75f;
 
-
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -108,8 +107,10 @@ namespace GlobalWarmingGame
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-
+            graphics = new GraphicsDeviceManager(this)
+            {
+                GraphicsProfile = GraphicsProfile.HiDef
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -194,8 +195,8 @@ namespace GlobalWarmingGame
 
                 GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
                 GameObjectManager.GraphicsDevice = GraphicsDevice;
+                GameObjectManager.SpriteBatch = spriteBatch;
 
-                // GameObjectManager.Init(seed, currentZone, false);
 
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
@@ -224,7 +225,10 @@ namespace GlobalWarmingGame
         protected override void Update(GameTime gameTime)
         {
             GameUIController.Update(gameTime);
+
+            //FIXME this should only be called once, not every frame!!!!
             GlobalCombatDetector.UpdateParticipants();
+            //
 
             keyboardInputHandler.Update(gameTime);
 
@@ -305,7 +309,10 @@ namespace GlobalWarmingGame
                             transformMatrix: GameObjectManager.Camera.Transform
                         );
 
-                        GameObjectManager.ZoneMap.Draw(spriteBatch);
+                Vector2 zoneSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size;
+                spriteBatch.Draw(GameObjectManager.GreyTiles, new Rectangle((int)-zoneSize.X, (int)-zoneSize.Y, GameObjectManager.GreyTiles.Width, GameObjectManager.GreyTiles.Height), Color.Gray);
+
+                GameObjectManager.ZoneMap.Draw(spriteBatch);
 
                         spriteBatch.End();
                     }
