@@ -10,7 +10,7 @@ namespace Engine.TileGrid
     /// </summary>
     public class Tile : GameObject, Engine.Drawing.IDrawable
     {
-        private readonly Texture2D texture;
+        public readonly Texture2D texture;
         public Temperature Temperature { get; set; }
         public bool Heated { get; set; }
         public string Type { get; }
