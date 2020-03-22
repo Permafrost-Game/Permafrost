@@ -16,8 +16,8 @@ namespace Engine.TileGrid
         public string Type { get; }
         public bool Walkable { get; }
 
-        private Rectangle sourceRectangle;
-        private Rectangle destinationRectangle;
+        private readonly Rectangle sourceRectangle;
+        private readonly Rectangle destinationRectangle;
         public Tile(Texture2D texture, Vector2 position, Vector2 size, bool walkable, float initialTemperature) : base(position, size)
         {
             this.Type = texture.Name;
