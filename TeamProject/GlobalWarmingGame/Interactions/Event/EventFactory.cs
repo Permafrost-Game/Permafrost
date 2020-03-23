@@ -13,9 +13,6 @@ namespace GlobalWarmingGame.Interactions.Event
     /// </summary>
     public static class EventFactory
     {
-        //A enum list of all events
-        private static readonly Event[] events = (Event[])Enum.GetValues(typeof(Event));
-
         /// <summary>
         /// Create an event given a enum.
         /// </summary>
@@ -23,13 +20,6 @@ namespace GlobalWarmingGame.Interactions.Event
         /// <returns>An event related to the given enum.</returns>
         public static IEvent CreateEvent(Event eventEnum) 
         {
-           
-            if (eventEnum == Event.Random) 
-            {
-                //Picks a random event from events but length is reduced by 1 to prevent event.random from being picked again
-                eventEnum = (Event)events.GetValue(EventManager.rand.Next(0, events.Length - 1 ));
-            }
-
             switch (eventEnum) 
             {
                 case Event.BearAttack:
@@ -45,7 +35,6 @@ namespace GlobalWarmingGame.Interactions.Event
     public enum Event
     {
         BearAttack,
-        ColonistJoin,
-        Random
+        ColonistJoin
     }
 }

@@ -2,6 +2,8 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Event;
+using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -264,7 +266,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
         #endregion
 
-        #region Drop-Down Menu and Build logic
+        #region Drop-Down Menus and Build logic
 
         private static bool constructingMode = false;
         private static IBuildable building;
@@ -287,8 +289,23 @@ namespace GlobalWarmingGame.UI.Controllers
             //Spawnables drop down
             view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
+
+            //Events drop down
+            view.CreateDropDown("Events", new List<ButtonHandler<Event>>
+            {
+                new ButtonHandler<Event>(Event.BearAttack, SelectEventCallback),
+                new ButtonHandler<Event>(Event.ColonistJoin, SelectEventCallback)
+            });
         }
 
+        /// <summary>
+        /// Start the selected event
+        /// </summary>
+        /// <param name=""></param>
+        private static void SelectEventCallback(Event evnt) 
+        {
+            EventManager.CreateGameEvent(evnt);
+        }
 
         /// <summary>
         /// Selects an Interactable for construction

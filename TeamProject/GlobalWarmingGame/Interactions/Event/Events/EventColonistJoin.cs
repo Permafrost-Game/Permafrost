@@ -40,6 +40,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
 
         public void UpdateTrigger(GameTime gameTime)
         {
+            //Not used
         }
     }
 }
