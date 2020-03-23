@@ -26,10 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             base.Update(gameTime);
             
-            if (this.Health <= 0)
-            {
-                GameObjectManager.Remove(this);
-            }
+           
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -66,6 +63,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             List<ResourceItem> loot = new List<ResourceItem>();
             loot.Add(new ResourceItem(Resource.Pickaxe, 2));
             return loot;
+        }
+
+        public override void SetEnemyDead()
+        {
+            //remove the enemy from the game 
+            this.DeathSound();
+
+            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+            GameObjectManager.Remove(this);
         }
     }
 }

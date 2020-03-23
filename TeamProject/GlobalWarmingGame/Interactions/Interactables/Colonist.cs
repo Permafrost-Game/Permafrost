@@ -282,7 +282,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
             }
 
-            if (enemy != null)
+            if (enemy != null && enemy.isInCombat)
             {
                 combatModeOn = true;
                 SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;

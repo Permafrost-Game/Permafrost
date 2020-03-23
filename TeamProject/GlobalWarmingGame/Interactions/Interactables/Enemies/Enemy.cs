@@ -3,6 +3,7 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -69,13 +70,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
 
-        public void SetEnemyDead(){    
-            //remove the enemy from the game 
-            this.DeathSound();
-            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
-            GameObjectManager.Remove(this);
-            
-        }
+        public abstract void SetEnemyDead();
 
 
 
