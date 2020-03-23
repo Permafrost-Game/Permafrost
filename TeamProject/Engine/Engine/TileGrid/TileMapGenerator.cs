@@ -83,7 +83,7 @@ namespace Engine.TileGrid
                             position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                             size: tileSet.textureSize,
                             walkable: false,
-                            globalTemperature
+                            initialTemperature : globalTemperature
                             );
                     }
                 }
