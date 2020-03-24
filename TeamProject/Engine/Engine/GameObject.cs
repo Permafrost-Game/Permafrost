@@ -12,6 +12,7 @@ namespace Engine
         public float Rotation { get; protected set; }
         public Vector2 Origin { get; protected set; }
         public string Tag { get; protected set; }
+        public bool IsActive { get; set; }
 
         public GameObject(Vector2 position, Vector2 size, float rotation, Vector2 origin)
         {
