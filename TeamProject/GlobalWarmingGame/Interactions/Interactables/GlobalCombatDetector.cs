@@ -70,16 +70,42 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+        /// <summary>
+        /// Finds the closest colonist to the bear 
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <returns>Closest colonist in range</returns>
         public static Colonist ColonistInAggroRange(Enemy enemy)
         {
+            Colonist closestColonist = null; 
+
+            //Set to a large distance that could be between two combatants
+            double closestDistanceBetweenCombatants = 3200;
+
             foreach (Colonist col in colonists)
             {
-                if (enemy.aggroRange > DistanceBetweenCombatants(enemy.Position, col.Position))
-                {           
-                    return col;
+                double distanceBetweenCombatants = DistanceBetweenCombatants(enemy.Position, col.Position);
+
+                //If colonist is in aggro range
+                if (enemy.AggroRange > distanceBetweenCombatants)
+                {
+                    //First colonist in aggro range 
+                    if (closestColonist == null)
+                    {
+                        closestColonist = col;
+                        closestDistanceBetweenCombatants = distanceBetweenCombatants;
+                    }
+                    //Closest colonist in aggro range so far compared with next colonist in aggro range
+                    else if (distanceBetweenCombatants < closestDistanceBetweenCombatants)
+                    {
+                        closestColonist = col;
+                        closestDistanceBetweenCombatants = distanceBetweenCombatants;
+                    }
                 }
             }
-            return null;
+
+            //Returns null if no colonists are in range
+            return closestColonist;
         }
     }
 }

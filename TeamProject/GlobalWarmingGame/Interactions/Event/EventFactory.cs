@@ -20,10 +20,14 @@ namespace GlobalWarmingGame.Interactions.Event
         /// <returns>An event related to the given enum.</returns>
         public static IEvent CreateEvent(Event eventEnum) 
         {
-            switch (eventEnum) 
+            switch (eventEnum)
             {
+                case Event.RobotAttack:
+                    return new EventRobotAttack(GameObjectManager.ZoneMap, GameObjectManager.Filter<Colonist>());
                 case Event.BearAttack:
-                    return new EventBearAttack(GameObjectManager.ZoneMap, GameObjectManager.Filter<Colonist>());
+                    return new EventBearAttack(GameObjectManager.ZoneMap);
+                case Event.RabbitJoin:
+                    return new EventRabbitJoin(GameObjectManager.ZoneMap);
                 case Event.ColonistJoin:
                     return new EventColonistJoin(GameObjectManager.ZoneMap);
                 default:
@@ -34,7 +38,9 @@ namespace GlobalWarmingGame.Interactions.Event
 
     public enum Event
     {
+        RobotAttack,
         BearAttack,
-        ColonistJoin
+        ColonistJoin,
+        RabbitJoin
     }
 }

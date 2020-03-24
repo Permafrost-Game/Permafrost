@@ -1,6 +1,7 @@
 ﻿using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using Microsoft.Xna.Framework;
 using System;
@@ -12,41 +13,38 @@ using System.Threading.Tasks;
 namespace GlobalWarmingGame.Interactions.Event.Events
 {
     /// <summary>
-    /// This event will spawn bears at the one edge of the map and have them
-    /// randomly attack the closest colonists in the map.
+    /// This event will spawn rabbits at the one edge of the map 
     /// </summary>
-    public class EventBearAttack : IEvent
+    public class EventRabbitJoin : IEvent
     {
         private readonly TileMap eventTileMap;
 
         public bool Complete { get; private set; } = false;
 
-        public EventBearAttack(TileMap tileMap)
+        public EventRabbitJoin(TileMap tileMap)
         {
             eventTileMap = tileMap;
         }
 
         public void Trigger()
         {
-            int numBears = EventManager.rand.Next(3, 6);
+            int numRabbits = EventManager.rand.Next(4, 6);
 
-            for (int i = 0; i < numBears; i++)
+            //Rabbit group spawn location
+            Vector2 eventSpawnLocation = EventManager.RandomEdgeSpawnLocation();
+
+            for (int i = 0; i < numRabbits; i++)
             {
-                //Bear spawn location
-                Vector2 eventSpawnLocation = EventManager.RandomEdgeSpawnLocation();
 
-                //Skip bears who spawn in water
+                //Skip rabbits who spawn in water
                 if (!eventTileMap.GetTileAtPosition(eventSpawnLocation).Walkable)
                 {
                     continue;
                 }
 
-                //Spawn bear
-                Bear bear = (Bear)InteractablesFactory.MakeInteractable(Interactable.Bear, eventSpawnLocation);
-                GameObjectManager.Add(bear);
-
-                //Event bear with whole map as aggro range
-                bear.AggroRange = 1600;
+                //Spawn rabbit
+                Rabbit rabbit = (Rabbit)InteractablesFactory.MakeInteractable(Interactable.Rabbit, eventSpawnLocation);
+                GameObjectManager.Add(rabbit);
             }
             Complete = true;
         }

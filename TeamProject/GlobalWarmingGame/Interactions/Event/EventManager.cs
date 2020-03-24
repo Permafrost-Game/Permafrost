@@ -9,10 +9,16 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Event
 {
+    /// <summary>
+    /// A class that creates, updates and helps events.
+    /// </summary>
     public static class EventManager
     {
         //Utility random number generator for all events
         public static readonly Random rand = new Random(GameObjectManager.seed);
+
+        //Turn random events on and off
+        public static bool RandomEvents { get; set; } = true;
 
         //A enum list of all events
         private static readonly Event[] eventEnums = (Event[])Enum.GetValues(typeof(Event));
@@ -20,8 +26,8 @@ namespace GlobalWarmingGame.Interactions.Event
         //Random number generator based off the seed
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
-        private static float timeToEvent = 60000f;
-        private static readonly float timeUntilEvent = 120000f;
+        private static float timeToRandomEvent = 60000f;
+        private static readonly float timeUntilRandomEvent = 120000f;
 
         /// <summary>
         /// A method in the game's update loop that is called every frame
@@ -30,17 +36,20 @@ namespace GlobalWarmingGame.Interactions.Event
         /// <param name="gameTime"></param>
         public static void UpdateEventTime(GameTime gameTime)
         {
-            timeToEvent -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            //If its time for a new event create a new random event, trigger it and add it to the active events list
-            if (timeToEvent < 0f)
+            if (RandomEvents) 
             {
-                //Picks a random event enum from events
-                Event randomEventEnum = (Event)eventEnums.GetValue(rand.Next(0, eventEnums.Length));
+                timeToRandomEvent -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                CreateGameEvent(randomEventEnum);
+                //If its time for a new event create a new random event, trigger it and add it to the active events list
+                if (timeToRandomEvent < 0f)
+                {
+                    //Picks a random event enum from events
+                    Event randomEventEnum = (Event)eventEnums.GetValue(rand.Next(0, eventEnums.Length));
 
-                timeToEvent = timeUntilEvent;
+                    CreateGameEvent(randomEventEnum);
+
+                    timeToRandomEvent = timeUntilRandomEvent;
+                }
             }
 
             //Loop through all active events and call their update trigger

@@ -69,6 +69,8 @@
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
     <Compile Include="Interactions\Event\EventFactory.cs" />
     <Compile Include="Interactions\Event\EventManager.cs" />
+    <Compile Include="Interactions\Event\Events\EventRobotAttack.cs" />
+    <Compile Include="Interactions\Event\Events\EventRabbitJoin.cs" />
     <Compile Include="Interactions\Event\Events\EventColonistJoin.cs" />
     <Compile Include="Interactions\Event\Events\EventBearAttack.cs" />
     <Compile Include="Interactions\Event\Events\IEvent.cs" />

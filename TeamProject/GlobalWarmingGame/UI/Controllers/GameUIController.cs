@@ -291,20 +291,9 @@ namespace GlobalWarmingGame.UI.Controllers
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
 
             //Events drop down
-            view.CreateDropDown("Events", new List<ButtonHandler<Event>>
-            {
-                new ButtonHandler<Event>(Event.BearAttack, SelectEventCallback),
-                new ButtonHandler<Event>(Event.ColonistJoin, SelectEventCallback)
-            });
-        }
+            view.CreateDropDown("Events", Enum.GetValues(typeof(Event)).Cast<Event>()
+                .Select(e => new ButtonHandler<Event>(e, SelectEventCallback)).ToList());
 
-        /// <summary>
-        /// Start the selected event
-        /// </summary>
-        /// <param name=""></param>
-        private static void SelectEventCallback(Event evnt) 
-        {
-            EventManager.CreateGameEvent(evnt);
         }
 
         /// <summary>
@@ -326,6 +315,15 @@ namespace GlobalWarmingGame.UI.Controllers
         {
             Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size - Camera.Position;
             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, GameObjectManager.ZoneMap.GetTileAtPosition(position).Position));
+        }
+
+        /// <summary>
+        /// Start the selected event
+        /// </summary>
+        /// <param name=""></param>
+        private static void SelectEventCallback(Event evnt)
+        {
+            EventManager.CreateGameEvent(evnt);
         }
 
         /// <summary>
