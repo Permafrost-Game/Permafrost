@@ -53,7 +53,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         )
         {
 
-            //InstructionTypes.Add(new InstructionType("Shoot", $"Shoot {name}", onStart: Shoot));
+            InstructionTypes.Add(new InstructionType("Attack", $"Attack {name}", onStart: Attack));
 
             //generic stats:
             this.AttackRange = aRange;
@@ -65,7 +65,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
        
 
-        private void Shoot(Instruction instruction)
+        private void Attack(Instruction instruction)
         {
             
         }
