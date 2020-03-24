@@ -10,6 +10,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     public class Robot : Enemy
     {
         
+
         public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot",5000, 70, 0, 500, position, textureSet)
         {
         
@@ -69,7 +70,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             //remove the enemy from the game 
             this.DeathSound();
-
+            notDefeated = false;
             GameObjectManager.Add(new Loot(this.Loot(), this.Position));
             GameObjectManager.Remove(this);
         }

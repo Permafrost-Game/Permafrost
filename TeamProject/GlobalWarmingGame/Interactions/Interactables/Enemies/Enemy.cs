@@ -38,8 +38,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public bool attacking=false;//determines if the enemy is attacking at the moment
         public bool isInCombat=false;//shows if the enemy is fighting a colonist
         private double timeToAttack; //a flag based on attack speed that tells the enemy to attack
+        internal bool notDefeated=true;
 
-            // variable for random movement of enemies
+        // variable for random movement of enemies
         private readonly RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 

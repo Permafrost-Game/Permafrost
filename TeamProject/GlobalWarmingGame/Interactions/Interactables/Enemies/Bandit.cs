@@ -15,6 +15,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     {
         private bool alreadyDefeated = false;
 
+       
+
         public Bandit(Vector2 position, Texture2D[][] textureSet)
         : base("Bandit", 1500, 70, 10, 300, position, textureSet)
         { }
@@ -69,9 +71,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             if (!alreadyDefeated)
             {
                 GlobalCombatDetector.enemies.Remove(this);
-                this.
+                Goals.Clear();
                 TextureGroupIndex = 4;
                 alreadyDefeated = true;
+                notDefeated=false;
                 SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
                 InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:dying));
                 InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));
@@ -89,9 +92,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         private void dying(Instruction instruction) {
             this.Rotation = 1.5f;
             isAnimated = false;
+            SoundFactory.PlaySoundEffect(Sound.banditDying);
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                SoundFactory.PlaySoundEffect(Sound.banditDying);
                 GameObjectManager.Add(new Loot(this.Loot(), this.Position));
                 GameObjectManager.Remove(this);
             });

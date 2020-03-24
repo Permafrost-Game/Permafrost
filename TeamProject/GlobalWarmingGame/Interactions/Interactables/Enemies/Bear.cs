@@ -13,6 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         : base ("Bear",2000, 70, 10, 300, position,textureSet)
         { }
 
+       
+
         public override void AnimateAttack()
         {
             isAnimated = true;
@@ -24,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             //remove the enemy from the game 
             this.DeathSound();
-
+            notDefeated = false;
             GameObjectManager.Add(new Loot(this.Loot(), this.Position));
             GameObjectManager.Remove(this);
         }
