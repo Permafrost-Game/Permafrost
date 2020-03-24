@@ -98,7 +98,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 SoundFactory.PlaySoundEffect(Sound.Explosion);
                 TextureGroupIndex = 5;
                 Colonist colonist = (Colonist) instruction.ActiveMember;
-                colonist.Health = -1;
+                colonist.SetDead();
                 Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
                 {
                     GameObjectManager.Remove(this);
