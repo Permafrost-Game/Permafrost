@@ -29,7 +29,9 @@ namespace GlobalWarmingGame
                  { Sound.banditCut, content.Load<SoundEffect>(@"sound/sounds/bandit-slashing") },
                  { Sound.banditDying, content.Load<SoundEffect>(@"sound/sounds/banditDeath") },
                  { Sound.banditGiveUp, content.Load<SoundEffect>(@"sound/sounds/bandit-disarmed") },
-                 { Sound.banditJoins, content.Load<SoundEffect>(@"sound/sounds/bandit joining colonist") }
+                 { Sound.banditJoins, content.Load<SoundEffect>(@"sound/sounds/bandit joining colonist") },
+                 { Sound.robotFire, content.Load<SoundEffect>(@"sound/sounds/robotFire") },
+                 { Sound.Explosion, content.Load<SoundEffect>(@"sound/sounds/explosion") }
             };
             songs = new Dictionary<Songs, Song>
             {
@@ -79,5 +81,7 @@ public enum Sound
     banditCut,
     banditDying,
     banditGiveUp,
-    banditJoins
+    banditJoins,
+    robotFire,
+    Explosion
 }

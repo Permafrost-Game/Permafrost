@@ -44,6 +44,47 @@ namespace GlobalWarmingGame.Interactions.Interactables
             textureSet = new Dictionary<string, Texture2D[][]>
             {
                 {
+                    "SmallRobot",
+                    new Texture2D[][]
+                    {
+                        new Texture2D[]
+                        {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/idleSmallRobot"),
+                        },
+                        new Texture2D[]
+                        {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/idleSmallRobot")                        
+                        },
+                        new Texture2D[]
+                        {
+                              contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotWalkUp")
+                            
+                        },
+                        new Texture2D[]
+                        {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight1"),
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight2"),
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight3"),
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight4"),
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight5"),
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight6")
+                        },
+                        new Texture2D[]
+                        {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotDies"),
+
+                        },
+                        new Texture2D[]
+                        {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot1"),
+                             contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot2"),
+                              contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot3"),
+                               contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot4")
+
+                        }
+                    }
+                },
+                {
                     "colonist",
                     new Texture2D[][]
                     {
@@ -170,7 +211,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         new Texture2D[]
                         {
                             contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/downedBandit"),
-                            
+
                         }
                     }
                 },
@@ -240,8 +281,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Bear(position, textureSet["bear"]);
                 case Interactable.Bandit:
                     return new Bandit(position, textureSet["Bandit"]);
-
-
+                case Interactable.SmallRobot:
+                    return new SmallRobot(position, textureSet["SmallRobot"]);
                 case Interactable.Tower:
                     return new Tower(position);
                 case Interactable.Storage:
@@ -271,4 +312,5 @@ public enum Interactable
     Storage,
     loot,
     Bandit,
+    SmallRobot,
 }

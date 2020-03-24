@@ -61,7 +61,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         internal override List<ResourceItem> Loot()
         {
             List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Pickaxe, 2));
+            loot.Add(new ResourceItem(Resource.MachineParts, 10));
             return loot;
         }
 
