@@ -13,9 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     class SmallRobot : Enemy
     {
-        public bool notDefeated { get; private set; }
+        private bool alreadyDefeated = false;
 
-        private bool alreadyDefeated=false;
 
         public SmallRobot(Vector2 position, Texture2D[][] textureSet) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet)
     {
@@ -34,7 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         base.Update(gameTime);
 
 
-    }
+        }
 
     protected override void ChaseColonist(Colonist colonist)
     {
@@ -78,13 +77,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             //remove the enemy from the game 
             if (!alreadyDefeated)
             {
+                isInCombat = false;
                 Goals.Clear();
-                GlobalCombatDetector.enemies.Remove(this);
-                this.notDefeated = false;
-                this.alreadyDefeated = true;
-                this.isInCombat = false;
-                this.DeathSound();
+                alreadyDefeated = true;
+                notDefeated = false;
                 TextureGroupIndex = 4;
+                this.DeathSound();
                 InstructionTypes.Add(new InstructionType("Extract Core", $"Extract core (chance of explosion!)", onComplete: SelfDestruct));
             }
     }

@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         public static List<Colonist> colonists=GameObjectManager.Filter<Colonist>().ToList();
         public static List<Enemy> enemies = GameObjectManager.Filter<Enemy>().ToList();
-
         public static Enemy FindColonistThreat (Colonist col)
         {
+           
             foreach (Enemy enemy in enemies) {
-                if (col.AttackRange>DistanceBetweenCombatants(enemy.Position,col.Position))
+               
+                if (col.AttackRange>DistanceBetweenCombatants(enemy.Position,col.Position) && enemy.notDefeated)
                 {
                     return enemy;
                 }    
@@ -33,7 +35,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             return null;
         }
-
         private static double DistanceBetweenCombatants(Vector2 myPos, Vector2 threatPos)
         {
             return Math.Sqrt((threatPos.X - myPos.X) * (threatPos.X - myPos.X) + (threatPos.Y - myPos.Y) * (threatPos.Y - myPos.Y));

@@ -163,7 +163,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Aggro(); // enemy is agressive all the time
 
             Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving
-            Math.Atan2(delta.X, delta.Y); // jedd's maths magic
 
             if (isInCombat)
             {

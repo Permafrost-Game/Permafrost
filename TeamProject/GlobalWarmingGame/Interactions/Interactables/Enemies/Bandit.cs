@@ -31,7 +31,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (Health <= 0) { isInCombat = false; }
+           
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -61,8 +61,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             List<ResourceItem> loot = new List<ResourceItem>();
             loot.Add(new ResourceItem(Resource.Food, 2));
-            loot.Add(new ResourceItem(Resource.Axe, 98));
-            loot.Add(new ResourceItem(Resource.Pickaxe, 50));
+            loot.Add(new ResourceItem(Resource.Axe, 1));
+            loot.Add(new ResourceItem(Resource.Pickaxe, 1));
             return loot;
         }
 
@@ -70,11 +70,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             
             if (!alreadyDefeated)
             {
-                GlobalCombatDetector.enemies.Remove(this);
+             
                 Goals.Clear();
                 TextureGroupIndex = 4;
                 alreadyDefeated = true;
                 notDefeated=false;
+                isInCombat = false;
                 SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
                 InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:dying));
                 InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));
