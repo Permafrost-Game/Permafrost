@@ -37,12 +37,14 @@ namespace GlobalWarmingGame
         public static event EventHandler<GameObject> ObjectAdded = delegate { };
         public static event EventHandler<GameObject> ObjectRemoved = delegate { };
 
-        public static Camera Camera { get; set; }
+        public static GraphicsDevice GraphicsDevice { get; set; }
+        public static Camera Camera { get; private set; }
 
         public static TileMap ZoneMap { get; set; }
 
-        private static GraphicsDevice graphicsDevice;
-        private static SpriteBatch spriteBatch;
+        private static int saveID;
+
+        public static SpriteBatch SpriteBatch { get; set; }
 
         public static Vector2 GreyTilesSize { get; private set; }
         public static RenderTarget2D GreyTiles { get; private set; }
@@ -55,20 +57,9 @@ namespace GlobalWarmingGame
             Interactables = new List<IInteractable>();
         }
 
-        public static void Init(int worldSeed, Vector2 currentZone, GraphicsDevice graphics, SpriteBatch sb, bool isSerialized = true)
+        public static void Init(int currentSaveID, int worldSeed, Vector2 currentZone, bool isSerialized = true)
         {
-            graphicsDevice = graphics;
-            spriteBatch = sb;
-
-            GreyTilesSize = ZoneMap.Size * ZoneMap.Tiles[0, 0].Size * 3;
-
-            GreyTiles = new RenderTarget2D(
-                graphicsDevice,
-                (int)GreyTilesSize.X,
-                (int)GreyTilesSize.Y,
-                false,
-                graphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
+            saveID = currentSaveID;
 
             if (!(serialization = isSerialized))
             {
@@ -80,6 +71,8 @@ namespace GlobalWarmingGame
             zonePos = currentZone;
 
             SetZone(zonePos);
+
+            Camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
         }
 
         public static string ZoneFileName()
@@ -89,7 +82,7 @@ namespace GlobalWarmingGame
 
         public static string ZoneFilePath()
         {
-            return String.Format(@"{0}/{1}.json", @"Content/zones", ZoneFileName());
+            return String.Format(@"Content/saves/{0}/zones/{1}.json", saveID, ZoneFileName());
         }
 
         public static void SaveZone()
@@ -112,6 +105,7 @@ namespace GlobalWarmingGame
 
         private static void SetZone(Vector2 position, List<Colonist> colonists = null)
         {
+
             zonePos = position;
             ZoneMap = GenerateMap(position);
             PathFinder.TileMap = ZoneMap;
@@ -174,22 +168,32 @@ namespace GlobalWarmingGame
                 }
             }
 
-            graphicsDevice.SetRenderTarget(GreyTiles);
-            graphicsDevice.Clear(Color.Transparent);
+            GreyTilesSize = ZoneMap.Size * ZoneMap.TileSize * 3;
+
+            GreyTiles = new RenderTarget2D(
+                GraphicsDevice,
+                (int)GreyTilesSize.X,
+                (int)GreyTilesSize.Y,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            GraphicsDevice.SetRenderTarget(GreyTiles);
+            GraphicsDevice.Clear(Color.Transparent);
 
             Vector2[] greyZonePositions =
             {
-                new Vector2(-1, 0), // left
-                new Vector2(1, 0), // right
-                new Vector2(0, -1), // up
-                new Vector2(0, 1), // down
-                new Vector2(1, -1), // top right
+                new Vector2(-1,  0), // left
+                new Vector2( 1,  0), // right
+                new Vector2( 0, -1), // up
+                new Vector2( 0,  1), // down
+                new Vector2( 1, -1), // top right
                 new Vector2(-1, -1), // top left
-                new Vector2(1, 1), // top right
-                new Vector2(-1, 1) // top left
+                new Vector2( 1,  1), // top right
+                new Vector2(-1,  1) // top left
             };
 
-            spriteBatch.Begin(
+            SpriteBatch.Begin(
                 sortMode: SpriteSortMode.Deferred,
                 blendState: BlendState.Opaque,
                 samplerState: SamplerState.PointClamp,
@@ -208,12 +212,12 @@ namespace GlobalWarmingGame
                     Vector2 newPosition = new Vector2(tile.Position.X + (greyTileMap.Size.X * tile.Size.X * offset.X), tile.Position.Y + (greyTileMap.Size.Y * tile.Size.Y * offset.Y));
 
                     Tile offsettedTile = new Tile(tile.texture, newPosition, tile.Size, false, 0f);
-                    offsettedTile.Draw(spriteBatch);
+                    offsettedTile.Draw(SpriteBatch);
                 }
             }
 
-            spriteBatch.End();
-            graphicsDevice.SetRenderTarget(null);
+            SpriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
         }
 
         public static void MoveZone(Vector2 direction)
@@ -221,15 +225,14 @@ namespace GlobalWarmingGame
             List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
 
             foreach (Colonist colonist in colonists)
-                GameObjectManager.Remove(colonist);
+                Remove(colonist);
 
             SaveZone();
 
             for (int i = 0; i < colonists.Count(); i++)
             {
-                Colonist colonist = (Colonist)colonists[i];
-                colonist.Goals.Clear();
-                colonist.Path.Clear();
+                Colonist colonist = colonists[i];
+                colonist.ClearInstructions();
 
                 if (direction.X == 1 || direction.X == -1)
                 {
@@ -254,24 +257,16 @@ namespace GlobalWarmingGame
             SetZone(zonePos + direction, colonists);
 
             if (direction.X == 1)
-            {
                 Camera.Position = new Vector2(ZoneMap.Size.X * TileSet.textureSize.X, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
-            }
 
             else if (direction.X == -1)
-            {
                 Camera.Position = new Vector2(0, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
-            }
 
             else if (direction.Y == -1)
-            {
                 Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, 0);
-            }
 
             else if (direction.Y == 1)
-            {
                 Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, ZoneMap.Size.Y * TileSet.textureSize.Y);
-            }
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }

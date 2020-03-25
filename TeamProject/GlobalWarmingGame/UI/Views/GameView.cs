@@ -23,8 +23,8 @@ namespace GlobalWarmingGame.UI.Views
         private Panel topPanel;
         private Panel bottomPanel;
         private Panel menu;
-        private Dictionary<int, Panel> inventories;
-        private Dictionary<int, Icon> inventoryButtons;
+        private readonly Dictionary<int, Panel> inventories;
+        private readonly Dictionary<int, Icon> inventoryButtons;
 
         /// <summary>True if the current mouse position is over a UI entity</summary>
         internal bool Hovering { get; set; }
@@ -44,11 +44,12 @@ namespace GlobalWarmingGame.UI.Views
         /// <summary>
         /// Resets currently active UI elements
         /// </summary>
-        internal void Reset()
+        internal void Clear()
         {
             UserInterface.Active.Clear();
-            inventories = new Dictionary<int, Panel>();
-            inventoryButtons = new Dictionary<int, Icon>();
+            inventories.Clear();
+            inventoryButtons.Clear();
+            menu = null;
         }
 
         internal void CreateUI()
@@ -193,7 +194,7 @@ namespace GlobalWarmingGame.UI.Views
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, List<T> list = null) 
+        internal void Notification<T>(string text, IEnumerable<T> list = null) 
         {
             string notificatonText = text;
 
@@ -205,7 +206,7 @@ namespace GlobalWarmingGame.UI.Views
 
             UserInterface.Active.AddEntity(Notification);
 
-            if (list != null && list.Count > 0) 
+            if (list != null) 
             {
                 foreach(T item in list) 
                 {

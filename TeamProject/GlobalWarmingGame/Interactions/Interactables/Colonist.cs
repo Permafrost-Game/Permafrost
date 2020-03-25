@@ -610,6 +610,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
 
         }
+
+        /// <summary>
+        /// Clears instructions, Goals, and Path
+        /// </summary>
+        public void ClearInstructions()
+        {
+            instructions.Clear();
+            Goals.Clear();
+            Path.Clear();
+        }
+
         public object Reconstruct()
         {
             return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);
