@@ -152,16 +152,17 @@ namespace GlobalWarmingGame.UI.Controllers
                     if (tile.Walkable)
                     {
                         if (tile.Position.X == 0)
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelWest), activeMember, objectClicked), IssueInstructionCallback));
-
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(-1, 0)));
+                            
                         else if (tile.Position.Y == 0)
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelNorth), activeMember, objectClicked), IssueInstructionCallback));
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(0, -1)));
 
                         else if (tile.Position.X >= ((GameObjectManager.ZoneMap.Size.X - 1) * GameObjectManager.ZoneMap.TileSize.X))
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelEast), activeMember, objectClicked), IssueInstructionCallback));
-
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(1, 0)));
+                        
                         else if (tile.Position.Y >= ((GameObjectManager.ZoneMap.Size.Y - 1) * GameObjectManager.ZoneMap.TileSize.Y))
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelSouth), activeMember, objectClicked), IssueInstructionCallback));
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(0, 1)));
+
                         else
                             options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
@@ -189,11 +190,36 @@ namespace GlobalWarmingGame.UI.Controllers
             return options;
         }
 
-        private static InstructionType TravelInstruction(InstructionEvent e) => new InstructionType("travel", "Travel", "Travel to the next zone", onComplete: e);
-        private static void ZoneTravelNorth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0, -1));
-        private static void ZoneTravelSouth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0,  1)); 
-        private static void ZoneTravelEast (Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 1,  0));
-        private static void ZoneTravelWest (Instruction i = default) => GameObjectManager.MoveZone(new Vector2(-1,  0));
+        private static ButtonHandler<Instruction> CreateTravelOption(GameObject objectClicked, Vector2 translation)
+        {
+            List<Colonist> colonists = GameObjectManager.Filter<Colonist>();
+            HashSet<Colonist> readyToTravel = new HashSet<Colonist>();
+            return new ButtonHandler<Instruction> (
+                    tag: new Instruction(type: TravelInstruction(null), passiveMember: objectClicked),
+                    action: (Instruction instruction) =>
+                    {
+                        foreach (Colonist c in colonists)
+                        {
+                            IssueInstructionCallback(new Instruction(
+                                type: TravelInstruction((Instruction i) => {
+                                    readyToTravel.Add(c);
+                                    c.ClearInstructions();
+                                    if (readyToTravel.Count == colonists.Count)
+                                    {
+                                        GameObjectManager.MoveZone(translation);
+                                    }
+                                }),
+                                activeMember: c,
+                                passiveMember: objectClicked)
+                                );
+                        }
+                    }
+                );
+        }
+            
+
+        private static InstructionType TravelInstruction(InstructionEvent e) => new InstructionType("travel", "Travel", "Travel to the next zone", onComplete: e, priority: Int16.MinValue);
+
 
         /// <summary>
         /// Adds the instruction to the active member of the instruction.

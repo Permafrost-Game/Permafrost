@@ -194,7 +194,7 @@ namespace GlobalWarmingGame.UI.Views
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, List<T> list = null) 
+        internal void Notification<T>(string text, IEnumerable<T> list = null) 
         {
             string notificatonText = text;
 
@@ -206,7 +206,7 @@ namespace GlobalWarmingGame.UI.Views
 
             UserInterface.Active.AddEntity(Notification);
 
-            if (list != null && list.Count > 0) 
+            if (list != null) 
             {
                 foreach(T item in list) 
                 {

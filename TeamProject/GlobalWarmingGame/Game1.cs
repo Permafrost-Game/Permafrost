@@ -226,9 +226,7 @@ namespace GlobalWarmingGame
         {
             GameUIController.Update(gameTime);
 
-            //FIXME this should only be called once, not every frame!!!!
             GlobalCombatDetector.UpdateParticipants();
-            //
 
             keyboardInputHandler.Update(gameTime);
 

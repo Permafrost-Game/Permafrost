@@ -225,15 +225,14 @@ namespace GlobalWarmingGame
             List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
 
             foreach (Colonist colonist in colonists)
-                GameObjectManager.Remove(colonist);
+                Remove(colonist);
 
             SaveZone();
 
             for (int i = 0; i < colonists.Count(); i++)
             {
-                Colonist colonist = (Colonist)colonists[i];
-                colonist.Goals.Clear();
-                colonist.Path.Clear();
+                Colonist colonist = colonists[i];
+                colonist.ClearInstructions();
 
                 if (direction.X == 1 || direction.X == -1)
                 {
