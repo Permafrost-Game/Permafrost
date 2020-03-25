@@ -10,6 +10,7 @@ using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,16 +24,10 @@ namespace GlobalWarmingGame
         const string SettingsPath = @"Content/settings.json";
 
         private float resolutionScale = 0.75f;
-        private int seed = new System.Random().Next();
-        private Vector2 currentZone = Vector2.Zero;
-
 
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        TileSet tileSet;
-
-        Camera camera;
         KeyboardInputHandler keyboardInputHandler;
 
         List<Light> lightObjects;
@@ -54,7 +49,7 @@ namespace GlobalWarmingGame
                 {
                     case GameState.MainMenu:
                         SoundFactory.StopSong();
-                        //GameUIController.ResetUI();
+                        MainMenuUIController.ClearUI();
                         break;
                     case GameState.Paused:
                         GameUIController.ShowPauseMenu(false);
@@ -66,7 +61,7 @@ namespace GlobalWarmingGame
                         if (previous != GameState.Playing && previous != GameState.Paused && previous != GameState.Settings)
                         {
                             SoundFactory.StopSong();
-                            GameUIController.ResetUI();
+                            GameUIController.ClearUI();
                         }
                         break;
                     case GameState.Intro:
@@ -79,7 +74,12 @@ namespace GlobalWarmingGame
                 switch (value)
                 {
                     case GameState.MainMenu:
-                        GameUIController.ResetUI();
+                        if (previous == GameState.Playing
+                            || previous == GameState.Paused
+                            || previous == GameState.Settings)
+                            MainMenuUIController.UnloadSave();
+
+                        GameUIController.ClearUI();
                         MainMenuUIController.CreateUI();
                         SoundFactory.PlaySong(Songs.Menu);
                         break;
@@ -125,11 +125,6 @@ namespace GlobalWarmingGame
                     graphics.ToggleFullScreen();
 
                 resolutionScale = float.Parse(settings["resolutionScale"]);
-
-                seed = int.Parse(settings["seed"]);
-
-                string[] zoneCoords = settings["currentZone"].Split(',');
-                currentZone = new Vector2(int.Parse(zoneCoords[0]), int.Parse(zoneCoords[1]));
             }
 
             graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
@@ -200,14 +195,9 @@ namespace GlobalWarmingGame
                 MainMenuUIController.LoadContent(Content);
 
                 GameObjectManager.TileSet = new TileSet(textureSet, new Vector2(32f));
+                GameObjectManager.GraphicsDevice = GraphicsDevice;
+                GameObjectManager.SpriteBatch = spriteBatch;
 
-                GameObjectManager.ZoneMap = GameObjectManager.GenerateMap(currentZone);
-                camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
-
-                GameObjectManager.Camera = camera;
-                GameObjectManager.Init(seed, currentZone, GraphicsDevice, spriteBatch, false);
-
-                //GameObjectManager.CurrentZone = new Zone() { TileMap = GameObjectManager.ZoneMap 
 
                 this.keyboardInputHandler = new KeyboardInputHandler(graphics);
             }
@@ -221,14 +211,12 @@ namespace GlobalWarmingGame
 
         protected override void UnloadContent()
         {
-            GameObjectManager.SaveZone();
+            MainMenuUIController.UnloadSave();
 
             var settingsData = JsonConvert.SerializeObject(new
             {
                 isFullScreen = graphics.IsFullScreen,
                 resolutionScale,
-                seed,
-                currentZone = GameObjectManager.ZoneFileName()
             }, Formatting.Indented);
 
             System.IO.File.WriteAllText(SettingsPath, settingsData);
@@ -238,14 +226,16 @@ namespace GlobalWarmingGame
         protected override void Update(GameTime gameTime)
         {
             GameUIController.Update(gameTime);
+
             GlobalCombatDetector.UpdateParticipants();
 
             keyboardInputHandler.Update(gameTime);
 
             if (GameState == GameState.Playing)
             {
+                MainMenuUIController.GameTime += gameTime.ElapsedGameTime;
 
-                camera.Update(gameTime);
+                GameObjectManager.Camera.Update(gameTime);
 
                 TemperatureManager.UpdateTemperature(gameTime);
                 EventManager.UpdateEventTime(gameTime);
@@ -293,7 +283,7 @@ namespace GlobalWarmingGame
                             GraphicsDevice.SetRenderTarget(screenShadows);
                             GraphicsDevice.Clear(Color.Black);
 
-                            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: camera.Transform);
+                            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: GameObjectManager.Camera.Transform);
                             foreach (Light light in lightObjects)
                             {
                                 light.Draw(spriteBatch);
@@ -316,7 +306,7 @@ namespace GlobalWarmingGame
                         spriteBatch.Begin(
                             sortMode: SpriteSortMode.Deferred,
                             samplerState: SamplerState.PointClamp,
-                            transformMatrix: camera.Transform
+                            transformMatrix: GameObjectManager.Camera.Transform
                         );
 
                 Vector2 zoneSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size;
@@ -353,7 +343,7 @@ namespace GlobalWarmingGame
                             sortMode: SpriteSortMode.FrontToBack,
                             blendState: BlendState.AlphaBlend,
                             samplerState: SamplerState.PointClamp,
-                            transformMatrix: camera.Transform
+                            transformMatrix: GameObjectManager.Camera.Transform
                         );
 
                         foreach (Engine.Drawing.IDrawable drawable in GameObjectManager.Drawables)
