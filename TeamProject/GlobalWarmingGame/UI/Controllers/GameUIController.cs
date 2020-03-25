@@ -345,12 +345,16 @@ namespace GlobalWarmingGame.UI.Controllers
             switch(Game1.GameState)
             {
                 case GameState.Playing:
+                case GameState.Paused:
                     Vector2 screenHover = currentMouseState.Position.ToVector2();
                     Vector2 gameHover = Vector2.Transform(screenHover, Camera.InverseTransform);
-                    if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed) 
+                    if (previousMouseState.LeftButton == ButtonState.Released
+                        && currentMouseState.LeftButton == ButtonState.Pressed
+                        && Game1.GameState == GameState.Playing) 
                         OnClick(gameHover);
                     UpdateTemperature(gameHover, screenHover);
                     break;
+                
             }
             
 
@@ -363,7 +367,7 @@ namespace GlobalWarmingGame.UI.Controllers
             Tile t = GameObjectManager.ZoneMap.GetTileAtPosition(gameHover);
             string temp = string.Empty;
 
-            if (t != null)
+            if (t != null && !view.Hovering)
             {
                 int temperature = (int)Math.Round(t.Temperature.Value);
                 if (temperature == 0)

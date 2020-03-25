@@ -324,7 +324,7 @@ namespace GlobalWarmingGame.UI.Views
         internal void UpdateTemp(string text, Vector2 position)
         {
             temperatureReadout.Text = text;
-            temperatureReadout.Offset = position + new Vector2(30);
+            temperatureReadout.Offset = position + new Vector2(20,30);
         }
     }
 }
