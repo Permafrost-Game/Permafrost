@@ -281,7 +281,6 @@ namespace GlobalWarmingGame
         public static void Add(GameObject gameObject)
         {
             gameObjects.Add(gameObject);
-            gameObject.IsActive = true;
 
             if (gameObject is IDrawable d)
                 Drawables.Add(d);
@@ -302,7 +301,6 @@ namespace GlobalWarmingGame
         public static void Remove(GameObject gameObject)
         {
             gameObjects.Remove(gameObject);
-            gameObject.IsActive = false;
 
             if (gameObject is IDrawable d)
                 Drawables.Remove(d);
