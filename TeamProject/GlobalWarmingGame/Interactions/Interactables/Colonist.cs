@@ -458,19 +458,22 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void OnInstructionComplete(Instruction instruction)
         {
-            if (instructions.Peek() == instruction)
+            if (instructions.Count > 0)
             {
-                instructions.Dequeue();
-                CheckInventoryDump();
-                if (!InCombat)
+                if (instructions.Peek() == instruction)
                 {
-                    TextureGroupIndex = 0;
-                    
+                    instructions.Dequeue();
+                    CheckInventoryDump();
+                    if (!InCombat)
+                    {
+                        TextureGroupIndex = 0;
+
+                    }
                 }
-            }
-            else
-            {
-                throw new Exception("Async instruction completed");
+                else
+                {
+                    throw new Exception("Async instruction completed");
+                }
             }
         }
 
@@ -529,6 +532,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
 
         }
+
+        /// <summary>
+        /// Clears instructions, Goals, and Path
+        /// </summary>
+        public void ClearInstructions()
+        {
+            instructions.Clear();
+            Goals.Clear();
+            Path.Clear();
+        }
+
         public object Reconstruct()
         {
             return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);

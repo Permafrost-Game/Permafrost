@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.UI.Views
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
         }
 
-        internal void Reset()
+        internal void Clear()
         {
             UserInterface.Active.Clear();
         }
