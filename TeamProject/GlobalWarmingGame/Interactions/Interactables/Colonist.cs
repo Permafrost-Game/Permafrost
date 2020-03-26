@@ -73,7 +73,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
         private bool _ranged = false;
-        public bool ranged
+        public bool Ranged
         {
             get { return _ranged; }
             set
@@ -102,7 +102,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 _isAttacking = value;
                 isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-                if (ranged)
+                if (Ranged)
                 {
                     TextureGroupIndex = _isAttacking ? 3 : 0;
                 }
@@ -182,10 +182,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InventoryChange.Invoke(this, resourceItem);
             if (inventory.ContainsType(Resource.Shotgun))
             {
-                ranged = true;
+                Ranged = true;
             }
             else {
-                ranged= false;
+                Ranged= false;
             }
         }
 
@@ -317,7 +317,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             enemy = GlobalCombatDetector.FindColonistThreat(this);
             if (AttackTrigger)
             {
-                hunt(enemy);
+                Hunt(enemy);
             }
             Vector2 delta = lastPosition - this.Position;
 
@@ -595,7 +595,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void PlayAttackingSound()
         {
-            if (ranged)
+            if (Ranged)
             {
                 SoundFactory.PlaySoundEffect(Sound.Shotgun);
             }
@@ -628,7 +628,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        private void hunt(Enemy enemy) {
+        private void Hunt(Enemy enemy) {
             Goals.Clear();
             if (enemy == null)
             {
