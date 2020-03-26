@@ -535,23 +535,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void OnInstructionComplete(Instruction instruction)
         {
-            if (instructions.First == instruction)
+            if (instructions.Count > 0)
             {
-                instructions.Dequeue();
-                if(instruction.Type.ID != "takeItem")
+                if (instructions.First == instruction)
                 {
-                    CheckInventoryDump();
+                    instructions.Dequeue();
+                    if (instruction.Type.ID != "takeItem")
+                    {
+                        CheckInventoryDump();
+                    }
+
+                    if (!InCombat)
+                    {
+                        TextureGroupIndex = 0;
+
+                    }
                 }
-                
-                if (!InCombat)
+                else
                 {
-                    TextureGroupIndex = 0;
-                    
+                    throw new Exception("Async instruction completed");
                 }
-            }
-            else
-            {
-                throw new Exception("Async instruction completed");
             }
         }
 
