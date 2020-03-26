@@ -124,6 +124,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
         private bool deathSoundPlayed;
+        private bool AttackTrigger=false;
+        private Enemy target;
+
         public bool HasRangedItem { get; set; } = false;
 
 
@@ -250,7 +253,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Move(gameTime);
             base.Update(gameTime);
             enemy = GlobalCombatDetector.FindColonistThreat(this);
-
+            if (AttackTrigger)
+            {
+                hunt(enemy);
+            }
             Vector2 delta = lastPosition - this.Position;
 
 
@@ -275,7 +281,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Peek().Update(gameTime);
                 if (instructions.Count > 0)
                 {
-                    if (Goals.Count == 0)
+                    if (Goals.Count == 0 )
                     {
                         Goals.Enqueue(instructions.Peek().PassiveMember.Position);
                     }
@@ -419,8 +425,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
             //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
-            instructions.Enqueue(instruction);
-
+            if (instruction.Type.ID == "Attack")
+            {
+                AttackTrigger = true;
+                target = (Enemy)instruction.PassiveMember;
+            }
+            else
+            {
+                instructions.Enqueue(instruction);
+            }
         }
 
         private void OnInstructionStart(Instruction instruction)
@@ -528,6 +541,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
             return false;
 
 
+        }
+
+        private void hunt(Enemy enemy) {
+            Goals.Clear();
+            if (enemy == null)
+            {
+                Goals.Enqueue(target.Position);
+            }
+            else {
+                AttackTrigger = false;
+                target = null;
+            }
+            
         }
         public object Reconstruct()
         {
