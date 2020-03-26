@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Event
         //Random number generator based off the seed
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
-        private static float timeToRandomEvent = 60000f;
+        private static float timeToRandomEvent = 80000f;
         private static readonly float timeUntilRandomEvent = 120000f;
 
         /// <summary>

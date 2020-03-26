@@ -22,14 +22,16 @@ namespace GlobalWarmingGame.Interactions.Event
         {
             switch (eventEnum)
             {
-                case Event.RobotAttack:
-                    return new EventRobotAttack(GameObjectManager.ZoneMap, GameObjectManager.Filter<Colonist>());
+                case Event.RobotSiege:
+                    return new EventRobotSiege(GameObjectManager.ZoneMap);
                 case Event.BearAttack:
                     return new EventBearAttack(GameObjectManager.ZoneMap);
-                case Event.RabbitJoin:
-                    return new EventRabbitJoin(GameObjectManager.ZoneMap);
+                case Event.Rabbit:
+                    return new EventRabbit(GameObjectManager.ZoneMap);
                 case Event.ColonistJoin:
                     return new EventColonistJoin(GameObjectManager.ZoneMap);
+                case Event.Merchant:
+                    return new EventMerchant(GameObjectManager.ZoneMap);
                 default:
                     throw new NotImplementedException(eventEnum + " has not been implemented");
             }
@@ -38,9 +40,10 @@ namespace GlobalWarmingGame.Interactions.Event
 
     public enum Event
     {
-        RobotAttack,
+        RobotSiege,
         BearAttack,
         ColonistJoin,
-        RabbitJoin
+        Merchant,
+        Rabbit
     }
 }

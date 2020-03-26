@@ -69,8 +69,9 @@
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
     <Compile Include="Interactions\Event\EventFactory.cs" />
     <Compile Include="Interactions\Event\EventManager.cs" />
-    <Compile Include="Interactions\Event\Events\EventRobotAttack.cs" />
-    <Compile Include="Interactions\Event\Events\EventRabbitJoin.cs" />
+    <Compile Include="Interactions\Event\Events\EventMerchant.cs" />
+    <Compile Include="Interactions\Event\Events\EventRobotSiege.cs" />
+    <Compile Include="Interactions\Event\Events\EventRabbit.cs" />
     <Compile Include="Interactions\Event\Events\EventColonistJoin.cs" />
     <Compile Include="Interactions\Event\Events\EventBearAttack.cs" />
     <Compile Include="Interactions\Event\Events\IEvent.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="Interactions\Interactables\Loot.cs" />
+    <Compile Include="Interactions\Interactables\Merchant.cs" />
     <Compile Include="SoundFactory.cs" />
     <Compile Include="ISerializationInfo.cs" />
     <Compile Include="Resources\IStorage.cs" />

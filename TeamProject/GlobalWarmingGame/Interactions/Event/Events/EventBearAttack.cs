@@ -45,7 +45,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 Bear bear = (Bear)InteractablesFactory.MakeInteractable(Interactable.Bear, eventSpawnLocation);
                 GameObjectManager.Add(bear);
 
-                //Event bear with whole map as aggro range
+                //Event bear with half map as aggro range
                 bear.AggroRange = 1600;
             }
             Complete = true;

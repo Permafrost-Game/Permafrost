@@ -15,13 +15,13 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// <summary>
     /// This event will spawn rabbits at the one edge of the map 
     /// </summary>
-    public class EventRabbitJoin : IEvent
+    public class EventRabbit : IEvent
     {
         private readonly TileMap eventTileMap;
 
         public bool Complete { get; private set; } = false;
 
-        public EventRabbitJoin(TileMap tileMap)
+        public EventRabbit(TileMap tileMap)
         {
             eventTileMap = tileMap;
         }
