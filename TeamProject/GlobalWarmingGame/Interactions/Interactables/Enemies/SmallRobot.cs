@@ -13,8 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     class SmallRobot : Enemy
     {
-        private bool alreadyDefeated = false;
-
+       
+        private bool robotExploded=false;
 
         public SmallRobot(Vector2 position, Texture2D[][] textureSet) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet)
     {
@@ -31,7 +31,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-
+            if (robotExploded) {
+                GameObjectManager.Remove(this);
+            }
 
         }
 
@@ -75,14 +77,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     public override void SetEnemyDead()
     {
             //remove the enemy from the game 
-            if (!alreadyDefeated)
+            if (notDefeated)
             {
                 isInCombat = false;
                 Goals.Clear();
-                alreadyDefeated = true;
                 notDefeated = false;
                 TextureGroupIndex = 4;
                 this.DeathSound();
+                InstructionTypes.Clear();
                 InstructionTypes.Add(new InstructionType("Extract Core", $"Extract core (chance of explosion!)", onComplete: SelfDestruct));
             }
     }
@@ -94,7 +96,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             if (chance > 50)
             {
                 GameObjectManager.Add(new Loot(this.Loot(), this.Position));
-                GameObjectManager.Remove(this);
+                robotExploded = true;
             }
             else
             {
@@ -104,7 +106,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 colonist.SetDead();
                 Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
                 {
-                    GameObjectManager.Remove(this);
+                    robotExploded = true;
                 });
                
             }

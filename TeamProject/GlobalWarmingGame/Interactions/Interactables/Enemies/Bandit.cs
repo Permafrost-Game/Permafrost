@@ -13,9 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     class Bandit : Enemy
     {
-        private bool alreadyDefeated = false;
-
-       
+        private bool killed=false;
 
         public Bandit(Vector2 position, Texture2D[][] textureSet)
         : base("Bandit", 1500, 70, 10, 300, position, textureSet)
@@ -31,7 +29,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-           
+            if (killed)
+            {
+                GameObjectManager.Remove(this);
+            }
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -68,15 +69,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         public override void SetEnemyDead() {
             
-            if (!alreadyDefeated)
+            if (notDefeated)
             {
              
                 Goals.Clear();
                 TextureGroupIndex = 4;
-                alreadyDefeated = true;
                 notDefeated=false;
                 isInCombat = false;
                 SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
+                InstructionTypes.Clear();
                 InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:dying));
                 InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));
             }
@@ -85,7 +86,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         private void join(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.banditJoins);
-            GameObjectManager.Remove(this);
+            killed = true;
             Vector2 spawnplace = new Vector2(this.Position.X + 20, this.Position.Y);
             GameObjectManager.Add(new Colonist(spawnplace));
         }
@@ -97,7 +98,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
                 GameObjectManager.Add(new Loot(this.Loot(), this.Position));
-                GameObjectManager.Remove(this);
+                killed = true;
             });
         }
     }
