@@ -3,7 +3,7 @@ Permafrost is a colony survival game for Windows.
 
 This game is made for Team 2's submission for CS2010.
 
-This game is currently in development and will be relesed at the end March 2020 for Windows.
+This game is currently in development and will be released at the end March 2020 for Windows.
 
 Pre-release versions can be [downloaded here](https://github.com/Permafrost-Game/Permafrost/releases/latest).
 
