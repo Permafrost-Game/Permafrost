@@ -16,7 +16,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
     public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
-
         public Colonist Target { get; set; } = null; //target is anything within aggro range
         private Colonist targetInRange=null; //targetInRange is anything in attacking range
 
@@ -82,25 +81,25 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
             if (potentialTarget != null)
             {
-                if (aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
+                if (AggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
                 {
-                    target = potentialTarget;
+                    Target = potentialTarget;
 
-                    if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
+                    if (this.AttackRange > Vector2.Distance(this.Position, Target.Position))
                     {
-                        targetInRange = target;
+                        targetInRange = Target;
                     } else
                     {
                         targetInRange = null;
                     }
 
                     Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
-                    ChaseColonist(target); //chase the found colonist
+                    ChaseColonist(Target); //chase the found colonist
 
                 }
                 else
                 {
-                    target = null;
+                    Target = null;
                     isAnimated = true;
                     TextureGroupIndex = 1;
                     Speed = 0.05f; //decreasing the default speed when roaming (more natural)
