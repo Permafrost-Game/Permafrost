@@ -31,7 +31,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             int numRabbits = EventManager.rand.Next(4, 6);
 
             //Rabbit group spawn location
-            Vector2 eventSpawnLocation = EventManager.RandomEdgeSpawnLocation();
+            Vector2 eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
 
             for (int i = 0; i < numRabbits; i++)
             {

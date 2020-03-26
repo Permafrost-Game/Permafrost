@@ -27,7 +27,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         public void Trigger()
         {
             //Create a new colonist at the edge of the map
-            Vector2 colonistSpawnLocation = EventManager.RandomEdgeSpawnLocation();
+            Vector2 colonistSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
 
             if (eventTileMap.GetTileAtPosition(colonistSpawnLocation).Walkable)
             {

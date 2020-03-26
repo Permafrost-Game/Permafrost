@@ -33,7 +33,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             for (int i = 0; i < numBears; i++)
             {
                 //Bear spawn location
-                Vector2 eventSpawnLocation = EventManager.RandomEdgeSpawnLocation();
+                Vector2 eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
 
                 //Skip bears who spawn in water
                 if (!eventTileMap.GetTileAtPosition(eventSpawnLocation).Walkable)

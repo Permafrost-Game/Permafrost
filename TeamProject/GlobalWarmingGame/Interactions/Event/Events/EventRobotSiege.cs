@@ -29,14 +29,14 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         public void Trigger()
         {
             //If the map has a tower 
-            if (GameObjectManager.Filter<Tower>().Count == 1) 
+            if (GameObjectManager.Filter<Tower>() != null) 
             {
                 int numRobots = EventManager.rand.Next(3, 6);
 
                 for (int i = 0; i < numRobots; i++)
                 {
                     //Robot spawn location
-                    Vector2 eventSpawnLocation = EventManager.RandomEdgeSpawnLocation();
+                    Vector2 eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
 
                     //Skip robots who spawn in water
                     if (!eventTileMap.GetTileAtPosition(eventSpawnLocation).Walkable)

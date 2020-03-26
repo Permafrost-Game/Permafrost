@@ -1,5 +1,6 @@
 ﻿using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Event.Events;
+using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace GlobalWarmingGame.Interactions.Event
         public static readonly Random rand = new Random(GameObjectManager.seed);
 
         //Turn random events on and off
-        public static bool RandomEvents { get; set; } = true;
+        public static bool RandomEvents { get; set; } = false;
 
         //A enum list of all events
         private static readonly Event[] eventEnums = (Event[])Enum.GetValues(typeof(Event));
@@ -36,7 +37,7 @@ namespace GlobalWarmingGame.Interactions.Event
         /// <param name="gameTime"></param>
         public static void UpdateEventTime(GameTime gameTime)
         {
-            if (RandomEvents) 
+            if (RandomEvents)
             {
                 timeToRandomEvent -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -53,10 +54,10 @@ namespace GlobalWarmingGame.Interactions.Event
             }
 
             //Loop through all active events and call their update trigger
-            foreach (IEvent evnt in activeEvents.ToArray()) 
+            foreach (IEvent evnt in activeEvents.ToArray())
             {
                 evnt.UpdateTrigger(gameTime);
-                if (evnt.Complete) 
+                if (evnt.Complete)
                 {
                     activeEvents.Remove(evnt);
                 }
@@ -67,7 +68,7 @@ namespace GlobalWarmingGame.Interactions.Event
         /// Create an event, trigger it and add it to the active events if the event has a duration or condition.
         /// </summary>
         /// <param name="eventEnum"></param>
-        public static void CreateGameEvent(Event eventEnum) 
+        public static void CreateGameEvent(Event eventEnum)
         {
             IEvent randomEvent = EventFactory.CreateEvent(eventEnum);
 
@@ -78,35 +79,82 @@ namespace GlobalWarmingGame.Interactions.Event
             }
         }
 
+        #region Event Utility Methods
         /// <summary>
         /// Utility method for events to call that will give them a random position at a edge
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public static Vector2 RandomEdgeSpawnLocation()
+        public static Vector2 UtilityRandomEdgeSpawnLocation()
         {
             Vector2 location = new Vector2();
             switch (rand.Next(0, 4))
             {
-                //Decreased max y (3200) by two tiles to 3136 so that when entities spawn at the bottom their sprites are fully in the map
+                //Decreased max range (3200) by two tiles to 3136
+                //Increased minimum range (0) by two tiles 64
+                //Assures that textures spawn fully in map
                 case 0:
                     //north edge
-                    location = new Vector2(rand.Next(0, 3136), 0);
+                    location = new Vector2(rand.Next(64, 3136), 64);
                     break;
                 case 1:
                     //west edge
-                    location = new Vector2(0, rand.Next(0, 3136));
+                    location = new Vector2(64, rand.Next(64, 3136));
                     break;
                 case 2:
                     //south edge
-                    location = new Vector2(rand.Next(0, 3136), 3136);
+                    location = new Vector2(rand.Next(64, 3136), 3136);
                     break;
                 case 3:
                     //east edge
-                    location = new Vector2(3168, rand.Next(0, 3136));
+                    location = new Vector2(3136, rand.Next(64, 3136));
                     break;
             }
             return location;
         }
+
+        /// <summary>
+        /// Utility method that calculates the distance between two positions
+        /// </summary>
+        /// <param name="positionA"></param>
+        /// <param name="positionB"></param>
+        /// <returns></returns>
+        public static float UtilityDistanceBetweenPosition(Vector2 positionA, Vector2 positionB)
+        {
+            return (float)Math.Sqrt((positionA.X - positionB.X) * (positionA.X - positionB.X) + (positionA.Y - positionB.Y) * (positionA.Y - positionB.Y));
+        }
+
+        /// <summary>
+        /// Loop through all the colonists to find the one closest to the position given
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static Colonist UtilityFindClosestColonist(Vector2 position)
+        {
+            Colonist closestColonist = null;
+
+            //Set to a large distance that could be between two combatants
+            float closestDistanceBetweenPositions = 3200;
+
+            foreach (Colonist col in GameObjectManager.Filter<Colonist>())
+            {
+                float distanceBetweenPositions = UtilityDistanceBetweenPosition(position, col.Position);
+
+                if (closestColonist == null)
+                {
+                    closestColonist = col;
+                    closestDistanceBetweenPositions = distanceBetweenPositions;
+                }
+                else if (distanceBetweenPositions < closestDistanceBetweenPositions)
+                {
+                    closestColonist = col;
+                    closestDistanceBetweenPositions = distanceBetweenPositions;
+                }
+            }
+
+            //Returns null if no colonists are in range
+            return closestColonist;
+        }
+        #endregion
     }
 }
