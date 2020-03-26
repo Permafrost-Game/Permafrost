@@ -78,20 +78,34 @@ namespace GlobalWarmingGame.Interactions.Enemies
         private void Aggro() //this method makes the enemy attack colonists and roam if there isnt any
         {
             //using globalcombatdetector to determine nearby colonists
-            target = GlobalCombatDetector.ColonistInAggroRange(this);
-            targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
-            
-            if (target == null)
+            Colonist potentialTarget = GlobalCombatDetector.GetClosestColonist(this.Position);
+
+            if (potentialTarget != null)
             {
-                isAnimated = true;
-                TextureGroupIndex = 1;
-                Speed = 0.05f;//decreasing the default speed when roaming (more natural)
-                Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
-            }
-            else
-            {
-                Speed = 0.2f;//return to normal speed (seems like speeding up when moving from roaming to chasing)
-                ChaseColonist(target); //chase the found colonist
+                if (aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
+                {
+                    target = potentialTarget;
+
+                    if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
+                    {
+                        targetInRange = target;
+                    } else
+                    {
+                        targetInRange = null;
+                    }
+
+                    Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
+                    ChaseColonist(target); //chase the found colonist
+
+                }
+                else
+                {
+                    target = null;
+                    isAnimated = true;
+                    TextureGroupIndex = 1;
+                    Speed = 0.05f; //decreasing the default speed when roaming (more natural)
+                    Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
+                }
             }
         }
 

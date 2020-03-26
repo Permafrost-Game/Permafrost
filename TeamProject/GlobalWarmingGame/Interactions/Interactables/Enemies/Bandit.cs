@@ -79,7 +79,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
                 InstructionTypes.Clear();
                 InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:dying));
-                InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));
+                InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));     
             }
         }
 
