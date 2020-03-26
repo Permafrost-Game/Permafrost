@@ -39,6 +39,16 @@ namespace GlobalWarmingGame.ResourceItems
         {
             this.resourceID = (int)resourceID;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is ResourceType type)
+            {
+                return this.resourceID == type.resourceID;
+            }
+
+            return false;
+        }
+        public override int GetHashCode() => this.resourceID.GetHashCode();
 
         public object Reconstruct()
         {

@@ -5,10 +5,13 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Priority_Queue;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
@@ -21,7 +24,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #region Instruction
 
         public List<InstructionType> InstructionTypes { get; }
-        private readonly Queue<Instruction> instructions;
+        private readonly SimplePriorityQueue<Instruction> instructions;
 
         [PFSerializable]
         public readonly Inventory inventory;
@@ -166,7 +169,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
             timeToFreezeCheck = timeUntillNextFreezeCheck;
 
-            instructions = new Queue<Instruction>();
+            instructions = new SimplePriorityQueue<Instruction>();
             InstructionTypes = new List<InstructionType>();
 
         }
@@ -206,22 +209,80 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if (Goals.Count == 0
                 && instructions.Count > 0
-                && completedGoal == (instructions.Peek().PassiveMember.Position)
+                && completedGoal == (instructions.First.PassiveMember.Position)
                     )
             {
-                Instruction currentInstruction = instructions.Peek();
+                Instruction currentInstruction = instructions.First;
                 try
-                {                         
+                {
                         currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
+                    //instruction Failed
                     OnInstructionComplete(e.instruction);
                 }
                 
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requiredResources"></param>
+        /// <returns></returns>
+        private bool CheckRequireResources(Instruction instruction)
+        {
+            List<Instruction> instructionsToEnqueue = new List<Instruction>();
+
+            List<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
+            Queue<ResourceItem> requiredItems = new Queue<ResourceItem>(instruction.Type.RequiredResources.Select(i => i.Clone()));
+
+            
+            while(requiredItems.Count > 0)
+            {
+                ResourceItem requiredItem = requiredItems.Dequeue();
+                if (inventory.ContainsType(requiredItem.ResourceType.ResourceID))
+                {
+                    requiredItem.Weight -= inventory.Resources[requiredItem.ResourceType.ResourceID].Weight;
+                }
+                foreach (StorageUnit s in storageUnits)
+                {
+                    if (s.ResourceItem != null
+                     && s.ResourceItem.ResourceType.Equals(requiredItem.ResourceType))
+                    {
+                        int amountToTake = Math.Min(requiredItem.Weight, s.ResourceItem.Weight);
+                        if(amountToTake > 0)
+                        {
+                            instructionsToEnqueue.Add(new Instruction(
+                                                            type: s.TakeItemInstruction(amountToTake),
+                                                            priorityOverride: instruction.Priority - 1,
+                                                            activeMember: this,
+                                                            passiveMember: s
+                                                            ));
+                            requiredItem.Weight -= amountToTake;
+                        }
+
+                        if (requiredItem.Weight <= 0)
+                        {
+                            break;
+                        }
+
+                    }
+                }
+                if(requiredItem.Weight > 0)
+                {
+                    return false;
+                }
+                
+            }
+            
+            foreach(Instruction i in instructionsToEnqueue)
+            {
+                AddInstruction(i);
+            }
+            return true;
+        }
 
         private void Move(GameTime gameTime)
         {
@@ -241,6 +302,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 foreach (ResourceItem item in inventory.Resources.Values) {
                     droppedItems.Add(item);
                 }
+
                 GameObjectManager.Add(new Loot(droppedItems, this.Position));
                 GameObjectManager.Remove(this);
                 return;
@@ -272,12 +334,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                instructions.Peek().Update(gameTime);
+                instructions.First.Update(gameTime);
                 if (instructions.Count > 0)
                 {
                     if (Goals.Count == 0)
                     {
-                        Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                        Instruction i1 = instructions.First;
+                        if ((!inventory.ContainsAll(i1.Type.RequiredResources)
+                            && CheckRequireResources(i1))
+                            | inventory.ContainsAll(instructions.First.Type.RequiredResources)) //instructions.First may have been changed by the previous line.
+                        {
+                            Goals.Enqueue(instructions.First.PassiveMember.Position);
+                        }
+                        else
+                        {
+                            //No valid resources
+                            GameUIController.ResourceNotification(instructions.Dequeue());
+                            
+                            
+                        }
+                        
                     }
                 }
             }
@@ -414,18 +490,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
         #endregion
 
-        public void AddInstruction(Instruction instruction, int priority = 0)
+        public void AddInstruction(Instruction instruction)
         {
             //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
-            instructions.Enqueue(instruction);
+            instructions.Enqueue(instruction, instruction.Priority);
 
         }
 
         private void OnInstructionStart(Instruction instruction)
         {
-            if (instructions.Peek() == instruction)
+            if (instructions.First == instruction)
             {
                 if (instruction.Type.TimeCost > 0)
                 {
@@ -456,24 +532,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+
         private void OnInstructionComplete(Instruction instruction)
         {
-            if (instructions.Count > 0)
+            if (instructions.First == instruction)
             {
-                if (instructions.Peek() == instruction)
+                instructions.Dequeue();
+                if(instruction.Type.ID != "takeItem")
                 {
-                    instructions.Dequeue();
                     CheckInventoryDump();
-                    if (!InCombat)
-                    {
-                        TextureGroupIndex = 0;
-
-                    }
                 }
-                else
+                
+                if (!InCombat)
                 {
-                    throw new Exception("Async instruction completed");
+                    TextureGroupIndex = 0;
+                    
                 }
+            }
+            else
+            {
+                throw new Exception("Async instruction completed");
             }
         }
 
@@ -485,7 +563,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Clear();
                 Goals.Clear();
                 this.IsAttacking = true;
-                playAttackingSound();
+                PlayAttackingSound();
                 enemy.Health -= this.AttackPower;
                 if (enemy.Health<=0)
                 {
@@ -498,7 +576,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             
         }
 
-        private void playAttackingSound()
+        private void PlayAttackingSound()
         {
             if (ranged)
             {

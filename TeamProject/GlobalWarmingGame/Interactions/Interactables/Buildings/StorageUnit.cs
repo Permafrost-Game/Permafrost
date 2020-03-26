@@ -30,6 +30,25 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             ResetState();
         }
 
+        public InstructionType TakeItemInstruction(int amount)
+        {
+            return new InstructionType(
+                id: "takeItem",
+                name: $"Take {amount}{ResourceItem}",
+                onComplete: (Instruction i) => TakeItem(i.ActiveMember.Inventory, amount)
+                );
+        }
+            
+
+        private void TakeItem(Inventory destination, int amount)
+        {
+            if (ResourceItem?.Weight >= amount
+                && destination.AddItem(new ResourceItem(ResourceItem.ResourceType, amount)))
+            {
+                ResourceItem.Weight -= amount;
+            }
+        }
+
         private List<InstructionType> CreateSetResourceInstructionTypes()
         {
             return Enum.GetValues(typeof(Resource)).Cast<Resource>()
@@ -56,7 +75,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                             id: "storeItems",
                             name: $"Store {ResourceItem.ResourceType.displayName}",
                             description: "",
-                            requiredResources: new List<ResourceItem> { new ResourceItem(ResourceItem.ResourceType, 1) },
+                            //requiredResources: new List<ResourceItem> { new ResourceItem(ResourceItem.ResourceType, 1) },
                             //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(ResourceItem.ResourceType.ResourceID),
                             onStart: StoreItem
                             );

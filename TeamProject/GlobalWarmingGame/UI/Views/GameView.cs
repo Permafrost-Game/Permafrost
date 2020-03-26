@@ -203,7 +203,7 @@ namespace GlobalWarmingGame.UI.Views
         {
             string notificatonText = text;
 
-            Panel Notification = new Panel(new Vector2(225f, 100f), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100f))
+            Panel Notification = new Panel(new Vector2(325f, 100f), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100f))
             {
                 Padding = Vector2.Zero,
                 Visible = false

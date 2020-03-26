@@ -38,7 +38,7 @@ namespace GlobalWarmingGame.Action
             this.Name = name;
             this.Description = description;
             this.Priority = priority;
-            this.RequiredResources = requiredResources;
+            this.RequiredResources = requiredResources?? new List<ResourceItem>();
             this.TimeCost = timeCost;
             this.onStart = onStart;
             this.onComplete = onComplete;

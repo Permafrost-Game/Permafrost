@@ -229,23 +229,7 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
         {
-            //Check if the instruction requires resources or craftables
-            if (instruction.Type.RequiredResources != null)
-            {
-                //Check if the colonist has the required resources in their inventory
-                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredResources))
-                {
-                    instruction.ActiveMember.AddInstruction(instruction, 0);
-                }
-                else 
-                {
-                    view.Notification("Missing items:", instruction.Type.RequiredResources);
-                }
-            }
-            else
-            {
-                instruction.ActiveMember.AddInstruction(instruction, 0);
-            }
+            instruction.ActiveMember.AddInstruction(instruction);
         }
 
         /// <summary>
@@ -314,6 +298,11 @@ namespace GlobalWarmingGame.UI.Controllers
             //Spawnables drop down
             view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
+        }
+
+        internal static void ResourceNotification(Instruction instruction)
+        {
+            view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
         }
 
 
