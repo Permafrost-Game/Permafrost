@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,33 +12,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         public static List<Colonist> colonists=GameObjectManager.Filter<Colonist>().ToList();
         public static List<Enemy> enemies = GameObjectManager.Filter<Enemy>().ToList();
-
         public static Enemy FindColonistThreat (Colonist col)
         {
             foreach (Enemy enemy in enemies) {
-                if (col.AttackRange>DistanceBetweenCombatants(enemy.Position,col.Position))
+
+                if (col.AttackRange>Vector2.Distance(enemy.Position,col.Position) && enemy.notDefeated)
                 {
                     return enemy;
-                }    
-            } 
-            return null;
-        }
-        public static Colonist FindEnemyThreat(Enemy enemy)
-        {
-            foreach (Colonist col in colonists)
-            {
-                if (enemy.AttackRange > DistanceBetweenCombatants(enemy.Position, col.Position))
-                {
-                    return col;
-                }          
+                }
             }
             return null;
         }
 
-        private static double DistanceBetweenCombatants(Vector2 myPos, Vector2 threatPos)
-        {
-            return Math.Sqrt((threatPos.X - myPos.X) * (threatPos.X - myPos.X) + (threatPos.Y - myPos.Y) * (threatPos.Y - myPos.Y));
-        }
 
         internal static void UpdateParticipants()
         {
@@ -70,41 +56,20 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
-        /// <summary>
-        /// Finds the closest colonist to the bear 
-        /// </summary>
-        /// <param name="enemy"></param>
-        /// <returns>Closest colonist in range</returns>
-        public static Colonist ColonistInAggroRange(Enemy enemy)
+        public static Colonist GetClosestColonist(Vector2 position)
         {
-            Colonist closestColonist = null; 
-
-            //Set to a large distance that could be between two combatants
-            double closestDistanceBetweenCombatants = 3200;
+            Colonist closestColonist = null;
+            double shortestDistance = double.MaxValue;
 
             foreach (Colonist col in colonists)
             {
-                double distanceBetweenCombatants = DistanceBetweenCombatants(enemy.Position, col.Position);
+                double distance = Vector2.Distance(position, col.Position);
 
-                //If colonist is in aggro range
-                if (enemy.AggroRange > distanceBetweenCombatants)
-                {
-                    //First colonist in aggro range 
-                    if (closestColonist == null)
-                    {
-                        closestColonist = col;
-                        closestDistanceBetweenCombatants = distanceBetweenCombatants;
-                    }
-                    //Closest colonist in aggro range so far compared with next colonist in aggro range
-                    else if (distanceBetweenCombatants < closestDistanceBetweenCombatants)
-                    {
-                        closestColonist = col;
-                        closestDistanceBetweenCombatants = distanceBetweenCombatants;
-                    }
+                if (shortestDistance > distance) {
+                    shortestDistance = distance;
+                    closestColonist = col;
                 }
             }
-
-            //Returns null if no colonists are in range
             return closestColonist;
         }
     }

@@ -73,7 +73,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
         private bool _ranged = false;
-        public bool ranged
+        public bool Ranged
         {
             get { return _ranged; }
             set
@@ -102,7 +102,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 _isAttacking = value;
                 isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-                if (ranged)
+                if (Ranged)
                 {
                     TextureGroupIndex = _isAttacking ? 3 : 0;
                 }
@@ -127,6 +127,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
         private bool deathSoundPlayed;
+        private bool AttackTrigger=false;
+        private Enemy target;
+
         public bool HasRangedItem { get; set; } = false;
 
 
@@ -179,10 +182,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             InventoryChange.Invoke(this, resourceItem);
             if (inventory.ContainsType(Resource.Shotgun))
             {
-                ranged = true;
+                Ranged = true;
             }
             else {
-                ranged= false;
+                Ranged= false;
             }
         }
 
@@ -312,7 +315,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Move(gameTime);
             base.Update(gameTime);
             enemy = GlobalCombatDetector.FindColonistThreat(this);
-
+            if (AttackTrigger)
+            {
+                Hunt(enemy);
+            }
             Vector2 delta = lastPosition - this.Position;
 
 
@@ -337,7 +343,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.First.Update(gameTime);
                 if (instructions.Count > 0)
                 {
-                    if (Goals.Count == 0)
+                    if (Goals.Count == 0 )
                     {
                         Instruction i1 = instructions.First;
                         if ((!inventory.ContainsAll(i1.Type.RequiredResources)
@@ -358,7 +364,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
             }
 
-            if (enemy != null)
+            if (enemy != null && enemy.notDefeated)
             {
                 combatModeOn = true;
                 SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
@@ -495,7 +501,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
             //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
-            instructions.Enqueue(instruction, instruction.Priority);
+            if (instruction.Type.ID == "Attack")
+            {
+                AttackTrigger = true;
+                target = (Enemy)instruction.PassiveMember;
+            }
+            else
+            {
+                instructions.Enqueue(instruction, instruction.Priority);
+            }
 
         }
 
@@ -581,7 +595,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void PlayAttackingSound()
         {
-            if (ranged)
+            if (Ranged)
             {
                 SoundFactory.PlaySoundEffect(Sound.Shotgun);
             }
@@ -611,6 +625,20 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             return false;
 
+
+        }
+
+        private void Hunt(Enemy enemy) {
+            Goals.Clear();
+            if (enemy == null)
+            {
+                Goals.Enqueue(target.Position);
+            }
+            else {
+                AttackTrigger = false;
+                target = null;
+            }
+            
 
         }
 

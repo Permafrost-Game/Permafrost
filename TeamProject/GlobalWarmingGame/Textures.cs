@@ -49,7 +49,8 @@ namespace GlobalWarmingGame
             /* todo */
             MapIcon.Add(TextureIconTypes.coal, null);
             MapIcon.Add(TextureIconTypes.leather, null);
-            MapIcon.Add(TextureIconTypes.machineParts, null);
+            MapIcon.Add(TextureIconTypes.robotCore, contentManager.Load<Texture2D>(@"textures/icons/robotCore"));
+            MapIcon.Add(TextureIconTypes.machineParts, contentManager.Load<Texture2D>(@"textures/icons/machineparts"));
 
             MapIcon.Add(TextureIconTypes.axe, contentManager.Load<Texture2D>(@"textures/icons/axe"));
             MapIcon.Add(TextureIconTypes.hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
@@ -223,7 +224,8 @@ namespace GlobalWarmingGame
         bow,
         cloth,
         coat,
-        Shotgun
+        Shotgun,
+        robotCore
     }
 
     public enum TextureSetTypes
