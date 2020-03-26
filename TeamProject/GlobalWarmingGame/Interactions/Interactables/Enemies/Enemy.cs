@@ -78,9 +78,17 @@ namespace GlobalWarmingGame.Interactions.Enemies
         private void Aggro() //this method makes the enemy attack colonists and roam if there isnt any
         {
             //using globalcombatdetector to determine nearby colonists
-            target = GlobalCombatDetector.ColonistInAggroRange(this);
-            targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
-            
+            Colonist potentialTarget= GlobalCombatDetector.ColonistInAggroRange(this);
+            if (potentialTarget != null) {
+                if (aggroRange > GlobalCombatDetector.DistanceBetweenCombatants(this.Position, potentialTarget.Position))
+                {
+                    target = potentialTarget;
+                    if (this.AttackRange > GlobalCombatDetector.DistanceBetweenCombatants(this.Position, target.Position))
+                    {
+                        targetInRange = target;
+                    }
+                }
+            }
             if (target == null)
             {
                 isAnimated = true;

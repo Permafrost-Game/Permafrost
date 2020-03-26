@@ -24,7 +24,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             } 
             return null;
         }
-        public static Colonist FindEnemyThreat(Enemy enemy)
+        /*public static Colonist FindEnemyThreat(Enemy enemy)
         {
             foreach (Colonist col in colonists)
             {
@@ -34,8 +34,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }          
             }
             return null;
-        }
-        private static double DistanceBetweenCombatants(Vector2 myPos, Vector2 threatPos)
+        }*/
+        public static double DistanceBetweenCombatants(Vector2 myPos, Vector2 threatPos)
         {
             return Math.Sqrt((threatPos.X - myPos.X) * (threatPos.X - myPos.X) + (threatPos.Y - myPos.Y) * (threatPos.Y - myPos.Y));
         }
@@ -73,14 +73,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public static Colonist ColonistInAggroRange(Enemy enemy)
         {
+            Colonist closestColonist=null;
+            double shortestDistance=Double.MaxValue;
+            double distance;
             foreach (Colonist col in colonists)
             {
-                if (enemy.aggroRange > DistanceBetweenCombatants(enemy.Position, col.Position))
-                {           
-                    return col;
-                }
+                distance = DistanceBetweenCombatants(enemy.Position, col.Position);
+                
+                    if (shortestDistance > distance) { 
+                        shortestDistance = distance;
+                        closestColonist = col;
+                    }
             }
-            return null;
+            return closestColonist;
         }
     }
 }
