@@ -231,23 +231,7 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
         {
-            //Check if the instruction requires resources or craftables
-            if (instruction.Type.RequiredResources != null)
-            {
-                //Check if the colonist has the required resources in their inventory
-                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredResources))
-                {
-                    instruction.ActiveMember.AddInstruction(instruction, 0);
-                }
-                else 
-                {
-                    view.Notification("Missing items:", instruction.Type.RequiredResources);
-                }
-            }
-            else
-            {
-                instruction.ActiveMember.AddInstruction(instruction, 0);
-            }
+            instruction.ActiveMember.AddInstruction(instruction);
         }
 
         /// <summary>
@@ -322,6 +306,10 @@ namespace GlobalWarmingGame.UI.Controllers
                 .Select(e => new ButtonHandler<Event>(e, SelectEventCallback)).ToList());
 
         }
+        internal static void ResourceNotification(Instruction instruction)
+        {
+            view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
+        }
 
         /// <summary>
         /// Selects an Interactable for construction
@@ -387,15 +375,41 @@ namespace GlobalWarmingGame.UI.Controllers
             switch(Game1.GameState)
             {
                 case GameState.Playing:
-                    if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
-                        OnClick();
+                case GameState.Paused:
+                    Vector2 screenHover = currentMouseState.Position.ToVector2();
+                    Vector2 gameHover = Vector2.Transform(screenHover, Camera.InverseTransform);
+                    if (previousMouseState.LeftButton == ButtonState.Released
+                        && currentMouseState.LeftButton == ButtonState.Pressed
+                        && Game1.GameState == GameState.Playing) 
+                        OnClick(gameHover);
+                    UpdateTemperature(gameHover, screenHover);
                     break;
+                
             }
             
 
             previousMouseState = currentMouseState;
 
         }
+
+        private static void UpdateTemperature(Vector2 gameHover, Vector2 screenHover)
+        {
+            Tile t = GameObjectManager.ZoneMap.GetTileAtPosition(gameHover);
+            string temp = string.Empty;
+
+            if (t != null && !view.Hovering)
+            {
+                int temperature = (int)Math.Round(t.Temperature.Value);
+                if (temperature == 0)
+                    temp = "±";
+                 else if (temperature > 0)
+                    temp = "+";
+
+                temp += $"{temperature}°C";
+            }
+            view.UpdateTemp(temp, screenHover);
+        }
+
         /// <summary>
         /// Draws UI, calls <see cref="View.Draw"/>
         /// </summary>
@@ -408,11 +422,10 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <summary>
         /// Called on a mouse click
         /// </summary>
-        private static void OnClick()
+        private static void OnClick(Vector2 positionClicked)
         {
             if (!view.Hovering)
             {
-                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
                 if (objectClicked == null)
