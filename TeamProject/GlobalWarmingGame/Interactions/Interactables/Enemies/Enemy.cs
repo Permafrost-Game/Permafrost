@@ -84,10 +84,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 if (aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
                 {
-                    //if(target != potentialTarget)
-                    {
-                        target = potentialTarget;
-                    }
+                    target = potentialTarget;
 
                     if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
                     {
@@ -97,15 +94,16 @@ namespace GlobalWarmingGame.Interactions.Enemies
                         targetInRange = null;
                     }
 
-                    Speed = 0.2f;//return to normal speed (seems like speeding up when moving from roaming to chasing)
+                    Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
                     ChaseColonist(target); //chase the found colonist
 
                 }
                 else
                 {
+                    target = null;
                     isAnimated = true;
                     TextureGroupIndex = 1;
-                    Speed = 0.05f;//decreasing the default speed when roaming (more natural)
+                    Speed = 0.05f; //decreasing the default speed when roaming (more natural)
                     Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
                 }
             }
