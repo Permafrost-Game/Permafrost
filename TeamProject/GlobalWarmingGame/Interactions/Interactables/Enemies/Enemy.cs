@@ -170,10 +170,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
             depth = (Position.X + (Position.Y / 2)) / 48000f; //depth
             
             base.Update(gameTime); //update the game
-                if (this.Health <= 0) {
-                    this.SetEnemyDead();
-                    return;
-                }
+            if (this.Health <= 0) {
+                this.SetEnemyDead();
+                return;
+            }
             Aggro(); // enemy is agressive all the time
 
             Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving

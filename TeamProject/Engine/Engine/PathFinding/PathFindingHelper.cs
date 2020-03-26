@@ -24,7 +24,7 @@ namespace Engine.PathFinding
         ///     <c>this.position += CalculateNextMove(gameTime, this);</c>
         /// </example>
         public static Vector2 CalculateNextMove(GameTime gameTime, IPathFindable pathFindable)
-        {
+         {
             if (pathFindable.Goals.Count != 0)
             {
                 if (pathFindable.Path.Count != 0)

@@ -23,7 +23,7 @@ namespace GlobalWarmingGame.Action
 
         public bool IsValid
         {
-            get { return Type.checkValidity != null ? Type.checkValidity(this) : true; }
+            get { return (Type.checkValidity != null ? Type.checkValidity(this) : true) && ActiveMember.Inventory.ContainsAll(Type.RequiredResources); }
         }
 
         private float timeSpent;
@@ -77,6 +77,7 @@ namespace GlobalWarmingGame.Action
 
             }
         }
+
 
         private void Complete()
         {
