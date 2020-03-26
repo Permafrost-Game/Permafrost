@@ -372,15 +372,41 @@ namespace GlobalWarmingGame.UI.Controllers
             switch(Game1.GameState)
             {
                 case GameState.Playing:
-                    if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
-                        OnClick();
+                case GameState.Paused:
+                    Vector2 screenHover = currentMouseState.Position.ToVector2();
+                    Vector2 gameHover = Vector2.Transform(screenHover, Camera.InverseTransform);
+                    if (previousMouseState.LeftButton == ButtonState.Released
+                        && currentMouseState.LeftButton == ButtonState.Pressed
+                        && Game1.GameState == GameState.Playing) 
+                        OnClick(gameHover);
+                    UpdateTemperature(gameHover, screenHover);
                     break;
+                
             }
             
 
             previousMouseState = currentMouseState;
 
         }
+
+        private static void UpdateTemperature(Vector2 gameHover, Vector2 screenHover)
+        {
+            Tile t = GameObjectManager.ZoneMap.GetTileAtPosition(gameHover);
+            string temp = string.Empty;
+
+            if (t != null && !view.Hovering)
+            {
+                int temperature = (int)Math.Round(t.Temperature.Value);
+                if (temperature == 0)
+                    temp = "±";
+                 else if (temperature > 0)
+                    temp = "+";
+
+                temp += $"{temperature}°C";
+            }
+            view.UpdateTemp(temp, screenHover);
+        }
+
         /// <summary>
         /// Draws UI, calls <see cref="View.Draw"/>
         /// </summary>
@@ -393,11 +419,10 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <summary>
         /// Called on a mouse click
         /// </summary>
-        private static void OnClick()
+        private static void OnClick(Vector2 positionClicked)
         {
             if (!view.Hovering)
             {
-                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
                 if (objectClicked == null)
