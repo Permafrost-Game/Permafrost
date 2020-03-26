@@ -10,6 +10,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     public class Robot : Enemy
     {
         
+
         public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot",5000, 70, 0, 500, position, textureSet)
         {
         
@@ -26,10 +27,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             base.Update(gameTime);
             
-            if (this.Health <= 0)
-            {
-                GameObjectManager.Remove(this);
-            }
+           
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -64,8 +62,17 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         internal override List<ResourceItem> Loot()
         {
             List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Pickaxe, 2));
+            loot.Add(new ResourceItem(Resource.MachineParts, 10));
             return loot;
+        }
+
+        public override void SetEnemyDead()
+        {
+            //remove the enemy from the game 
+            this.DeathSound();
+            notDefeated = false;
+            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+            GameObjectManager.Remove(this);
         }
     }
 }
