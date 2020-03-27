@@ -19,7 +19,7 @@ namespace GlobalWarmingGame.Interactions.Event
         public static readonly Random rand = new Random(GameObjectManager.seed);
 
         //Turn random events on and off
-        public static bool RandomEvents { get; set; } = false;
+        public static bool RandomEvents { get; set; } = true;
 
         //A enum list of all events
         private static readonly Event[] eventEnums = (Event[])Enum.GetValues(typeof(Event));
@@ -111,49 +111,6 @@ namespace GlobalWarmingGame.Interactions.Event
                     break;
             }
             return location;
-        }
-
-        /// <summary>
-        /// Utility method that calculates the distance between two positions
-        /// </summary>
-        /// <param name="positionA"></param>
-        /// <param name="positionB"></param>
-        /// <returns></returns>
-        public static float UtilityDistanceBetweenPosition(Vector2 positionA, Vector2 positionB)
-        {
-            return (float)Math.Sqrt((positionA.X - positionB.X) * (positionA.X - positionB.X) + (positionA.Y - positionB.Y) * (positionA.Y - positionB.Y));
-        }
-
-        /// <summary>
-        /// Loop through all the colonists to find the one closest to the position given
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public static Colonist UtilityFindClosestColonist(Vector2 position)
-        {
-            Colonist closestColonist = null;
-
-            //Set to a large distance that could be between two combatants
-            float closestDistanceBetweenPositions = 3200;
-
-            foreach (Colonist col in GameObjectManager.Filter<Colonist>())
-            {
-                float distanceBetweenPositions = UtilityDistanceBetweenPosition(position, col.Position);
-
-                if (closestColonist == null)
-                {
-                    closestColonist = col;
-                    closestDistanceBetweenPositions = distanceBetweenPositions;
-                }
-                else if (distanceBetweenPositions < closestDistanceBetweenPositions)
-                {
-                    closestColonist = col;
-                    closestDistanceBetweenPositions = distanceBetweenPositions;
-                }
-            }
-
-            //Returns null if no colonists are in range
-            return closestColonist;
         }
         #endregion
     }

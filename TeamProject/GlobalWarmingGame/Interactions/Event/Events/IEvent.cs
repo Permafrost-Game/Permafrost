@@ -22,7 +22,8 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         void Trigger();
 
         /// <summary>
-        /// Update elementss of a ongoing event
+        /// Update elements of a ongoing event.
+        /// Becareful as it updates on every frame.
         /// </summary>
         void UpdateTrigger(GameTime gameTime);
     }

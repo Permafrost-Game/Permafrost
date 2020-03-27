@@ -17,9 +17,9 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// </summary>
     public class EventRabbit : IEvent
     {
-        private readonly TileMap eventTileMap;
-
         public bool Complete { get; private set; } = false;
+
+        private readonly TileMap eventTileMap;
 
         public EventRabbit(TileMap tileMap)
         {

@@ -40,7 +40,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         internal bool notDefeated=true;
 
         // variable for random movement of enemies
-        private readonly RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
+        public RandomAI AI { get; set; } = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
         public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
@@ -103,7 +103,10 @@ namespace GlobalWarmingGame.Interactions.Enemies
                     isAnimated = true;
                     TextureGroupIndex = 1;
                     Speed = 0.05f; //decreasing the default speed when roaming (more natural)
-                    Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
+                    if (AI != null) 
+                    {
+                        Goals.Enqueue(this.Position + AI.RandomTranslation()); //make it go randomly around
+                    }
                 }
             }
         }

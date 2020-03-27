@@ -17,6 +17,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     public class EventColonistJoin : IEvent
     {
         public bool Complete { get; private set; } = false;
+
         private readonly TileMap eventTileMap;
 
         public EventColonistJoin(TileMap tileMap)

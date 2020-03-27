@@ -59,7 +59,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                     GameObjectManager.Add(eventMerchant);
 
                     //Move merchant to the closest colonist
-                    eventMerchant.Goals.Enqueue(EventManager.UtilityFindClosestColonist(eventMerchant.Position).Position);
+                    eventMerchant.Goals.Enqueue(GlobalCombatDetector.GetClosestColonist(eventMerchant.Position).Position);
                 }
             }
             else 
@@ -88,7 +88,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             if (merchantLeaving && timeToRemoveMerchant < 0)
             {
                 //If merchant is leaving and the merchant is close to their spawn (within two tiles)
-                if (EventManager.UtilityDistanceBetweenPosition(eventMerchant.Position, merchantSpawnLocation) < 64f)
+                if (Vector2.Distance(eventMerchant.Position, merchantSpawnLocation) < 64f)
                 {
                     //Remove merchant and set this event to complete
                     GameObjectManager.Remove(eventMerchant);
