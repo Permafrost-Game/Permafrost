@@ -35,7 +35,6 @@ namespace Engine
         public Camera(Viewport viewport, Vector2 clampSize, Vector2 clampPosition)
         {
             this.viewport = viewport;
-            this.Position = new Vector2(0,0);
             this.scroll = 1;
             this.ClampSize = clampSize;
             this.ClampPosition = clampPosition;
