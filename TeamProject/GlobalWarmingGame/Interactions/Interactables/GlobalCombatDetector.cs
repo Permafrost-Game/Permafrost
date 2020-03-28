@@ -23,6 +23,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public static void Initalise()
         {
             colonists = GameObjectManager.Filter<Colonist>().ToList();
+            enemies = GameObjectManager.Filter<Enemy>().ToList();
         }
 
         public static Enemy FindColonistThreat (Colonist col)
@@ -37,12 +38,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             return null;
         }
 
-
-        internal static void UpdateParticipants()
-        {
-            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
-            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
-        }
 
         private static void ObjectRemovedEventHandler(object sender, GameObject GameObject)
         {
