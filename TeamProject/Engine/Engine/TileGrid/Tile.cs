@@ -51,13 +51,11 @@ namespace Engine.TileGrid
             }
             else
             {
-                int blue = 170 -5 - ((int)Temperature.Value *2);
-                int red = 170 -5 + ((int)Temperature.Value *2);
                 spriteBatch.Draw(
                      texture: texture,
                      destinationRectangle: destinationRectangle,
                      sourceRectangle: sourceRectangle,
-                     color: new Color(red,0,blue)
+                     color: new Color(170 - 5 + ((int)Temperature.Value * 2) /* red */, 0 /* green */, 170 - 5 - ((int)Temperature.Value * 2) /*blue*/)
                      ) ;
             }
         }
