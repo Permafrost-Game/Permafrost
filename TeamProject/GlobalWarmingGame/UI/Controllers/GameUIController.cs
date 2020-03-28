@@ -192,7 +192,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
         private static ButtonHandler<Instruction> CreateTravelOption(GameObject objectClicked, Vector2 translation)
         {
-            List<Colonist> colonists = GameObjectManager.Filter<Colonist>();
+            List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
             HashSet<Colonist> readyToTravel = new HashSet<Colonist>();
             return new ButtonHandler<Instruction> (
                     tag: new Instruction(type: TravelInstruction(null), passiveMember: objectClicked),
@@ -323,8 +323,11 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="interactable">the <see cref="Interactable"/> that maps to the <see cref="IInteractable"/> to be added</param>
         private static void SpawnInteractableCallback(Interactable interactable)
         {
-            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size - Camera.Position;
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, GameObjectManager.ZoneMap.GetTileAtPosition(position).Position));
+            Tile destination = GameObjectManager.ZoneMap.GetTileAtPosition(Camera.Position);
+            if(destination != null)
+            {
+                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, destination.Position));
+            }
         }
 
         /// <summary>
@@ -373,6 +376,11 @@ namespace GlobalWarmingGame.UI.Controllers
                 
             }
             
+            foreach(InventoryTransactionMessage i in inventoryTransactionMessages)
+            {
+                if(i.IsActive)
+                    i.Update(gameTime);
+            }
 
             previousMouseState = currentMouseState;
 
@@ -475,11 +483,9 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <summary>A list of all inventories that have a UI menu</summary>
         private static readonly List<Inventory> openInventories;
 
-        /// <summary>
-        /// Converts <paramref name="inventory"/> into a <c>IEnumberable{ItemElemnt}</c><br/>
-        /// and calls <see cref="View.UpdateInventoryMenu"/>
-        /// </summary>
-        /// <param name="inventory">The <see cref="Inventory"/> to be updated</param>
+        private static readonly List<InventoryTransactionMessage> inventoryTransactionMessages = new List<InventoryTransactionMessage>();
+
+        /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> is to be updated</param>
         private static void UpdateInventoryMenu(IStorage storage)
         {
             Inventory inventory = storage.Inventory;
@@ -518,15 +524,16 @@ namespace GlobalWarmingGame.UI.Controllers
             
         }
 
+
         /// <summary>
         /// Callback for <see cref="Inventory.InventoryChange"/> Event
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="item"></param>
         private static void InventoryChangeCallBack(object sender, ResourceItem item)
         {
             string op = item.Weight >= 0 ? "+" : "";
-            GameObjectManager.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
+            inventoryTransactionMessages.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
             UpdateInventoryMenu((IStorage)sender);
         }
 

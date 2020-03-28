@@ -22,9 +22,11 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         //declaring stats variables
         public float AttackPower { get; set; }
+
         public float Health { get; set; }
         public float AttackRange { get; set; }
         private double AttackSpeed { get; set; }
+
         public float Speed { get; set; }
         public readonly double aggroRange = 200; // could be moved down(for now all enemies aggro at the same distance)
 
@@ -53,7 +55,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         )
         {
 
-            InstructionTypes.Add(new InstructionType("Attack", $"Attack {name}", onStart: Attack));
+            InstructionTypes.Add(new InstructionType("Attack", $"Attack {name}"));
 
             //generic stats:
             this.AttackRange = aRange;
@@ -62,14 +64,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
             this.AttackSpeed = aSpeed;
             Speed = 0.2f;
         }
-
-       
-
-        private void Attack(Instruction instruction)
-        {
-            
-        }
-
 
         public abstract void SetEnemyDead();
 
@@ -80,42 +74,39 @@ namespace GlobalWarmingGame.Interactions.Enemies
             //using globalcombatdetector to determine nearby colonists
             Colonist potentialTarget = GlobalCombatDetector.GetClosestColonist(this.Position);
 
-            if (potentialTarget != null)
+            if (potentialTarget != null
+                && aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
             {
-                if (aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
+                target = potentialTarget;
+
+                if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
                 {
-                    target = potentialTarget;
-
-                    if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
-                    {
-                        targetInRange = target;
-                    } else
-                    {
-                        targetInRange = null;
-                    }
-
-                    Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
-                    ChaseColonist(target); //chase the found colonist
-
-                }
-                else
+                    targetInRange = target;
+                } else
                 {
-                    target = null;
-                    isAnimated = true;
-                    TextureGroupIndex = 1;
-                    Speed = 0.05f; //decreasing the default speed when roaming (more natural)
-                    Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
+                    targetInRange = null;
                 }
+
+                Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
+                ChaseColonist(target); //chase the found colonist
+
+            }
+            else
+            {
+                target = null;
+                isAnimated = true;
+                TextureGroupIndex = 1;
+                Speed = 0.05f; //decreasing the default speed when roaming (more natural)
+                Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
             }
         }
-
+        
         public abstract void AnimateAttack(); //absract method for animating attacks allows more customisation
-       
-        //getters and setters
-        public double GetAttackSpeed() => AttackSpeed;
-        public void SetAttacking(bool b) {
+        public void SetAttacking(bool b)
+        {
             attacking = b;
-            if( b == false){
+            if (b == false)
+            {
                 TextureGroupIndex = 1; //sets textures to normal when attacking is turned off
             }
         }
@@ -150,7 +141,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 this.SetAttacking(false);
             }
-            if (timeToAttack >= this.GetAttackSpeed())
+            if (timeToAttack >= AttackSpeed)
             {
                 timeToAttack = 0; //reset the counter
                 return true; //attack speed is less or equal to the time passed since last attack, allow to hit again
@@ -165,18 +156,19 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         public override void Update(GameTime gameTime){
-            Vector2 position1 = this.Position; //getting the position before updating
+            Vector2 lastPosition = this.Position; //getting the position before updating
             this.Position += PathFindingHelper.CalculateNextMove(gameTime, this); //calculating next move
-            depth = (Position.X + (Position.Y / 2)) / 48000f; //depth
-            
+            UpdateDepth(0.25f);
             base.Update(gameTime); //update the game
+
             if (this.Health <= 0) {
                 this.SetEnemyDead();
                 return;
             }
+
             Aggro(); // enemy is agressive all the time
 
-            Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving
+            Vector2 delta = lastPosition - this.Position; //getting in which direction the enemy is moving
 
             if (isInCombat)
             {
@@ -218,7 +210,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 PerformCombat(gameTime,targetInRange); // fight if theres anyone to fight      
             }
-            else if(target!=null && targetInRange==null)
+            else if(target!=null)
             {
                 SetInCombat(false);
                 TextureGroupIndex = 1;
@@ -231,24 +223,16 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             this.SetInCombat(false);
 
-            if (targetInRange != null) //double checking if the target didnt disappear 
-            {
-
-                if ( targetInRange.Health > 0 && this.Health > 0)
-                {   //set flags for animation
-                    targetInRange.InCombat = true; 
-                    this.SetInCombat(true);
-                    EnemyAttack(gameTime); //actually try attacking
-                }
-                else
-                {
-                    this.SetInCombat(false); //suddenly there is no enemy anymore then set out of combat
-                }
+            if ( targetInRange.Health > 0 && this.Health > 0)
+            {   //set flags for animation
+                targetInRange.InCombat = true; 
+                this.SetInCombat(true);
+                EnemyAttack(gameTime); //actually try attacking
             }
 
         }
 
-        internal abstract void AttackingSound(); //woah sounds so cool
+        internal abstract void AttackingSound();
         internal abstract void DeathSound();
         internal abstract List<ResourceItem> Loot();
 
