@@ -104,6 +104,7 @@ namespace GlobalWarmingGame.Action
                     {
                         Complete();
                     }
+                    else throw new InvalidInstruction(this, "Instruction is no longer valid");
                 }
             }
         }

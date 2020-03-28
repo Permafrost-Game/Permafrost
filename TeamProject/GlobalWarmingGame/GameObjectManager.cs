@@ -250,11 +250,15 @@ namespace GlobalWarmingGame
                     );
                     
                 }
-
                 Camera.Position = colonist.Position;
             }
 
             SetZone(zonePos + direction, colonists);
+
+            foreach (Colonist c in colonists)
+            {
+                c.CheckMove();
+            }
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }
