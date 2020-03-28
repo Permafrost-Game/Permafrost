@@ -181,13 +181,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
-            if (inventory.ContainsType(Resource.Shotgun))
-            {
-                Ranged = true;
-            }
-            else {
-                Ranged= false;
-            }
+            Ranged = inventory.ContainsType(Resource.Shotgun);
         }
 
         internal void SetDead()
@@ -213,13 +207,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if (Goals.Count == 0
                 && instructions.Count > 0
-                && completedGoal == (instructions.First.PassiveMember.Position)
-                    )
+                && this.Position == (instructions.First.PassiveMember.Position)
+                )
             {
                 Instruction currentInstruction = instructions.First;
                 try
                 {
-                        currentInstruction.Start();    
+                    currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
@@ -231,11 +225,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requiredResources"></param>
-        /// <returns></returns>
         private bool CheckRequireResources(Instruction instruction)
         {
             List<Instruction> instructionsToEnqueue = new List<Instruction>();
