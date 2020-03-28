@@ -11,6 +11,7 @@ namespace Engine.TileGrid
     public class TileMap : Engine.Drawing.IDrawable
     {
         public Tile[,] Tiles { get; }
+        public Vector2 TileSize { get; }
 
         private float timeToTemperatureUpdate;
         private readonly float timeUntilTemperatureUpdate = 2000f;
@@ -22,6 +23,7 @@ namespace Engine.TileGrid
 
         public TileMap(Tile[,] tiles)
         {
+            TileSize = tiles[0, 0].Size;
             this.Tiles = tiles;
             timeToTemperatureUpdate = timeUntilTemperatureUpdate;
         }
@@ -41,9 +43,8 @@ namespace Engine.TileGrid
         /// <returns>The <see cref="Engine.TileGrid.Tile"/> within the region of <paramref name="position"/></returns>
         public Tile GetTileAtPosition(Vector2 position)
         {
-            Vector2 tileSize = Tiles[0, 0].Size;
-            int x = (Int32) Math.Round(position.X / tileSize.X);
-            int y = (Int32) Math.Round(position.Y / tileSize.Y);
+            int x = (Int32) Math.Round(position.X / TileSize.X);
+            int y = (Int32) Math.Round(position.Y / TileSize.Y);
 
             Tile t = null;
             if(x >= 0 &&

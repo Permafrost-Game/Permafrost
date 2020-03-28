@@ -7,14 +7,15 @@ using System;
 
 namespace GlobalWarmingGame.UI
 {
-    class InventoryTransactionMessage : GameObject, Engine.IUpdatable
+    class InventoryTransactionMessage
     {
         private readonly Paragraph p;
         private readonly GameObject parent;
         private readonly Camera camera;
         private float timeUntilDispose;
         private const float DEFAULT_TIME_ALIVE = 3000f;
-        public InventoryTransactionMessage(GameObject parent, Camera camera, string message, float timeAlive = DEFAULT_TIME_ALIVE) : base(parent.Position, Vector2.Zero)
+        public bool IsActive { get => p != null ? p.Parent == UserInterface.Active.Root : true; }
+        public InventoryTransactionMessage(GameObject parent, Camera camera, string message, float timeAlive = DEFAULT_TIME_ALIVE)
         {
             this.parent = parent;
             this.camera = camera;
@@ -23,7 +24,6 @@ namespace GlobalWarmingGame.UI
                 text: message,
                 anchor: Anchor.TopLeft
                 );
-
 
             UserInterface.Active.AddEntity(p);
         }
@@ -36,7 +36,7 @@ namespace GlobalWarmingGame.UI
             timeUntilDispose -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntilDispose <= 0)
             {
-                Dispose();
+                UserInterface.Active.RemoveEntity(p);
             }
 
         }
@@ -46,10 +46,5 @@ namespace GlobalWarmingGame.UI
             return Vector2.Transform(new Vector2(parent.Position.X - parent.Size.X / 2, parent.Position.Y - 15f - parent.Size.Y / 2) / UserInterface.Active.GlobalScale, camera.Transform);
         }
 
-        private void Dispose()
-        {
-            GameObjectManager.Remove(this);
-            UserInterface.Active.RemoveEntity(p);
-        }
     }
 }

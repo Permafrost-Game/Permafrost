@@ -19,9 +19,9 @@ namespace GlobalWarmingGame
         public static void SpawnGameObjects(int seed, Vector2 zonePos)
         {
             Random rand = new Random(seed);
+            int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
 
-
-            Vector2 zoneCenter = 32 * (GameObjectManager.ZoneMap.Size / 2);
+            Vector2 zoneCenter = tileSize * (GameObjectManager.ZoneMap.Size / 2);
 
             if (zonePos.X % towerDistance == 0
                 && zonePos.X < towerSpan
@@ -40,7 +40,7 @@ namespace GlobalWarmingGame
                     GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
                         GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water") ?
                         zoneCenter :
-                        zoneCenter + new Vector2(rand.Next(-128, 128), rand.Next(-128, 128))
+                        zoneCenter + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
                         ));
                 }
             }

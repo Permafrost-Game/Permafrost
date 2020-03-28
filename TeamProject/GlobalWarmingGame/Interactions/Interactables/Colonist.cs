@@ -5,10 +5,13 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Priority_Queue;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
@@ -17,11 +20,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
+        private static readonly Random random = new Random();
 
         #region Instruction
 
         public List<InstructionType> InstructionTypes { get; }
-        private readonly Queue<Instruction> instructions;
+        private readonly SimplePriorityQueue<Instruction> instructions;
 
         [PFSerializable]
         public readonly Inventory inventory;
@@ -70,7 +74,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
         private bool _ranged = false;
-        public bool ranged
+        public bool Ranged
         {
             get { return _ranged; }
             set
@@ -99,7 +103,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 _isAttacking = value;
                 isAnimated = true;
                 SpriteEffect = SpriteEffects.None;
-                if (ranged)
+                if (Ranged)
                 {
                     TextureGroupIndex = _isAttacking ? 3 : 0;
                 }
@@ -124,6 +128,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
         private bool deathSoundPlayed;
+        private bool AttackTrigger=false;
+        private Enemy target;
+
         public bool HasRangedItem { get; set; } = false;
 
 
@@ -166,7 +173,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
             timeToFreezeCheck = timeUntillNextFreezeCheck;
 
-            instructions = new Queue<Instruction>();
+            instructions = new SimplePriorityQueue<Instruction>();
             InstructionTypes = new List<InstructionType>();
 
         }
@@ -174,13 +181,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
-            if (inventory.ContainsType(Resource.Shotgun))
-            {
-                ranged = true;
-            }
-            else {
-                ranged= false;
-            }
+            Ranged = inventory.ContainsType(Resource.Shotgun);
         }
 
         internal void SetDead()
@@ -206,22 +207,76 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if (Goals.Count == 0
                 && instructions.Count > 0
-                && completedGoal == (instructions.Peek().PassiveMember.Position)
-                    )
+                && this.Position == (instructions.First.PassiveMember.Position)
+                )
             {
-                Instruction currentInstruction = instructions.Peek();
+                Instruction currentInstruction = instructions.First;
                 try
-                {                         
-                        currentInstruction.Start();    
+                {
+                    currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
+                    //instruction Failed
                     OnInstructionComplete(e.instruction);
                 }
                 
             }
+
         }
 
+        private bool CheckRequireResources(Instruction instruction)
+        {
+            List<Instruction> instructionsToEnqueue = new List<Instruction>();
+
+            IEnumerable<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
+            Queue<ResourceItem> requiredItems = new Queue<ResourceItem>(instruction.Type.RequiredResources.Select(i => i.Clone()));
+
+            
+            while(requiredItems.Count > 0)
+            {
+                ResourceItem requiredItem = requiredItems.Dequeue();
+                if (inventory.ContainsType(requiredItem.ResourceType.ResourceID))
+                {
+                    requiredItem.Weight -= inventory.Resources[requiredItem.ResourceType.ResourceID].Weight;
+                }
+                foreach (StorageUnit s in storageUnits)
+                {
+                    if (s.ResourceItem != null
+                     && s.ResourceItem.ResourceType.Equals(requiredItem.ResourceType))
+                    {
+                        int amountToTake = Math.Min(requiredItem.Weight, s.ResourceItem.Weight);
+                        if(amountToTake > 0)
+                        {
+                            instructionsToEnqueue.Add(new Instruction(
+                                                            type: s.TakeItemInstruction(amountToTake),
+                                                            priorityOverride: instruction.Priority - 1,
+                                                            activeMember: this,
+                                                            passiveMember: s
+                                                            ));
+                            requiredItem.Weight -= amountToTake;
+                        }
+
+                        if (requiredItem.Weight <= 0)
+                        {
+                            break;
+                        }
+
+                    }
+                }
+                if(requiredItem.Weight > 0)
+                {
+                    return false;
+                }
+                
+            }
+            
+            foreach(Instruction i in instructionsToEnqueue)
+            {
+                AddInstruction(i);
+            }
+            return true;
+        }
 
         private void Move(GameTime gameTime)
         {
@@ -241,6 +296,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 foreach (ResourceItem item in inventory.Resources.Values) {
                     droppedItems.Add(item);
                 }
+
                 GameObjectManager.Add(new Loot(droppedItems, this.Position));
                 GameObjectManager.Remove(this);
                 return;
@@ -250,7 +306,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             Move(gameTime);
             base.Update(gameTime);
             enemy = GlobalCombatDetector.FindColonistThreat(this);
-
+            if (AttackTrigger)
+            {
+                Hunt(enemy);
+            }
             Vector2 delta = lastPosition - this.Position;
 
 
@@ -272,17 +331,39 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                instructions.Peek().Update(gameTime);
+                try
+                {
+                    instructions.First.Update(gameTime);
+                }
+                catch (InvalidInstruction e)
+                {
+                    OnInstructionComplete(e.instruction);
+                }
+                
                 if (instructions.Count > 0)
                 {
-                    if (Goals.Count == 0)
+                    if (Goals.Count == 0 )
                     {
-                        Goals.Enqueue(instructions.Peek().PassiveMember.Position);
+                        Instruction i1 = instructions.First;
+                        if ((!inventory.ContainsAll(i1.Type.RequiredResources)
+                            && CheckRequireResources(i1))
+                            | inventory.ContainsAll(instructions.First.Type.RequiredResources)) //instructions.First may have been changed by the previous line.
+                        {
+                            Goals.Enqueue(instructions.First.PassiveMember.Position);
+                        }
+                        else
+                        {
+                            //No valid resources
+                            GameUIController.ResourceNotification(instructions.Dequeue());
+                            
+                            
+                        }
+                        
                     }
                 }
             }
 
-            if (enemy != null)
+            if (enemy != null && enemy.notDefeated)
             {
                 combatModeOn = true;
                 SpriteEffect = enemy.Position.X < this.Position.X ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
@@ -414,18 +495,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
         }
         #endregion
 
-        public void AddInstruction(Instruction instruction, int priority = 0)
+        public void AddInstruction(Instruction instruction)
         {
             //TODO implement priority
             instruction.OnStart.Add(OnInstructionStart);
             instruction.OnComplete.Add(OnInstructionComplete);
-            instructions.Enqueue(instruction);
+            if (instruction.Type.ID == "Attack")
+            {
+                AttackTrigger = true;
+                target = (Enemy)instruction.PassiveMember;
+            }
+            else
+            {
+                instructions.Enqueue(instruction, instruction.Priority);
+            }
 
         }
 
         private void OnInstructionStart(Instruction instruction)
         {
-            if (instructions.Peek() == instruction)
+            if (instructions.First == instruction)
             {
                 if (instruction.Type.TimeCost > 0)
                 {
@@ -456,21 +545,51 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
+
         private void OnInstructionComplete(Instruction instruction)
         {
-            if (instructions.Peek() == instruction)
+            if (instructions.Count > 0)
             {
-                instructions.Dequeue();
-                CheckInventoryDump();
-                if (!InCombat)
+                if (instructions.First == instruction)
                 {
-                    TextureGroupIndex = 0;
-                    
+                    instructions.Dequeue();
+                    if (instruction.Type.ID != "takeItem")
+                    {
+                        CheckInventoryDump();
+                    }
+
+                    if (!InCombat)
+                    {
+                        TextureGroupIndex = 0;
+
+                    }
+                }
+                else
+                {
+                    throw new Exception("Async instruction completed");
                 }
             }
-            else
+
+            CheckMove();
+        }
+
+        public void CheckMove()
+        {
+            if (instructions.Count == 0)
             {
-                throw new Exception("Async instruction completed");
+                //If a colonis is standing on another colonist, he should move
+                foreach (Colonist c in GlobalCombatDetector.colonists)
+                {
+                    if (c != this
+                        && this.Position == c.Position)
+                    {
+                        if (c.Goals.Count == 0)
+                        {
+                            Vector2 tileSize = GameObjectManager.ZoneMap.TileSize;
+                            Goals.Enqueue(this.Position + new Vector2(random.Next(-1, 2) * tileSize.X, random.Next(-1, 2) * tileSize.Y));
+                        }
+                    }
+                }
             }
         }
 
@@ -482,7 +601,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 instructions.Clear();
                 Goals.Clear();
                 this.IsAttacking = true;
-                playAttackingSound();
+                PlayAttackingSound();
                 enemy.Health -= this.AttackPower;
                 if (enemy.Health<=0)
                 {
@@ -495,9 +614,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
             
         }
 
-        private void playAttackingSound()
+        private void PlayAttackingSound()
         {
-            if (ranged)
+            if (Ranged)
             {
                 SoundFactory.PlaySoundEffect(Sound.Shotgun);
             }
@@ -529,6 +648,31 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
 
         }
+
+        private void Hunt(Enemy enemy) {
+            Goals.Clear();
+            if (enemy == null)
+            {
+                Goals.Enqueue(target.Position);
+            }
+            else {
+                AttackTrigger = false;
+                target = null;
+            }
+            
+
+        }
+
+        /// <summary>
+        /// Clears instructions, Goals, and Path
+        /// </summary>
+        public void ClearInstructions()
+        {
+            instructions.Clear();
+            Goals.Clear();
+            Path.Clear();
+        }
+
         public object Reconstruct()
         {
             return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);

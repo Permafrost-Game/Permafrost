@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GeonBit.UI.Entities;
 
 namespace GlobalWarmingGame.UI.Menus
 {
@@ -13,6 +14,6 @@ namespace GlobalWarmingGame.UI.Menus
 
         private static void ApplyState(GameState state) => Game1.GameState = state;
 
-        public SettingsMenu() : base(name, buttons) { }
+        public SettingsMenu() : base(name, buttons, anchor: Anchor.Center) { }
     }
 }
