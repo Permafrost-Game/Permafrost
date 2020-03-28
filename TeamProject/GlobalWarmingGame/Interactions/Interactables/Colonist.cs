@@ -238,7 +238,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             List<Instruction> instructionsToEnqueue = new List<Instruction>();
 
-            List<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
+            IEnumerable<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
             Queue<ResourceItem> requiredItems = new Queue<ResourceItem>(instruction.Type.RequiredResources.Select(i => i.Clone()));
 
             

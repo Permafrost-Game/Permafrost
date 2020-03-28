@@ -165,18 +165,18 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
 
         public override void Update(GameTime gameTime){
-            Vector2 position1 = this.Position; //getting the position before updating
+            Vector2 lastPosition = this.Position; //getting the position before updating
             this.Position += PathFindingHelper.CalculateNextMove(gameTime, this); //calculating next move
-            depth = (Position.X + (Position.Y / 2)) / 48000f; //depth
-            
+            UpdateDepth(0.25f);
             base.Update(gameTime); //update the game
+
             if (this.Health <= 0) {
                 this.SetEnemyDead();
                 return;
             }
             Aggro(); // enemy is agressive all the time
 
-            Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving
+            Vector2 delta = lastPosition - this.Position; //getting in which direction the enemy is moving
 
             if (isInCombat)
             {

@@ -192,7 +192,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
         private static ButtonHandler<Instruction> CreateTravelOption(GameObject objectClicked, Vector2 translation)
         {
-            List<Colonist> colonists = GameObjectManager.Filter<Colonist>();
+            List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
             HashSet<Colonist> readyToTravel = new HashSet<Colonist>();
             return new ButtonHandler<Instruction> (
                     tag: new Instruction(type: TravelInstruction(null), passiveMember: objectClicked),

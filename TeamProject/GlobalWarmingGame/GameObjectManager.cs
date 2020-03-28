@@ -129,9 +129,9 @@ namespace GlobalWarmingGame
                     if (colonists != null)
                         foreach (Colonist colonist in colonists)
                             Add(colonist);
-                    Updatables = Filter<Engine.IUpdatable>();
-                    Drawables = Filter<IDrawable>();
-                    Interactables = Filter<IInteractable>();
+                    Updatables = Filter<Engine.IUpdatable>().ToList();
+                    Drawables = Filter<IDrawable>().ToList();
+                    Interactables = Filter<IInteractable>().ToList();
                 }
                 else
                 {
@@ -307,9 +307,9 @@ namespace GlobalWarmingGame
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> Filter<T>()
+        public static IEnumerable<T> Filter<T>()
         {
-            return gameObjects.OfType<T>().ToList();
+            return gameObjects.OfType<T>();
         }
 
         /// <summary>

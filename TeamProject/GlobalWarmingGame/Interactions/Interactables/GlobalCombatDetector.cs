@@ -8,10 +8,23 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class GlobalCombatDetector
+    public static class GlobalCombatDetector
     {
-        public static List<Colonist> colonists=GameObjectManager.Filter<Colonist>().ToList();
-        public static List<Enemy> enemies = GameObjectManager.Filter<Enemy>().ToList();
+        public static List<Colonist> colonists= new List<Colonist>();
+        public static List<Enemy> enemies = new List<Enemy>();
+
+
+        static GlobalCombatDetector()
+        {
+            GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
+            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
+        }
+
+        public static void Initalise()
+        {
+            colonists = GameObjectManager.Filter<Colonist>().ToList();
+        }
+
         public static Enemy FindColonistThreat (Colonist col)
         {
             foreach (Enemy enemy in enemies) {
