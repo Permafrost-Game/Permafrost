@@ -45,7 +45,7 @@ namespace GlobalWarmingGame.UI.Controllers
         public static void CreateUI(float uiScale = 1f)
         {
             openInventories.Clear();
-            view.Reset();
+            view.Clear();
             view.SetUIScale(uiScale);
 
             view.CreateUI();
@@ -67,9 +67,10 @@ namespace GlobalWarmingGame.UI.Controllers
             }
         }
 
-        internal static void ResetUI()
+        internal static void ClearUI()
         {
-            view.Reset();
+            view.Clear();
+            SelectedColonist = null;
         }
 
         /// <summary>
@@ -151,16 +152,17 @@ namespace GlobalWarmingGame.UI.Controllers
                     if (tile.Walkable)
                     {
                         if (tile.Position.X == 0)
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelWest), activeMember, objectClicked), IssueInstructionCallback));
-
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(-1, 0)));
+                            
                         else if (tile.Position.Y == 0)
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelNorth), activeMember, objectClicked), IssueInstructionCallback));
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(0, -1)));
 
                         else if (tile.Position.X >= ((GameObjectManager.ZoneMap.Size.X - 1) * GameObjectManager.ZoneMap.TileSize.X))
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelEast), activeMember, objectClicked), IssueInstructionCallback));
-
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(1, 0)));
+                        
                         else if (tile.Position.Y >= ((GameObjectManager.ZoneMap.Size.Y - 1) * GameObjectManager.ZoneMap.TileSize.Y))
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(TravelInstruction(ZoneTravelSouth), activeMember, objectClicked), IssueInstructionCallback));
+                            options.Add(CreateTravelOption(objectClicked, new Vector2(0, 1)));
+
                         else
                             options.Add(new ButtonHandler<Instruction>(new Instruction(WALK_INSTRUCTION_TYPE, activeMember, objectClicked), IssueInstructionCallback));
 
@@ -188,11 +190,36 @@ namespace GlobalWarmingGame.UI.Controllers
             return options;
         }
 
-        private static InstructionType TravelInstruction(InstructionEvent e) => new InstructionType("travel", "Travel", "Travel to the next zone", onComplete: e);
-        private static void ZoneTravelNorth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0, -1));
-        private static void ZoneTravelSouth(Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 0,  1)); 
-        private static void ZoneTravelEast (Instruction i = default) => GameObjectManager.MoveZone(new Vector2( 1,  0));
-        private static void ZoneTravelWest (Instruction i = default) => GameObjectManager.MoveZone(new Vector2(-1,  0));
+        private static ButtonHandler<Instruction> CreateTravelOption(GameObject objectClicked, Vector2 translation)
+        {
+            List<Colonist> colonists = GameObjectManager.Filter<Colonist>();
+            HashSet<Colonist> readyToTravel = new HashSet<Colonist>();
+            return new ButtonHandler<Instruction> (
+                    tag: new Instruction(type: TravelInstruction(null), passiveMember: objectClicked),
+                    action: (Instruction instruction) =>
+                    {
+                        foreach (Colonist c in colonists)
+                        {
+                            IssueInstructionCallback(new Instruction(
+                                type: TravelInstruction((Instruction i) => {
+                                    readyToTravel.Add(c);
+                                    c.ClearInstructions();
+                                    if (readyToTravel.Count == colonists.Count)
+                                    {
+                                        GameObjectManager.MoveZone(translation);
+                                    }
+                                }),
+                                activeMember: c,
+                                passiveMember: objectClicked)
+                                );
+                        }
+                    }
+                );
+        }
+            
+
+        private static InstructionType TravelInstruction(InstructionEvent e) => new InstructionType("travel", "Travel", "Travel to the next zone", onComplete: e, priority: Int16.MinValue);
+
 
         /// <summary>
         /// Adds the instruction to the active member of the instruction.
@@ -202,23 +229,7 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="instruction">the instruction to be issued</param>
         private static void IssueInstructionCallback(Instruction instruction)
         {
-            //Check if the instruction requires resources or craftables
-            if (instruction.Type.RequiredResources != null)
-            {
-                //Check if the colonist has the required resources in their inventory
-                if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredResources))
-                {
-                    instruction.ActiveMember.AddInstruction(instruction, 0);
-                }
-                else 
-                {
-                    view.Notification("Missing items:", instruction.Type.RequiredResources);
-                }
-            }
-            else
-            {
-                instruction.ActiveMember.AddInstruction(instruction, 0);
-            }
+            instruction.ActiveMember.AddInstruction(instruction);
         }
 
         /// <summary>
@@ -289,6 +300,11 @@ namespace GlobalWarmingGame.UI.Controllers
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
         }
 
+        internal static void ResourceNotification(Instruction instruction)
+        {
+            view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
+        }
+
 
         /// <summary>
         /// Selects an Interactable for construction
@@ -345,15 +361,41 @@ namespace GlobalWarmingGame.UI.Controllers
             switch(Game1.GameState)
             {
                 case GameState.Playing:
-                    if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
-                        OnClick();
+                case GameState.Paused:
+                    Vector2 screenHover = currentMouseState.Position.ToVector2();
+                    Vector2 gameHover = Vector2.Transform(screenHover, Camera.InverseTransform);
+                    if (previousMouseState.LeftButton == ButtonState.Released
+                        && currentMouseState.LeftButton == ButtonState.Pressed
+                        && Game1.GameState == GameState.Playing) 
+                        OnClick(gameHover);
+                    UpdateTemperature(gameHover, screenHover);
                     break;
+                
             }
             
 
             previousMouseState = currentMouseState;
 
         }
+
+        private static void UpdateTemperature(Vector2 gameHover, Vector2 screenHover)
+        {
+            Tile t = GameObjectManager.ZoneMap.GetTileAtPosition(gameHover);
+            string temp = string.Empty;
+
+            if (t != null && !view.Hovering)
+            {
+                int temperature = (int)Math.Round(t.Temperature.Value);
+                if (temperature == 0)
+                    temp = "±";
+                 else if (temperature > 0)
+                    temp = "+";
+
+                temp += $"{temperature}°C";
+            }
+            view.UpdateTemp(temp, screenHover);
+        }
+
         /// <summary>
         /// Draws UI, calls <see cref="View.Draw"/>
         /// </summary>
@@ -366,11 +408,10 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <summary>
         /// Called on a mouse click
         /// </summary>
-        private static void OnClick()
+        private static void OnClick(Vector2 positionClicked)
         {
             if (!view.Hovering)
             {
-                Vector2 positionClicked = Vector2.Transform(currentMouseState.Position.ToVector2(), Camera.InverseTransform);
                 GameObject objectClicked = ObjectClicked(positionClicked.ToPoint());
 
                 if (objectClicked == null)

@@ -13,6 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         : base ("Bear",2000, 70, 10, 300, position,textureSet)
         { }
 
+       
+
         public override void AnimateAttack()
         {
             isAnimated = true;
@@ -20,14 +22,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             
         }
 
+        public override void SetEnemyDead()
+        {
+            //remove the enemy from the game 
+            this.DeathSound();
+            notDefeated = false;
+            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+            GameObjectManager.Remove(this);
+        }
+
         public override void Update(GameTime gameTime)
         {   
             base.Update(gameTime);
             
-            if (this.Health <= 0)
-            {
-                GameObjectManager.Remove(this);
-            }
+            
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -57,8 +65,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             List<ResourceItem> loot = new List<ResourceItem>();
             loot.Add(new ResourceItem(Resource.Food, 2));
-            loot.Add(new ResourceItem(Resource.Axe, 98));
-            loot.Add(new ResourceItem(Resource.Pickaxe, 50));
+            
             return loot;
         }
     }

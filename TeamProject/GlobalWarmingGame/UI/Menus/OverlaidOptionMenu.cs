@@ -6,7 +6,8 @@ namespace GlobalWarmingGame.UI.Menus
 {
     class OverlaidOptionMenu<T> : Entity
     {
-        public OverlaidOptionMenu(string menuText, IEnumerable<ButtonHandler<T>> buttons)
+        public OverlaidOptionMenu(string menuText, IEnumerable<ButtonHandler<T>> buttons, Vector2 size = default, Anchor anchor = Anchor.Auto, Vector2 offset = default) :
+            base(size, anchor, offset)
         {
             Panel Menu = new Panel(new Vector2(350, 450), PanelSkin.Simple)
             {

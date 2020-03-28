@@ -1,4 +1,5 @@
-﻿using GeonBit.UI;
+﻿using Engine.TileGrid;
+using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
@@ -20,11 +21,12 @@ namespace GlobalWarmingGame.UI.Views
         private PauseMenu PauseMenu;
         private SettingsMenu SettingsMenu;
 
+        private Paragraph temperatureReadout;
         private Panel topPanel;
         private Panel bottomPanel;
         private Panel menu;
-        private Dictionary<int, Panel> inventories;
-        private Dictionary<int, Icon> inventoryButtons;
+        private readonly Dictionary<int, Panel> inventories;
+        private readonly Dictionary<int, Icon> inventoryButtons;
 
         /// <summary>True if the current mouse position is over a UI entity</summary>
         internal bool Hovering { get; set; }
@@ -37,18 +39,19 @@ namespace GlobalWarmingGame.UI.Views
 
         internal void Initalise(ContentManager content)
         {
-            UserInterface.Initialize(content, "hd");
+            UserInterface.Initialize(content, "main");
             UserInterface.Active.WhileMouseHoverOrDown = (Entity e) => { Hovering = true; };
         }
 
         /// <summary>
         /// Resets currently active UI elements
         /// </summary>
-        internal void Reset()
+        internal void Clear()
         {
             UserInterface.Active.Clear();
-            inventories = new Dictionary<int, Panel>();
-            inventoryButtons = new Dictionary<int, Icon>();
+            inventories.Clear();
+            inventoryButtons.Clear();
+            menu = null;
         }
 
         internal void CreateUI()
@@ -65,6 +68,9 @@ namespace GlobalWarmingGame.UI.Views
                 Visible = false
             };
             UserInterface.Active.AddEntity(SettingsMenu);
+
+            temperatureReadout = new Paragraph("", Anchor.TopLeft);
+            UserInterface.Active.AddEntity(temperatureReadout);
 
             #region topPanel
             topPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.TopCenter)
@@ -193,11 +199,11 @@ namespace GlobalWarmingGame.UI.Views
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, List<T> list = null) 
+        internal void Notification<T>(string text, IEnumerable<T> list = null) 
         {
             string notificatonText = text;
 
-            Panel Notification = new Panel(new Vector2(225f, 100f), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100f))
+            Panel Notification = new Panel(new Vector2(325f, 100f), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 100f))
             {
                 Padding = Vector2.Zero,
                 Visible = false
@@ -205,7 +211,7 @@ namespace GlobalWarmingGame.UI.Views
 
             UserInterface.Active.AddEntity(Notification);
 
-            if (list != null && list.Count > 0) 
+            if (list != null) 
             {
                 foreach(T item in list) 
                 {
@@ -313,6 +319,13 @@ namespace GlobalWarmingGame.UI.Views
             inventories[id].Dispose();
             inventories.Remove(id);
             
+        }
+
+
+        internal void UpdateTemp(string text, Vector2 position)
+        {
+            temperatureReadout.Text = text;
+            temperatureReadout.Offset = position + new Vector2(20,30);
         }
     }
 }

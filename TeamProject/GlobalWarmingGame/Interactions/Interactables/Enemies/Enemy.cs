@@ -3,6 +3,7 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -37,8 +38,9 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public bool attacking=false;//determines if the enemy is attacking at the moment
         public bool isInCombat=false;//shows if the enemy is fighting a colonist
         private double timeToAttack; //a flag based on attack speed that tells the enemy to attack
+        internal bool notDefeated=true;
 
-            // variable for random movement of enemies
+        // variable for random movement of enemies
         private readonly RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
@@ -51,7 +53,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         )
         {
 
-            //InstructionTypes.Add(new InstructionType("Shoot", $"Shoot {name}", onStart: Shoot));
+            InstructionTypes.Add(new InstructionType("Attack", $"Attack {name}", onStart: Attack));
 
             //generic stats:
             this.AttackRange = aRange;
@@ -63,39 +65,47 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
        
 
-        private void Shoot(Instruction instruction)
+        private void Attack(Instruction instruction)
         {
             
         }
 
 
-        public void SetEnemyDead(){    
-            //remove the enemy from the game 
-            this.DeathSound();
-            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
-            GameObjectManager.Remove(this);
-            
-        }
+        public abstract void SetEnemyDead();
 
 
 
         private void Aggro() //this method makes the enemy attack colonists and roam if there isnt any
         {
             //using globalcombatdetector to determine nearby colonists
-            target = GlobalCombatDetector.ColonistInAggroRange(this);
-            targetInRange = GlobalCombatDetector.FindEnemyThreat(this);
-            
-            if (target == null)
+            Colonist potentialTarget = GlobalCombatDetector.GetClosestColonist(this.Position);
+
+            if (potentialTarget != null)
             {
-                isAnimated = true;
-                TextureGroupIndex = 1;
-                Speed = 0.05f;//decreasing the default speed when roaming (more natural)
-                Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
-            }
-            else
-            {
-                Speed = 0.2f;//return to normal speed (seems like speeding up when moving from roaming to chasing)
-                ChaseColonist(target); //chase the found colonist
+                if (aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
+                {
+                    target = potentialTarget;
+
+                    if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
+                    {
+                        targetInRange = target;
+                    } else
+                    {
+                        targetInRange = null;
+                    }
+
+                    Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
+                    ChaseColonist(target); //chase the found colonist
+
+                }
+                else
+                {
+                    target = null;
+                    isAnimated = true;
+                    TextureGroupIndex = 1;
+                    Speed = 0.05f; //decreasing the default speed when roaming (more natural)
+                    Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
+                }
             }
         }
 
@@ -160,14 +170,13 @@ namespace GlobalWarmingGame.Interactions.Enemies
             depth = (Position.X + (Position.Y / 2)) / 48000f; //depth
             
             base.Update(gameTime); //update the game
-                if (this.Health <= 0) {
-                    this.SetEnemyDead();
-                    return;
-                }
+            if (this.Health <= 0) {
+                this.SetEnemyDead();
+                return;
+            }
             Aggro(); // enemy is agressive all the time
 
             Vector2 delta = position1 - this.Position; //getting in which direction the enemy is moving
-            Math.Atan2(delta.X, delta.Y); // jedd's maths magic
 
             if (isInCombat)
             {

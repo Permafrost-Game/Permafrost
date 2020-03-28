@@ -1,5 +1,6 @@
 ﻿using Engine;
 using GlobalWarmingGame.Interactions.Enemies;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,33 +12,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         public static List<Colonist> colonists=GameObjectManager.Filter<Colonist>().ToList();
         public static List<Enemy> enemies = GameObjectManager.Filter<Enemy>().ToList();
-
         public static Enemy FindColonistThreat (Colonist col)
         {
             foreach (Enemy enemy in enemies) {
-                if (col.AttackRange>DistanceBetweenCombatants(enemy.Position,col.Position))
+               
+                if (col.AttackRange>Vector2.Distance(enemy.Position,col.Position) && enemy.notDefeated)
                 {
                     return enemy;
                 }    
             } 
             return null;
         }
-        public static Colonist FindEnemyThreat(Enemy enemy)
-        {
-            foreach (Colonist col in colonists)
-            {
-                if (enemy.AttackRange > DistanceBetweenCombatants(enemy.Position, col.Position))
-                {
-                    return col;
-                }          
-            }
-            return null;
-        }
 
-        private static double DistanceBetweenCombatants(Vector2 myPos, Vector2 threatPos)
-        {
-            return Math.Sqrt((threatPos.X - myPos.X) * (threatPos.X - myPos.X) + (threatPos.Y - myPos.Y) * (threatPos.Y - myPos.Y));
-        }
 
         internal static void UpdateParticipants()
         {
@@ -70,16 +56,21 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
         }
 
-        public static Colonist ColonistInAggroRange(Enemy enemy)
+        public static Colonist GetClosestColonist(Vector2 position)
         {
+            Colonist closestColonist = null;
+            double shortestDistance = double.MaxValue;
+
             foreach (Colonist col in colonists)
             {
-                if (enemy.aggroRange > DistanceBetweenCombatants(enemy.Position, col.Position))
-                {           
-                    return col;
+                double distance = Vector2.Distance(position, col.Position);
+                
+                if (shortestDistance > distance) { 
+                    shortestDistance = distance;
+                    closestColonist = col;
                 }
             }
-            return null;
+            return closestColonist;
         }
     }
 }
