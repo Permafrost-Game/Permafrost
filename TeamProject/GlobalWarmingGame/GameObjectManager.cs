@@ -72,7 +72,8 @@ namespace GlobalWarmingGame
 
             SetZone(zonePos);
 
-            Camera = new Camera(GraphicsDevice.Viewport, GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size);
+            Vector2 tileMapSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.TileSize;
+            Camera = new Camera(GraphicsDevice.Viewport, tileMapSize, tileMapSize);
         }
 
         public static string ZoneFileName()
@@ -229,44 +230,31 @@ namespace GlobalWarmingGame
 
             SaveZone();
 
-            for (int i = 0; i < colonists.Count(); i++)
+            foreach (Colonist colonist in colonists)
             {
-                Colonist colonist = colonists[i];
                 colonist.ClearInstructions();
 
-                if (direction.X == 1 || direction.X == -1)
-                {
-                    float x = direction.X == 1 ? 0 : (ZoneMap.Size.X - 1) * (TileSet.textureSize.X);
-                    float y = (ZoneMap.Size.Y / 2) * (TileSet.textureSize.Y)
-                        + (i * colonist.Size.Y) + (i * TileSet.textureSize.Y)
-                        - ((colonists.Count / 2) * colonist.Size.Y);
 
-                    colonist.Position = new Vector2(x, y);
-                }
-                else if (direction.Y == -1 || direction.Y == 1)
+                if (direction.X != 0)
                 {
-                    float x = (ZoneMap.Size.X / 2) * (TileSet.textureSize.X)
-                        + (i * colonist.Size.X) + (i * TileSet.textureSize.X)
-                        - ((colonists.Count / 2) * colonist.Size.X);
-                    float y = direction.Y == -1 ? (ZoneMap.Size.Y - 2) * (TileSet.textureSize.Y) : 0;
-
-                    colonist.Position = new Vector2(x, y);
+                    colonist.Position = new Vector2(
+                        x: direction.X > 0 ? 0 : (ZoneMap.Size.X - 1) * (TileSet.textureSize.X),
+                        y: colonist.Position.Y
+                    );
                 }
+                else if (direction.Y != 0)
+                {
+                    colonist.Position = new Vector2(
+                        x: colonist.Position.X,
+                        y: direction.Y > 0 ? 0 : (ZoneMap.Size.Y - 1) * (TileSet.textureSize.Y)
+                    );
+                    
+                }
+
+                Camera.Position = colonist.Position;
             }
 
             SetZone(zonePos + direction, colonists);
-
-            if (direction.X == 1)
-                Camera.Position = new Vector2(ZoneMap.Size.X * TileSet.textureSize.X, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
-
-            else if (direction.X == -1)
-                Camera.Position = new Vector2(0, (ZoneMap.Size.Y * TileSet.textureSize.Y) / 2);
-
-            else if (direction.Y == -1)
-                Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, 0);
-
-            else if (direction.Y == 1)
-                Camera.Position = new Vector2((ZoneMap.Size.Y * TileSet.textureSize.Y) / 2, ZoneMap.Size.Y * TileSet.textureSize.Y);
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }
