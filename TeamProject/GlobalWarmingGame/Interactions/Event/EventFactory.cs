@@ -23,15 +23,15 @@ namespace GlobalWarmingGame.Interactions.Event
             switch (eventEnum)
             {
                 case Event.RobotSiege:
-                    return new EventRobotSiege(GameObjectManager.ZoneMap);
+                    return new EventRobotSiege("A force of robots are trying to take the tower.", GameObjectManager.ZoneMap);
                 case Event.BearAttack:
-                    return new EventBearAttack(GameObjectManager.ZoneMap);
+                    return new EventBearAttack("Some angry bears are nearby.", GameObjectManager.ZoneMap);
                 case Event.Rabbit:
-                    return new EventRabbit(GameObjectManager.ZoneMap);
+                    return new EventRabbit("Some rabbits are wondering nearby.", GameObjectManager.ZoneMap);
                 case Event.Colonist:
-                    return new EventColonist(GameObjectManager.ZoneMap);
+                    return new EventColonist("A colonist has joined.", GameObjectManager.ZoneMap);
                 case Event.Merchant:
-                    return new EventMerchant(GameObjectManager.ZoneMap);
+                    return new EventMerchant("A merchant has arrived.", GameObjectManager.ZoneMap);
                 default:
                     throw new NotImplementedException(eventEnum + " has not been implemented");
             }

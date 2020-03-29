@@ -17,16 +17,19 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     public class EventColonist : IEvent
     {
         public bool IsComplete { get; private set; } = false;
+        public string Description { get; }
 
         private readonly TileMap eventTileMap;
 
-        public EventColonist(TileMap tileMap)
+        public EventColonist(string description, TileMap tileMap)
         {
+            Description = description;
             eventTileMap = tileMap;
         }
 
-        public void TriggerEvent()
+        public bool TriggerEvent()
         {
+            bool triggered = false;
             //Create a new colonist at the edge of the map
             Vector2 colonistSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
 
@@ -34,9 +37,13 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             {
                 Colonist newColonist = (Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, colonistSpawnLocation);
                 GameObjectManager.Add(newColonist);
+
+                //Colonist spawned and now the event counts as triggered
+                triggered = true;
             }
 
             IsComplete = true;
+            return triggered;
         }
 
         public void UpdateEvent(GameTime gameTime)

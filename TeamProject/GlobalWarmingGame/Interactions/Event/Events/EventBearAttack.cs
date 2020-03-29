@@ -18,16 +18,20 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     public class EventBearAttack : IEvent
     {
         public bool IsComplete { get; private set; }
+        public string Description { get; }
 
         private readonly TileMap eventTileMap;
 
-        public EventBearAttack(TileMap tileMap)
+        public EventBearAttack(string description, TileMap tileMap)
         {
+            Description = description;
             eventTileMap = tileMap;
         }
 
-        public void TriggerEvent()
+        public bool TriggerEvent()
         {
+            bool triggered = false;
+
             int numBears = EventManager.rand.Next(2, 4);
 
             for (int i = 0; i < numBears; i++)
@@ -47,8 +51,13 @@ namespace GlobalWarmingGame.Interactions.Event.Events
 
                 //Event bear with half the map as aggro range
                 bear.AggroRange = 1600;
+
+                //A bear has spawned and now the event counts as triggered
+                triggered = true;
             }
             IsComplete = true;
+
+            return triggered;
         }
 
         public void UpdateEvent(GameTime gameTime)

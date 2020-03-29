@@ -92,7 +92,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public void ResetCapture()
         {
             IsCaptured = false;
-            Heating = false; 
+            Heating = false;
+            InstructionTypes.Clear();
             InstructionTypes.Add(new InstructionType(
                      id: "capture",
                      name: "Capture",

@@ -18,16 +18,19 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     public class EventRabbit : IEvent
     {
         public bool IsComplete { get; private set; }
+        public string Description { get; }
 
         private readonly TileMap eventTileMap;
 
-        public EventRabbit(TileMap tileMap)
+        public EventRabbit(string description, TileMap tileMap)
         {
+            Description = description;
             eventTileMap = tileMap;
         }
 
-        public void TriggerEvent()
+        public bool TriggerEvent()
         {
+            bool triggered = false;
             int numRabbits = EventManager.rand.Next(4, 6);
 
             //Rabbit group spawn location
@@ -45,8 +48,13 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 //Spawn rabbit
                 Rabbit rabbit = (Rabbit)InteractablesFactory.MakeInteractable(Interactable.Rabbit, eventSpawnLocation);
                 GameObjectManager.Add(rabbit);
+
+                //Rabbit spawned and now the event counts as triggered
+                triggered = true;
             }
             IsComplete = true;
+
+            return triggered;
         }
 
         public void UpdateEvent(GameTime gameTime)

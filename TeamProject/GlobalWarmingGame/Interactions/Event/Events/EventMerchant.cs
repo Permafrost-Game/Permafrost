@@ -22,6 +22,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     public class EventMerchant : IEvent
     {
         public bool IsComplete { get; private set; }
+        public string Description { get; }
 
         private readonly TileMap eventTileMap;
         private Vector2 merchantSpawnLocation;
@@ -34,38 +35,38 @@ namespace GlobalWarmingGame.Interactions.Event.Events
 
         private bool isLeaving = false;
 
-        public EventMerchant(TileMap tileMap)
+        public EventMerchant(string description, TileMap tileMap)
         {
+            Description = description;
             eventTileMap = tileMap;
         }
 
-        public void TriggerEvent()
+        public bool TriggerEvent()
         {
-            //If the map has colonists
-            if (GameObjectManager.Filter<Colonist>().Count > 0)
+            bool triggered = false;
+
+            //Merchant spawn location
+            merchantSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
+
+            //If the map has colonists and If Merchant doesn't spawn in water
+            if (GameObjectManager.Filter<Colonist>().Count() > 0 && eventTileMap.GetTileAtPosition(merchantSpawnLocation).Walkable)
             {
-                //Merchant spawn location
-                merchantSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
+                //Spawn Merchant
+                eventMerchant = (Merchant)InteractablesFactory.MakeInteractable(Interactable.Merchant, merchantSpawnLocation);
+                GameObjectManager.Add(eventMerchant);
 
-                //If Merchant spawns in water end the event
-                if (!eventTileMap.GetTileAtPosition(merchantSpawnLocation).Walkable)
-                {
-                    IsComplete = true;
-                }
-                else
-                {
-                    //Spawn Merchant
-                    eventMerchant = (Merchant)InteractablesFactory.MakeInteractable(Interactable.Merchant, merchantSpawnLocation);
-                    GameObjectManager.Add(eventMerchant);
+                //Move merchant to the closest colonist
+                eventMerchant.Goals.Enqueue(GlobalCombatDetector.GetClosestColonist(eventMerchant.Position).Position);
 
-                    //Move merchant to the closest colonist
-                    eventMerchant.Goals.Enqueue(GlobalCombatDetector.GetClosestColonist(eventMerchant.Position).Position);
-                }
+                //A merchant has spawned and now the event counts as triggered
+                triggered = true;
             }
-            else 
+            else
             {
                 IsComplete = true;
             }
+
+            return triggered;
         }
 
         public void UpdateEvent(GameTime gameTime)
@@ -84,17 +85,23 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 isLeaving = true;
             }
 
-            timeToRemoveMerchant -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (isLeaving && timeToRemoveMerchant < 0)
+            //If merchant is leaving
+            if (isLeaving)
             {
-                //If merchant is leaving and the merchant is close to their spawn (within two tiles)
-                if (Vector2.Distance(eventMerchant.Position, merchantSpawnLocation) < 64f)
+                timeToRemoveMerchant -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                //If its time to try remove the merchant
+                if (timeToRemoveMerchant < 0) 
                 {
-                    //Remove merchant and set this event to complete
-                    GameObjectManager.Remove(eventMerchant);
-                    IsComplete = true;
+                    //If the merchant is close to their spawn (within two tiles)
+                    if (Vector2.Distance(eventMerchant.Position, merchantSpawnLocation) < 64f)
+                    {
+                        //Remove merchant and set this event to complete
+                        GameObjectManager.Remove(eventMerchant);
+                        IsComplete = true;
+                    }
+                    timeToRemoveMerchant = timeUntilRemoveMerchant;
                 }
-                timeToRemoveMerchant = timeUntilRemoveMerchant;
             }
         }
     }

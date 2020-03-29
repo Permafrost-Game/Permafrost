@@ -20,6 +20,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     public class EventRobotSiege : IEvent
     {
         public bool IsComplete { get; private set; }
+        public string Description { get; }
 
         private readonly TileMap eventTileMap;
         private readonly List<Enemy> activeRobots;
@@ -30,19 +31,22 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         private float timeToActivateRobotAI = 1000f;
         private readonly float timeUntilActivateRobotAI = 1000f;
 
-        public EventRobotSiege(TileMap tileMap)
+        public EventRobotSiege(string description, TileMap tileMap)
         {
+            Description = description;
             eventTileMap = tileMap;
             activeRobots = new List<Enemy>();
         }
 
-        public void TriggerEvent()
+        public bool TriggerEvent()
         {
+            bool triggered = false;
+
             //If the map has a tower and it is captured by the player
-            if (GameObjectManager.Filter<Tower>().Count != 0 && GameObjectManager.Filter<Tower>()[0]._isCaptured) 
+            if (GameObjectManager.Filter<Tower>().Count() != 0 && GameObjectManager.Filter<Tower>().First()._isCaptured)
             {
                 int numRobots = EventManager.rand.Next(4, 8);
-                eventTower = GameObjectManager.Filter<Tower>()[0];
+                eventTower = GameObjectManager.Filter<Tower>().First();
 
                 for (int i = 0; i < numRobots; i++)
                 {
@@ -59,7 +63,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                     Enemy robot;
 
                     int robotTypeNums = EventManager.rand.Next(0, 3);
-                    switch (robotTypeNums) 
+                    switch (robotTypeNums)
                     {
                         case 0:
                         case 1:
@@ -83,9 +87,18 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                     robot.AI = null;
 
                     //Move robot towards tower
-                    robot.Goals.Enqueue(new Vector2(eventTower.Position.X, eventTower.Position.Y));                    
+                    robot.Goals.Enqueue(new Vector2(eventTower.Position.X, eventTower.Position.Y));
+
+                    //A robot has spawned and now the event counts as triggered
+                    triggered = true;
                 }
             }
+            else 
+            {
+                IsComplete = true;
+            }
+
+            return triggered;
         }
 
         public void UpdateEvent(GameTime gameTime)
@@ -107,13 +120,16 @@ namespace GlobalWarmingGame.Interactions.Event.Events
 
             //If any of the event robots are alive at this point they have won and the tower is captured.
             timeToTowerCapture -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timeToTowerCapture < 0) 
+            if (timeToTowerCapture < 0)
             {
-                //TODO Still contains dead robots
-                if (activeRobots.Count > 0) 
+                foreach (Enemy enemy in activeRobots)
                 {
-                    eventTower.ResetCapture();
+                    if (enemy.Health > 0)
+                    {
+                        eventTower.ResetCapture();
+                    }
                 }
+
                 IsComplete = true;
             }
         }

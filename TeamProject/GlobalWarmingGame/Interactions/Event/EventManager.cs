@@ -1,6 +1,7 @@
 ﻿using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace GlobalWarmingGame.Interactions.Event
         //Random number generator based off the seed
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
-        private static float timeToRandomEvent = 80000f;
+        private static float timeToRandomEvent = 120000f;
         private static readonly float timeUntilRandomEvent = 120000f;
 
         /// <summary>
@@ -70,12 +71,17 @@ namespace GlobalWarmingGame.Interactions.Event
         /// <param name="eventEnum"></param>
         public static void CreateGameEvent(Event eventEnum)
         {
-            IEvent randomEvent = EventFactory.CreateEvent(eventEnum);
+            IEvent evnt = EventFactory.CreateEvent(eventEnum);
 
-            randomEvent.TriggerEvent();
-            if (!randomEvent.IsComplete)
+            //Inform user that an event has started
+            if (evnt.TriggerEvent())
             {
-                activeEvents.Add(randomEvent);
+                GameUIController.EventNotification(evnt);
+            }
+
+            if (!evnt.IsComplete)
+            {
+                activeEvents.Add(evnt);
             }
         }
 

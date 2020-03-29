@@ -345,6 +345,15 @@ namespace GlobalWarmingGame.UI.Controllers
         }
 
         /// <summary>
+        /// Notification for a event
+        /// </summary>
+        /// <param name="evnt"></param>
+        internal static void EventNotification(IEvent evnt)
+        {
+            view.Notification<string>(evnt.Description, null);
+        }
+
+        /// <summary>
         /// Called when colonist is at the building site and then the building is made visible
         /// </summary>
         /// <param name="follower"></param>
