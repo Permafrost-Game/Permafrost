@@ -303,7 +303,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
             //Events drop down
             view.CreateDropDown("Events", Enum.GetValues(typeof(Event)).Cast<Event>()
-                .Select(e => new ButtonHandler<Event>(e, SelectEventCallback)).ToList());
+                .Select(e => new ButtonHandler<Event>(e, StartEventCallback)).ToList());
 
         }
         internal static void ResourceNotification(Instruction instruction)
@@ -336,7 +336,7 @@ namespace GlobalWarmingGame.UI.Controllers
         /// Start the selected event
         /// </summary>
         /// <param name=""></param>
-        private static void SelectEventCallback(Event evnt)
+        private static void StartEventCallback(Event evnt)
         {
             EventManager.CreateGameEvent(evnt);
         }

@@ -56,8 +56,8 @@ namespace GlobalWarmingGame.Interactions.Event
             //Loop through all active events and call their update trigger
             foreach (IEvent evnt in activeEvents.ToArray())
             {
-                evnt.UpdateTrigger(gameTime);
-                if (evnt.Complete)
+                evnt.UpdateEvent(gameTime);
+                if (evnt.IsComplete)
                 {
                     activeEvents.Remove(evnt);
                 }
@@ -65,15 +65,15 @@ namespace GlobalWarmingGame.Interactions.Event
         }
 
         /// <summary>
-        /// Create an event, trigger it and add it to the active events if the event has a duration or condition.
+        /// Create an event, trigger it and add it to the active events if the event is not complete yet.
         /// </summary>
         /// <param name="eventEnum"></param>
         public static void CreateGameEvent(Event eventEnum)
         {
             IEvent randomEvent = EventFactory.CreateEvent(eventEnum);
 
-            randomEvent.Trigger();
-            if (!randomEvent.Complete)
+            randomEvent.TriggerEvent();
+            if (!randomEvent.IsComplete)
             {
                 activeEvents.Add(randomEvent);
             }

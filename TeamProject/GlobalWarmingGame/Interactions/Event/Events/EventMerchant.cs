@@ -21,7 +21,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// </summary>
     public class EventMerchant : IEvent
     {
-        public bool Complete { get; private set; } = false;
+        public bool IsComplete { get; private set; }
 
         private readonly TileMap eventTileMap;
         private Vector2 merchantSpawnLocation;
@@ -32,14 +32,14 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         private float timeToRemoveMerchant = 1000f;
         private readonly float timeUntilRemoveMerchant = 1000f;
 
-        private bool merchantLeaving = false;
+        private bool isLeaving = false;
 
         public EventMerchant(TileMap tileMap)
         {
             eventTileMap = tileMap;
         }
 
-        public void Trigger()
+        public void TriggerEvent()
         {
             //If the map has colonists
             if (GameObjectManager.Filter<Colonist>().Count > 0)
@@ -50,7 +50,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 //If Merchant spawns in water end the event
                 if (!eventTileMap.GetTileAtPosition(merchantSpawnLocation).Walkable)
                 {
-                    Complete = true;
+                    IsComplete = true;
                 }
                 else
                 {
@@ -64,16 +64,16 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             }
             else 
             {
-                Complete = true;
+                IsComplete = true;
             }
         }
 
-        public void UpdateTrigger(GameTime gameTime)
+        public void UpdateEvent(GameTime gameTime)
         {
             timeToMerchantLeave -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             //If the merchant isn't leaving yet but its now time to leave
-            if (!merchantLeaving && timeToMerchantLeave < 0)
+            if (!isLeaving && timeToMerchantLeave < 0)
             {
                 eventMerchant.Goals.Clear();
                 eventMerchant.Goals.Enqueue(merchantSpawnLocation);
@@ -81,18 +81,18 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 //Merchant is leaving and no longer trading
                 eventMerchant.InstructionTypes.Clear();
 
-                merchantLeaving = true;
+                isLeaving = true;
             }
 
             timeToRemoveMerchant -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (merchantLeaving && timeToRemoveMerchant < 0)
+            if (isLeaving && timeToRemoveMerchant < 0)
             {
                 //If merchant is leaving and the merchant is close to their spawn (within two tiles)
                 if (Vector2.Distance(eventMerchant.Position, merchantSpawnLocation) < 64f)
                 {
                     //Remove merchant and set this event to complete
                     GameObjectManager.Remove(eventMerchant);
-                    Complete = true;
+                    IsComplete = true;
                 }
                 timeToRemoveMerchant = timeUntilRemoveMerchant;
             }

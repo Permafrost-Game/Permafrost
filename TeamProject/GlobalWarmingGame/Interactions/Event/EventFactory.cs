@@ -28,8 +28,8 @@ namespace GlobalWarmingGame.Interactions.Event
                     return new EventBearAttack(GameObjectManager.ZoneMap);
                 case Event.Rabbit:
                     return new EventRabbit(GameObjectManager.ZoneMap);
-                case Event.ColonistJoin:
-                    return new EventColonistJoin(GameObjectManager.ZoneMap);
+                case Event.Colonist:
+                    return new EventColonist(GameObjectManager.ZoneMap);
                 case Event.Merchant:
                     return new EventMerchant(GameObjectManager.ZoneMap);
                 default:
@@ -42,7 +42,7 @@ namespace GlobalWarmingGame.Interactions.Event
     {
         RobotSiege,
         BearAttack,
-        ColonistJoin,
+        Colonist,
         Merchant,
         Rabbit
     }

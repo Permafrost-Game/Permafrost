@@ -19,7 +19,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// </summary>
     public class EventRobotSiege : IEvent
     {
-        public bool Complete { get; private set; } = false;
+        public bool IsComplete { get; private set; }
 
         private readonly TileMap eventTileMap;
         private readonly List<Enemy> activeRobots;
@@ -36,7 +36,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             activeRobots = new List<Enemy>();
         }
 
-        public void Trigger()
+        public void TriggerEvent()
         {
             //If the map has a tower and it is captured by the player
             if (GameObjectManager.Filter<Tower>().Count != 0 && GameObjectManager.Filter<Tower>()[0]._isCaptured) 
@@ -88,7 +88,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             }
         }
 
-        public void UpdateTrigger(GameTime gameTime)
+        public void UpdateEvent(GameTime gameTime)
         {
             //Turn on the robots random AI when they are by the tower
             timeToActivateRobotAI -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -114,7 +114,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 {
                     eventTower.ResetCapture();
                 }
-                Complete = true;
+                IsComplete = true;
             }
         }
     }

@@ -14,17 +14,17 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         /// This can happen as an event is triggered or
         /// after an event has triggered in the UpdateTrigger loop.
         /// </summary>
-        bool Complete { get; }
+        bool IsComplete { get; }
 
         /// <summary>
         /// Trigger the event and execute a function
         /// </summary>
-        void Trigger();
+        void TriggerEvent();
 
         /// <summary>
         /// Update elements of a ongoing event.
         /// Becareful as it updates on every frame.
         /// </summary>
-        void UpdateTrigger(GameTime gameTime);
+        void UpdateEvent(GameTime gameTime);
     }
 }

@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// </summary>
     public class EventBearAttack : IEvent
     {
-        public bool Complete { get; private set; } = false;
+        public bool IsComplete { get; private set; }
 
         private readonly TileMap eventTileMap;
 
@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             eventTileMap = tileMap;
         }
 
-        public void Trigger()
+        public void TriggerEvent()
         {
             int numBears = EventManager.rand.Next(2, 4);
 
@@ -48,10 +48,10 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 //Event bear with half the map as aggro range
                 bear.AggroRange = 1600;
             }
-            Complete = true;
+            IsComplete = true;
         }
 
-        public void UpdateTrigger(GameTime gameTime)
+        public void UpdateEvent(GameTime gameTime)
         {
             //Not used
         }

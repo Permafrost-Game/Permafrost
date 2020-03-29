@@ -14,18 +14,18 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// <summary>
     /// This event will spawn add a colonist to the players colony.
     /// </summary>
-    public class EventColonistJoin : IEvent
+    public class EventColonist : IEvent
     {
-        public bool Complete { get; private set; } = false;
+        public bool IsComplete { get; private set; } = false;
 
         private readonly TileMap eventTileMap;
 
-        public EventColonistJoin(TileMap tileMap)
+        public EventColonist(TileMap tileMap)
         {
             eventTileMap = tileMap;
         }
 
-        public void Trigger()
+        public void TriggerEvent()
         {
             //Create a new colonist at the edge of the map
             Vector2 colonistSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
@@ -36,10 +36,10 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 GameObjectManager.Add(newColonist);
             }
 
-            Complete = true;
+            IsComplete = true;
         }
 
-        public void UpdateTrigger(GameTime gameTime)
+        public void UpdateEvent(GameTime gameTime)
         {
             //Not used
         }

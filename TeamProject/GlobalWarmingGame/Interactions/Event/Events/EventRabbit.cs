@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
     /// </summary>
     public class EventRabbit : IEvent
     {
-        public bool Complete { get; private set; } = false;
+        public bool IsComplete { get; private set; }
 
         private readonly TileMap eventTileMap;
 
@@ -26,7 +26,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             eventTileMap = tileMap;
         }
 
-        public void Trigger()
+        public void TriggerEvent()
         {
             int numRabbits = EventManager.rand.Next(4, 6);
 
@@ -46,10 +46,10 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 Rabbit rabbit = (Rabbit)InteractablesFactory.MakeInteractable(Interactable.Rabbit, eventSpawnLocation);
                 GameObjectManager.Add(rabbit);
             }
-            Complete = true;
+            IsComplete = true;
         }
 
-        public void UpdateTrigger(GameTime gameTime)
+        public void UpdateEvent(GameTime gameTime)
         {
             //Not used
         }
