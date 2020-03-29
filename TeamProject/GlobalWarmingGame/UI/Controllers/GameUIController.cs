@@ -42,14 +42,14 @@ namespace GlobalWarmingGame.UI.Controllers
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
         }
 
-        public static void CreateUI(float uiScale = 1f)
+        public static void CreateUI( float uiScale = 1f)
         {
             openInventories.Clear();
             view.Clear();
             view.SetUIScale(uiScale);
 
             view.CreateUI();
-            AddDropDowns();
+            AddDropDowns(DevMode);
             
             GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
             GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
@@ -282,11 +282,30 @@ namespace GlobalWarmingGame.UI.Controllers
         private static Interactable SelectedBuildable { get; set; }
         public static Camera Camera { get => GameObjectManager.Camera; }
 
+        private static bool _devMode;
+        public static bool DevMode
+        {
+            get
+            {
+                return _devMode;
+            }
+            set
+            {
+                _devMode = value;
+                if (Game1.GameState == GameState.Settings)
+                {
+                    AddDropDowns(value);
+                }
+                
+            }
+        }
+
         /// <summary>
         /// Adds the Building and Spawn dropdown menus to the view
         /// </summary>
-        private static void AddDropDowns()
+        private static void AddDropDowns(bool devMode)
         {
+            view.ClearDropDown();
             //Buildings drop down
             view.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
             {
@@ -295,9 +314,13 @@ namespace GlobalWarmingGame.UI.Controllers
                 new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildableCallback)
             });
 
-            //Spawnables drop down
-            view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
-                .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
+            if(devMode)
+            {
+                //Spawnables drop down
+                view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
+                    .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
+            }
+            
         }
 
         internal static void ResourceNotification(Instruction instruction)

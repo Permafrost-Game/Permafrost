@@ -72,7 +72,7 @@ namespace GlobalWarmingGame
 
             SetZone(zonePos);
 
-            Vector2 tileMapSize = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.TileSize;
+            Vector2 tileMapSize = ZoneMap.Size * ZoneMap.TileSize;
             Camera = new Camera(GraphicsDevice.Viewport, tileMapSize, tileMapSize);
         }
 

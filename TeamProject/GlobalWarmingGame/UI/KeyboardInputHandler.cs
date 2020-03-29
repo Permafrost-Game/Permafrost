@@ -45,15 +45,18 @@ namespace GlobalWarmingGame.UI
                         }
                     }
 
+                    if(GameUIController.DevMode)
+                    {
+                        if (CheckKeyPress(Keys.I))
+                            GameObjectManager.MoveZone(new Vector2(0, -1));
+                        else if (CheckKeyPress(Keys.K))
+                            GameObjectManager.MoveZone(new Vector2(0, 1));
+                        else if (CheckKeyPress(Keys.L))
+                            GameObjectManager.MoveZone(new Vector2(1, 0));
+                        else if (CheckKeyPress(Keys.J))
+                            GameObjectManager.MoveZone(new Vector2(-1, 0));
+                    }
 
-                    if (CheckKeyPress(Keys.I))
-                        GameObjectManager.MoveZone(new Vector2(0, -1));
-                    else if (CheckKeyPress(Keys.K))
-                        GameObjectManager.MoveZone(new Vector2(0, 1));
-                    else if (CheckKeyPress(Keys.L))
-                        GameObjectManager.MoveZone(new Vector2(1, 0));
-                    else if (CheckKeyPress(Keys.J))
-                        GameObjectManager.MoveZone(new Vector2(-1, 0));
 
                     if (CheckKeyPress(Keys.Escape))
                         Game1.GameState = GameState.Paused;
