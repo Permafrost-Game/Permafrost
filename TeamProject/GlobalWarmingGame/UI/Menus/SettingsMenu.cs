@@ -66,12 +66,12 @@ namespace GlobalWarmingGame.UI.Menus
         public void InitaliseButtons()
         {
             ClearButtons();
-            AddButton(new ButtonHandler<bool>(GetFullScreen(), "FullScreen", SetFullScreen), true);
+            AddButton(new ButtonHandler<bool>(GetFullScreen(), "Full Screen", SetFullScreen), true);
 
-            AddButton(new ButtonHandler<bool>(GetDevMode(), "DevMode", SetDevMode), true);
+            AddButton(new ButtonHandler<bool>(GetDevMode(), "Dev Mode", SetDevMode), true);
 
-            AddButton(new ButtonHandler<float>(GetDisplayScale(), "DisplayScale +", IncrementDisplayScale), true);
-            AddButton(new ButtonHandler<float>(GetDisplayScale(), "DisplayScale -", DecrementDisplayScale), true);
+            AddButton(new ButtonHandler<float>(GetDisplayScale(), "Display Scale +", IncrementDisplayScale), true);
+            AddButton(new ButtonHandler<float>(GetDisplayScale(), "Display Scale -", DecrementDisplayScale), true);
 
             AddButton(new ButtonHandler<GameState>(GameState.Paused, "Done", ApplyGameState), false);
         }
