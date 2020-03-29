@@ -271,8 +271,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new BigStoneNode(position);
 
                 case Interactable.loot:
-                    List<ResourceItem> loot = new List<ResourceItem>();
-                    loot.Add(new ResourceItem(Resource.Shotgun, 1));
+                    List<ResourceItem> loot = new List<ResourceItem> { new ResourceItem(Resource.Shotgun, 1) };
                     return new Loot(loot, position);
 
                 case Interactable.TallGrass:

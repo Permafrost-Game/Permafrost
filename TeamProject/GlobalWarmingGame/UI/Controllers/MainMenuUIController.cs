@@ -1,4 +1,5 @@
-﻿using GlobalWarmingGame.UI.Views;
+﻿using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -140,6 +141,7 @@ namespace GlobalWarmingGame.UI.Controllers
             System.IO.File.WriteAllText(string.Format(@"{0}/save.json", newSaveDir), saveData);
 
             GameObjectManager.Init(currentSaveID, seed, currentZone, true);
+            GlobalCombatDetector.Initalise();
 
             hasBeenLoaded = true;
 

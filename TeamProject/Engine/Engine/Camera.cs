@@ -13,9 +13,11 @@ namespace Engine
         private int scroll;
         
 
-        public float MovementSpeed { get; set; }
-        public float ZoomSpeed { get; set; }
-        public Vector2 ClampSize { get; set; }
+        public float MovementSpeed { get; private set; }
+        public float ZoomSpeed { get; private set; }
+
+        public Vector2 ClampPosition { get; private set; }
+        public Vector2 ClampSize { get; private set; }
         public Matrix Transform { get; set; }
         public Matrix InverseTransform { get { return Matrix.Invert(Transform); } }
 
@@ -30,12 +32,12 @@ namespace Engine
         }
 
 
-        public Camera(Viewport viewport, Vector2 clampSize)
+        public Camera(Viewport viewport, Vector2 clampSize, Vector2 clampPosition)
         {
             this.viewport = viewport;
-            this.Position = Vector2.Zero;
             this.scroll = 1;
             this.ClampSize = clampSize;
+            this.ClampPosition = clampPosition;
             ResetCamera();
         }
 
@@ -56,13 +58,13 @@ namespace Engine
         {
             GetInput(gameTime);
 
-            Vector2 clampSize = ClampSize;
             Zoom = MathHelper.Clamp(Zoom, 0.75f, 5.0f); // Clamps Zoom value
-            _position.X = MathHelper.Clamp(Position.X, 0f, clampSize.X ); // Clamps camera position on X
-            _position.Y = MathHelper.Clamp(Position.Y, 0f, clampSize.Y ); // Clamps camera position on Y
+            _position.X = MathHelper.Clamp(Position.X, 0f, ClampSize.X ); // Clamps camera position on X
+            _position.Y = MathHelper.Clamp(Position.Y, 0f, ClampSize.Y ); // Clamps camera position on Y
 
-            Transform = Matrix.CreateTranslation(Position.X, Position.Y, 0) * // Main Translation Matrix
-                Matrix.CreateTranslation(-clampSize.X, -clampSize.Y, 0) *
+            Transform = Matrix.CreateTranslation(-Position.X, -Position.Y, 0) * // Main Translation Matrix
+                //Matrix.CreateTranslation(ClampPosition.X, ClampPosition.Y, 0) *
+                Matrix.CreateTranslation(-ClampPosition.X + ClampSize.X, -ClampPosition.Y + ClampSize.Y, 0) *
                 Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) * // Scale Matrix
                 Matrix.CreateTranslation(new Vector3(viewport.Width / 2, viewport.Height / 2, 0)); // Origin Offset Matrix
 
@@ -108,22 +110,22 @@ namespace Engine
 
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                _position.Y += distance;
+                _position.Y -= distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                _position.X += distance;
+                _position.X -= distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                _position.Y -= distance;
+                _position.Y += distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                _position.X -= distance;
+                _position.X += distance;
             }
 
             if (keyboardState.IsKeyDown(Keys.R))

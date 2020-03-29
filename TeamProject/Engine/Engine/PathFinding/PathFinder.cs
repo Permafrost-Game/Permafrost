@@ -31,7 +31,7 @@ namespace Engine.PathFinding
             if (!start.Walkable) throw new PathFindingPathException(start,  $"Start Tile: \"{start}\" is not walkable");
             if (!goal.Walkable) throw new PathFindingPathException(goal,    $"Goal Tile: \"{goal  }\" is not walkable");
 
-            openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, DistanceCalculator(start, goal)) } };
+            openDictionary = new Dictionary<Tile, TileCosts>() { { start, new TileCosts(0, CalculateDistance(start, goal)) } };
             closedDictionary = new Dictionary<Tile, TileCosts>();
 
             ///<summary>While you still have places to look</summary>
@@ -137,10 +137,10 @@ namespace Engine.PathFinding
                 if (tile != null)
                 {
                     //Distance from start to neighbour through current tile
-                    double neighbourToStartCost = currentTotalCost.FromStart + DistanceCalculator(current, tile);
+                    double neighbourToStartCost = currentTotalCost.FromStart + CalculateDistance(current, tile);
 
                     //Make a new total tile cost for neighbour and pass (Distance from start to neighbour through current tile) and (Direct distance from neighbour to goal tile)</summary>
-                    TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, DistanceCalculator(tile, goal))
+                    TileCosts neighbourTileCosts = new TileCosts(neighbourToStartCost, CalculateDistance(tile, goal))
                     {
                         Parent = current
                     };
@@ -158,24 +158,7 @@ namespace Engine.PathFinding
             return tileList;
         }
 
-        ///<summary>
-        ///Calculate the distance of a tile to another tile
-        ///</summary>
-        ///<returns> double toEndCost </returns>
-        private static double DistanceCalculator(Tile current, Tile end)
-        {
-            //Cost from this node to another node
-            double toEndCost;
-
-            //Positions of the tiles in vector form
-            Vector2 currentVector = current.Position;
-            Vector2 endVector2 = end.Position;
-
-            //Standard distance formula: distance = sqrt((X2-X1)^2 + (Y2-Y1)^2)
-            toEndCost = Math.Sqrt((currentVector.X - endVector2.X) * (currentVector.X - endVector2.X) + (currentVector.Y - endVector2.Y) * (currentVector.Y - endVector2.Y));
-
-            return toEndCost;
-        }
+        private static float CalculateDistance(GameObject obj1, GameObject obj2) => Vector2.Distance(obj1.Position, obj2.Position);
 
         /// <summary>
         /// Using the parent tiles we can work our way back to the start from the end tile and store the path.

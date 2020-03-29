@@ -225,7 +225,6 @@ namespace GlobalWarmingGame
 
         protected override void Update(GameTime gameTime)
         {
-            GlobalCombatDetector.UpdateParticipants();
             GameUIController.Update(gameTime);
             
 
