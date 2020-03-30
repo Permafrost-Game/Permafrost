@@ -29,12 +29,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public static Enemy FindColonistThreat (Colonist col)
         {
             foreach (Enemy enemy in enemies) {
-               
+
                 if (col.AttackRange>Vector2.Distance(enemy.Position,col.Position) && enemy.notDefeated)
                 {
                     return enemy;
-                }    
-            } 
+                }
+            }
             return null;
         }
 
@@ -72,8 +72,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             foreach (Colonist col in colonists)
             {
                 double distance = Vector2.Distance(position, col.Position);
-                
-                if (shortestDistance > distance) { 
+
+                if (shortestDistance > distance) {
                     shortestDistance = distance;
                     closestColonist = col;
                 }

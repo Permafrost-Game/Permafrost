@@ -210,7 +210,7 @@ namespace GlobalWarmingGame.UI.Views
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, IEnumerable<T> list = null) 
+        internal void Notification<T>(string text, IEnumerable<T> list = null, int secondDelay = 2) 
         {
             string notificatonText = text;
 
@@ -234,7 +234,7 @@ namespace GlobalWarmingGame.UI.Views
             Notification.AddChild(new Label(notificatonText, Anchor.Center));
             Notification.Visible = true;
 
-            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            Task.Delay(new TimeSpan(0, 0, secondDelay)).ContinueWith(o =>
             {
                 Notification.Dispose();
                 UserInterface.Active.RemoveEntity(Notification);
