@@ -7,7 +7,7 @@ using System;
 
 namespace GlobalWarmingGame.UI
 {
-    class InventoryTransactionMessage
+    class InventoryTransactionMessage : IUpdatableUI
     {
         private readonly Paragraph p;
         private readonly GameObject parent;

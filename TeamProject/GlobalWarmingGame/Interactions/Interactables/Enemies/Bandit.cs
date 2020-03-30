@@ -67,7 +67,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             return loot;
         }
 
-        public override void SetEnemyDead() {
+        protected override void SetDead() {
             
             if (notDefeated)
             {

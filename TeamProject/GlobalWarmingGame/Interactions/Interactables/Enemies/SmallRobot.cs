@@ -74,7 +74,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         return loot;
     }
 
-    public override void SetEnemyDead()
+        protected override void SetDead()
     {
             //remove the enemy from the game 
             if (notDefeated)
