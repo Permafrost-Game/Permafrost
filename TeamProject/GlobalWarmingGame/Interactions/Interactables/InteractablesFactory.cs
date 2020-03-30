@@ -253,6 +253,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 case Interactable.Colonist:
                     return new Colonist(position);
+                case Interactable.Merchant:
+                    return new Merchant(position);
                 case Interactable.Farm:
                     return new Farm(position, textures["farm"]);
                 case Interactable.Rabbit:
@@ -267,9 +269,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new SmallStoneNode(position);
                 case Interactable.StoneNodeBig:
                     return new BigStoneNode(position);
+
                 case Interactable.loot:
                     List<ResourceItem> loot = new List<ResourceItem> { new ResourceItem(Resource.Shotgun, 1) };
                     return new Loot(loot, position);
+
                 case Interactable.TallGrass:
                     return new TallGrass(position);
                 case Interactable.CampFire:
@@ -307,6 +311,7 @@ public enum Interactable
     Rabbit,
     Farm,
     Colonist,
+    Merchant,
     Tower,
     Storage,
     loot,

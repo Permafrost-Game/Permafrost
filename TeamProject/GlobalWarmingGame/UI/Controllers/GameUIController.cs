@@ -2,6 +2,8 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Event;
+using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -275,7 +277,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
         #endregion
 
-        #region Drop-Down Menu and Build logic
+        #region Drop-Down Menus and Build logic
 
         private static bool constructingMode = false;
         private static IBuildable building;
@@ -314,20 +316,21 @@ namespace GlobalWarmingGame.UI.Controllers
                 new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildableCallback)
             });
 
-            if(devMode)
+            if (devMode)
             {
                 //Spawnables drop down
                 view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
-                    .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
-            }
-            
-        }
+                .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
 
+                //Events drop down
+                view.CreateDropDown("Events", Enum.GetValues(typeof(Event)).Cast<Event>()
+                    .Select(e => new ButtonHandler<Event>(e, StartEventCallback)).ToList());
+            }
+        }
         internal static void ResourceNotification(Instruction instruction)
         {
             view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
         }
-
 
         /// <summary>
         /// Selects an Interactable for construction
@@ -351,6 +354,24 @@ namespace GlobalWarmingGame.UI.Controllers
             {
                 GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, destination.Position));
             }
+        }
+
+        /// <summary>
+        /// Start the selected event
+        /// </summary>
+        /// <param name=""></param>
+        private static void StartEventCallback(Event evnt)
+        {
+            EventManager.CreateGameEvent(evnt);
+        }
+
+        /// <summary>
+        /// Notification for a event
+        /// </summary>
+        /// <param name="evnt"></param>
+        internal static void EventNotification(IEvent evnt)
+        {
+            view.Notification<string>(evnt.Description, null, 4);
         }
 
         /// <summary>

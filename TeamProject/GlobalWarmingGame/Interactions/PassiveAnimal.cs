@@ -73,7 +73,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public void OnGoalComplete(Vector2 completedGoal)
         {
-            Goals.Enqueue(this.Position + ai.RandomTranslation());
+            if (ai != null) 
+            {
+                Goals.Enqueue(this.Position + ai.RandomTranslation());
+            }
         }
     }
 }
