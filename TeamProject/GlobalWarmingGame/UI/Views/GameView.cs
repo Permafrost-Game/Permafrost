@@ -24,6 +24,7 @@ namespace GlobalWarmingGame.UI.Views
         private Paragraph temperatureReadout;
         private Panel topPanel;
         private Panel bottomPanel;
+        private Icon temperatureButton;
         private Panel menu;
         private readonly Dictionary<int, Panel> inventories;
         private readonly Dictionary<int, Icon> inventoryButtons;
@@ -81,6 +82,14 @@ namespace GlobalWarmingGame.UI.Views
             UserInterface.Active.AddEntity(topPanel);
             #endregion
 
+
+            temperatureButton = new Icon(IconType.Book, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
+            {
+                OnClick = d => { Tile.TemperatureMode = !Tile.TemperatureMode; }
+            };
+
+            UserInterface.Active.AddEntity(temperatureButton);
+
             #region bottomPanel
             bottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter)
             {
@@ -89,6 +98,8 @@ namespace GlobalWarmingGame.UI.Views
             };
             UserInterface.Active.AddEntity(bottomPanel);
             #endregion
+
+            
         }
 
         
