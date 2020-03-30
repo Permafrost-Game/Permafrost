@@ -33,8 +33,6 @@ namespace GlobalWarmingGame.Resources
             addResource(new ResourceType(Resource.Coal, "Coal", "A lump of coal", TextureIconTypes.coal)); //TODO coal Needs texture
             addResource(new ResourceType(Resource.Leather, "Leather", "Tanned leather", TextureIconTypes.leather)); //TODO leather Needs texture
             addResource(new ResourceType(Resource.MachineParts, "Machine Parts", "Machine parts", TextureIconTypes.machineParts)); //TODO machineParts Needs texture
-            addResource(new ResourceType(Resource.Shotgun, "Shotgun", "A Shotgun", TextureIconTypes.Shotgun));
-            addResource(new ResourceType(Resource.robotCore, "Robot Core", "A Core", TextureIconTypes.robotCore));
 
             //Teir 1 Craftable Resource Type definitions
 
@@ -45,7 +43,10 @@ namespace GlobalWarmingGame.Resources
             addResource(new ResourceType(Resource.Bow, "bow", "A bow with arrows", TextureIconTypes.bow));
             addResource(new ResourceType(Resource.Cloth, "Cloth", "A piece of cloth", TextureIconTypes.cloth));
             addResource(new ResourceType(Resource.Coat, "Coat", "A basic coat", TextureIconTypes.coat));
-            
+            addResource(new ResourceType(Resource.Shotgun, "Shotgun", "A Shotgun", TextureIconTypes.Shotgun));
+
+            addResource(new ResourceType(Resource.robotCore, "Robot Core", "A Core", TextureIconTypes.robotCore));
+
 
         }
 
@@ -72,7 +73,6 @@ public enum Resource
     MachineParts,
     Axe,
     Backpack,
-    BasicRifle,
     Bow,
     Cloth,
     Coat,

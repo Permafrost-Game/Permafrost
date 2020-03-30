@@ -13,11 +13,10 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Enemies
 {
-    
+
     public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
     {
-        
-        private Colonist target=null; //target is anything within aggro range
+        public Colonist Target { get; set; } = null; //target is anything within aggro range
         private Colonist targetInRange=null; //targetInRange is anything in attacking range
 
         //declaring stats variables
@@ -28,13 +27,13 @@ namespace GlobalWarmingGame.Interactions.Enemies
         private double AttackSpeed { get; set; }
 
         public float Speed { get; set; }
-        public readonly double aggroRange = 200; // could be moved down(for now all enemies aggro at the same distance)
+        public double AggroRange { get; set; } = 200; // could be moved down(for now all enemies aggro at the same distance)
 
         //initializing variables for instructions(right clicking an enemy allows you to attack it)
         public List<InstructionType> InstructionTypes { get;} = new List<InstructionType>();
         public Queue<Vector2> Goals { get; set; } = new Queue<Vector2>();
         public Queue<Vector2> Path { get; set; }  = new Queue<Vector2>();
-        
+
 
         //timing variables
         public bool attacking=false;//determines if the enemy is attacking at the moment
@@ -43,7 +42,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         internal bool notDefeated=true;
 
         // variable for random movement of enemies
-        private readonly RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
+        public RandomAI AI { get; set; } = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
         public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
@@ -75,32 +74,36 @@ namespace GlobalWarmingGame.Interactions.Enemies
             Colonist potentialTarget = GlobalCombatDetector.GetClosestColonist(this.Position);
 
             if (potentialTarget != null
-                && aggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
+                && AggroRange > Vector2.Distance(this.Position, potentialTarget.Position))
             {
-                target = potentialTarget;
+                Target = potentialTarget;
 
-                if (this.AttackRange > Vector2.Distance(this.Position, target.Position))
+                if (this.AttackRange > Vector2.Distance(this.Position, Target.Position))
                 {
-                    targetInRange = target;
-                } else
+                    targetInRange = Target;
+                }
+                else
                 {
                     targetInRange = null;
                 }
 
                 Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
-                ChaseColonist(target); //chase the found colonist
+                ChaseColonist(Target); //chase the found colonist
 
             }
             else
             {
-                target = null;
+                Target = null;
                 isAnimated = true;
                 TextureGroupIndex = 1;
                 Speed = 0.05f; //decreasing the default speed when roaming (more natural)
-                Goals.Enqueue(this.Position + ai.RandomTranslation()); //make it go randomly around
+                if (AI != null) 
+                {
+                    Goals.Enqueue(this.Position + AI.RandomTranslation()); //make it go randomly around
+                }
             }
         }
-        
+
         public abstract void AnimateAttack(); //absract method for animating attacks allows more customisation
         public void SetAttacking(bool b)
         {
@@ -112,7 +115,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         }
         public void SetInCombat(bool b)
         {
-            isInCombat = b; 
+            isInCombat = b;
         }
 
         protected abstract void ChaseColonist(Colonist colonist);//abstract to give more customisation
@@ -123,7 +126,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             {
                 this.SetAttacking(true); //flags for animation
                 this.AttackingSound(); //uses subclass implementation for attacking sound based on what enemy it is
-                targetInRange.Health = target.Health - this.AttackPower;
+                targetInRange.Health = Target.Health - this.AttackPower;
             }
             //quick check if target died after the last hit
             if (targetInRange.Health <= 0 || this.Health <= 0)
@@ -137,7 +140,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
         {
             timeToAttack += gameTime.ElapsedGameTime.TotalMilliseconds; //counting how much time has passed since last attack
 
-            if (timeToAttack > 500) //if its been half a second already cancel the attacking 
+            if (timeToAttack > 500) //if its been half a second already cancel the attacking
             {
                 this.SetAttacking(false);
             }
@@ -184,7 +187,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                 {
                     isAnimated = true;
                     TextureGroupIndex = 1; //setting bear to normal texture if its not attacking
-                   
+
                 }
             }
             else //if not in combat
@@ -205,24 +208,23 @@ namespace GlobalWarmingGame.Interactions.Enemies
                         TextureGroupIndex = (delta.Y > 0) ? 2 : 0;
                     }
             }
-       
+
             if (targetInRange != null)
             {
-                PerformCombat(gameTime,targetInRange); // fight if theres anyone to fight      
+                PerformCombat(gameTime,targetInRange); // fight if theres anyone to fight
             }
-            else if(target!=null)
+            else if(Target!=null)
             {
                 SetInCombat(false);
                 TextureGroupIndex = 1;
                 Goals.Clear();
-                ChaseColonist(target); //if there isnt anyone in attacking range then check if anyone is around and chase him
+                ChaseColonist(Target); //if there isnt anyone in attacking range then check if anyone is around and chase him
             }
         }
 
         private void PerformCombat(GameTime gameTime,Colonist targetInRange)
         {
             this.SetInCombat(false);
-
             if ( targetInRange.Health > 0 && this.Health > 0)
             {   //set flags for animation
                 targetInRange.InCombat = true; 
@@ -239,4 +241,3 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
     }
 }
-
