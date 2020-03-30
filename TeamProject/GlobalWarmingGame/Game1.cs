@@ -175,14 +175,12 @@ namespace GlobalWarmingGame
             {
                 var textureSet = new Dictionary<int, Texture2D>();
 
-                Texture2D water = this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water");
-
                 textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
-                textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
-                textureSet.Add(2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
+                textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
+                textureSet.Add(2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
                 textureSet.Add(3, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
-                textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
-                textureSet.Add(5, water);
+                textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
+                textureSet.Add(5, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water"));
 
                 Textures.LoadContent(Content);
 

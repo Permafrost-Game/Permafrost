@@ -9,7 +9,6 @@ using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
-using SimplexNoise;
 using System;
 using System.Collections.Generic;
 using System.IO;

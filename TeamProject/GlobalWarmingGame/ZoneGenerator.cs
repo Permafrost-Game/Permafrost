@@ -4,7 +4,6 @@ using Engine.Drawing;
 using GlobalWarmingGame.Interactions;
 using System.Collections.Generic;
 using System;
-using SimplexNoise;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
 
@@ -45,66 +44,45 @@ namespace GlobalWarmingGame
                 }
             }
 
+            FastNoise noise = new FastNoise(seed + 5);
+            noise.SetNoiseType(FastNoise.NoiseType.Perlin);
+            noise.SetFrequency(0.005f);
 
             foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
-            {
-                //int item = rand.Next(0, 100);
-                float value = ((Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 4f) / 255) + (Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 0.1f) / 255)) / 2;
+            {      
+                float value = noise.GetNoise(t.Position.X, t.Position.Y);
+                Console.WriteLine(value);
 
-                if (!t.Type.Equals("textures/tiles/main_tileset/water"))
+                if (t.Type.Equals("textures/tiles/main_tileset/Grass"))
                 {
+                    if (value > 0.35f || value < -0.35f)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
 
-                    if (t.Type.Equals("textures/tiles/main_tileset/Grass"))
-                    {
-                        if (value > 0.80 && value < 0.85)
-                        {
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                        }
-                        else if (value > 0.85 && value < 0.9)
-                        {
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
-                        }
+                    else if (value < 0.002f && value > 0)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
 
-                        else if (value < 0.1)
-                        {
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
-                        }
-                        else if (value < 0.12)
-                        {
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
-                        }
-                    }
+                    else if (value > -0.002f && value < 0)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
                 }
 
-                if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
+                else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
-                    if (value > 0.85)
-                    {
+                    if (value > 0.5f || value < -0.5f)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
-                    }
                 }
 
-                if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
+                else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
                 {
-                    if (value > 0.9)
-                    {
+                    if (value > 0.5f || value < -0.5f)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                    }
                 }
-                if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
-                {
-                    if (value > 0.9)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                    }
 
-                    else if (rand.Next(0, 10000) == 99)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
-                    }
+                else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
+                {
+                    if (value > 0.6f || value < -0.6f)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                 }
             }
         }
     }
-    
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SimplexNoise;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,18 +33,18 @@ namespace Engine.TileGrid
             for (var x = 0; x < width; x++)
                 for (var y = 0; y < height; y++)
                 {
-                    float value = noise.GetNoise(x + xOffset, y + yOffset) + 0.25f;
-                    int tileCount = tileSet.tileSetTextures.Count - 1; //-1 because of texture 0 is for errors
+                    float value = noise.GetNoise(x + xOffset, y + yOffset) + 0.25f; //offset for shorter if statements
+                    int tileCount = tileSet.TileSetTextures.Count - 1; //-1 because of texture 0 is for errors
 
                     for (int counter = 1; counter <= tileCount; counter++)
                     {
                         if (value <= (0.75f / tileCount) * counter)
                         {
                             tiles[x, y] = new Tile(
-                                texture: tileSet.tileSetTextures[counter],
+                                texture: tileSet.TileSetTextures[counter],
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
-                                walkable: !tileSet.tileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water"),
+                                walkable: !tileSet.TileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water"),
                                 initialTemperature: globalTemperature
                                 );
                             break;
@@ -55,7 +54,7 @@ namespace Engine.TileGrid
                     if(tiles[x, y] == null)
                     {
                         tiles[x, y] = new Tile( //Display an error texture
-                                texture: tileSet.tileSetTextures[0],
+                                texture: tileSet.TileSetTextures[0],
                                 position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                                 size: tileSet.textureSize,
                                 walkable: true,
@@ -79,7 +78,7 @@ namespace Engine.TileGrid
                     if (value < 0.025f)
                     {
                         tiles[x, y] = new Tile(
-                            texture: tileSet.tileSetTextures[5],
+                            texture: tileSet.TileSetTextures[5],
                             position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                             size: tileSet.textureSize,
                             walkable: false,
