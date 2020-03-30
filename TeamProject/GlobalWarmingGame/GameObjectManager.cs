@@ -148,7 +148,7 @@ namespace GlobalWarmingGame
             {
                 try
                 {
-                    IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
+                     IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
 
                     Console.WriteLine("Loading from " + ZoneFilePath());
 
