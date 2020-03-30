@@ -32,7 +32,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         {
             bool triggered = false;
 
-            int numBears = EventManager.rand.Next(2, 4);
+            int numBears = EventManager.rand.Next(1, 3);
 
             for (int i = 0; i < numBears; i++)
             {

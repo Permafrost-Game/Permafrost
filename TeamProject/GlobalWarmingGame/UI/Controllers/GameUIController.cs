@@ -350,7 +350,7 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="evnt"></param>
         internal static void EventNotification(IEvent evnt)
         {
-            view.Notification<string>(evnt.Description, null);
+            view.Notification<string>(evnt.Description, null, 4);
         }
 
         /// <summary>
