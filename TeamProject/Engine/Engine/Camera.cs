@@ -6,8 +6,8 @@ namespace Engine
 {
     public class Camera : IUpdatable
     {
-       
-        protected Viewport viewport;
+
+        public Viewport Viewport { get; set;}
         private MouseState mouseState;
         private KeyboardState keyboardState;
         private int scroll;
@@ -34,14 +34,14 @@ namespace Engine
 
         public Camera(Viewport viewport, Vector2 clampSize, Vector2 clampPosition)
         {
-            this.viewport = viewport;
+            this.Viewport = viewport;
             this.scroll = 1;
             this.ClampSize = clampSize;
             this.ClampPosition = clampPosition;
             ResetCamera();
         }
 
-        private void ResetCamera()
+        public void ResetCamera()
         {
             this.Position = ClampSize / 2;
             this.MovementSpeed = 1f;
@@ -66,7 +66,7 @@ namespace Engine
                 //Matrix.CreateTranslation(ClampPosition.X, ClampPosition.Y, 0) *
                 Matrix.CreateTranslation(-ClampPosition.X + ClampSize.X, -ClampPosition.Y + ClampSize.Y, 0) *
                 Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) * // Scale Matrix
-                Matrix.CreateTranslation(new Vector3(viewport.Width / 2, viewport.Height / 2, 0)); // Origin Offset Matrix
+                Matrix.CreateTranslation(new Vector3(Viewport.Width / 2, Viewport.Height / 2, 0)); // Origin Offset Matrix
 
         }
 

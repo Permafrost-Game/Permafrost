@@ -4,35 +4,55 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.UI.Menus
 {
-    class OverlaidOptionMenu<T> : Entity
+    class OverlaidOptionMenu : Entity
     {
-        public OverlaidOptionMenu(string menuText, IEnumerable<ButtonHandler<T>> buttons, Vector2 size = default, Anchor anchor = Anchor.Auto, Vector2 offset = default) :
+
+        private readonly Panel menu;
+        private readonly Label label;
+        public OverlaidOptionMenu(string menuText, Vector2 size = default, Anchor anchor = Anchor.Auto, Vector2 offset = default) :
             base(size, anchor, offset)
         {
-            Panel Menu = new Panel(new Vector2(350, 450), PanelSkin.Simple)
+            menu = new Panel(new Vector2(350, 450), PanelSkin.Simple)
             {
                 Opacity = 192
             };
 
-            Label label = new Label(menuText, Anchor.TopCenter)
+            label = new Label(menuText, Anchor.TopCenter)
             {
                 Scale = 2f,
                 Offset = new Vector2(0, 10)
             };
-            Menu.AddChild(label);
+            menu.AddChild(label);
 
-            foreach(ButtonHandler<T> b in buttons)
+
+            AddChild(menu);
+        }
+
+        public void ClearButtons()
+        {
+            menu.ClearChildren();
+            menu.AddChild(label);
+        }
+
+        public void AddButtons<T>(IEnumerable<ButtonHandler<T>> buttons, bool displayTag = false)
+        {
+            foreach (ButtonHandler<T> b in buttons)
             {
-                Button currentButton = new Button(b.ToString(), ButtonSkin.Default, Anchor.AutoCenter, new Vector2(250, 50), new Vector2(0, 0))
-                {
-                    OnClick = (Entity e) => { b.action(b.Tag); }
-                };
-
-                currentButton.ButtonParagraph.Scale = 0.8f;
-                Menu.AddChild(currentButton);
+                AddButton(b, displayTag);
             }
+        }
 
-            AddChild(Menu);
+        public void AddButton<T>(ButtonHandler<T> button, bool displayTag = false)
+        {
+            string name = displayTag ? $"{button.ToString()} : {button.Tag.ToString()}" : button.ToString();
+
+            Button currentButton = new Button(name, ButtonSkin.Default, Anchor.AutoCenter, new Vector2(250, 50), new Vector2(0, 0))
+            {
+                OnClick = (Entity e) => { button.action(button.Tag); }
+            };
+
+            currentButton.ButtonParagraph.Scale = 0.8f;
+            menu.AddChild(currentButton);
         }
     }
 }

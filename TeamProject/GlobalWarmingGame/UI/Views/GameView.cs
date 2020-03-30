@@ -64,7 +64,7 @@ namespace GlobalWarmingGame.UI.Views
 
             UserInterface.Active.AddEntity(PauseMenu);
 
-            SettingsMenu = new SettingsMenu
+            SettingsMenu = new SettingsMenu()
             {
                 Visible = false
             };
@@ -204,6 +204,12 @@ namespace GlobalWarmingGame.UI.Views
 
         }
 
+
+        internal void ClearDropDown()
+        {
+            topPanel.ClearChildren();
+        }
+
         /// <summary>
         /// Creates a notification for the user
         /// </summary>
@@ -316,6 +322,7 @@ namespace GlobalWarmingGame.UI.Views
             }
             inventories[id].Visible = true;
         }
+
 
         /// <summary>
         /// Removes an inventory menu
