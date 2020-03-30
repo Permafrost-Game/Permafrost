@@ -106,9 +106,9 @@ namespace GlobalWarmingGame
 
         private static void SetZone(Vector2 position, List<Colonist> colonists = null)
         {
-
+            
             zonePos = position;
-            ZoneMap = GenerateMap(position);
+                ZoneMap = GenerateMap(position);            
             PathFinder.TileMap = ZoneMap;
 
             gameObjects.Clear();
@@ -118,7 +118,7 @@ namespace GlobalWarmingGame
 
             if (colonists != null)
                 foreach (Colonist colonist in colonists)
-                    Add(colonist);
+                   Add(colonist);
                     
 
             if (!serialization)
@@ -154,7 +154,7 @@ namespace GlobalWarmingGame
 
                     foreach (IEnumerable<object> objList in objs.Values)
                         foreach (GameObject gameObject in objList)
-                            Add(gameObject);
+                             Add(gameObject);
                 }
                 catch (FileNotFoundException)
                 {
@@ -171,6 +171,7 @@ namespace GlobalWarmingGame
 
             GreyTilesSize = ZoneMap.Size * ZoneMap.TileSize * 3;
 
+            GreyTiles?.Dispose();
             GreyTiles = new RenderTarget2D(
                 GraphicsDevice,
                 (int)GreyTilesSize.X,
@@ -178,7 +179,7 @@ namespace GlobalWarmingGame
                 false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
-
+            
             GraphicsDevice.SetRenderTarget(GreyTiles);
             GraphicsDevice.Clear(Color.Transparent);
 
