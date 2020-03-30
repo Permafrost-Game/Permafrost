@@ -94,26 +94,29 @@ namespace GlobalWarmingGame.Interactions.Event
         public static Vector2 UtilityRandomEdgeSpawnLocation()
         {
             Vector2 location = new Vector2();
+            //Increased minimum range (0) by two tiles 64
+            int minimum = (int)GameObjectManager.ZoneMap.TileSize.X * 2;
+            //Decreased max range (3200) by two tiles to 3136
+            int max = (int)(GameObjectManager.ZoneMap.Size.X * GameObjectManager.ZoneMap.TileSize.X) - minimum;
+
             switch (rand.Next(0, 4))
             {
-                //Decreased max range (3200) by two tiles to 3136
-                //Increased minimum range (0) by two tiles 64
                 //Assures that textures spawn fully in map
                 case 0:
                     //north edge
-                    location = new Vector2(rand.Next(64, 3136), 64);
+                    location = new Vector2(rand.Next(minimum, max), minimum);
                     break;
                 case 1:
                     //west edge
-                    location = new Vector2(64, rand.Next(64, 3136));
+                    location = new Vector2(minimum, rand.Next(minimum, max));
                     break;
                 case 2:
                     //south edge
-                    location = new Vector2(rand.Next(64, 3136), 3136);
+                    location = new Vector2(rand.Next(minimum, max), max);
                     break;
                 case 3:
                     //east edge
-                    location = new Vector2(3136, rand.Next(64, 3136));
+                    location = new Vector2(max, rand.Next(minimum, max));
                     break;
             }
             return location;

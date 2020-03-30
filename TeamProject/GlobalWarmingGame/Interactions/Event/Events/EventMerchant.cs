@@ -93,8 +93,8 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 //If its time to try remove the merchant
                 if (timeToRemoveMerchant < 0) 
                 {
-                    //If the merchant is close to their spawn (within two tiles)
-                    if (Vector2.Distance(eventMerchant.Position, merchantSpawnLocation) < 64f)
+                    //If the merchant is close to their spawn (roughly within two tiles)
+                    if (Vector2.Distance(eventMerchant.Position, merchantSpawnLocation) < eventTileMap.TileSize.X * 2)
                     {
                         //Remove merchant and set this event to complete
                         GameObjectManager.Remove(eventMerchant);

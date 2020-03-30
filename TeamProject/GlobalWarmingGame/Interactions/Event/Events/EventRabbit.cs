@@ -20,6 +20,9 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         public bool IsComplete { get; private set; }
         public string Description { get; }
 
+        private readonly int minimumNumRabbits = 4;
+        private readonly int maximumNumRabbits = 6;
+
         private readonly TileMap eventTileMap;
 
         public EventRabbit(string description, TileMap tileMap)
@@ -31,7 +34,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         public bool TriggerEvent()
         {
             bool triggered = false;
-            int numRabbits = EventManager.rand.Next(4, 6);
+            int numRabbits = EventManager.rand.Next(minimumNumRabbits, maximumNumRabbits);
 
             //Rabbit group spawn location
             Vector2 eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();

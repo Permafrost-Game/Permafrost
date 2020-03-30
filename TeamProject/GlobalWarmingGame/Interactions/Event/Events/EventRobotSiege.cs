@@ -111,7 +111,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
                 foreach (Enemy enemy in activeRobots)
                 {
                     //If the robot is within 10 tiles of the tower
-                    if (Vector2.Distance(enemy.Position, eventTower.Position) <= 320)
+                    if (Vector2.Distance(enemy.Position, eventTower.Position) <= eventTileMap.TileSize.X * 10)
                     {
                         enemy.AI = new RandomAI(70, 0);
                     }
@@ -125,8 +125,8 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             {
                 foreach (Enemy enemy in activeRobots)
                 {
-                    //If the robot is alive and within 10 tiles of the tower
-                    if (enemy.Health > 0 && Vector2.Distance(enemy.Position, eventTower.Position) <= 320)
+                    //If the robot is alive and roughly within 10 tiles of the tower
+                    if (enemy.Health > 0 && Vector2.Distance(enemy.Position, eventTower.Position) <= eventTileMap.TileSize.X * 10)
                     {
                         eventTower.ResetCapture();
                     }
