@@ -20,6 +20,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
+        private static readonly Random random = new Random();
 
         #region Instruction
 
@@ -180,13 +181,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
-            if (inventory.ContainsType(Resource.Shotgun))
-            {
-                Ranged = true;
-            }
-            else {
-                Ranged= false;
-            }
+            Ranged = inventory.ContainsType(Resource.Shotgun);
         }
 
         internal void SetDead()
@@ -212,13 +207,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if (Goals.Count == 0
                 && instructions.Count > 0
-                && completedGoal == (instructions.First.PassiveMember.Position)
-                    )
+                && this.Position == (instructions.First.PassiveMember.Position)
+                )
             {
                 Instruction currentInstruction = instructions.First;
                 try
                 {
-                        currentInstruction.Start();    
+                    currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
@@ -227,18 +222,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
                 
             }
+
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requiredResources"></param>
-        /// <returns></returns>
         private bool CheckRequireResources(Instruction instruction)
         {
             List<Instruction> instructionsToEnqueue = new List<Instruction>();
 
-            List<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
+            IEnumerable<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
             Queue<ResourceItem> requiredItems = new Queue<ResourceItem>(instruction.Type.RequiredResources.Select(i => i.Clone()));
 
             
@@ -340,7 +331,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                instructions.First.Update(gameTime);
+                try
+                {
+                    instructions.First.Update(gameTime);
+                }
+                catch (InvalidInstruction e)
+                {
+                    OnInstructionComplete(e.instruction);
+                }
+                
                 if (instructions.Count > 0)
                 {
                     if (Goals.Count == 0 )
@@ -568,6 +567,28 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 else
                 {
                     throw new Exception("Async instruction completed");
+                }
+            }
+
+            CheckMove();
+        }
+
+        public void CheckMove()
+        {
+            if (instructions.Count == 0)
+            {
+                //If a colonis is standing on another colonist, he should move
+                foreach (Colonist c in GlobalCombatDetector.colonists)
+                {
+                    if (c != this
+                        && this.Position == c.Position)
+                    {
+                        if (c.Goals.Count == 0)
+                        {
+                            Vector2 tileSize = GameObjectManager.ZoneMap.TileSize;
+                            Goals.Enqueue(this.Position + new Vector2(random.Next(-1, 2) * tileSize.X, random.Next(-1, 2) * tileSize.Y));
+                        }
+                    }
                 }
             }
         }

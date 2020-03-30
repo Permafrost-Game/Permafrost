@@ -2,6 +2,8 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Event;
+using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -42,14 +44,14 @@ namespace GlobalWarmingGame.UI.Controllers
             colonistInventoryIcon = content.Load<Texture2D>("textures/icons/colonist");
         }
 
-        public static void CreateUI(float uiScale = 1f)
+        public static void CreateUI( float uiScale = 1f)
         {
             openInventories.Clear();
             view.Clear();
             view.SetUIScale(uiScale);
 
             view.CreateUI();
-            AddDropDowns();
+            AddDropDowns(DevMode);
             
             GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
             GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
@@ -192,7 +194,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
         private static ButtonHandler<Instruction> CreateTravelOption(GameObject objectClicked, Vector2 translation)
         {
-            List<Colonist> colonists = GameObjectManager.Filter<Colonist>();
+            List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
             HashSet<Colonist> readyToTravel = new HashSet<Colonist>();
             return new ButtonHandler<Instruction> (
                     tag: new Instruction(type: TravelInstruction(null), passiveMember: objectClicked),
@@ -275,18 +277,37 @@ namespace GlobalWarmingGame.UI.Controllers
 
         #endregion
 
-        #region Drop-Down Menu and Build logic
+        #region Drop-Down Menus and Build logic
 
         private static bool constructingMode = false;
         private static IBuildable building;
         private static Interactable SelectedBuildable { get; set; }
         public static Camera Camera { get => GameObjectManager.Camera; }
 
+        private static bool _devMode;
+        public static bool DevMode
+        {
+            get
+            {
+                return _devMode;
+            }
+            set
+            {
+                _devMode = value;
+                if (Game1.GameState == GameState.Settings)
+                {
+                    AddDropDowns(value);
+                }
+                
+            }
+        }
+
         /// <summary>
         /// Adds the Building and Spawn dropdown menus to the view
         /// </summary>
-        private static void AddDropDowns()
+        private static void AddDropDowns(bool devMode)
         {
+            view.ClearDropDown();
             //Buildings drop down
             view.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
             {
@@ -295,16 +316,21 @@ namespace GlobalWarmingGame.UI.Controllers
                 new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildableCallback)
             });
 
-            //Spawnables drop down
-            view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
+            if (devMode)
+            {
+                //Spawnables drop down
+                view.CreateDropDown("Spawn", Enum.GetValues(typeof(Interactable)).Cast<Interactable>()
                 .Select(i => new ButtonHandler<Interactable>(i, SpawnInteractableCallback)).ToList());
-        }
 
+                //Events drop down
+                view.CreateDropDown("Events", Enum.GetValues(typeof(Event)).Cast<Event>()
+                    .Select(e => new ButtonHandler<Event>(e, StartEventCallback)).ToList());
+            }
+        }
         internal static void ResourceNotification(Instruction instruction)
         {
             view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
         }
-
 
         /// <summary>
         /// Selects an Interactable for construction
@@ -323,8 +349,29 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="interactable">the <see cref="Interactable"/> that maps to the <see cref="IInteractable"/> to be added</param>
         private static void SpawnInteractableCallback(Interactable interactable)
         {
-            Vector2 position = GameObjectManager.ZoneMap.Size * GameObjectManager.ZoneMap.Tiles[0, 0].Size - Camera.Position;
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, GameObjectManager.ZoneMap.GetTileAtPosition(position).Position));
+            Tile destination = GameObjectManager.ZoneMap.GetTileAtPosition(Camera.Position);
+            if(destination != null)
+            {
+                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(interactable, destination.Position));
+            }
+        }
+
+        /// <summary>
+        /// Start the selected event
+        /// </summary>
+        /// <param name=""></param>
+        private static void StartEventCallback(Event evnt)
+        {
+            EventManager.CreateGameEvent(evnt);
+        }
+
+        /// <summary>
+        /// Notification for a event
+        /// </summary>
+        /// <param name="evnt"></param>
+        internal static void EventNotification(IEvent evnt)
+        {
+            view.Notification<string>(evnt.Description, null, 4);
         }
 
         /// <summary>
@@ -373,6 +420,11 @@ namespace GlobalWarmingGame.UI.Controllers
                 
             }
             
+            foreach(InventoryTransactionMessage i in inventoryTransactionMessages)
+            {
+                if(i.IsActive)
+                    i.Update(gameTime);
+            }
 
             previousMouseState = currentMouseState;
 
@@ -475,11 +527,9 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <summary>A list of all inventories that have a UI menu</summary>
         private static readonly List<Inventory> openInventories;
 
-        /// <summary>
-        /// Converts <paramref name="inventory"/> into a <c>IEnumberable{ItemElemnt}</c><br/>
-        /// and calls <see cref="View.UpdateInventoryMenu"/>
-        /// </summary>
-        /// <param name="inventory">The <see cref="Inventory"/> to be updated</param>
+        private static readonly List<InventoryTransactionMessage> inventoryTransactionMessages = new List<InventoryTransactionMessage>();
+
+        /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> is to be updated</param>
         private static void UpdateInventoryMenu(IStorage storage)
         {
             Inventory inventory = storage.Inventory;
@@ -518,15 +568,16 @@ namespace GlobalWarmingGame.UI.Controllers
             
         }
 
+
         /// <summary>
         /// Callback for <see cref="Inventory.InventoryChange"/> Event
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="item"></param>
         private static void InventoryChangeCallBack(object sender, ResourceItem item)
         {
             string op = item.Weight >= 0 ? "+" : "";
-            GameObjectManager.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
+            inventoryTransactionMessages.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
             UpdateInventoryMenu((IStorage)sender);
         }
 

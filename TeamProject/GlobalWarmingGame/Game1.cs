@@ -2,6 +2,7 @@
 using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Event;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI;
@@ -20,9 +21,6 @@ namespace GlobalWarmingGame
     /// </summary>
     public class Game1 : Game
     {
-        const string SettingsPath = @"Content/settings.json";
-
-        private float resolutionScale = 0.75f;
 
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -30,7 +28,7 @@ namespace GlobalWarmingGame
         KeyboardInputHandler keyboardInputHandler;
 
         List<Light> lightObjects;
-        private bool lighting = true;
+        private bool lighting = false;
         ShadowmapResolver shadowmapResolver;
         QuadRenderComponent quadRender;
         RenderTarget2D screenShadows;
@@ -116,26 +114,36 @@ namespace GlobalWarmingGame
 
         protected override void Initialize()
         {
-            if (File.Exists(SettingsPath))
-            {
-                var settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(SettingsPath));
-
-                if (bool.Parse(settings["isFullScreen"]))
-                    graphics.ToggleFullScreen();
-
-                resolutionScale = float.Parse(settings["resolutionScale"]);
-            }
-
-            graphics.PreferredBackBufferWidth  = (int) (GraphicsDevice.DisplayMode.Width * resolutionScale);
-            graphics.PreferredBackBufferHeight = (int) (GraphicsDevice.DisplayMode.Height * resolutionScale);
-            graphics.ApplyChanges();
-
             GameUIController.Initalise(Content);
+
+            SettingsManager.OnSettingsChange.Add(OnSettingsChange);
+            SettingsManager.Initalise();
+            
+            
 
             //Removes 60 FPS limit
             this.graphics.SynchronizeWithVerticalRetrace = false;
             base.IsFixedTimeStep = false;
             base.Initialize();
+
+        }
+
+        private void OnSettingsChange()
+        {
+            if (graphics.IsFullScreen != SettingsManager.Fullscreen)
+                graphics.ToggleFullScreen();
+
+            graphics.PreferredBackBufferWidth = (int)(GraphicsDevice.DisplayMode.Width * SettingsManager.ResolutionScale);
+            graphics.PreferredBackBufferHeight = (int)(GraphicsDevice.DisplayMode.Height * SettingsManager.ResolutionScale);
+            graphics.ApplyChanges();
+             
+            if (GameObjectManager.Camera != null)
+            {
+                GameObjectManager.Camera.Viewport = GraphicsDevice.Viewport;
+            }
+
+            GameUIController.DevMode = SettingsManager.DevMode;
+            
 
         }
 
@@ -175,7 +183,7 @@ namespace GlobalWarmingGame
             {
                 var textureSet = new Dictionary<int, Texture2D>();
 
-                textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/old_tileset/error"));
+                textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error"));
                 textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
                 textureSet.Add(2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
                 textureSet.Add(3, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
@@ -210,19 +218,12 @@ namespace GlobalWarmingGame
         {
             MainMenuUIController.UnloadSave();
 
-            var settingsData = JsonConvert.SerializeObject(new
-            {
-                isFullScreen = graphics.IsFullScreen,
-                resolutionScale,
-            }, Formatting.Indented);
-
-            System.IO.File.WriteAllText(SettingsPath, settingsData);
+            SettingsManager.WriteSettings();
         }
         #endregion
 
         protected override void Update(GameTime gameTime)
         {
-            GlobalCombatDetector.UpdateParticipants();
             GameUIController.Update(gameTime);
             
 
@@ -235,6 +236,7 @@ namespace GlobalWarmingGame
                 GameObjectManager.Camera.Update(gameTime);
 
                 TemperatureManager.UpdateTemperature(gameTime);
+                EventManager.UpdateEventTime(gameTime);
 
                 //TODO the .ToArray() here is so that the foreach itterates over a copy of the list, Not ideal as it adds time complexity
                 foreach (Engine.IUpdatable updatable in GameObjectManager.Updatables.ToArray())

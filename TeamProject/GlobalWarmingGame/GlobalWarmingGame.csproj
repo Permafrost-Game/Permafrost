@@ -34,7 +34,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <OutputPath>bin\Windows\AnyCPU\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,6 +67,14 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
+    <Compile Include="Interactions\Event\EventFactory.cs" />
+    <Compile Include="Interactions\Event\EventManager.cs" />
+    <Compile Include="Interactions\Event\Events\EventMerchant.cs" />
+    <Compile Include="Interactions\Event\Events\EventRobotSiege.cs" />
+    <Compile Include="Interactions\Event\Events\EventRabbit.cs" />
+    <Compile Include="Interactions\Event\Events\EventColonist.cs" />
+    <Compile Include="Interactions\Event\Events\EventBearAttack.cs" />
+    <Compile Include="Interactions\Event\Events\IEvent.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Bandit.cs" />
     <Compile Include="Interactions\Interactables\Enemies\SmallRobot.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
@@ -93,6 +101,8 @@
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="Interactions\Interactables\Loot.cs" />
+    <Compile Include="SettingsManager.cs" />
+    <Compile Include="Interactions\Interactables\Merchant.cs" />
     <Compile Include="SoundFactory.cs" />
     <Compile Include="ISerializationInfo.cs" />
     <Compile Include="Resources\IStorage.cs" />

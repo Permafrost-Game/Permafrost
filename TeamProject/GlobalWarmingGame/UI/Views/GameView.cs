@@ -24,6 +24,7 @@ namespace GlobalWarmingGame.UI.Views
         private Paragraph temperatureReadout;
         private Panel topPanel;
         private Panel bottomPanel;
+        private Icon temperatureButton;
         private Panel menu;
         private readonly Dictionary<int, Panel> inventories;
         private readonly Dictionary<int, Icon> inventoryButtons;
@@ -63,7 +64,7 @@ namespace GlobalWarmingGame.UI.Views
 
             UserInterface.Active.AddEntity(PauseMenu);
 
-            SettingsMenu = new SettingsMenu
+            SettingsMenu = new SettingsMenu()
             {
                 Visible = false
             };
@@ -81,6 +82,14 @@ namespace GlobalWarmingGame.UI.Views
             UserInterface.Active.AddEntity(topPanel);
             #endregion
 
+
+            temperatureButton = new Icon(IconType.Book, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
+            {
+                OnClick = d => { Tile.TemperatureMode = !Tile.TemperatureMode; }
+            };
+
+            UserInterface.Active.AddEntity(temperatureButton);
+
             #region bottomPanel
             bottomPanel = new Panel(new Vector2(0, 100), PanelSkin.Simple, Anchor.BottomCenter)
             {
@@ -89,6 +98,8 @@ namespace GlobalWarmingGame.UI.Views
             };
             UserInterface.Active.AddEntity(bottomPanel);
             #endregion
+
+            
         }
 
         
@@ -193,13 +204,19 @@ namespace GlobalWarmingGame.UI.Views
 
         }
 
+
+        internal void ClearDropDown()
+        {
+            topPanel.ClearChildren();
+        }
+
         /// <summary>
         /// Creates a notification for the user
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, IEnumerable<T> list = null) 
+        internal void Notification<T>(string text, IEnumerable<T> list = null, int secondDelay = 2) 
         {
             string notificatonText = text;
 
@@ -223,7 +240,7 @@ namespace GlobalWarmingGame.UI.Views
             Notification.AddChild(new Label(notificatonText, Anchor.Center));
             Notification.Visible = true;
 
-            Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
+            Task.Delay(new TimeSpan(0, 0, secondDelay)).ContinueWith(o =>
             {
                 Notification.Dispose();
                 UserInterface.Active.RemoveEntity(Notification);
@@ -305,6 +322,7 @@ namespace GlobalWarmingGame.UI.Views
             }
             inventories[id].Visible = true;
         }
+
 
         /// <summary>
         /// Removes an inventory menu

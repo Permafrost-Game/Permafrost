@@ -8,28 +8,36 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class GlobalCombatDetector
+    public static class GlobalCombatDetector
     {
-        public static List<Colonist> colonists=GameObjectManager.Filter<Colonist>().ToList();
-        public static List<Enemy> enemies = GameObjectManager.Filter<Enemy>().ToList();
-        public static Enemy FindColonistThreat (Colonist col)
-        {
-            foreach (Enemy enemy in enemies) {
-               
-                if (col.AttackRange>Vector2.Distance(enemy.Position,col.Position) && enemy.notDefeated)
-                {
-                    return enemy;
-                }    
-            } 
-            return null;
-        }
+        public static List<Colonist> colonists= new List<Colonist>();
+        public static List<Enemy> enemies = new List<Enemy>();
 
 
-        internal static void UpdateParticipants()
+        static GlobalCombatDetector()
         {
             GameObjectManager.ObjectAdded += ObjectAddedEventHandler;
             GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
         }
+
+        public static void Initalise()
+        {
+            colonists = GameObjectManager.Filter<Colonist>().ToList();
+            enemies = GameObjectManager.Filter<Enemy>().ToList();
+        }
+
+        public static Enemy FindColonistThreat (Colonist col)
+        {
+            foreach (Enemy enemy in enemies) {
+
+                if (col.AttackRange>Vector2.Distance(enemy.Position,col.Position) && enemy.notDefeated)
+                {
+                    return enemy;
+                }
+            }
+            return null;
+        }
+
 
         private static void ObjectRemovedEventHandler(object sender, GameObject GameObject)
         {
@@ -64,8 +72,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             foreach (Colonist col in colonists)
             {
                 double distance = Vector2.Distance(position, col.Position);
-                
-                if (shortestDistance > distance) { 
+
+                if (shortestDistance > distance) {
                     shortestDistance = distance;
                     closestColonist = col;
                 }
