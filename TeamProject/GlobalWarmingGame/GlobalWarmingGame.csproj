@@ -73,7 +73,6 @@
     <Compile Include="CutSceneFactory.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
-    <Compile Include="Interactions\Interactables\Environment\EnvironmentObject.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />

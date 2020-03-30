@@ -6,11 +6,29 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    public class Bear : Enemy
+    public class Bear : Enemy, IReconstructable
     {
-        
-        public Bear ( Vector2 position, Texture2D[][] textureSet)
-        : base ("Bear",2000, 70, 10, 300, position,textureSet)
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.bear)
+        {
+
+        }
+
+        public Bear ( Vector2 position, int hp = 300)
+        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.bear)
         { }
 
        
@@ -67,6 +85,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             loot.Add(new ResourceItem(Resource.Food, 2));
             
             return loot;
+        }
+
+        public object Reconstruct()
+        {
+            return new Bear(PFSPosition, (int)PFSHealth);
         }
     }
 }

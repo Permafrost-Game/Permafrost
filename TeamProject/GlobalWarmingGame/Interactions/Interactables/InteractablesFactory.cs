@@ -276,13 +276,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.CampFire:
                     return new CampFire(position, textureSet["campFire"]);
                 case Interactable.Robot:
-                    return new Robot(position, textureSet["robot"]);
+                    return new Robot(position);
                 case Interactable.Bear:
-                    return new Bear(position, textureSet["bear"]);
+                    return new Bear(position);
                 case Interactable.Bandit:
-                    return new Bandit(position, textureSet["Bandit"]);
+                    return new Bandit(position);
                 case Interactable.SmallRobot:
-                    return new SmallRobot(position, textureSet["SmallRobot"]);
+                    return new SmallRobot(position);
                 case Interactable.Tower:
                     return new Tower(position);
                 case Interactable.Storage:

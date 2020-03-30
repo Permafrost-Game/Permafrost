@@ -33,9 +33,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public Inventory Inventory { get => inventory; }
 
         [PFSerializable]
-        public readonly int textureSetID;
-
-        [PFSerializable]
         public Vector2 PFSPosition
         {
             get { return Position; }
@@ -142,15 +139,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public Colonist() : this(position: Vector2.Zero) { }
 
-        public Colonist(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.colonist, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        public Colonist(Vector2 position, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
         (
             position: position,
-            textureSet: Textures.MapSet[textureSetType],
+            textureSet: Textures.MapSet[TextureSetTypes.colonist],
             frameTime: COLONIST_FRAME_TIME
         )
         {
-            textureSetID = (int)textureSetType;
-
             if (inventory == null)
                 this.inventory = new Inventory(capacity);
             else
@@ -654,7 +649,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public object Reconstruct()
         {
-            return new Colonist(PFSPosition, (TextureSetTypes)textureSetID, inventory);
+            return new Colonist(PFSPosition, inventory);
         }
 
     }

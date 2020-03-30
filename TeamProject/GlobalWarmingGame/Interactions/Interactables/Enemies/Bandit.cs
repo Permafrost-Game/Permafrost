@@ -15,8 +15,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     {
         private bool killed=false;
 
-        public Bandit(Vector2 position, Texture2D[][] textureSet)
-        : base("Bandit", 1500, 70, 10, 300, position, textureSet)
+        public Bandit(Vector2 position)
+        : base("Bandit", 1500, 70, 10, 300, position, TextureSetTypes.bandit)
         { }
 
         public override void AnimateAttack()

@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         //declaring stats variables
         public float AttackPower { get; set; }
-        public float Health { get; set; }
+        public float Health { get; set; } // PFS & position
         public float AttackRange { get; set; }
         private double AttackSpeed { get; set; }
         public float Speed { get; set; }
@@ -44,11 +44,11 @@ namespace GlobalWarmingGame.Interactions.Enemies
         private readonly RandomAI ai = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
-        public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
+        public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, TextureSetTypes textureSetType) : base
         (
             //constructior setting game object details
             position: position,
-            textureSet: textureSet,
+            textureSet: Textures.MapSet[textureSetType],
             frameTime: 100f
         )
         {

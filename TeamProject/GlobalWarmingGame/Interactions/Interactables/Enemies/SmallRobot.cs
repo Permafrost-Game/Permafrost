@@ -16,7 +16,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
        
         private bool robotExploded=false;
 
-        public SmallRobot(Vector2 position, Texture2D[][] textureSet) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet)
+        public SmallRobot(Vector2 position) : base("SmallRobot", 1000, 70, 0, 500, position, TextureSetTypes.robot)
     {
 
     }

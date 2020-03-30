@@ -11,7 +11,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     {
         
 
-        public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot",5000, 70, 0, 500, position, textureSet)
+        public Robot(Vector2 position) : base("Robot",5000, 70, 0, 500, position, TextureSetTypes.robot)
         {
         
         }
