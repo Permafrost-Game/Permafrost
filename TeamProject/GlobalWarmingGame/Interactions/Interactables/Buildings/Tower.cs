@@ -1,6 +1,9 @@
 ﻿using Engine;
 using Engine.Drawing;
 using GlobalWarmingGame.Action;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
+using GlobalWarmingGame.UI.Controllers;
+using GlobalWarmingGame.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,7 +19,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public Temperature Temperature { get; set; } = new Temperature(100);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get;}
-
+        private List<Robot> robots;
         #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
@@ -51,7 +54,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false, int seed = 0) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]
@@ -79,14 +82,54 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     );
                 Heating = false;
             }
+
+            int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
+
+            Random rand = null;
+            if (seed != 0)
+            {
+                rand = new Random(seed);
+            }
+            else
+            {
+                rand = new Random();
+            }
+
+            robots = new List<Robot>();
+            for (int i = 0; i < rand.Next(1, 5); i++)
+            {
+                Robot robot = (Robot)((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
+                    GameObjectManager.ZoneMap.GetTileAtPosition(this.Position).Type.Equals("textures/tiles/main_tileset/water") ?
+                    this.Position :
+                    this.Position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
+                    ));
+                GameObjectManager.Add(robot);
+                robots.Add(robot);
+            }
         }
 
         private void Capture(Instruction instruction)
         {
-            IsCaptured = true;
-            Heating = true;
-            InstructionTypes.Clear();
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));           
+            bool capturable = true;
+            foreach(Robot robot in robots)
+            {
+                if(robot.Health > 0)
+                {
+                    capturable = false;
+                    break; 
+                }
+            }
+            if (capturable)
+            {
+                IsCaptured = true;
+                Heating = true;
+                InstructionTypes.Clear();
+                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2(this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
+            }
+            else
+            {
+                //notification to kill all robots before capturing tower. 
+            }
         }
 
         public void ResetCapture()

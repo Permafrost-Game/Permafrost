@@ -7,6 +7,7 @@ using System;
 using SimplexNoise;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
+using GlobalWarmingGame.Interactions.Interactables.Enemies;
 
 namespace GlobalWarmingGame
 {
@@ -18,7 +19,6 @@ namespace GlobalWarmingGame
 
         public static void SpawnGameObjects(int seed, Vector2 zonePos)
         {
-            Random rand = new Random(seed);
             int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
 
             Vector2 zoneCenter = tileSize * (GameObjectManager.ZoneMap.Size / 2);
@@ -34,18 +34,9 @@ namespace GlobalWarmingGame
                 )
             {
                 GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
-
-                for (int i = 0; i < rand.Next(1, 5); i++)
-                {
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
-                        GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water") ?
-                        zoneCenter :
-                        zoneCenter + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
-                        ));
-                }
             }
 
-
+            Random rand = new Random(seed);
             foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
             {
                 //int item = rand.Next(0, 100);
