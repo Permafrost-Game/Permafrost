@@ -288,6 +288,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new SmallRobot(position, textureSet["SmallRobot"]);
                 case Interactable.Tower:
                     return new Tower(position);
+                case Interactable.FinalTower:
+                    return new Tower(position, TextureTypes.TowerC, TextureTypes.TowerF, false, true);
                 case Interactable.Storage:
                     return new StorageUnit(position);
                 default:
@@ -313,6 +315,7 @@ public enum Interactable
     Colonist,
     Merchant,
     Tower,
+    FinalTower,
     Storage,
     loot,
     Bandit,

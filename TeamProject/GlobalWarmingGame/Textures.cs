@@ -33,8 +33,9 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.TallGrass,         contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
             Map.Add(TextureTypes.TowerC,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
             Map.Add(TextureTypes.TowerH,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            Map.Add(TextureTypes.TowerF,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/final_tower"));
             Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
-            Map.Add(TextureTypes.loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
+            Map.Add(TextureTypes.loot,              contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
             
 
             #endregion
@@ -203,6 +204,7 @@ namespace GlobalWarmingGame
         TallGrass,
         TowerC,
         TowerH,
+        TowerF,
         StorageUnit,
         loot,
     }

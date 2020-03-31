@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public Temperature Temperature { get; set; } = new Temperature(100);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
-
+        public static bool final_tower_set; 
         #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
@@ -38,6 +38,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public int robots;
         [PFSerializable]
+
+        public bool _isFinal;
         public bool _isCaptured;
         private Random rand; 
         private bool IsCaptured
@@ -52,33 +54,59 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false, bool finalTower = false) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]
         )
         {
-            hostileTextureID = (int)hostileTextureType;
-            capturedTextureID = (int)capturedTextureType;
+           
+                hostileTextureID = (int)hostileTextureType;
+                capturedTextureID = (int)capturedTextureType;
 
-            hostileTexture = Textures.Map[hostileTextureType];
-            capturedTexture = Textures.Map[capturedTextureType];
-            InstructionTypes = new List<InstructionType>();
+                hostileTexture = Textures.Map[hostileTextureType];
+                capturedTexture = Textures.Map[capturedTextureType];
 
-            rand = new Random();
-            this.robots = rand.Next(0, 5);
+                hostileTextureID = (int)hostileTextureType;
+                capturedTextureID = (int)capturedTextureType;
 
-            int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
-            for (int i = 0; i < robots; i++)
+                hostileTexture = Textures.Map[hostileTextureType];
+                capturedTexture = Textures.Map[capturedTextureType];
+                InstructionTypes = new List<InstructionType>();
+
+                rand = new Random();
+            if (finalTower == true && final_tower_set == false)
             {
-                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
-                    GameObjectManager.ZoneMap.GetTileAtPosition(position).Type.Equals("textures/tiles/main_tileset/water") ?
-                    position :
-                    position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
-                    ));
-            }
+                _isFinal = true; 
+                final_tower_set = true;
+                this.robots = rand.Next(10, 20);
 
-            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler; 
+                int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
+                for (int i = 0; i < robots; i++)
+                {
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
+                        GameObjectManager.ZoneMap.GetTileAtPosition(position).Type.Equals("textures/tiles/main_tileset/water") ?
+                        position :
+                        position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
+                        ));
+                }
+            }
+            else
+            {
+                this.robots = rand.Next(0, 5);
+                _isFinal = false; 
+
+                int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
+                for (int i = 0; i < robots; i++)
+                {
+                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
+                        GameObjectManager.ZoneMap.GetTileAtPosition(position).Type.Equals("textures/tiles/main_tileset/water") ?
+                        position :
+                        position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
+                        ));
+                }
+            }
+            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
 
             if (IsCaptured = captured)
             {
@@ -95,6 +123,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     );
                 Heating = false;
             }
+            
         }
 
         private void ObjectRemovedEventHandler(Object sender, GameObject GameObject)
@@ -112,6 +141,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 Heating = true;
                 InstructionTypes.Clear();
                 GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2(this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
+                if (_isFinal)
+                {
+                    //game complete.
+                    //CutSceneFactory.LoadContent(ContentManager);
+                    //CutSceneFactory.PlayVideo(VideoN.Final);
+                }
             }
             else
             {
