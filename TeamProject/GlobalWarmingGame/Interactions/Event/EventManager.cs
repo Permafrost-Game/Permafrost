@@ -76,7 +76,7 @@ namespace GlobalWarmingGame.Interactions.Event
             //Inform user that an event has started
             if (evnt.TriggerEvent())
             {
-                GameUIController.EventNotification(evnt);
+                GameUIController.Notification<string>(evnt.Description, 4);
             }
 
             if (!evnt.IsComplete)

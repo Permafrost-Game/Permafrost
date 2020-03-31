@@ -216,7 +216,7 @@ namespace GlobalWarmingGame.UI.Views
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, IEnumerable<T> list = null, int secondDelay = 2) 
+        internal void Notification<T>(string text, int secondDelay, IEnumerable<T> list = null) 
         {
             string notificatonText = text;
 

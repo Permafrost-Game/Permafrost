@@ -353,9 +353,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         else
                         {
                             //No valid resources
-                            GameUIController.ResourceNotification(instructions.Dequeue());
-                            
-                            
+                            GameUIController.Notification($"Resources Required to {instructions.Dequeue().Type.Name}:", 4, instructions.Dequeue().Type.RequiredResources);
+
+
                         }
                         
                     }
@@ -466,30 +466,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 {
                     timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
                 }
-            }
-        }
-        #endregion
-
-        #region Update Temperature
-        /// <summary>
-        /// Adjust the colonist's temperature based on the tile they are over and their lower comfort range
-        /// </summary>
-        /// <param name="tileTemp">temperature of the tile below the colonist</param>
-        public void UpdateTemp(float tileTemp)
-        {
-            //If tile temperature is greater than the colonists temperature and greater than LowerComfortRange
-            //Increase the colonist's temperature by 2
-            //clamp the colonist's temperature with the tile's temperature as the max 
-            if (tileTemp > Temperature.Value && tileTemp > LowerComfortRange)
-            {
-                Temperature.Value = MathHelper.Clamp(Temperature.Value + tileTemp/2, Temperature.Min, tileTemp);
-            }
-            //If tile temperature is less than the colonists temperature and less than LowerComfortRange
-            //Decrease the colonist's temperature by 1
-            //clamp the colonist's temperature with the tile's temperature as the min
-            else if (tileTemp < Temperature.Value && tileTemp < LowerComfortRange)
-            {
-                Temperature.Value = MathHelper.Clamp(Temperature.Value - tileTemp/2, tileTemp, Temperature.Max);
             }
         }
         #endregion
