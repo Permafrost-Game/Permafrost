@@ -45,8 +45,8 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             //If the map has a tower and it is captured by the player
             if (GameObjectManager.Filter<Tower>().Count() != 0 && GameObjectManager.Filter<Tower>().First()._isCaptured)
             {
-                //Number of robots is equal to the number of colonists / 1.5, this equation can be rebalanced
-                int numRobots = (int)(GameObjectManager.Filter<Colonist>().Count() / 1.5);
+                //Number of robots is equal to the number of colonists / 1.25, this equation can be rebalanced
+                int numRobots = (int)(GameObjectManager.Filter<Colonist>().Count() / 1.25);
                 eventTower = GameObjectManager.Filter<Tower>().First();
 
                 for (int i = 0; i < numRobots; i++)
