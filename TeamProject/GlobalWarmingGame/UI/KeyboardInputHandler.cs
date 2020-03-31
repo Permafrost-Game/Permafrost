@@ -69,6 +69,10 @@ namespace GlobalWarmingGame.UI
                     if (CheckKeyPress(Keys.Escape))
                         Game1.GameState = GameState.Playing;
                     break;
+                case GameState.CutScene:
+                    if (CheckKeyPress(Keys.Escape))
+                        Game1.GameState = GameState.Playing;
+                    break;
                 
             }
             //else if (CheckKeyPress(Keys.F5))

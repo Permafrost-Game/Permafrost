@@ -143,9 +143,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2(this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
                 if (_isFinal)
                 {
-                    //game complete.
-                    //CutSceneFactory.LoadContent(ContentManager);
-                    //CutSceneFactory.PlayVideo(VideoN.Final);
+                    Game1.GameState = GameState.CutScene;
+                    CutSceneFactory.PlayVideo(VideoN.Intro);
                 }
             }
             else

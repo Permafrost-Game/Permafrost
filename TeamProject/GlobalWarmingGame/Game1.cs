@@ -365,6 +365,12 @@ namespace GlobalWarmingGame
                 case GameState.MainMenu:
                     MainMenuUIController.Draw(spriteBatch);
                     break;
+
+                case GameState.CutScene:
+                    spriteBatch.Begin();
+                    CutSceneFactory.Draw(spriteBatch, GraphicsDevice);
+                    spriteBatch.End();
+                    break;
                 default:
                     GraphicsDevice.Clear(Color.Black);
 
@@ -404,7 +410,8 @@ namespace GlobalWarmingGame
         #region Menus
 
         #endregion
+
     }
 
-    public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting }
+    public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting, CutScene }
 }
