@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
+    public class Colonist : AnimatedSprite, IHealthbased, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
