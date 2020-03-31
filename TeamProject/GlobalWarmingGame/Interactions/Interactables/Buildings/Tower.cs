@@ -2,8 +2,6 @@
 using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
-using GlobalWarmingGame.UI.Controllers;
-using GlobalWarmingGame.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,8 +16,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     {
         public Temperature Temperature { get; set; } = new Temperature(100);
         public bool Heating { get; private set; }
-        public List<InstructionType> InstructionTypes { get;}
-        private List<Robot> robots;
+        public List<InstructionType> InstructionTypes { get; }
+
         #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
@@ -38,10 +36,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         private readonly Texture2D hostileTexture;
         private readonly Texture2D capturedTexture;
 
-
+        public int robots;
         [PFSerializable]
         public bool _isCaptured;
-
+        private Random rand; 
         private bool IsCaptured
         {
             get { return _isCaptured; }
@@ -54,7 +52,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false, int seed = 0) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]
@@ -66,6 +64,21 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             hostileTexture = Textures.Map[hostileTextureType];
             capturedTexture = Textures.Map[capturedTextureType];
             InstructionTypes = new List<InstructionType>();
+
+            rand = new Random();
+            this.robots = rand.Next(0, 5);
+
+            int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
+            for (int i = 0; i < robots; i++)
+            {
+                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
+                    GameObjectManager.ZoneMap.GetTileAtPosition(position).Type.Equals("textures/tiles/main_tileset/water") ?
+                    position :
+                    position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
+                    ));
+            }
+
+            GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler; 
 
             if (IsCaptured = captured)
             {
@@ -82,44 +95,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     );
                 Heating = false;
             }
-
-            int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
-
-            Random rand = null;
-            if (seed != 0)
-            {
-                rand = new Random(seed);
-            }
-            else
-            {
-                rand = new Random();
-            }
-
-            robots = new List<Robot>();
-            for (int i = 0; i < rand.Next(1, 5); i++)
-            {
-                Robot robot = (Robot)((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
-                    GameObjectManager.ZoneMap.GetTileAtPosition(this.Position).Type.Equals("textures/tiles/main_tileset/water") ?
-                    this.Position :
-                    this.Position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
-                    ));
-                GameObjectManager.Add(robot);
-                robots.Add(robot);
-            }
         }
 
+        private void ObjectRemovedEventHandler(Object sender, GameObject GameObject)
+        {
+            if(GameObject is Robot)
+            {
+                this.robots--;
+            }
+        }
         private void Capture(Instruction instruction)
         {
-            bool capturable = true;
-            foreach(Robot robot in robots)
-            {
-                if(robot.Health > 0)
-                {
-                    capturable = false;
-                    break; 
-                }
-            }
-            if (capturable)
+            if (robots == 0)
             {
                 IsCaptured = true;
                 Heating = true;
@@ -128,7 +115,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
             else
             {
-                //notification to kill all robots before capturing tower. 
+                //alert you must kill all robots to capture tower. 
             }
         }
 
