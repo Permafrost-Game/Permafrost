@@ -28,8 +28,9 @@ namespace GlobalWarmingGame.Interactions.Event
         //Random number generator based off the seed
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
-        private static float timeToRandomEvent = 120000f;
-        private static readonly float timeUntilRandomEvent = 120000f;
+        //Random events every 4 minutes
+        private static readonly float timeUntilRandomEvent = 240000f;
+        private static float timeToRandomEvent = timeUntilRandomEvent;
 
         /// <summary>
         /// A method in the game's update loop that is called every frame

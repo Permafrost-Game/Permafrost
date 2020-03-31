@@ -71,9 +71,8 @@
     <Compile Include="Interactions\Event\EventManager.cs" />
     <Compile Include="Interactions\Event\Events\EventMerchant.cs" />
     <Compile Include="Interactions\Event\Events\EventRobotSiege.cs" />
-    <Compile Include="Interactions\Event\Events\EventRabbit.cs" />
     <Compile Include="Interactions\Event\Events\EventColonist.cs" />
-    <Compile Include="Interactions\Event\Events\EventBearAttack.cs" />
+    <Compile Include="Interactions\Event\Events\EventSpawnNPCs.cs" />
     <Compile Include="Interactions\Event\Events\IEvent.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Bandit.cs" />
     <Compile Include="Interactions\Interactables\Enemies\SmallRobot.cs" />
