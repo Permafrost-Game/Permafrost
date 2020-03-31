@@ -353,7 +353,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         else
                         {
                             //No valid resources
-                            GameUIController.Notification($"Resources Required to {instructions.Dequeue().Type.Name}:", 4, instructions.Dequeue().Type.RequiredResources);
+                            instructions.Dequeue();
+                            GameUIController.Notification($"Resources Required to {i1.Type.Name}:", 4, i1.Type.RequiredResources);
 
 
                         }
