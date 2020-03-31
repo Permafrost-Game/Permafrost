@@ -33,9 +33,9 @@ namespace GlobalWarmingGame.Interactions.Event
                 case Event.BanditAmbush:
                     return new EventSpawnNPCs($"{Interactable.Bandit}s have sprung an ambush.", GameObjectManager.ZoneMap, Interactable.Bandit, 4, false, false, 12);
                 case Event.SmallRobot:
-                    return new EventSpawnNPCs($"{Interactable.SmallRobot}s are scounting nearby.", GameObjectManager.ZoneMap, Interactable.SmallRobot, 3, false, true);
+                    return new EventSpawnNPCs($"{Interactable.SmallRobot}s are scounting nearby.", GameObjectManager.ZoneMap, Interactable.SmallRobot, 3, false, true, 1);
                 case Event.Robot:
-                    return new EventSpawnNPCs($"{Interactable.Robot}s are patrolling nearby.", GameObjectManager.ZoneMap, Interactable.Robot, 3);
+                    return new EventSpawnNPCs($"{Interactable.Robot}s are patrolling nearby.", GameObjectManager.ZoneMap, Interactable.Robot, 3, false, false, 1);
                 case Event.Rabbit:
                     return new EventSpawnNPCs($"A group of {Interactable.Rabbit}s are wondering nearby.", GameObjectManager.ZoneMap, Interactable.Rabbit, 6, true, true);
                 default:
