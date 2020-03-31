@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Event
     public static class EventManager
     {
         //Utility random number generator for all events
-        public static readonly Random rand = new Random(GameObjectManager.seed);
+        public static readonly Random rand = new Random();
 
         //Turn random events on and off
         public static bool RandomEvents { get; set; } = true;

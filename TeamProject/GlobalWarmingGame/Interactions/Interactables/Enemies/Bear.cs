@@ -8,9 +8,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     public class Bear : Enemy
     {
-        
+
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.Food, 8),
+                new ResourceItem(Resource.Leather, 2)
+            };
+
         public Bear ( Vector2 position, Texture2D[][] textureSet)
-        : base ("Bear",2000, 70, 10, 300, position,textureSet)
+        : base ("Bear",2000, 70, 6, 300, position,textureSet)
         { }
 
        
@@ -27,7 +33,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             //remove the enemy from the game 
             this.DeathSound();
             notDefeated = false;
-            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+            GameObjectManager.Add(new Loot(loot, this.Position));
             GameObjectManager.Remove(this);
         }
 
@@ -60,13 +66,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         internal override void DeathSound()
         {
             SoundFactory.PlaySoundEffect(Sound.bearDying);
-        }
-        internal override List<ResourceItem> Loot()
-        {
-            List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Food, 2));
-            
-            return loot;
         }
     }
 }

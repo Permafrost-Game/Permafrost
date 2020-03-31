@@ -83,12 +83,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (value == false)
                 {
                     AttackRange = 70;
-                    AttackPower = 30;
+                    AttackPower = 18;
                     AttackSpeed = 1000;
                 }
                 else {
                     AttackRange = 350;
-                    AttackPower = 45;
+                    AttackPower = 27;
                     AttackSpeed = 1500;
                 }
 
@@ -116,8 +116,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Temperature
         public Temperature Temperature { get; set; } = new Temperature(38);
-        public float UpperComfortRange { get; private set; } = 50;
-        public float LowerComfortRange { get; private set; } = 15;
+        public float LowerComfortRange { get; private set; } = 5;
         private float timeToFreezeCheck;
         private readonly float timeUntillNextFreezeCheck = 2000f;
         #endregion
@@ -143,7 +142,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public Colonist() : this(position: Vector2.Zero) { }
 
-        public Colonist(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.colonist, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        public Colonist(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Colonist, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
         (
             position: position,
             textureSet: Textures.MapSet[textureSetType],
@@ -161,12 +160,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
             
 
             AttackRange = 70;
-            AttackPower = 30;
+            AttackPower = 18;
             AttackSpeed = 1000;
             lastPosition = position;
 
 
-            Speed = 0.25f;
+            Speed = 0.15f;
             MaxHealth = 100f;
             Health = MaxHealth;
 
@@ -419,7 +418,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeToFreezeCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToFreezeCheck < 0f)
             {
-                if (Temperature.Value < LowerComfortRange || Temperature.Value > UpperComfortRange)
+                if (Temperature.Value < LowerComfortRange)
                 {
                     Health -= 1;
                 }
@@ -438,23 +437,23 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillNextHungerCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntillNextHungerCheck < 0)
             {
-                //If colonist doesn't have food on them, they are starving -1 health
-                if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
+                //If the colonist is hungry they take health damage and reset else increase hunger
+                if (Hunger == 5)
                 {
-                    //If the colonist is hungry they take health damage and reset else increase hunger
-                    if (Hunger == 5)
+                    //If colonist doesn't have food on them, they are starving -1 health
+                    if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
                     {
                         Health -= 1;
                     }
                     else
                     {
-                        Hunger++;
+                        //Food was eaten, reset hunger
+                        Hunger = 0;
                     }
                 }
-                else 
+                else
                 {
-                    //Food was eaten, reset hunger
-                    Hunger = 0;
+                    Hunger++;
                 }
 
                 //If colonist's current temperature is lower than their acceptable lowerComfortRange
@@ -483,14 +482,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
             //clamp the colonist's temperature with the tile's temperature as the max 
             if (tileTemp > Temperature.Value && tileTemp > LowerComfortRange)
             {
-                Temperature.Value = MathHelper.Clamp(Temperature.Value + 2, Temperature.Min, tileTemp);
+                Temperature.Value = MathHelper.Clamp(Temperature.Value + tileTemp/2, Temperature.Min, tileTemp);
             }
             //If tile temperature is less than the colonists temperature and less than LowerComfortRange
             //Decrease the colonist's temperature by 1
             //clamp the colonist's temperature with the tile's temperature as the min
             else if (tileTemp < Temperature.Value && tileTemp < LowerComfortRange)
             {
-                Temperature.Value = MathHelper.Clamp(Temperature.Value - 1, tileTemp, Temperature.Max);
+                Temperature.Value = MathHelper.Clamp(Temperature.Value - tileTemp/2, tileTemp, Temperature.Max);
             }
         }
         #endregion

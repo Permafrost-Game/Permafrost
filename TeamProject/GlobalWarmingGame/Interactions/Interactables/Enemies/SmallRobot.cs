@@ -13,69 +13,70 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     class SmallRobot : Enemy
     {
-       
-        private bool robotExploded=false;
+
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.MachineParts, 2),
+                new ResourceItem(Resource.RobotCore, 1)
+            };
+
+        private bool robotExploded = false;
 
         public SmallRobot(Vector2 position, Texture2D[][] textureSet) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet)
-    {
+        {
 
-    }
+        }
 
-    public override void AnimateAttack()
-    {
-        isAnimated = true;
-        this.TextureGroupIndex = 3;
+        public override void AnimateAttack()
+        {
+            isAnimated = true;
+            this.TextureGroupIndex = 3;
 
-    }
+        }
 
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-            if (robotExploded) {
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            if (robotExploded)
+            {
                 GameObjectManager.Remove(this);
             }
 
         }
 
-    protected override void ChaseColonist(Colonist colonist)
-    {
-        Vector2 fakeLeftXcoordinate = new Vector2(colonist.Position.X - 40, colonist.Position.Y);
-        Vector2 fakeRightXcoordinate = new Vector2(colonist.Position.X + 40, colonist.Position.Y);
-        if (this.Position.X < colonist.Position.X)
+        protected override void ChaseColonist(Colonist colonist)
         {
-            Goals.Enqueue(fakeLeftXcoordinate);
+            Vector2 fakeLeftXcoordinate = new Vector2(colonist.Position.X - 40, colonist.Position.Y);
+            Vector2 fakeRightXcoordinate = new Vector2(colonist.Position.X + 40, colonist.Position.Y);
+            if (this.Position.X < colonist.Position.X)
+            {
+                Goals.Enqueue(fakeLeftXcoordinate);
+            }
+            else
+            {
+                Goals.Enqueue(fakeRightXcoordinate);
+            }
         }
-        else
+
+        internal override void AttackingSound()
         {
-            Goals.Enqueue(fakeRightXcoordinate);
+            SoundFactory.PlaySoundEffect(Sound.robotFire);
         }
-    }
 
-    internal override void AttackingSound()
-    {
-        SoundFactory.PlaySoundEffect(Sound.robotFire);
-    }
+        public override void EnemyAttack(GameTime gameTime)
+        {
+            Random dmg = new Random();
+            AttackPower = dmg.Next(1, 6);
+            base.EnemyAttack(gameTime);
+        }
 
-    public override void EnemyAttack(GameTime gameTime)
-    {
-        Random dmg = new Random();
-        AttackPower = dmg.Next(1, 10);
-        base.EnemyAttack(gameTime);
-    }
+        internal override void DeathSound()
+        {
+            SoundFactory.PlaySoundEffect(Sound.robotBreak);
+        }
 
-    internal override void DeathSound()
-    {
-        SoundFactory.PlaySoundEffect(Sound.robotBreak);
-    }
-    internal override List<ResourceItem> Loot()
-    {
-        List<ResourceItem> loot = new List<ResourceItem>();
-        loot.Add(new ResourceItem(Resource.robotCore, 1));
-        return loot;
-    }
-
-    public override void SetEnemyDead()
-    {
+        public override void SetEnemyDead()
+        {
             //remove the enemy from the game 
             if (notDefeated)
             {
@@ -87,7 +88,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 InstructionTypes.Clear();
                 InstructionTypes.Add(new InstructionType("Extract Core", $"Extract core (chance of explosion!)", onComplete: SelfDestruct));
             }
-    }
+        }
 
         private void SelfDestruct(Instruction instruction)
         {
@@ -95,20 +96,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             int chance = rd.Next(1, 100);
             if (chance > 50)
             {
-                GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+                GameObjectManager.Add(new Loot(loot, this.Position));
                 robotExploded = true;
             }
             else
             {
                 SoundFactory.PlaySoundEffect(Sound.Explosion);
                 TextureGroupIndex = 5;
-                Colonist colonist = (Colonist) instruction.ActiveMember;
+                Colonist colonist = (Colonist)instruction.ActiveMember;
                 colonist.Health = colonist.Health - 50;
                 Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
                 {
                     robotExploded = true;
                 });
-               
+
             }
         }
     }

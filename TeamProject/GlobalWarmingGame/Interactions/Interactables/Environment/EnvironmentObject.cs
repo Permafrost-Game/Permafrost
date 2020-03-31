@@ -3,10 +3,12 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
+    [Obsolete]
     public class EnvironmentObject : Sprite, IInteractable
     {
         public List<InstructionType> InstructionTypes { get; set; }

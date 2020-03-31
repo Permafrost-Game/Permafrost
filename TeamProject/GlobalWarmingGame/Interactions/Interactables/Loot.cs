@@ -34,7 +34,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        public Loot(List<ResourceItem> loot,Vector2 position, TextureTypes textureType = TextureTypes.loot) : base
+        public Loot(List<ResourceItem> loot,Vector2 position, TextureTypes textureType = TextureTypes.Loot) : base
         (
             position: position,
             texture: Textures.Map[textureType]

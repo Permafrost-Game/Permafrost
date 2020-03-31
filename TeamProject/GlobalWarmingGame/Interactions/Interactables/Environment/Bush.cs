@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         [PFSerializable]
         public bool _isHarvestable;
 
-        private static readonly float timeToHarvestable = 6000f;
+        private static readonly float timeToHarvestable = 20000f;
 
         [PFSerializable]
         public float timeUnitlHarvestable;
@@ -73,12 +73,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                 id: "forrage",
                 name: "Forrage",
                 checkValidity: (Instruction i) => IsHarvestable,
+                timeCost: 1000f,
                 onComplete: Forrage
                 );
             InstructionTypes.Add(new InstructionType(
                 id: "chop",
                 name: "Chop",
                 checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                timeCost: 2000f,
                 onComplete: Chop)
                 );
 
