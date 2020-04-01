@@ -64,7 +64,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             this.Health = maxHp;
             this.AttackPower = aPower;
             this.AttackSpeed = aSpeed;
-            Speed = 0.2f;
+            Speed = 0.1f;
         }
 
         protected abstract void SetDead();
@@ -90,7 +90,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                     targetInRange = null;
                 }
 
-                Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
+                Speed = 0.1f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
                 ChaseColonist(Target); //chase the found colonist
 
             }
@@ -239,8 +239,5 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         internal abstract void AttackingSound();
         internal abstract void DeathSound();
-        internal abstract List<ResourceItem> Loot();
-
-
     }
 }

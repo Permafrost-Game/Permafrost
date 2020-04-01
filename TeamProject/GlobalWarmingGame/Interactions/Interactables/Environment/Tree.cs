@@ -73,7 +73,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(Resource.Axe),
                     onStart: StartChop,
                     onComplete: EndChop,
-                    timeCost: 3500f
+                    timeCost: 4000f
                     );
                 InstructionTypes.Add(chop);
             }

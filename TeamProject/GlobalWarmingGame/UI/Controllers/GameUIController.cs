@@ -335,9 +335,14 @@ namespace GlobalWarmingGame.UI.Controllers
                     .Select(e => new ButtonHandler<Event>(e, StartEventCallback)).ToList());
             }
         }
-        internal static void ResourceNotification(Instruction instruction)
+
+        /// <summary>
+        /// Generic Notification
+        /// </summary>
+        /// <param name="evnt"></param>
+        internal static void Notification<T>(string text, int secondDelay = 2, IEnumerable<T> list = null)
         {
-            view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
+            view.Notification(text, secondDelay, list);
         }
 
         /// <summary>
@@ -371,15 +376,6 @@ namespace GlobalWarmingGame.UI.Controllers
         private static void StartEventCallback(Event evnt)
         {
             EventManager.CreateGameEvent(evnt);
-        }
-
-        /// <summary>
-        /// Notification for a event
-        /// </summary>
-        /// <param name="evnt"></param>
-        internal static void EventNotification(IEvent evnt)
-        {
-            view.Notification<string>(evnt.Description, null, 4);
         }
 
         /// <summary>

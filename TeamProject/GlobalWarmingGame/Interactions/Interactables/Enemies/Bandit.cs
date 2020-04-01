@@ -15,8 +15,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
     {
         private bool killed=false;
 
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.Food, 2),
+                new ResourceItem(Resource.Coat, 1),
+                new ResourceItem(Resource.Axe, 1)
+            };
+
         public Bandit(Vector2 position, Texture2D[][] textureSet)
-        : base("Bandit", 1500, 70, 10, 300, position, textureSet)
+        : base("Bandit", 1500, 70, 6, 300, position, textureSet)
         { }
 
         public override void AnimateAttack()
@@ -58,14 +65,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             SoundFactory.PlaySoundEffect(Sound.banditDying);
         }
-        internal override List<ResourceItem> Loot()
-        {
-            List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Food, 2));
-            loot.Add(new ResourceItem(Resource.Axe, 1));
-            loot.Add(new ResourceItem(Resource.Pickaxe, 1));
-            return loot;
-        }
 
         protected override void SetDead() {
             
@@ -97,7 +96,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             SoundFactory.PlaySoundEffect(Sound.banditDying);
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+                GameObjectManager.Add(new Loot(loot, this.Position));
                 killed = true;
             });
         }

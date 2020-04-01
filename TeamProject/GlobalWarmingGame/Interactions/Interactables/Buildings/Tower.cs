@@ -13,7 +13,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Tower : Sprite, IInteractable, IReconstructable, IHeatSource
     {
-        public Temperature Temperature { get; set; } = new Temperature(100);
+        public Temperature Temperature { get; set; } = new Temperature(1000);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get;}
 

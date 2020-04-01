@@ -25,14 +25,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Leather,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 2)
+                        new ResourceItem(Resource.Food, 4)
                     }
                 },
                 {
                     Resource.MachineParts,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 6)
+                        new ResourceItem(Resource.Food, 4)
                     }
                 },
                 {
@@ -53,28 +53,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Pickaxe,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
-                    }
-                },
-                {
-                    Resource.Backpack,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Food, 8)
+                        new ResourceItem(Resource.Food, 5)
                     }
                 },
                 {
                     Resource.Shotgun,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 12)
-                    }
-                },
-                {
-                    Resource.Bow,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Food, 8)
+                        new ResourceItem(Resource.Food, 24)
                     }
                 },
                 {
@@ -88,7 +74,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Coat,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
+                        new ResourceItem(Resource.Food, 8)
                     }
                 }
             };
@@ -96,7 +82,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         private readonly Random rand;
 
-        public Merchant(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.colonist) : base
+        public Merchant(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Colonist) : base
         (
             position, "Merchant", Textures.MapSet[textureSetType], 0.05f, null
         )
@@ -114,7 +100,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     InstructionTypes.Add(new InstructionType((r = Resource.Cloth).ToString(), "Buy Cloth", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.MachineParts).ToString(), "Buy MachineParts", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Shotgun).ToString(), "Buy Shotgun", requiredResources: prices[r], onComplete: Trade));
-                    InstructionTypes.Add(new InstructionType((r = Resource.Bow).ToString(), "Buy Bow", requiredResources: prices[r], onComplete: Trade));
                     break;
 
                 //Merchant with tool related goods
@@ -122,7 +107,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     InstructionTypes.Add(new InstructionType((r = Resource.Axe).ToString(), "Buy Axe", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Hoe).ToString(), "Buy Hoe", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Pickaxe).ToString(), "Buy Pickaxe", requiredResources: prices[r], onComplete: Trade));
-                    InstructionTypes.Add(new InstructionType((r = Resource.Backpack).ToString(), "Buy Backpack", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Coat).ToString(), "Buy Coat", requiredResources: prices[r], onComplete: Trade));
                     break;
             }

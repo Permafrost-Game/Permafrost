@@ -13,7 +13,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Farm : Sprite, IInteractable, Engine.IUpdatable, IBuildable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 4)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 8), 
+                                                                                                   new ResourceItem(Resource.Hoe, 1)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -21,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         private readonly InstructionType harvest;
         private bool growing;
         private float timeUntilGrown;
-        private static readonly float growTime = 20000f;
+        private static readonly float growTime = 30000f;
 
         public Farm(Vector2 position, Texture2D texture) : base
         (
@@ -36,7 +37,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 name: "Plant",
                 description: "Plant",
                 checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
-                timeCost: 3000f,
+                timeCost: 4000f,
                 onComplete: Plant
                 );
             harvest = new InstructionType(
@@ -44,16 +45,16 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 name: "Harvest",
                 description: "Harvest",
                 checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
-                timeCost: 3000f,
+                timeCost: 4000f,
                 onComplete: Harvest);
 
-            timeUntilGrown = 20000f;
+            timeUntilGrown = growTime;
             InstructionTypes.Add(plant);
         }
 
         private void Harvest(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 10));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 20));
 
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);

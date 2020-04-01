@@ -30,7 +30,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         }
 
-        public Rabbit(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.rabbit) : base
+        public Rabbit(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Rabbit) : base
         (
             position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
@@ -44,7 +44,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public void Hunt(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 4));
             Dispose();
             SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
         }

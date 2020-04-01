@@ -82,7 +82,7 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             if (timeToStopMerchant < 0)
             {
                 //If the merchant is close to their spawn (roughly within two tiles)
-                if (Vector2.Distance(eventMerchant.Position, closestColonistLocation) < eventTileMap.TileSize.X * 2) 
+                if (Vector2.Distance(eventMerchant.Position, closestColonistLocation) <= eventTileMap.TileSize.X * 2) 
                 {
                     eventMerchant.Goals.Clear();
                 }

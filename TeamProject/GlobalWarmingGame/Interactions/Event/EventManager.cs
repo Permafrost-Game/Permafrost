@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions.Event
     public static class EventManager
     {
         //Utility random number generator for all events
-        public static readonly Random rand = new Random(GameObjectManager.seed);
+        public static readonly Random rand = new Random();
 
         //Turn random events on and off
         public static bool RandomEvents { get; set; } = true;
@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Event
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
         //Random events every 4 minutes
-        private static readonly float timeUntilRandomEvent = 240000f;
+        private static readonly float timeUntilRandomEvent = 300000f;
         private static float timeToRandomEvent = timeUntilRandomEvent;
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace GlobalWarmingGame.Interactions.Event
             //Inform user that an event has started
             if (evnt.TriggerEvent())
             {
-                GameUIController.EventNotification(evnt);
+                GameUIController.Notification<string>(evnt.Description, 4);
             }
 
             if (!evnt.IsComplete)
