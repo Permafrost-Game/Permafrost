@@ -300,7 +300,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     droppedItems.Add(item);
                 }
 
-                GameObjectManager.Add(new Loot(droppedItems, this.Position));
+                if (droppedItems.Count > 0) 
+                {
+                    GameObjectManager.Add(new Loot(droppedItems, this.Position));
+                }
+
                 GameObjectManager.Remove(this);
                 return;
             }
