@@ -144,18 +144,21 @@ namespace GlobalWarmingGame.Interactions
                 float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).Temperature.Value;
                 float colonistTemp = colonist.Temperature.Value;
 
-                float tempDifference = MathHelper.Distance(colonistTemp, tileTemp);
+                float absoluteTempDifference = MathHelper.Distance(colonistTemp, tileTemp);
 
-                if (colonist.LowerComfortRange < tileTemp)
+                if (colonist.Temperature.Value < tileTemp)
                 {
-                    colonist.Temperature.Value = MathHelper.Clamp(colonistTemp + (tempDifference / 8), tileTemp, colonist.Temperature.Max);
+                    colonistTemp += absoluteTempDifference / 4;
                 }
-                else
+                else if (colonist.Temperature.Value > tileTemp)
                 {
-                    colonist.Temperature.Value = MathHelper.Clamp(colonistTemp - (tempDifference / 16), colonist.Temperature.Min, tileTemp);
+                    colonistTemp -= absoluteTempDifference / 8;
                 }
 
-                Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health + " hunger: " + colonist.Hunger);
+                //Cap colonists temperature at -50 and 50
+                colonist.Temperature.Value = MathHelper.Clamp(colonistTemp, colonist.TemperatureMin, colonist.TemperatureMax);
+
+                Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health);
             }
         }
         #endregion

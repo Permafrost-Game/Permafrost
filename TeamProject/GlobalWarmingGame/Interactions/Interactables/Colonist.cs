@@ -116,6 +116,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Temperature
         public Temperature Temperature { get; set; } = new Temperature(38);
+        public float TemperatureMax { get; }
+        public float TemperatureMin { get; }
         public float LowerComfortRange { get; private set; } = 5;
         private float timeToFreezeCheck;
         private readonly float timeUntillNextFreezeCheck = 2000f;
@@ -169,6 +171,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             MaxHealth = 100f;
             Health = MaxHealth;
 
+            TemperatureMin = Temperature.Min;
+            TemperatureMax = 50;
             timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
             timeToFreezeCheck = timeUntillNextFreezeCheck;
 
