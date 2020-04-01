@@ -115,7 +115,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
         #region Temperature
-        public Temperature Temperature { get; set; } = new Temperature(38);
+        public Temperature Temperature { get; set; } = new Temperature(50);
         public float TemperatureMax { get; }
         public float TemperatureMin { get; }
         public float LowerComfortRange { get; private set; } = 5;

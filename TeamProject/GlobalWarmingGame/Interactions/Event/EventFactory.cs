@@ -29,15 +29,15 @@ namespace GlobalWarmingGame.Interactions.Event
                 case Event.Merchant:
                     return new EventMerchant("A merchant has arrived.", GameObjectManager.ZoneMap);
                 case Event.BearAttack:
-                    return new EventSpawnNPCs($"Some angry {Interactable.Bear}s are nearby.", GameObjectManager.ZoneMap, Interactable.Bear, 3);
+                    return new EventSpawnNPCs($"Some angry {Interactable.Bear}s are nearby.", GameObjectManager.ZoneMap, Interactable.Bear, 4, 3);
                 case Event.BanditAmbush:
-                    return new EventSpawnNPCs($"{Interactable.Bandit}s have sprung an ambush.", GameObjectManager.ZoneMap, Interactable.Bandit, 4, false, false, 12);
+                    return new EventSpawnNPCs($"{Interactable.Bandit}s have sprung an ambush.", GameObjectManager.ZoneMap, Interactable.Bandit, 3, 3, false, false, 12);
                 case Event.SmallRobot:
-                    return new EventSpawnNPCs($"{Interactable.SmallRobot}s are scounting nearby.", GameObjectManager.ZoneMap, Interactable.SmallRobot, 3, false, true, 1);
+                    return new EventSpawnNPCs($"{Interactable.SmallRobot}s are scounting nearby.", GameObjectManager.ZoneMap, Interactable.SmallRobot, 3, 3, false, true, 1);
                 case Event.Robot:
-                    return new EventSpawnNPCs($"{Interactable.Robot}s are patrolling nearby.", GameObjectManager.ZoneMap, Interactable.Robot, 3, false, false, 1);
+                    return new EventSpawnNPCs($"{Interactable.Robot}s are patrolling nearby.", GameObjectManager.ZoneMap, Interactable.Robot, 3, 3, false, false, 1);
                 case Event.Rabbit:
-                    return new EventSpawnNPCs($"A group of {Interactable.Rabbit}s are wondering nearby.", GameObjectManager.ZoneMap, Interactable.Rabbit, 6, true, true);
+                    return new EventSpawnNPCs($"A group of {Interactable.Rabbit}s are wondering nearby.", GameObjectManager.ZoneMap, Interactable.Rabbit, 6, 0, true, true);
                 default:
                     throw new NotImplementedException(eventEnum + " has not been implemented");
             }

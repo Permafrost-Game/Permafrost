@@ -29,7 +29,7 @@ namespace GlobalWarmingGame.Interactions.Event
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
         //Random events every 4 minutes
-        private static readonly float timeUntilRandomEvent = 240000f;
+        private static readonly float timeUntilRandomEvent = 300000f;
         private static float timeToRandomEvent = timeUntilRandomEvent;
 
         /// <summary>

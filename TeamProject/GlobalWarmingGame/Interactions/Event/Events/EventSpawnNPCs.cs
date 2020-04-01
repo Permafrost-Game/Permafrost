@@ -28,18 +28,21 @@ namespace GlobalWarmingGame.Interactions.Event.Events
         private readonly int minimumNumNPCs = 1;
         private readonly int maximumNumNPCs;
 
+        private readonly int requiredNumColonists;
+
         //Multiply aggro range for (not)peaceful NPCs
         private readonly int aggroMultiplier;
 
         private readonly TileMap eventTileMap;
 
-        public EventSpawnNPCs(string description, TileMap tileMap, Interactable npc, int maximumNumNPCs, bool peaceful = false, bool groupedUp = false, int aggroMultiplier = 8)
+        public EventSpawnNPCs(string description, TileMap tileMap, Interactable npc, int maximumNumNPCs, int requiredNumColonists, bool peaceful = false, bool groupedUp = false, int aggroMultiplier = 8)
         {
             Description = description;
             npcEnum = npc;
             eventTileMap = tileMap;
             this.maximumNumNPCs = maximumNumNPCs;
             this.aggroMultiplier = aggroMultiplier;
+            this.requiredNumColonists = requiredNumColonists;
             this.peaceful = peaceful;
             this.groupedUp = groupedUp;
         }
@@ -49,35 +52,38 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             bool triggered = false;
             int numNPCs = EventManager.rand.Next(minimumNumNPCs, maximumNumNPCs);
 
-            //NPC spawn location
-            Vector2 eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
-
-            for (int i = 0; i < numNPCs; i++)
+            if (requiredNumColonists <= GameObjectManager.Filter<Colonist>().Count())
             {
-                //If they aren't grouped up set a new event spawn location
-                if (!groupedUp)
+                //NPC spawn location
+                Vector2 eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
+
+                for (int i = 0; i < numNPCs; i++)
                 {
-                    eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
+                    //If they aren't grouped up set a new event spawn location
+                    if (!groupedUp)
+                    {
+                        eventSpawnLocation = EventManager.UtilityRandomEdgeSpawnLocation();
+                    }
+
+                    //Skip NPCs who spawn in water
+                    if (!eventTileMap.GetTileAtPosition(eventSpawnLocation).Walkable)
+                    {
+                        continue;
+                    }
+
+                    //Spawn NPC
+                    GameObject npc = (GameObject)InteractablesFactory.MakeInteractable(npcEnum, eventSpawnLocation);
+                    GameObjectManager.Add(npc);
+
+                    if (!peaceful)
+                    {
+                        //Event NPC with a 900% increase in aggro range
+                        ((Enemy)npc).AggroRange *= aggroMultiplier;
+                    }
+
+                    //A NPC has spawned and now the event counts as triggered
+                    triggered = true;
                 }
-
-                //Skip NPCs who spawn in water
-                if (!eventTileMap.GetTileAtPosition(eventSpawnLocation).Walkable)
-                {
-                    continue;
-                }
-
-                //Spawn NPC
-                GameObject npc = (GameObject)InteractablesFactory.MakeInteractable(npcEnum, eventSpawnLocation);
-                GameObjectManager.Add(npc);
-
-                if (!peaceful)
-                {
-                    //Event NPC with a 900% increase in aggro range
-                    ((Enemy)npc).AggroRange *= aggroMultiplier;
-                }
-
-                //A NPC has spawned and now the event counts as triggered
-                triggered = true;
             }
             IsComplete = true;
 
