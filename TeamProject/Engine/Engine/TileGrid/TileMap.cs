@@ -10,6 +10,8 @@ namespace Engine.TileGrid
     /// </summary>
     public class TileMap : Engine.Drawing.IDrawable
     {
+
+        public bool TemperatureMode { get; set; } = false;
         public Tile[,] Tiles { get; }
         public Vector2 TileSize { get; }
 
@@ -28,9 +30,19 @@ namespace Engine.TileGrid
         {
             foreach (Tile tile in Tiles)
             {
-                tile.Draw(spriteBatch);
+                if(TemperatureMode)
+                {
+                    tile.DrawTemperatureMode(spriteBatch);
+                }
+                else
+                {
+                    tile.Draw(spriteBatch);
+                    
+                }
+                
             }
         }
+
 
         /// <summary>
         /// Gets a <see cref="Engine.TileGrid.Tile"/> within a given position by rounding <paramref name="position"/>

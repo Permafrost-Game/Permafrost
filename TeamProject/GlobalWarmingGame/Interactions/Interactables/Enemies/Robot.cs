@@ -63,7 +63,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             SoundFactory.PlaySoundEffect(Sound.robotBreak);
         }
 
-        public override void SetEnemyDead()
+        protected override void SetDead()
         {
             //remove the enemy from the game 
             this.DeathSound();

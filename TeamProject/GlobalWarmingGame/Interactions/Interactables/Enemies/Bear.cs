@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             
         }
 
-        public override void SetEnemyDead()
+        protected override void SetDead()
         {
             //remove the enemy from the game 
             this.DeathSound();

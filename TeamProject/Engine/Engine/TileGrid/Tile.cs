@@ -10,7 +10,6 @@ namespace Engine.TileGrid
     /// </summary>
     public class Tile : GameObject, Engine.Drawing.IDrawable
     {
-        public static bool TemperatureMode { get; set; } = false; 
         public readonly Texture2D texture;
         public Temperature Temperature { get; set; }
         public bool Heated { get; set; }
@@ -37,18 +36,18 @@ namespace Engine.TileGrid
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!TemperatureMode)
-            {
                 spriteBatch.Draw(
                     texture: texture,
                     destinationRectangle: destinationRectangle,
                     sourceRectangle: sourceRectangle,
                     color: Color.White
                     );
-            }
-            else
-            {
-                spriteBatch.Draw(
+                
+        }
+
+        public void DrawTemperatureMode(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
                      texture: texture,
                      destinationRectangle: destinationRectangle,
                      sourceRectangle: sourceRectangle,
@@ -57,7 +56,6 @@ namespace Engine.TileGrid
                          g: 0f,
                          b: -((Temperature.Value - 20f) / 40f)
                      ));
-            }
         }
     }
 }

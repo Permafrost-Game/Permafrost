@@ -66,7 +66,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             SoundFactory.PlaySoundEffect(Sound.banditDying);
         }
 
-        public override void SetEnemyDead() {
+        protected override void SetDead() {
             
             if (notDefeated)
             {
