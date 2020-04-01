@@ -24,11 +24,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         private float timeUntilGrown;
         private static readonly float growTime = 30000f;
 
-        public Farm(Vector2 position, Texture2D texture) : base
+        public Farm(Vector2 position, TextureTypes type = TextureTypes.Farm) : base
         (
             position: position,
             depth: CalculateDepth(position, -1),
-            texture: texture
+            texture: Textures.Map[type]
         )
         {
             InstructionTypes = new List<InstructionType>();

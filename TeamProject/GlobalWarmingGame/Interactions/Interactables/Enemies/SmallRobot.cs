@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         private bool robotExploded = false;
 
-        public SmallRobot(Vector2 position, Texture2D[][] textureSet) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet)
+        public SmallRobot(Vector2 position, TextureSetTypes type = TextureSetTypes.SmallRobot) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet: Textures.MapSet[type])
         {
 
         }
@@ -104,7 +104,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 SoundFactory.PlaySoundEffect(Sound.Explosion);
                 TextureGroupIndex = 5;
                 Colonist colonist = (Colonist)instruction.ActiveMember;
-                colonist.Health = colonist.Health - 50;
+                colonist.Health -= 50;
                 Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
                 {
                     robotExploded = true;

@@ -15,8 +15,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.Leather, 2)
             };
 
-        public Bear ( Vector2 position, Texture2D[][] textureSet)
-        : base ("Bear",2000, 70, 6, 300, position,textureSet)
+        public Bear ( Vector2 position, TextureSetTypes type = TextureSetTypes.Bear)
+        : base ("Bear",2000, 70, 6, 300, position, textureSet: Textures.MapSet[type])
         { }
 
        

@@ -22,8 +22,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.Axe, 1)
             };
 
-        public Bandit(Vector2 position, Texture2D[][] textureSet)
-        : base("Bandit", 1500, 70, 6, 300, position, textureSet)
+        public Bandit(Vector2 position, TextureSetTypes type = TextureSetTypes.Bandit)
+        : base("Bandit", 1500, 70, 6, 300, position, textureSet: Textures.MapSet[type])
         { }
 
         public override void AnimateAttack()
@@ -77,12 +77,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 isInCombat = false;
                 SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
                 InstructionTypes.Clear();
-                InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:dying));
-                InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));     
+                InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:Dying));
+                InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:Join));     
             }
         }
 
-        private void join(Instruction instruction)
+        private void Join(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.banditJoins);
             killed = true;
@@ -90,7 +90,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             GameObjectManager.Add(new Colonist(spawnplace));
         }
 
-        private void dying(Instruction instruction) {
+        private void Dying(Instruction instruction) {
             this.Rotation = 1.5f;
             isAnimated = false;
             SoundFactory.PlaySoundEffect(Sound.banditDying);

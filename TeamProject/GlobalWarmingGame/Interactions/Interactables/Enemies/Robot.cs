@@ -14,7 +14,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.MachineParts, 2)
             };
 
-        public Robot(Vector2 position, Texture2D[][] textureSet) : base("Robot",5000, 70, 0, 500, position, textureSet)
+        public Robot(Vector2 position, TextureSetTypes type = TextureSetTypes.Robot) : base("Robot",5000, 70, 0, 500, position, textureSet: Textures.MapSet[type])
         {
         
         }

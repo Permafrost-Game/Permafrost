@@ -194,8 +194,6 @@ namespace GlobalWarmingGame
 
                 Textures.LoadContent(Content);
 
-                InteractablesFactory.LoadContent(Content);
-
                 ResourceTypeFactory.Init();
 
                 GameUIController.LoadContent(Content);

@@ -362,7 +362,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         {
                             //No valid resources
                             instructions.Dequeue();
-                            GameUIController.Notification($"Resources Required to {i1.Type.Name}:", 4, i1.Type.RequiredResources);
+
+                            List<string> detailedRequiredResources = new List<string>();
+                            foreach (ResourceItem resourceItem in i1.Type.RequiredResources) 
+                            {
+                                detailedRequiredResources.Add(resourceItem.Weight + " " + resourceItem.ToString());
+                            }
+
+                            GameUIController.Notification($"Items Required to {i1.Type.Name}:", 4, detailedRequiredResources);
 
 
                         }

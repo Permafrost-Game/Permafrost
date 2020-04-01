@@ -21,10 +21,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
 
-        public CampFire(Vector2 position, Texture2D[][] textureSet) : base
+        public CampFire(Vector2 position, TextureSetTypes type = TextureSetTypes.CampFire) : base
         (
             position: position,
-            textureSet: textureSet,
+            textureSet: Textures.MapSet[type],
             frameTime: 50f
         )
         {
