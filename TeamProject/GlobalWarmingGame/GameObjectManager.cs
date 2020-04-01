@@ -211,8 +211,8 @@ namespace GlobalWarmingGame
                     Vector2 offset = new Vector2(greyZonePos.X + 1, greyZonePos.Y + 1);
                     Vector2 newPosition = new Vector2(tile.Position.X + (greyTileMap.Size.X * tile.Size.X * offset.X), tile.Position.Y + (greyTileMap.Size.Y * tile.Size.Y * offset.Y));
 
-                    //Tile offsettedTile = new Tile(tile.texture, newPosition, tile.Size, false, 0f);
-                    //offsettedTile.Draw(SpriteBatch);
+                    Tile offsettedTile = new Tile(tile.texture, newPosition, tile.Size, false, 0f);
+                    offsettedTile.Draw(SpriteBatch);
                 }
             }
 

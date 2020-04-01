@@ -7,11 +7,28 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    public class Robot : Enemy
+    public class Robot : Enemy, IReconstructable
     {
-        
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
 
-        public Robot(Vector2 position) : base("Robot",5000, 70, 0, 500, position, TextureSetTypes.robot)
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        public Robot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.robot)
+        {
+
+        }
+
+        public Robot(Vector2 position, int hp = 500) : base("Robot",5000, 70, 0, hp, position, TextureSetTypes.robot)
         {
         
         }
@@ -73,6 +90,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             notDefeated = false;
             GameObjectManager.Add(new Loot(this.Loot(), this.Position));
             GameObjectManager.Remove(this);
+        }
+
+        public object Reconstruct()
+        {
+            return new Robot(PFSPosition, (int)PFSHealth);
         }
     }
 }
