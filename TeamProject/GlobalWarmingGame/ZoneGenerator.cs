@@ -34,14 +34,9 @@ namespace GlobalWarmingGame
                 && !GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water")
                 )
             {
-                if (Tower.final_tower_set == false)
-                {
-                    GameObjectManager.Add((Tower)InteractablesFactory.MakeInteractable(Interactable.FinalTower, zoneCenter));
-                }
-                else
-                {
-                    GameObjectManager.Add((Tower)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
-                }
+            
+                GameObjectManager.Add((Tower)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
+                
             }
 
 

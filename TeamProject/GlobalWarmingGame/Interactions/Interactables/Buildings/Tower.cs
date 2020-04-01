@@ -17,7 +17,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public Temperature Temperature { get; set; } = new Temperature(100);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
-        public static bool final_tower_set; 
+        public static int captured_count;
+        public static bool final_isset = false; 
         #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
@@ -54,48 +55,25 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false, bool finalTower = false) : base
+        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
         (
             position: position,
             texture: Textures.Map[hostileTextureType]
         )
         {
            
-                hostileTextureID = (int)hostileTextureType;
-                capturedTextureID = (int)capturedTextureType;
-
-                hostileTexture = Textures.Map[hostileTextureType];
-                capturedTexture = Textures.Map[capturedTextureType];
-
-                hostileTextureID = (int)hostileTextureType;
-                capturedTextureID = (int)capturedTextureType;
-
-                hostileTexture = Textures.Map[hostileTextureType];
-                capturedTexture = Textures.Map[capturedTextureType];
-                InstructionTypes = new List<InstructionType>();
-
-                rand = new Random();
-            if (finalTower == true && final_tower_set == false)
+            rand = new Random();
+            if (captured_count == 10 && final_isset == false)
             {
-                _isFinal = true; 
-                final_tower_set = true;
-                this.robots = rand.Next(10, 20);
-
-                int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
-                for (int i = 0; i < robots; i++)
-                {
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
-                        GameObjectManager.ZoneMap.GetTileAtPosition(position).Type.Equals("textures/tiles/main_tileset/water") ?
-                        position :
-                        position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
-                        ));
-                }
+                hostileTextureType = TextureTypes.TowerF;
+                _isFinal = true;
+                final_isset = true; 
             }
             else
             {
-                this.robots = rand.Next(0, 5);
-                _isFinal = false; 
-
+                _isFinal = false;
+            }
+                this.robots = rand.Next(captured_count+1, (captured_count+1) *2);
                 int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
                 for (int i = 0; i < robots; i++)
                 {
@@ -105,8 +83,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                         position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
                         ));
                 }
-            }
             GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
+
+            hostileTextureID = (int)hostileTextureType;
+            capturedTextureID = (int)capturedTextureType;
+
+            hostileTexture = Textures.Map[hostileTextureType];
+            capturedTexture = Textures.Map[capturedTextureType];
+
+            hostileTextureID = (int)hostileTextureType;
+            capturedTextureID = (int)capturedTextureType;
+
+            hostileTexture = Textures.Map[hostileTextureType];
+            capturedTexture = Textures.Map[capturedTextureType];
+            InstructionTypes = new List<InstructionType>();
 
             if (IsCaptured = captured)
             {
@@ -141,11 +131,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 Heating = true;
                 InstructionTypes.Clear();
                 GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2(this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
+                if (captured_count < 10)
+                {
+                    captured_count++;
+                }
                 if (_isFinal)
                 {
-                    //game complete.
-                    //CutSceneFactory.LoadContent(ContentManager);
-                    //CutSceneFactory.PlayVideo(VideoN.Final);
+                    CutSceneFactory.PlayVideo(VideoN.Intro);
                 }
             }
             else
