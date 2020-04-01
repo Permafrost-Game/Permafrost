@@ -246,10 +246,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
                 foreach (StorageUnit s in storageUnits)
                 {
-                    if (s.resourceItem != null
-                     && s.resourceItem.ResourceType.Equals(requiredItem.ResourceType))
+                    if (s.ResourceItem != null
+                     && s.ResourceItem.ResourceType.Equals(requiredItem.ResourceType))
                     {
-                        int amountToTake = Math.Min(requiredItem.Weight, s.resourceItem.Weight);
+                        int amountToTake = Math.Min(requiredItem.Weight, s.ResourceItem.Weight);
                         if(amountToTake > 0)
                         {
                             instructionsToEnqueue.Add(new Instruction(
@@ -528,7 +528,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             foreach(StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
             {
-                if(storageUnit.resourceItem != null && inventory.ContainsType(storageUnit.resourceItem.ResourceType.ResourceID))
+                if(storageUnit.ResourceItem != null && inventory.ContainsType(storageUnit.ResourceItem.ResourceType.ResourceID))
                 {
                     AddInstruction(new Instruction(
                         type: storageUnit.StoreInstruction,
