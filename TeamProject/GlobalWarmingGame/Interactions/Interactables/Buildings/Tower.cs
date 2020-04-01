@@ -27,27 +27,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         }
 
         [PFSerializable]
-        public readonly int hostileTextureID;
-
-        [PFSerializable]
-        public readonly int capturedTextureID;
-
-        [PFSerializable]
         public bool captured;
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        public Tower(Vector2 position, TextureTypes capturedTextureType = TextureTypes.TowerC, TextureTypes hostileTextureType = TextureTypes.TowerH, bool captured = false) : base
+        public Tower(Vector2 position, bool captured = false) : base
         (
             position: position,
-            texture: Textures.Map[hostileTextureType]
+            texture: Textures.Map[TextureTypes.TowerH]
         )
         {
-            hostileTextureID = (int)hostileTextureType;
-            capturedTextureID = (int)capturedTextureType;
-
-            hostileTexture = Textures.Map[hostileTextureType];
-            capturedTexture = Textures.Map[capturedTextureType];
+            hostileTexture = Textures.Map[TextureTypes.TowerH];
+            capturedTexture = Textures.Map[TextureTypes.TowerC];
             InstructionTypes = new List<InstructionType>();
 
             if (this.captured = captured)
@@ -79,7 +70,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public object Reconstruct()
         {
-            return new Tower(PFSPosition, (TextureTypes)capturedTextureID, (TextureTypes)hostileTextureID, captured);
+            return new Tower(PFSPosition, captured);
         }
     }
 }
