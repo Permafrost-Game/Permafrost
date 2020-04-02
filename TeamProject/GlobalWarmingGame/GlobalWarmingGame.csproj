@@ -74,6 +74,7 @@
     <Compile Include="Interactions\Event\Events\EventColonist.cs" />
     <Compile Include="Interactions\Event\Events\EventSpawnNPCs.cs" />
     <Compile Include="Interactions\Event\Events\IEvent.cs" />
+    <Compile Include="Interactions\Interactables\Animals\Fox.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Bandit.cs" />
     <Compile Include="Interactions\Interactables\Enemies\SmallRobot.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />

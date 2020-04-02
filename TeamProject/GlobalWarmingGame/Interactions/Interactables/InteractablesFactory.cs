@@ -258,6 +258,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Farm(position);
                 case Interactable.Rabbit:
                     return new Rabbit(position);
+                case Interactable.Fox:
+                    return new Fox(position);
                 case Interactable.Bush:
                     return new Bush(position);
                 case Interactable.Tree:
@@ -308,6 +310,7 @@ public enum Interactable
     Tree,
     Bush,
     Rabbit,
+    Fox,
     Farm,
     Colonist,
     Merchant,

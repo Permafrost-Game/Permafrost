@@ -18,6 +18,7 @@ namespace GlobalWarmingGame
             {
                 { Sound.WoodChop, content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
                 { Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
+                { Sound.FoxDeath, content.Load<SoundEffect>(@"sound/sounds/foxDeath") },
                 { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") },
                 { Sound.BearAttack, content.Load<SoundEffect>(@"sound/sounds/bear_roar") },
                 { Sound.RobotAttack, content.Load<SoundEffect>(@"sound/sounds/robot_electricity") },
@@ -73,6 +74,7 @@ public enum Sound
 {
     WoodChop,
     RabbitDeath,
+    FoxDeath,
     StonePickup,
     BearAttack,
     RobotAttack,

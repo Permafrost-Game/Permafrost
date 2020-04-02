@@ -203,6 +203,23 @@ namespace GlobalWarmingGame
                     }
             });
 
+            MapSet.Add(TextureSetTypes.Fox, new Texture2D[][] {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf5"),
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf6"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf7"),
+                    },
+                    new Texture2D[]
+                    {
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf0"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf1"),
+                    }
+            });
             MapSet.Add(TextureSetTypes.Bandit, new Texture2D[][]
                 {
                     new Texture2D[]
@@ -326,6 +343,7 @@ namespace GlobalWarmingGame
         Robot,
         Rabbit,
         Bandit,
-        SmallRobot
+        SmallRobot,
+        Fox
     }
 }
