@@ -11,7 +11,7 @@ namespace GlobalWarmingGame
         public static Dictionary<Sound, SoundEffect> sounds;
         public static Dictionary<Songs, Song> songs;
         public static float Volume { get; set; } = 0.1f;
-
+        private static Songs currSong;
         public static void Loadsounds(ContentManager content)
         {
             sounds = new Dictionary<Sound, SoundEffect>
@@ -44,10 +44,13 @@ namespace GlobalWarmingGame
  
         public static void PlaySong(Songs songS)
         {
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = Volume;
-            MediaPlayer.Play(songs[songS]);
-            
+            if (currSong != songS)
+            {
+                currSong = songS;
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = Volume;
+                MediaPlayer.Play(songs[currSong]);
+            }
         }
         public static void PlaySoundEffect(Sound sound)
         {
