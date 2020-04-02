@@ -20,7 +20,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             get { return Position; }
             set { Position = value; }
         }
-        List<ResourceItem> lootDrop;
+
+        [PFSerializable]
+        public List<ResourceItem> lootDrop;
+
         List<InstructionType> IInteractable.InstructionTypes => InstructionTypes;
 
         [PFSerializable]
@@ -34,7 +37,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        public Loot(List<ResourceItem> loot,Vector2 position, TextureTypes textureType = TextureTypes.loot) : base
+        public Loot(List<ResourceItem> loot,Vector2 position, TextureTypes textureType = TextureTypes.Loot) : base
         (
             position: position,
             texture: Textures.Map[textureType]

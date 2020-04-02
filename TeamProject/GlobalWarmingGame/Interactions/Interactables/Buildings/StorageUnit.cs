@@ -10,24 +10,69 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class StorageUnit : Sprite, IInteractable, IBuildable
+    class StorageUnit : Sprite, IInteractable, IBuildable, IReconstructable
     {
         public List<ResourceItem> CraftingCosts { get; } = new List<ResourceItem>() { new ResourceItem(Resource.Stone, 4),
                                                                                       new ResourceItem(Resource.Wood,  8)};
 
         public List<InstructionType> InstructionTypes { get; private set; }
 
-        public ResourceItem ResourceItem { get; private set; }
+        public static ResourceItem ResourceItemEmpty = new ResourceItem(new ResourceType());
+
+        public ResourceItem ResourceItem { get; set; }
+
+        [PFSerializable]
+        public ResourceItem PFSResourceItem
+        {
+            get { return ResourceItem != null ? ResourceItem : ResourceItemEmpty; }
+            set { ResourceItem = value; }
+        }
 
         public InstructionType StoreInstruction { get; private set; }
 
-        public StorageUnit(Vector2 position, TextureTypes textureType = TextureTypes.StorageUnit) : base
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        public StorageUnit() : base(Vector2.Zero, Textures.Map[TextureTypes.StorageUnit])
+        {
+
+        }
+
+        public StorageUnit(Vector2 position, ResourceItem resourceItem = null) : base
         (
             position: position,
-            texture: Textures.Map[textureType]
+            texture: Textures.Map[TextureTypes.StorageUnit]
         )
         {
             ResetState();
+
+            if (resourceItem != null)
+            {
+                this.ResourceItem = resourceItem;
+
+                InstructionTypes.Clear();
+
+                StoreInstruction = new InstructionType(
+                id: "storeItems",
+                name: $"Store {ResourceItem.ResourceType.displayName}",
+                description: "",
+                //requiredResources: new List<ResourceItem> { new ResourceItem(ResourceItem.ResourceType, 1) },
+                //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(ResourceItem.ResourceType.ResourceID),
+                onStart: StoreItem
+                );
+
+                InstructionTypes.Add(new InstructionType(
+                                id: "takeItems",
+                                name: $"Take All {ResourceItem.ResourceType.displayName}",
+                                description: "",
+                                onStart: TakeItems
+                                )
+                    );
+            }
         }
 
         public InstructionType TakeItemInstruction(int amount)
@@ -38,7 +83,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 onComplete: (Instruction i) => TakeItem(i.ActiveMember.Inventory, amount)
                 );
         }
-            
+
 
         private void TakeItem(Inventory destination, int amount)
         {
@@ -67,7 +112,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             //if(instruction.Type.RequiredResources.Count != 1) throw new Exception($"{this.GetType().ToString()} expected RequiredResources.Count to be 1, but was {instruction.Type.RequiredResources.Count}");
             //ResourceItem = instruction.Type.RequiredResources[0];
-            Resource r = (Resource) Enum.Parse(typeof(Resource), instruction.Type.ID);
+            Resource r = (Resource)Enum.Parse(typeof(Resource), instruction.Type.ID);
             ResourceItem = new ResourceItem(r);
             InstructionTypes.Clear();
 
@@ -96,7 +141,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 ResetState();
             }
-           
+
         }
         private void ResetState()
         {
@@ -108,7 +153,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         {
             StorageUnit storage = (StorageUnit)instruction.PassiveMember;
 
-            if(storage.ResourceItem != null)
+            if (storage.ResourceItem != null)
             {
                 Inventory inventory = instruction.ActiveMember.Inventory;
                 Resource resourceType = storage.ResourceItem.ResourceType.ResourceID;
@@ -120,7 +165,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     inventory.RemoveItem(item);
                 }
             }
-            
+
         }
 
         public void Build()
@@ -132,7 +177,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            if(ResourceItem != null)
+            if (ResourceItem != null)
             {
                 Texture2D resourceTexture = ResourceItem.ResourceType.Texture;
                 spriteBatch.Draw(
@@ -149,5 +194,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
         }
 
+        public object Reconstruct()
+        {
+            return new StorageUnit(PFSPosition, PFSResourceItem);
+        }
     }
 }

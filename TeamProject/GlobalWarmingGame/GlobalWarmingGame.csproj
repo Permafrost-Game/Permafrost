@@ -80,7 +80,6 @@
     <Compile Include="CutSceneFactory.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
-    <Compile Include="Interactions\Interactables\Environment\EnvironmentObject.cs" />
     <Compile Include="Interactions\Interactables\IHealthbased.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
-    <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
     <Compile Include="Interactions\Interactables\Environment\Bush.cs" />

@@ -21,8 +21,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         //declaring stats variables
         public float AttackPower { get; set; }
-
-
         public float MaxHealth { get; }
         public float Health { get; set; }
         public float AttackRange { get; set; }
@@ -47,11 +45,11 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public RandomAI AI { get; set; } = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
-        public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
+        public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, TextureSetTypes textureSetType) : base
         (
             //constructior setting game object details
             position: position,
-            textureSet: textureSet,
+            textureSet: Textures.MapSet[textureSetType],
             frameTime: 100f
         )
         {
@@ -64,7 +62,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             this.Health = maxHp;
             this.AttackPower = aPower;
             this.AttackSpeed = aSpeed;
-            Speed = 0.2f;
+            Speed = 0.1f;
         }
 
         protected abstract void SetDead();
@@ -90,7 +88,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
                     targetInRange = null;
                 }
 
-                Speed = 0.2f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
+                Speed = 0.1f; //return to normal speed (seems like speeding up when moving from roaming to chasing)
                 ChaseColonist(Target); //chase the found colonist
 
             }
@@ -239,8 +237,5 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         internal abstract void AttackingSound();
         internal abstract void DeathSound();
-        internal abstract List<ResourceItem> Loot();
-
-
     }
 }

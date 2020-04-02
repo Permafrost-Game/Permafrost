@@ -13,7 +13,6 @@ namespace GlobalWarmingGame.ResourceItems
 
         public ResourceItem()
         {
-
         }
 
         public ResourceItem(ResourceType Type, int weight = 0)

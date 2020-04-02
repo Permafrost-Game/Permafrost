@@ -11,13 +11,44 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    class Bandit : Enemy
+    class Bandit : Enemy, IReconstructable
     {
-        private bool killed=false;
+        public bool killed=false;
 
-        public Bandit(Vector2 position, Texture2D[][] textureSet)
-        : base("Bandit", 1500, 70, 10, 300, position, textureSet)
-        { }
+        [PFSerializable]
+        public bool dying = false;
+
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.Food, 2),
+                new ResourceItem(Resource.Coat, 1),
+                new ResourceItem(Resource.Axe, 1)
+            };
+
+        public Bandit() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Bandit)
+        {
+
+        }
+
+        public Bandit(Vector2 position, int hp = 300, bool dying = false)
+        : base("Bandit", 1500, 70, 10, hp, position, TextureSetTypes.Bandit)
+        {
+            this.killed = dying;
+        }
 
         public override void AnimateAttack()
         {
@@ -58,14 +89,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             SoundFactory.PlaySoundEffect(Sound.banditDying);
         }
-        internal override List<ResourceItem> Loot()
-        {
-            List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Food, 2));
-            loot.Add(new ResourceItem(Resource.Axe, 1));
-            loot.Add(new ResourceItem(Resource.Pickaxe, 1));
-            return loot;
-        }
 
         protected override void SetDead() {
             
@@ -78,7 +101,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 isInCombat = false;
                 SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
                 InstructionTypes.Clear();
-                InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:dying));
+                InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:Dying));
                 InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));     
             }
         }
@@ -91,15 +114,22 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             GameObjectManager.Add(new Colonist(spawnplace));
         }
 
-        private void dying(Instruction instruction) {
+        private void Dying(Instruction instruction) {
+            dying = true;
+
             this.Rotation = 1.5f;
             isAnimated = false;
             SoundFactory.PlaySoundEffect(Sound.banditDying);
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+                GameObjectManager.Add(new Loot(loot, this.Position));
                 killed = true;
             });
+        }
+
+        public object Reconstruct()
+        {
+            return new Bandit(PFSPosition, (int)PFSHealth, dying);
         }
     }
     
