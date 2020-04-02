@@ -5,6 +5,7 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
+using GlobalWarmingGame.Resources;
 using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -124,8 +125,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Food
         public int Hunger { get; private set; } = 0;
+        private static readonly InstructionType EAT_INSTRUCTION_TYPE = new InstructionType("eat", "Eat", "Eat food", 0, new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 15) });
         private float timeUntillNextHungerCheck;
-        private readonly float BASE_FOOD_CONSUMPTION = 12000f;
+        private readonly float BASE_FOOD_CONSUMPTION = 6000f;
         #endregion
         private bool deathSoundPlayed;
         private bool AttackTrigger=false;
@@ -444,20 +446,23 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillNextHungerCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntillNextHungerCheck < 0)
             {
+                Instruction i = new Instruction(EAT_INSTRUCTION_TYPE, 0, this, this);
+                instructions.Enqueue(i, i.Priority);
                 //If the colonist is hungry they take health damage and reset else increase hunger
-                if (Hunger == 5)
+                if (Hunger >= 5)
                 {
                     //If colonist doesn't have food on them, they are starving -1 health
-                    if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
-                    {
-                        Health -= 1;
-                    }
-                    else
-                    {
+                    
+                    //if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
+                    //{
+                    //    Health -= 1;
+                    //}
+                    //else
+                    //{
                         //Food was eaten, reset hunger
-                        Hunger = 0;
-                        Health = Math.Min(Health + 5, MaxHealth);
-                    }
+                        //Hunger = 0;
+                        //Health = Math.Min(Health + 5, MaxHealth);
+                    //}
                 }
                 else
                 {
