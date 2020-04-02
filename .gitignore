@@ -73,3 +73,7 @@ Test/*.csproj
 *.speccache
 *.ncrunchproject
 *.ncrunchsolution
+
+#FastNoise
+TeamProject/GlobalWarmingGame/FastNoise.dll
+TeamProject/Engine/Engine/FastNoise.dll
