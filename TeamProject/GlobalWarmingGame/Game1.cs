@@ -181,14 +181,15 @@ namespace GlobalWarmingGame
 
             //LOADING TILEMAP AND ZONES
             {
-                var textureSet = new Dictionary<int, Texture2D>();
-
-                textureSet.Add(0, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error"));
-                textureSet.Add(1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass"));
-                textureSet.Add(2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow"));
-                textureSet.Add(3, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1"));
-                textureSet.Add(4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone"));
-                textureSet.Add(5, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water"));
+                var textureSet = new Dictionary<int, Texture2D>
+                {
+                    { 0, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/error") },
+                    { 1, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Tundra1") },
+                    { 2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass") },
+                    { 3, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow") },
+                    { 4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone") },
+                    { 5, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water") }
+                };
 
                 Textures.LoadContent(Content);
 

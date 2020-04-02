@@ -21,71 +21,110 @@ namespace Engine.TileGrid
         /// <param name="height">The number of tiles to be generated in the Y direction</param>
         /// <param name="tileSet">The TileSet that is to be used</param>
         /// <returns>A TileMap</returns>
-        public static TileMap GenerateTileMap(int seed, float scale, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
+        public static TileMap GenerateTileMap(int seed, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
         {
             Tile[,] tiles = new Tile[width, height];
 
-            //1st Pass: Terrain
+            //1st Pass: Grass & Snow
+            seed++;
             FastNoise noise = new FastNoise(seed);
             noise.SetNoiseType(FastNoise.NoiseType.PerlinFractal);
             noise.SetFrequency(0.015f);
+            noise.SetFractalOctaves(2);
 
             for (var x = 0; x < width; x++)
                 for (var y = 0; y < height; y++)
                 {
-                    float value = noise.GetNoise(x + xOffset, y + yOffset) + 0.25f; //offset for shorter if statements
-                    int tileCount = tileSet.TileSetTextures.Count - 1; //-1 because of texture 0 is for errors
+                    float value = noise.GetNoise(x + xOffset, y + yOffset);
 
-                    for (int counter = 1; counter <= tileCount; counter++)
+                    if (value >= 0.1f)
                     {
-                        if (value <= (0.75f / tileCount) * counter)
-                        {
-                            tiles[x, y] = new Tile(
-                                texture: tileSet.TileSetTextures[counter],
-                                position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
-                                size: tileSet.textureSize,
-                                walkable: !tileSet.TileSetTextures[counter].Name.Equals("textures/tiles/main_tileset/water"),
-                                initialTemperature: globalTemperature
-                                );
-                            break;
-                        }
+                        //Display GRASS tile
+                        tiles[x, y] = new Tile(
+                                    texture: tileSet.TileSetTextures[2],
+                                    position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
+                                    size: tileSet.textureSize,
+                                    walkable: true,
+                                    initialTemperature: globalTemperature
+                                    );
                     }
 
-                    if(tiles[x, y] == null)
+                    else if (value < 0.1f)
                     {
-                        tiles[x, y] = new Tile( //Display an error texture
-                                texture: tileSet.TileSetTextures[0],
-                                position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
-                                size: tileSet.textureSize,
-                                walkable: true,
-                                initialTemperature: globalTemperature
-                                );
+                        //Display SNOW tile
+                        tiles[x, y] = new Tile(
+                                    texture: tileSet.TileSetTextures[3],
+                                    position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
+                                    size: tileSet.textureSize,
+                                    walkable: true,
+                                    initialTemperature: globalTemperature
+                                    );
                     }
                 }
 
-            //2nd Pass: Rivers
-            noise = new FastNoise(seed * 5);
+            //2nd Pass: Tundra & Stone
+            seed++;
+            noise = new FastNoise(seed);
             noise.SetNoiseType(FastNoise.NoiseType.PerlinFractal);
-            noise.SetFrequency(0.01f);
-            noise.SetFractalType(FastNoise.FractalType.Billow);
+            noise.SetFrequency(0.025f);
             noise.SetFractalOctaves(1);
 
             for (var x = 0; x < width; x++)
                 for (var y = 0; y < height; y++)
                 {
-                    float value = noise.GetNoise(x + xOffset, y + yOffset) + 1;
+                    float value = noise.GetNoise(x + xOffset, y + yOffset);
 
-                    if (value < 0.025f)
+                    if (value <= -0.4f)
+                    {
+                        //Display TUNDRA tile
+                        tiles[x, y] = new Tile(
+                                    texture: tileSet.TileSetTextures[1],
+                                    position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
+                                    size: tileSet.textureSize,
+                                    walkable: true,
+                                    initialTemperature: globalTemperature
+                                    );
+                    }
+
+                    else if (value >= 0.4f)
+                    {
+                        //Display STONE tile
+                        tiles[x, y] = new Tile(
+                                    texture: tileSet.TileSetTextures[4],
+                                    position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
+                                    size: tileSet.textureSize,
+                                    walkable: true,
+                                    initialTemperature: globalTemperature
+                                    );
+                    }
+                }
+
+            //3rd Pass: Rivers
+            seed++;
+            noise = new FastNoise(seed);
+            noise.SetNoiseType(FastNoise.NoiseType.CubicFractal);
+            noise.SetFrequency(0.015f);
+            noise.SetFractalType(FastNoise.FractalType.Billow);
+            noise.SetFractalOctaves(1);
+
+            for (var x = 0; x < width; x++)
+            {
+                for (var y = 0; y < height; y++)
+                {
+                    float value = noise.GetNoise(x + xOffset, y + yOffset);
+
+                    if (value < -0.9f)
                     {
                         tiles[x, y] = new Tile(
                             texture: tileSet.TileSetTextures[5],
                             position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                             size: tileSet.textureSize,
                             walkable: false,
-                            initialTemperature : globalTemperature
+                            initialTemperature: globalTemperature
                             );
                     }
                 }
+            }
 
             return new TileMap(tiles);
         }

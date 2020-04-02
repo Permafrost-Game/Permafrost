@@ -44,44 +44,79 @@ namespace GlobalWarmingGame
                 }
             }
 
-            FastNoise noise = new FastNoise(seed + 5);
-            noise.SetNoiseType(FastNoise.NoiseType.Perlin);
+            seed++;
+            FastNoise noise = new FastNoise(seed);
+            noise.SetNoiseType(FastNoise.NoiseType.PerlinFractal);
             noise.SetFrequency(0.005f);
+            noise.SetFractalOctaves(1);
+
+            Random random = new Random(seed);
+            int chance;
 
             foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
-            {      
-                float value = noise.GetNoise(t.Position.X, t.Position.Y);
-                Console.WriteLine(value);
+            {
+                float value = noise.GetNoise(t.Position.X, t.Position.Y);           
 
                 if (t.Type.Equals("textures/tiles/main_tileset/Grass"))
                 {
                     if (value > 0.35f || value < -0.35f)
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                    {
+                        chance = random.Next(1000);
+                        if (chance < 667)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                    }
 
-                    else if (value < 0.002f && value > 0)
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
+                    else if (value < 0.01f && value > 0)
+                    {
+                        chance = random.Next(1000);
+                        if (chance < 667)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
+                    }
 
-                    else if (value > -0.002f && value < 0)
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
+                    else if (value > -0.01f && value < 0)
+                    {
+                        chance = random.Next(1000);
+                        if (chance < 667)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
+                    }
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
-                    if (value > 0.5f || value < -0.5f)
+                    chance = random.Next(1000);
+
+                    if (chance < 75)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
+
+                    else if (chance < 100)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeBig, t.Position));
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
                 {
+                    chance = random.Next(1000);
                     if (value > 0.5f || value < -0.5f)
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                        if (chance < 667)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
                 {
+                    chance = random.Next(1000);
                     if (value > 0.6f || value < -0.6f)
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                        if (chance < 667)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                 }
+
+                chance = random.Next(1000);
+                if (!t.Type.Equals("textures/tiles/main_tileset/Stone") && !t.Type.Equals("textures/tiles/main_tileset/water"))
+                    if (chance < 3)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+
+                chance = random.Next(1000);
+                if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
+                    if(chance < 1)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
             }
         }
     }
