@@ -2,13 +2,8 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Event.Events
 {

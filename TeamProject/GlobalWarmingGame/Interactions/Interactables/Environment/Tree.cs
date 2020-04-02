@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;

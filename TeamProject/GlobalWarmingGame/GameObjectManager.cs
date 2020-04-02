@@ -1,15 +1,10 @@
 ﻿using Engine;
-using Engine.Drawing;
 using Engine.PathFinding;
 using Engine.TileGrid;
-using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-using SimplexNoise;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -261,6 +256,7 @@ namespace GlobalWarmingGame
             {
                 c.CheckMove();
             }
+            GlobalCombatDetector.Initalise();
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }
