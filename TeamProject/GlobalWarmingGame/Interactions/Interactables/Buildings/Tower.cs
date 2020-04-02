@@ -2,6 +2,7 @@
 using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
+using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -93,6 +94,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     onComplete: Capture)
                     );
             }
+            
         }
 
         /// <summary>
@@ -152,6 +154,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             else
             {
                 //alert you must kill all robots to capture tower. 
+                GameUIController.Notification<string>("Must kill all robots to capture this tower", 4);
             }
         }
 
