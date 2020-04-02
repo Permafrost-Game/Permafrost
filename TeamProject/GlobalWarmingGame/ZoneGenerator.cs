@@ -1,13 +1,10 @@
 ﻿using Engine;
 using Engine.TileGrid;
-using Engine.Drawing;
-using GlobalWarmingGame.Interactions;
-using System.Collections.Generic;
-using System;
-using SimplexNoise;
 using GlobalWarmingGame.Interactions.Interactables;
-using Microsoft.Xna.Framework;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using Microsoft.Xna.Framework;
+using SimplexNoise;
+using System;
 
 namespace GlobalWarmingGame
 {

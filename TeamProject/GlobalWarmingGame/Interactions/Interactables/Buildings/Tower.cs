@@ -72,16 +72,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
               texture: captured? isFinal? Textures.Map[TextureTypes.TowerF] : Textures.Map[TextureTypes.TowerH] : Textures.Map[TextureTypes.TowerC]
         )
         {
+            this.hostileTexture = Textures.Map[TextureTypes.TowerH];
+            this.capturedTexture = Textures.Map[TextureTypes.TowerC];
+
             this.robots = robots;
             this.isFinal = isFinal;
             this.IsCaptured = captured;
-            this.hostileTexture = Textures.Map[TextureTypes.TowerH];
-            this.capturedTexture = Textures.Map[TextureTypes.TowerC];
+            
             GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
 
             InstructionTypes = new List<InstructionType>();
 
-            if (IsCaptured)
+            if (!IsCaptured)
             {
                 InstructionTypes.Add(new InstructionType(
                     id: "capture",
@@ -154,8 +156,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             InstructionTypes.Add(new InstructionType(
                      id: "capture",
                      name: "Capture",
-                     description: "Capture",
-                     checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
                      onComplete: Capture)
                      );
         }

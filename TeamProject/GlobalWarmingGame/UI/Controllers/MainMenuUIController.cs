@@ -112,8 +112,8 @@ namespace GlobalWarmingGame.UI.Controllers
 
             
 
-        if (!Directory.Exists(SavesPath))
-            Directory.CreateDirectory(SavesPath);
+            if (!Directory.Exists(SavesPath))
+                Directory.CreateDirectory(SavesPath);
 
             string[] saveDirectories = Directory.GetDirectories(SavesPath);
 

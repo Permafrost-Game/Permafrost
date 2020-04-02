@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Lighting;
+﻿using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Event;
@@ -9,10 +8,7 @@ using GlobalWarmingGame.UI;
 using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace GlobalWarmingGame
 {

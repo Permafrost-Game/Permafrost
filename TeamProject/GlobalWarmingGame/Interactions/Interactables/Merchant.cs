@@ -1,13 +1,6 @@
-﻿
-using Engine;
-using Engine.Drawing;
-using Engine.PathFinding;
-using GlobalWarmingGame.Action;
+﻿using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Priority_Queue;
 using System;
 using System.Collections.Generic;
 

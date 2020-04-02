@@ -1,7 +1,6 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies

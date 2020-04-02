@@ -10,7 +10,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 {
     public static class GlobalCombatDetector
     {
-        public static List<Colonist> colonists= new List<Colonist>();
+        public static List<Colonist> colonists = new List<Colonist>();
         public static List<Enemy> enemies = new List<Enemy>();
 
 
@@ -37,7 +37,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             return null;
         }
-
 
         private static void ObjectRemovedEventHandler(object sender, GameObject GameObject)
         {

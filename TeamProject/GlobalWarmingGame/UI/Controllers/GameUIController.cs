@@ -4,7 +4,6 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Event;
-using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
