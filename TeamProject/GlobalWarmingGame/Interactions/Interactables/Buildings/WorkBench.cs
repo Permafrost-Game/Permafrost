@@ -39,6 +39,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     {
                         new ResourceItem(Resource.Wood, 1),
                         new ResourceItem(Resource.Fibers, 2),
+                        new ResourceItem(Resource.Stone, 1),
                     }
                 },
                 {
@@ -51,29 +52,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     }
                 },
                 {
-                    Resource.Backpack,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Cloth, 2),
-                        new ResourceItem(Resource.Leather, 5),
-                    }
-                },
-                {
-                    Resource.BasicRifle,
+                    Resource.Shotgun,
                     new List<ResourceItem>()
                     {
                         new ResourceItem(Resource.Wood, 8),
                         new ResourceItem(Resource.Leather, 2),
                         new ResourceItem(Resource.MachineParts, 4),
-                    }
-                },
-                {
-                    Resource.Bow,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Wood, 4),
-                        new ResourceItem(Resource.Fibers, 6),
-                        new ResourceItem(Resource.Stone, 1),
                     }
                 },
                 {
@@ -95,7 +79,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         }
 
 
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Stone, 4), new ResourceItem(Resource.Wood, 8)};
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Stone, 8),
+                                                                                                   new ResourceItem(Resource.Wood, 16)};
 
         public List<InstructionType> InstructionTypes { get; }
 
@@ -118,9 +103,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 new InstructionType((r = Resource.Axe).ToString(), "Axe", requiredResources: crafting[r], onComplete: Craft),
                 new InstructionType((r = Resource.Hoe).ToString(), "Hoe", requiredResources: crafting[r], onComplete: Craft),
                 new InstructionType((r = Resource.Pickaxe).ToString(), "Pickaxe", requiredResources: crafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.Backpack).ToString(), "Backpack", requiredResources: crafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.BasicRifle).ToString(), "Basic Rifle", requiredResources: crafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.Bow).ToString(), "Bow", requiredResources: crafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Shotgun).ToString(), "Shotgun", requiredResources: crafting[r], onComplete: Craft),
                 new InstructionType((r = Resource.Cloth).ToString(), "Cloth", requiredResources: crafting[r], onComplete: Craft),
                 new InstructionType((r = Resource.Coat).ToString(), "Coat", requiredResources: crafting[r], onComplete: Craft)
             };

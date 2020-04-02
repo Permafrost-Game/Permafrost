@@ -22,13 +22,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             set { Position = value; }
         }
 
-        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.bear)
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.Food, 8),
+                new ResourceItem(Resource.Leather, 2)
+            };
+
+        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Bear)
         {
 
         }
 
         public Bear ( Vector2 position, int hp = 300)
-        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.bear)
+        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.Bear)
         { }
 
        
@@ -40,12 +46,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             
         }
 
-        public override void SetEnemyDead()
+        protected override void SetDead()
         {
             //remove the enemy from the game 
             this.DeathSound();
             notDefeated = false;
-            GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+            GameObjectManager.Add(new Loot(loot, this.Position));
             GameObjectManager.Remove(this);
         }
 
@@ -79,14 +85,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             SoundFactory.PlaySoundEffect(Sound.bearDying);
         }
-        internal override List<ResourceItem> Loot()
-        {
-            List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Food, 2));
-            
-            return loot;
-        }
-
         public object Reconstruct()
         {
             return new Bear(PFSPosition, (int)PFSHealth);

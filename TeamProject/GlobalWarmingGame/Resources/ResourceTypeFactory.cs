@@ -26,26 +26,25 @@ namespace GlobalWarmingGame.Resources
             resources  = new Dictionary<Resource, ResourceType>();
 
             //Populate resources dictionary
-            addResource(new ResourceType(Resource.Stone, "Stone", "A piece of rock", TextureIconTypes.stone));
-            addResource(new ResourceType(Resource.Wood, "Wood", "A wooden log", TextureIconTypes.wood));
-            addResource(new ResourceType(Resource.Fibers, "Fibers", "A bundle of fibers", TextureIconTypes.fibers));
-            addResource(new ResourceType(Resource.Food, "Food", "Food", TextureIconTypes.apple));
-            addResource(new ResourceType(Resource.Coal, "Coal", "A lump of coal", TextureIconTypes.coal)); //TODO coal Needs texture
-            addResource(new ResourceType(Resource.Leather, "Leather", "Tanned leather", TextureIconTypes.leather)); //TODO leather Needs texture
-            addResource(new ResourceType(Resource.MachineParts, "Machine Parts", "Machine parts", TextureIconTypes.machineParts)); //TODO machineParts Needs texture
-            addResource(new ResourceType(Resource.Shotgun, "Shotgun", "A Shotgun", TextureIconTypes.Shotgun));
-            addResource(new ResourceType(Resource.robotCore, "Robot Core", "A Core", TextureIconTypes.robotCore));
+            addResource(new ResourceType(Resource.Stone, "Stone", "A piece of rock", TextureIconTypes.Stone));
+            addResource(new ResourceType(Resource.Wood, "Wood", "A wooden log", TextureIconTypes.Wood));
+            addResource(new ResourceType(Resource.Fibers, "Fibers", "A bundle of fibers", TextureIconTypes.Fibers));
+            addResource(new ResourceType(Resource.Food, "Food", "Food", TextureIconTypes.Apple));
+            addResource(new ResourceType(Resource.Leather, "Leather", "Tanned leather", TextureIconTypes.Leather)); //TODO Needs texture
+            addResource(new ResourceType(Resource.MachineParts, "Machine Parts", "Machine parts", TextureIconTypes.MachineParts));
+            //Add a wheat resource to replace food from farm
 
             //Teir 1 Craftable Resource Type definitions
 
-            addResource(new ResourceType(Resource.Axe, "Axe", "An axe", TextureIconTypes.axe));
-            addResource(new ResourceType(Resource.Hoe, "Hoe", "A hoe", TextureIconTypes.hoe));
-            addResource(new ResourceType(Resource.Pickaxe, "Pickaxe", "A Pickaxe", TextureIconTypes.pickaxe));
-            addResource(new ResourceType(Resource.Backpack, "Backpack", "A backpack", TextureIconTypes.backpack));
-            addResource(new ResourceType(Resource.Bow, "bow", "A bow with arrows", TextureIconTypes.bow));
-            addResource(new ResourceType(Resource.Cloth, "Cloth", "A piece of cloth", TextureIconTypes.cloth));
-            addResource(new ResourceType(Resource.Coat, "Coat", "A basic coat", TextureIconTypes.coat));
-            
+            addResource(new ResourceType(Resource.Axe, "Axe", "An axe", TextureIconTypes.Axe));
+            addResource(new ResourceType(Resource.Hoe, "Hoe", "A hoe", TextureIconTypes.Hoe));
+            addResource(new ResourceType(Resource.Pickaxe, "Pickaxe", "A Pickaxe", TextureIconTypes.Pickaxe));
+            addResource(new ResourceType(Resource.Cloth, "Cloth", "A piece of cloth", TextureIconTypes.Cloth)); //TODO Needs texture
+            addResource(new ResourceType(Resource.Coat, "Coat", "A basic coat", TextureIconTypes.Coat)); //TODO Needs texture
+            addResource(new ResourceType(Resource.Shotgun, "Shotgun", "A Shotgun", TextureIconTypes.Shotgun));
+
+            addResource(new ResourceType(Resource.RobotCore, "Robot Core", "A Core", TextureIconTypes.RobotCore));
+
 
         }
 
@@ -71,13 +70,10 @@ public enum Resource
     Leather,
     MachineParts,
     Axe,
-    Backpack,
-    BasicRifle,
-    Bow,
     Cloth,
     Coat,
     Hoe,
     Pickaxe,
     Shotgun,
-    robotCore
+    RobotCore
 }

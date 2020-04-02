@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             set { Position = value; }
         }
 
-        public CampFire() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.campFire])
+        public CampFire() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.CampFire])
         {
 
         }
@@ -36,7 +36,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public CampFire(Vector2 position) : base
         (
             position: position,
-            textureSet: Textures.MapSet[TextureSetTypes.campFire],
+            textureSet: Textures.MapSet[TextureSetTypes.CampFire],
             frameTime: 50f
         )
         {

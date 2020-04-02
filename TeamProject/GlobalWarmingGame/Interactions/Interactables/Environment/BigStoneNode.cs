@@ -37,9 +37,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     id: "mine",
                     name: "Mine",
                     description: "Mine stone",
-                    //requiredResources: new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Pickaxe), 1)},
-                    checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type)
-                                                   && i.ActiveMember.Inventory.ContainsType(Resource.Pickaxe),
+                    requiredResources: new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Pickaxe), 1)},
+                    //checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type)
+                    //                               && i.ActiveMember.Inventory.ContainsType(Resource.Pickaxe),
                     timeCost: 3000f,
                     onStart: StartMine,
                     onComplete: EndMine
@@ -56,7 +56,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private void EndMine(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.StonePickup);
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Stone, 8));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Stone, 12));
             Dispose();
         }
 

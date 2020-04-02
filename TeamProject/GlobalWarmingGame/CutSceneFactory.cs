@@ -36,8 +36,15 @@ namespace GlobalWarmingGame
             Texture2D texture;
             if (vp.State != MediaState.Stopped)
             {
-                texture = vp.GetTexture();
-                spriteBatch.Draw(texture, graphicsDevice.Viewport.Bounds, Color.White);
+                try
+                {
+                    texture = vp.GetTexture();
+                    spriteBatch.Draw(texture, graphicsDevice.Viewport.Bounds, Color.White);
+                }
+                catch (System.InvalidOperationException)
+                {
+                    System.Console.WriteLine("Video failed to process a frame");
+                }
             }
         }
     }
