@@ -298,6 +298,18 @@ namespace GlobalWarmingGame.UI.Views
             }
         }
 
+        internal void SetActiveInventory(int id)
+        {
+            foreach(Icon i in inventoryButtons.Values)
+            {
+                i.FillColor = new Color(255,255,255,255);
+            }
+
+            inventoryButtons[id].FillColor = new Color(255, 255, 255, 129);
+
+            SetInventoryVisiblity(id);
+        }
+
         private Entity CreateInventoryElement(ItemElement i)
         {
             Icon slot = new Icon(IconType.None, Anchor.AutoInline, 0.75f, true);

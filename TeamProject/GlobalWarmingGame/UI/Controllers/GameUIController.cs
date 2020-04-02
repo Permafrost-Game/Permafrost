@@ -85,13 +85,15 @@ namespace GlobalWarmingGame.UI.Controllers
         {
             if(GameObject is Colonist colonist)
             {
-                if (SelectedColonist == null)
-                {
-                    SelectedColonist = colonist;
-                }
                 FloatingHealthBar healthBar = new FloatingHealthBar(colonist, 2000f, true, Color.LimeGreen, Color.Red);
                 UpdatableUIObjects.Add(healthBar);
                 AddInventoryMenu(colonist);
+
+                if (SelectedColonist == null)
+                {
+                    SelectedColonist = colonist;
+                    view.SetActiveInventory(colonist.inventory.GetHashCode());
+                }
             }
             else if (GameObject is Enemy enemy)
             {
@@ -603,12 +605,12 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="inventory"></param>
         private static void SelectInventory(Inventory inventory)
         {
-            view.SetInventoryVisiblity(inventory.GetHashCode());
             foreach (Colonist colonist in GameObjectManager.Filter<Colonist>() )
             {
                 if(colonist.Inventory == inventory)
                 {
                     SelectedColonist = colonist;
+                    view.SetActiveInventory(inventory.GetHashCode());
                 }
             }
         }
