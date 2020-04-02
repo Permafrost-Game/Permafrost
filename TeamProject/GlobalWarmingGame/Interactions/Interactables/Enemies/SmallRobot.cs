@@ -20,6 +20,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.RobotCore, 1)
             };
 
+        private bool robotExploded;
+
         [PFSerializable]
         public float PFSHealth
         {
@@ -34,12 +36,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             set { Position = value; }
         }
 
-        public SmallRobot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.smallRobot)
+        public SmallRobot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.SmallRobot)
         {
 
         }
 
-        public SmallRobot(Vector2 position, int hp = 500) : base("SmallRobot", 1000, 70, 0, hp, position, TextureSetTypes.smallRobot)
+        public SmallRobot(Vector2 position, int hp = 500) : base("SmallRobot", 1000, 70, 0, hp, position, TextureSetTypes.SmallRobot)
         {
 
         }

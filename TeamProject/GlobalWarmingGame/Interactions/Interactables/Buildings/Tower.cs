@@ -103,7 +103,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public object Reconstruct()
         {
-            return new Tower(PFSPosition, captured);
+            return new Tower(PFSPosition, _isCaptured);
         }
     }
 }

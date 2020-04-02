@@ -39,17 +39,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.Axe, 1)
             };
 
-        public Bandit() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.bandit)
+        public Bandit() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Bandit)
         {
 
-
-
-        public Bandit(Vector2 position, Texture2D[][] textureSet)
-        : base("Bandit", 1500, 70, 6, 300, position, textureSet)
-        { }
+        }
 
         public Bandit(Vector2 position, int hp = 300, bool dying = false)
-        : base("Bandit", 1500, 70, 10, hp, position, TextureSetTypes.bandit)
+        : base("Bandit", 1500, 70, 10, hp, position, TextureSetTypes.Bandit)
         {
             this.killed = dying;
         }

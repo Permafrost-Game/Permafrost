@@ -186,7 +186,7 @@ namespace GlobalWarmingGame
                     }
             });
 
-            MapSet.Add(TextureSetTypes.bandit, new Texture2D[][]
+            MapSet.Add(TextureSetTypes.Bandit, new Texture2D[][]
                 {
                     new Texture2D[]
                     {
@@ -218,7 +218,7 @@ namespace GlobalWarmingGame
                 }
             });
 
-            MapSet.Add(TextureSetTypes.smallRobot, new Texture2D[][]
+            MapSet.Add(TextureSetTypes.SmallRobot, new Texture2D[][]
             {
                 new Texture2D[]
                 {
@@ -249,7 +249,7 @@ namespace GlobalWarmingGame
                 },
                 new Texture2D[]
                 {
-                    contentManager.LoadS<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot1"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot1"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot2"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot3"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot4")

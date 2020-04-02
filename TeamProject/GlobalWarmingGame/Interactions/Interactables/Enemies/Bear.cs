@@ -28,13 +28,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.Leather, 2)
             };
 
-        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.bear)
+        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Bear)
         {
 
         }
 
         public Bear ( Vector2 position, int hp = 300)
-        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.bear)
+        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.Bear)
         { }
 
        

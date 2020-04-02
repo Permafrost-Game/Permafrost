@@ -28,12 +28,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.MachineParts, 2)
             };
 
-        public Robot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.robot)
+        public Robot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Robot)
         {
 
         }
 
-        public Robot(Vector2 position, int hp = 500) : base("Robot",5000, 70, 0, hp, position, TextureSetTypes.robot)
+        public Robot(Vector2 position, int hp = 500) : base("Robot",5000, 70, 0, hp, position, TextureSetTypes.Robot)
         {
         
         }

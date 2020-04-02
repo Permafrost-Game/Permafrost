@@ -144,7 +144,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         public Colonist(Vector2 position, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
         (
             position: position,
-            textureSet: Textures.MapSet[TextureSetTypes.colonist],
+            textureSet: Textures.MapSet[TextureSetTypes.Colonist],
             frameTime: COLONIST_FRAME_TIME
         )
         {
