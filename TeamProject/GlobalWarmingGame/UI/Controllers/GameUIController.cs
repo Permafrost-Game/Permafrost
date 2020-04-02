@@ -611,6 +611,7 @@ namespace GlobalWarmingGame.UI.Controllers
                 {
                     SelectedColonist = colonist;
                     view.SetActiveInventory(inventory.GetHashCode());
+                    GameObjectManager.Camera.Position = colonist.Position;
                 }
             }
         }
