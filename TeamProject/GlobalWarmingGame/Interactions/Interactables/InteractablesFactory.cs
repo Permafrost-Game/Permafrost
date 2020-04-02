@@ -16,7 +16,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
     /// </summary>
     public static class InteractablesFactory
     {
-
         /// <summary>
         /// Create an Interable given a Enum and a position
         /// </summary>
@@ -65,10 +64,33 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Tower(position);
                 case Interactable.Storage:
                     return new StorageUnit(position);
-                case Interactable.BridgeTile:
-                    return new BridgeTile(position);
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
+            }
+        }
+
+        /// <summary>
+        /// Create a Buildable given a Enum and a position
+        /// </summary>
+        /// <param name="interactable"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static IBuildable MakeBuildable(Buildable buildable, Vector2 position)
+        {
+            switch (buildable)
+            {
+                case Buildable.Farm:
+                    return new Farm(position);
+                case Buildable.WorkBench:
+                    return new WorkBench(position);
+                case Buildable.Forge:
+                    return new Forge(position);
+                case Buildable.CampFire:
+                    return new CampFire(position);
+                case Buildable.Storage:
+                    return new StorageUnit(position);
+                default:
+                    throw new NotImplementedException(buildable + " has not been implemented");
             }
         }
     }
@@ -80,7 +102,7 @@ public enum Buildable
     WorkBench,
     Forge,
     Farm,
-    Storage,
+    Storage
 }
 
 public enum Interactable
@@ -103,6 +125,5 @@ public enum Interactable
     Storage,
     loot,
     Bandit,
-    SmallRobot,
-    BridgeTile
+    SmallRobot
 }
