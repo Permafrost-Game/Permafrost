@@ -4,7 +4,6 @@ using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace GlobalWarmingGame.UI.Views
 {
@@ -35,11 +34,14 @@ namespace GlobalWarmingGame.UI.Views
 
 
         internal delegate void NewGame();
+        private NewGame newGame;
+        private bool startNewGame = false;
         internal void CreateUI(Texture2D MainMenuLogo, NewGame newGame)
         {
+            this.newGame = newGame;
             mainMenu = new MainMenu(MainMenuLogo);
 
-            mainMenu.MainToIntro.OnClick = (Entity button) => { newGame(); };
+            mainMenu.MainToIntro.OnClick = (Entity button) => { startNewGame = true; };
             mainMenu.MainToLoad.OnClick = (Entity button) => { SetLoadMenuVisiblity(true);  SetMainMenuVisiblity(false); };
             mainMenu.MainToQuit.OnClick = (Entity button) => Game1.GameState = GameState.Exiting;
 
@@ -114,6 +116,11 @@ namespace GlobalWarmingGame.UI.Views
 
         internal void Update(GameTime gameTime)
         {
+            if(startNewGame)
+            {
+                startNewGame = false;
+                newGame();
+            }
             Hovering = false;
             UserInterface.Active.Update(gameTime);
         }

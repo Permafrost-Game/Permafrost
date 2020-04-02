@@ -5,11 +5,8 @@ using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Event.Events
 {
@@ -45,8 +42,8 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             //If the map has a tower and it is captured by the player
             if (GameObjectManager.Filter<Tower>().Count() != 0 && GameObjectManager.Filter<Tower>().First()._isCaptured)
             {
-                //Number of robots is equal to the number of colonists / 1.5, this equation can be rebalanced
-                int numRobots = (int)(GameObjectManager.Filter<Colonist>().Count() / 1.5);
+                //Number of robots is equal to the number of colonists / 1.25, this equation can be rebalanced
+                int numRobots = (int)(GameObjectManager.Filter<Colonist>().Count() / 1.25);
                 eventTower = GameObjectManager.Filter<Tower>().First();
 
                 for (int i = 0; i < numRobots; i++)
@@ -125,8 +122,8 @@ namespace GlobalWarmingGame.Interactions.Event.Events
             {
                 foreach (Enemy enemy in activeRobots)
                 {
-                    //If the robot is alive and roughly within 10 tiles of the tower
-                    if (enemy.Health > 0 && Vector2.Distance(enemy.Position, eventTower.Position) <= eventTileMap.TileSize.X * 10)
+                    //If the robot is alive and roughly within 15 tiles of the tower
+                    if (enemy.Health > 0 && Vector2.Distance(enemy.Position, eventTower.Position) <= eventTileMap.TileSize.X * 15)
                     {
                         eventTower.ResetCapture();
                     }

@@ -1,19 +1,12 @@
-﻿
-using Engine;
-using Engine.Drawing;
-using Engine.PathFinding;
-using GlobalWarmingGame.Action;
+﻿using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Priority_Queue;
 using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
-    public class Merchant : PassiveAnimal
+    public class Merchant : PassiveAnimal, IReconstructable
     {
         private static readonly Dictionary<Resource, List<ResourceItem>> prices;
         static Merchant()
@@ -25,14 +18,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Leather,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 2)
+                        new ResourceItem(Resource.Food, 4)
                     }
                 },
                 {
                     Resource.MachineParts,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 6)
+                        new ResourceItem(Resource.Food, 4)
                     }
                 },
                 {
@@ -53,28 +46,14 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Pickaxe,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
-                    }
-                },
-                {
-                    Resource.Backpack,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Food, 8)
+                        new ResourceItem(Resource.Food, 5)
                     }
                 },
                 {
                     Resource.Shotgun,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 12)
-                    }
-                },
-                {
-                    Resource.Bow,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Food, 8)
+                        new ResourceItem(Resource.Food, 24)
                     }
                 },
                 {
@@ -88,7 +67,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Coat,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
+                        new ResourceItem(Resource.Food, 8)
                     }
                 }
             };
@@ -96,9 +75,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         private readonly Random rand;
 
-        public Merchant(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.colonist) : base
+        #region PFSerializable
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+        public Merchant() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.Merchent], 0f, null) { }
+        #endregion
+        
+        public Merchant(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Merchent) : base
         (
-            position, "Merchant", Textures.MapSet[textureSetType], 0.05f, null
+            position, Textures.MapSet[textureSetType], 0.05f, null
         )
         {
             Speed = 0.10f;
@@ -114,7 +103,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     InstructionTypes.Add(new InstructionType((r = Resource.Cloth).ToString(), "Buy Cloth", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.MachineParts).ToString(), "Buy MachineParts", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Shotgun).ToString(), "Buy Shotgun", requiredResources: prices[r], onComplete: Trade));
-                    InstructionTypes.Add(new InstructionType((r = Resource.Bow).ToString(), "Buy Bow", requiredResources: prices[r], onComplete: Trade));
                     break;
 
                 //Merchant with tool related goods
@@ -122,7 +110,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     InstructionTypes.Add(new InstructionType((r = Resource.Axe).ToString(), "Buy Axe", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Hoe).ToString(), "Buy Hoe", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Pickaxe).ToString(), "Buy Pickaxe", requiredResources: prices[r], onComplete: Trade));
-                    InstructionTypes.Add(new InstructionType((r = Resource.Backpack).ToString(), "Buy Backpack", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Coat).ToString(), "Buy Coat", requiredResources: prices[r], onComplete: Trade));
                     break;
             }
@@ -142,6 +129,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                 }
                 colonist.Inventory.AddItem(new ResourceItem(resource, 1));
             }
+        }
+
+        public object Reconstruct()
+        {
+            return new Merchant(PFSPosition);
         }
     }
 }

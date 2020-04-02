@@ -1,5 +1,4 @@
 ﻿using GlobalWarmingGame.Resources;
-using System;
 
 namespace GlobalWarmingGame.ResourceItems
 {
@@ -13,7 +12,6 @@ namespace GlobalWarmingGame.ResourceItems
 
         public ResourceItem()
         {
-
         }
 
         public ResourceItem(ResourceType Type, int weight = 0)

@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
@@ -35,12 +34,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             set { Position = value; }
         }
 
-        [PFSerializable]
-        public readonly int textureTreeID;
-
-        [PFSerializable]
-        public readonly int textureStumpID;
-
         public List<InstructionType> InstructionTypes { get; }
 
         public Tree() : base(Vector2.Zero, Vector2.Zero)
@@ -48,18 +41,16 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         }
 
-        public Tree(Vector2 position, TextureTypes textureTypeTree = TextureTypes.Tree, TextureTypes textureTypeStump = TextureTypes.TreeStump, bool choppable = true) : base
+        public Tree(Vector2 position, bool choppable = true) : base
         (
             position: position,
-            texture: Textures.Map[textureTypeTree]
+            texture: Textures.Map[TextureTypes.Tree]
         )
         {
-            textureTreeID = (int)textureTypeTree;
-            textureStumpID = (int)textureTypeStump;
-
             InstructionTypes = new List<InstructionType>();
-            this.textureTree = Textures.Map[textureTypeTree];
-            this.textureStump = Textures.Map[textureTypeStump];
+
+            this.textureTree = Textures.Map[TextureTypes.Tree];
+            this.textureStump = Textures.Map[TextureTypes.TreeStump];
 
             Choppable = choppable;
 
@@ -73,7 +64,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(Resource.Axe),
                     onStart: StartChop,
                     onComplete: EndChop,
-                    timeCost: 3500f
+                    timeCost: 4000f
                     );
                 InstructionTypes.Add(chop);
             }
@@ -93,7 +84,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            return new Tree(PFSPosition, (TextureTypes)textureTreeID, (TextureTypes)textureStumpID, _choppable);
+            return new Tree(PFSPosition, _choppable);
         }
     }
 }

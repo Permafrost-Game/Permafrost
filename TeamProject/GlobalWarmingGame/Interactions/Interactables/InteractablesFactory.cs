@@ -1,5 +1,4 @@
-﻿using GlobalWarmingGame.Interactions.Enemies;
-using GlobalWarmingGame.Interactions.Interactables.Animals;
+﻿using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Environment;
@@ -256,7 +255,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Merchant:
                     return new Merchant(position);
                 case Interactable.Farm:
-                    return new Farm(position, textures["farm"]);
+                    return new Farm(position);
                 case Interactable.Rabbit:
                     return new Rabbit(position);
                 case Interactable.Bush:
@@ -264,7 +263,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Tree:
                     return new Tree(position);
                 case Interactable.WorkBench:
-                    return new WorkBench(position, textures["workBench"]);
+                    return new WorkBench(position);
                 case Interactable.StoneNodeSmall:
                     return new SmallStoneNode(position);
                 case Interactable.StoneNodeBig:
@@ -277,15 +276,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.TallGrass:
                     return new TallGrass(position);
                 case Interactable.CampFire:
-                    return new CampFire(position, textureSet["campFire"]);
+                    return new CampFire(position);
                 case Interactable.Robot:
-                    return new Robot(position, textureSet["robot"]);
+                    return new Robot(position);
                 case Interactable.Bear:
-                    return new Bear(position, textureSet["bear"]);
+                    return new Bear(position);
                 case Interactable.Bandit:
-                    return new Bandit(position, textureSet["Bandit"]);
+                    return new Bandit(position);
                 case Interactable.SmallRobot:
-                    return new SmallRobot(position, textureSet["SmallRobot"]);
+                    return new SmallRobot(position);
                 case Interactable.Tower:
                     return new Tower(position);
                 case Interactable.Storage:

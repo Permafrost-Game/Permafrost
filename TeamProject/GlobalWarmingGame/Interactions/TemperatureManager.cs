@@ -2,7 +2,7 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
-using System;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
 {
@@ -14,16 +14,25 @@ namespace GlobalWarmingGame.Interactions
     {
         public static Temperature GlobalTemperature { get; set; } = new Temperature(-2);
 
-        private static float timeToColonistTemperatureUpdate = 0f;
-        private static readonly float timeUntilColonistTemperatureUpdate = 2000f;
+        private static readonly float timeUntilTemperatureUpdate = 2000f;
+        private static float timeToTemperatureUpdate = timeUntilTemperatureUpdate;
 
-        private static float timeUntillBuildingTemperatureUpdate = 0f;
+        private static readonly float timeUntilColonistTemperatureUpdate = 2000f;
+        private static float timeToColonistTemperatureUpdate = timeUntilColonistTemperatureUpdate;
+
         private static readonly float timeToBuildingTemperatureUpdate = 2000f;
+        private static float timeUntillBuildingTemperatureUpdate = timeToBuildingTemperatureUpdate;
 
         public static void UpdateTemperature(GameTime gameTime)
         {
             //TileMap temperature in the current zone
-            GameObjectManager.ZoneMap.UpdateTilesTemperatures(gameTime, GlobalTemperature.Value);
+            timeToTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (timeToTemperatureUpdate < 0)
+            {
+                UpdateTilesTemperatures(GlobalTemperature.Value);
+                timeToTemperatureUpdate = timeUntilTemperatureUpdate;
+            }
 
             //Colonist Temperature
             timeToColonistTemperatureUpdate -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -42,9 +51,89 @@ namespace GlobalWarmingGame.Interactions
             }
         }
 
+        #region Update TileMap Tiles' Temperatures
+        /// <summary>
+        /// Update each tile's temperature
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="globalTemperature"></param>
+        private static void UpdateTilesTemperatures(float globalTemperature)
+        {
+            foreach (Tile tile in GameObjectManager.ZoneMap.Tiles)
+            {
+                //if tile is being heated by a structure it's temperature isn't affected by the cold
+                if (tile.Heated)
+                {
+                    continue;
+                }
+
+                //Calculate new temperature as an average of surrounding tiles
+                List<Tile> adjacentTiles = AdjacentTiles(tile);
+                float sumTemperature = 0;
+
+                foreach (Tile t in adjacentTiles)
+                {
+                    sumTemperature += t.Temperature.Value;
+                }
+
+                float averageTemperature = sumTemperature / adjacentTiles.Count;
+
+                //Adjust the temperature based on the global temperature
+                //Formula decreases temperature when sumTemperature > globalTemperature
+                //and increases the temperature when sumTemperature < globalTemperature
+                tile.Temperature.Value = averageTemperature + ((globalTemperature - averageTemperature) / 128);
+            }
+        }
+
+        /// <summary>
+        /// Calculate the adjacent tiles to the center tile
+        /// </summary>
+        /// <param name="tile">Center tile</param>
+        /// <returns>List of adjacent tiles</returns>
+        private static List<Tile> AdjacentTiles(Tile tile)
+        {
+            List<Tile> adjTiles = new List<Tile>();
+
+            Vector2 v;
+            float tileSize = tile.Size.X;
+
+            if ((tile.Position.X - tileSize) >= 0)
+            {
+                v = new Vector2((tile.Position.X - tileSize), tile.Position.Y);
+                adjTiles.Add(GameObjectManager.ZoneMap.GetTileAtPosition(v));
+            }
+
+            if ((tile.Position.X + tileSize) < GameObjectManager.ZoneMap.Size.X * tileSize)
+            {
+
+                v = new Vector2((tile.Position.X + tileSize), tile.Position.Y);
+                adjTiles.Add(GameObjectManager.ZoneMap.GetTileAtPosition(v));
+
+            }
+
+            if ((tile.Position.Y - tileSize) >= 0)
+            {
+
+                v = new Vector2(tile.Position.X, (tile.Position.Y - tileSize));
+                adjTiles.Add(GameObjectManager.ZoneMap.GetTileAtPosition(v));
+
+            }
+
+            if ((tile.Position.Y + tileSize) < GameObjectManager.ZoneMap.Size.Y * tileSize)
+            {
+
+                v = new Vector2(tile.Position.X, (tile.Position.Y + tileSize));
+                adjTiles.Add(GameObjectManager.ZoneMap.GetTileAtPosition(v));
+
+            }
+
+            return adjTiles;
+        }
+        #endregion
+
         #region Update Colonist Temperatures
         /// <summary>
-        /// Update the temperatures for each colonist
+        /// Adjust the each colonist's temperature based on the tile they are over and their lower comfort range
         /// </summary>
         private static void UpdateColonistTemperatures()
         {
@@ -52,9 +141,23 @@ namespace GlobalWarmingGame.Interactions
             foreach (Colonist colonist in GameObjectManager.Filter<Colonist>())
             {
                 float tileTemp = GameObjectManager.ZoneMap.GetTileAtPosition(colonist.Position).Temperature.Value;
+                float colonistTemp = colonist.Temperature.Value;
 
-                colonist.UpdateTemp(tileTemp);
-                //Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health + " hunger: " + colonist.Hunger);
+                float absoluteTempDifference = MathHelper.Distance(colonistTemp, tileTemp);
+
+                if (colonist.Temperature.Value < tileTemp)
+                {
+                    colonistTemp += absoluteTempDifference / 4;
+                }
+                else if (colonist.Temperature.Value > tileTemp)
+                {
+                    colonistTemp -= absoluteTempDifference / 8;
+                }
+
+                //Cap colonists temperature at -50 and 50
+                colonist.Temperature.Value = MathHelper.Clamp(colonistTemp, colonist.TemperatureMin, colonist.TemperatureMax);
+
+                //Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health);
             }
         }
         #endregion
@@ -116,6 +219,6 @@ namespace GlobalWarmingGame.Interactions
                 }
             }
         }
-        #endregion
+        #endregion       
     }
 }

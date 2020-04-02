@@ -2,12 +2,11 @@
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace GlobalWarmingGame.UI
 {
-    class InventoryTransactionMessage
+    class InventoryTransactionMessage : IUpdatableUI
     {
         private readonly Paragraph p;
         private readonly GameObject parent;

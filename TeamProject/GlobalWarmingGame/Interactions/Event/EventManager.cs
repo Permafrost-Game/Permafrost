@@ -1,13 +1,8 @@
-﻿using Engine.TileGrid;
-using GlobalWarmingGame.Interactions.Event.Events;
-using GlobalWarmingGame.Interactions.Interactables;
+﻿using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Event
 {
@@ -17,7 +12,7 @@ namespace GlobalWarmingGame.Interactions.Event
     public static class EventManager
     {
         //Utility random number generator for all events
-        public static readonly Random rand = new Random(GameObjectManager.seed);
+        public static readonly Random rand = new Random();
 
         //Turn random events on and off
         public static bool RandomEvents { get; set; } = true;
@@ -28,8 +23,9 @@ namespace GlobalWarmingGame.Interactions.Event
         //Random number generator based off the seed
         private static readonly List<IEvent> activeEvents = new List<IEvent>();
 
-        private static float timeToRandomEvent = 120000f;
-        private static readonly float timeUntilRandomEvent = 120000f;
+        //Random events every 4 minutes
+        private static readonly float timeUntilRandomEvent = 300000f;
+        private static float timeToRandomEvent = timeUntilRandomEvent;
 
         /// <summary>
         /// A method in the game's update loop that is called every frame
@@ -76,7 +72,7 @@ namespace GlobalWarmingGame.Interactions.Event
             //Inform user that an event has started
             if (evnt.TriggerEvent())
             {
-                GameUIController.EventNotification(evnt);
+                GameUIController.Notification<string>(evnt.Description, 4);
             }
 
             if (!evnt.IsComplete)

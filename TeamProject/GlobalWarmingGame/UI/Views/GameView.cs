@@ -1,5 +1,4 @@
-﻿using Engine.TileGrid;
-using GeonBit.UI;
+﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
@@ -83,9 +82,9 @@ namespace GlobalWarmingGame.UI.Views
             #endregion
 
 
-            temperatureButton = new Icon(IconType.Book, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
+            temperatureButton = new Icon(IconType.PotionRed, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
             {
-                OnClick = d => { Tile.TemperatureMode = !Tile.TemperatureMode; }
+                OnClick = d => { GameObjectManager.ZoneMap.TemperatureMode = !GameObjectManager.ZoneMap.TemperatureMode; }
             };
 
             UserInterface.Active.AddEntity(temperatureButton);
@@ -216,7 +215,7 @@ namespace GlobalWarmingGame.UI.Views
         /// <typeparam name="T"></typeparam>
         /// <param name="text">Common notification text</param>
         /// <param name="list">List of objects of type T that will be appended to the notification text</param>
-        internal void Notification<T>(string text, IEnumerable<T> list = null, int secondDelay = 2) 
+        internal void Notification<T>(string text, int secondDelay, IEnumerable<T> list = null) 
         {
             string notificatonText = text;
 
@@ -297,6 +296,18 @@ namespace GlobalWarmingGame.UI.Views
             {
                 inventories[id].AddChild(CreateInventoryElement(new ItemElement(null, "0")));
             }
+        }
+
+        internal void SetActiveInventory(int id)
+        {
+            foreach(Icon i in inventoryButtons.Values)
+            {
+                i.FillColor = new Color(255,255,255,255);
+            }
+
+            inventoryButtons[id].FillColor = new Color(255, 255, 255, 129);
+
+            SetInventoryVisiblity(id);
         }
 
         private Entity CreateInventoryElement(ItemElement i)

@@ -2,8 +2,8 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
+using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Event;
-using GlobalWarmingGame.Interactions.Event.Events;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
@@ -85,11 +85,20 @@ namespace GlobalWarmingGame.UI.Controllers
         {
             if(GameObject is Colonist colonist)
             {
+                FloatingHealthBar healthBar = new FloatingHealthBar(colonist, 2000f, true, Color.LimeGreen, Color.Red);
+                UpdatableUIObjects.Add(healthBar);
+                AddInventoryMenu(colonist);
+
                 if (SelectedColonist == null)
                 {
                     SelectedColonist = colonist;
+                    view.SetActiveInventory(colonist.inventory.GetHashCode());
                 }
-                AddInventoryMenu(colonist);
+            }
+            else if (GameObject is Enemy enemy)
+            {
+                FloatingHealthBar healthBar = new FloatingHealthBar(enemy, 2000f, false, Color.DarkGreen, Color.DarkRed);
+                UpdatableUIObjects.Add(healthBar);
             }
         }
 
@@ -327,9 +336,14 @@ namespace GlobalWarmingGame.UI.Controllers
                     .Select(e => new ButtonHandler<Event>(e, StartEventCallback)).ToList());
             }
         }
-        internal static void ResourceNotification(Instruction instruction)
+
+        /// <summary>
+        /// Generic Notification
+        /// </summary>
+        /// <param name="evnt"></param>
+        internal static void Notification<T>(string text, int secondDelay = 2, IEnumerable<T> list = null)
         {
-            view.Notification($"Resources Required to {instruction.Type.Name}:", instruction.Type.RequiredResources);
+            view.Notification(text, secondDelay, list);
         }
 
         /// <summary>
@@ -363,15 +377,6 @@ namespace GlobalWarmingGame.UI.Controllers
         private static void StartEventCallback(Event evnt)
         {
             EventManager.CreateGameEvent(evnt);
-        }
-
-        /// <summary>
-        /// Notification for a event
-        /// </summary>
-        /// <param name="evnt"></param>
-        internal static void EventNotification(IEvent evnt)
-        {
-            view.Notification<string>(evnt.Description, null, 4);
         }
 
         /// <summary>
@@ -420,7 +425,7 @@ namespace GlobalWarmingGame.UI.Controllers
                 
             }
             
-            foreach(InventoryTransactionMessage i in inventoryTransactionMessages)
+            foreach(IUpdatableUI i in UpdatableUIObjects)
             {
                 if(i.IsActive)
                     i.Update(gameTime);
@@ -527,7 +532,7 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <summary>A list of all inventories that have a UI menu</summary>
         private static readonly List<Inventory> openInventories;
 
-        private static readonly List<InventoryTransactionMessage> inventoryTransactionMessages = new List<InventoryTransactionMessage>();
+        private static readonly List<IUpdatableUI> UpdatableUIObjects = new List<IUpdatableUI>();
 
         /// <param name="storage">The <see cref="IStorage"/> whoes <see cref="Inventory"/> is to be updated</param>
         private static void UpdateInventoryMenu(IStorage storage)
@@ -577,7 +582,7 @@ namespace GlobalWarmingGame.UI.Controllers
         private static void InventoryChangeCallBack(object sender, ResourceItem item)
         {
             string op = item.Weight >= 0 ? "+" : "";
-            inventoryTransactionMessages.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
+            UpdatableUIObjects.Add(new InventoryTransactionMessage((GameObject) sender, Camera, $"{op} {item.Weight} {item.ResourceType.displayName}"));
             UpdateInventoryMenu((IStorage)sender);
         }
 
@@ -600,12 +605,12 @@ namespace GlobalWarmingGame.UI.Controllers
         /// <param name="inventory"></param>
         private static void SelectInventory(Inventory inventory)
         {
-            view.SetInventoryVisiblity(inventory.GetHashCode());
             foreach (Colonist colonist in GameObjectManager.Filter<Colonist>() )
             {
                 if(colonist.Inventory == inventory)
                 {
                     SelectedColonist = colonist;
+                    view.SetActiveInventory(inventory.GetHashCode());
                 }
             }
         }

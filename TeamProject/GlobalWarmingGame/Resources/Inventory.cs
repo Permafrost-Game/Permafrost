@@ -1,7 +1,4 @@
-﻿using Engine;
-using GlobalWarmingGame.Interactions.Interactables;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.ResourceItems

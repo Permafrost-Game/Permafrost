@@ -1,13 +1,7 @@
-﻿
-using Engine;
-using Engine.Drawing;
-using Engine.PathFinding;
+﻿using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
@@ -15,6 +9,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
     {
         private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 
+        #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
         {
@@ -25,14 +20,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         [PFSerializable]
         public readonly int textureSetID;
 
-        public Rabbit() : this(Vector2.Zero)
-        {
-
-        }
-
-        public Rabbit(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.rabbit) : base
+        public Rabbit() : this(Vector2.Zero) { }
+        #endregion
+        public Rabbit(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Rabbit) : base
         (
-            position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
+            position, Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
         {
             textureSetID = (int)textureSetType;
@@ -44,7 +36,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public void Hunt(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 2));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 4));
             Dispose();
             SoundFactory.PlaySoundEffect(Sound.RabbitDeath);
         }
