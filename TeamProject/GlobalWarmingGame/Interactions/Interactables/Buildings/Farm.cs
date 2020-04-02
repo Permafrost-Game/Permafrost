@@ -1,34 +1,46 @@
-﻿using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class Farm : Sprite, IInteractable, Engine.IUpdatable, IBuildable
+    public class Farm : Sprite, IInteractable, Engine.IUpdatable, IBuildable, IReconstructable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 8), 
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 8),
                                                                                                    new ResourceItem(Resource.Hoe, 1)};
 
         public List<InstructionType> InstructionTypes { get; }
 
         private readonly InstructionType plant;
         private readonly InstructionType harvest;
-        private bool growing;
-        private float timeUntilGrown;
-        private static readonly float growTime = 30000f;
 
-        public Farm(Vector2 position, TextureTypes type = TextureTypes.Farm) : base
+        [PFSerializable]
+        public bool growing;
+
+        [PFSerializable]
+        public float timeUntilGrown;
+
+        private const float growTime = 15000f;
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        public Farm() : base(Vector2.Zero, Textures.Map[TextureTypes.Farm])
+        {
+
+        }
+
+        public Farm(Vector2 position, bool growing = false, float timeUntilGrown = growTime) : base
         (
             position: position,
             depth: CalculateDepth(position, -1),
-            texture: Textures.Map[type]
+            texture: Textures.Map[TextureTypes.Farm]
         )
         {
             InstructionTypes = new List<InstructionType>();
@@ -48,8 +60,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 timeCost: 4000f,
                 onComplete: Harvest);
 
-            timeUntilGrown = growTime;
-            InstructionTypes.Add(plant);
+            this.timeUntilGrown = timeUntilGrown;
+            this.growing = growing;
+
+            if (this.growing != true)
+                InstructionTypes.Add(plant);
         }
 
         private void Harvest(Instruction instruction)
@@ -84,6 +99,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public void Build()
         {
             GameObjectManager.Add(this);
+        }
+
+        public object Reconstruct()
+        {
+            return new Farm(PFSPosition, growing, timeUntilGrown);
         }
     }
 }

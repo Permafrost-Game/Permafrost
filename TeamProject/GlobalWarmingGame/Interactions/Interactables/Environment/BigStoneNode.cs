@@ -4,22 +4,30 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    public class BigStoneNode : Sprite, IInteractable
+    public class BigStoneNode : Sprite, IInteractable, IReconstructable
     {
         public List<InstructionType> InstructionTypes { get; }
 
-        private readonly Random rand = new Random();
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
-        public BigStoneNode(Vector2 position, TextureTypes textureType = TextureTypes.BigStoneNode) : base
+        public BigStoneNode() : base(Vector2.Zero, Vector2.Zero)
+        {
+
+        }
+
+        public BigStoneNode(Vector2 position) : base
         (
             position: position,
-            texture: Textures.Map[textureType]
+            texture: Textures.Map[TextureTypes.BigStoneNode]
         )
         {
             InstructionTypes = new List<InstructionType>
@@ -57,6 +65,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         {
             GameObjectManager.Remove(this);
             this.InstructionTypes.Clear();
+        }
+
+        public object Reconstruct()
+        {
+            return new BigStoneNode(PFSPosition);
         }
     }
 }

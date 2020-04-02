@@ -1,13 +1,25 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    public class Bear : Enemy
+    public class Bear : Enemy, IReconstructable
     {
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         private readonly List<ResourceItem> loot = new List<ResourceItem>
             {
@@ -15,22 +27,27 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.Leather, 2)
             };
 
-        public Bear ( Vector2 position, TextureSetTypes type = TextureSetTypes.Bear)
-        : base ("Bear",2000, 70, 6, 300, position, textureSet: Textures.MapSet[type])
+        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Bear)
+        {
+
+        }
+
+        public Bear ( Vector2 position, int hp = 300)
+        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.Bear)
         { }
 
-       
+
 
         public override void AnimateAttack()
         {
             isAnimated = true;
             this.TextureGroupIndex = 3;
-            
+
         }
 
         protected override void SetDead()
         {
-            //remove the enemy from the game 
+            //remove the enemy from the game
             this.DeathSound();
             notDefeated = false;
             GameObjectManager.Add(new Loot(loot, this.Position));
@@ -38,10 +55,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         }
 
         public override void Update(GameTime gameTime)
-        {   
+        {
             base.Update(gameTime);
-            
-            
+
+
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -60,12 +77,16 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.roaringBear);
+            SoundFactory.PlaySoundEffect(Sound.BearAttack);
         }
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.bearDying);
+            SoundFactory.PlaySoundEffect(Sound.BearDeath);
+        }
+        public object Reconstruct()
+        {
+            return new Bear(PFSPosition, (int)PFSHealth);
         }
     }
 }

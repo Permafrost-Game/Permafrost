@@ -3,13 +3,10 @@ using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Interactions.Interactables.Enemies;
-using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Enemies
 {
@@ -21,8 +18,6 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
         //declaring stats variables
         public float AttackPower { get; set; }
-
-
         public float MaxHealth { get; }
         public float Health { get; set; }
         public float AttackRange { get; set; }
@@ -47,11 +42,11 @@ namespace GlobalWarmingGame.Interactions.Enemies
         public RandomAI AI { get; set; } = new RandomAI(70, 0); //variables passed here could be pushed down to make different patterns for different enemies
 
 
-        public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, Texture2D[][] textureSet) : base
+        public Enemy(string name, int aSpeed, int aRange, int aPower, int maxHp, Vector2 position, TextureSetTypes textureSetType) : base
         (
             //constructior setting game object details
             position: position,
-            textureSet: textureSet,
+            textureSet: Textures.MapSet[textureSetType],
             frameTime: 100f
         )
         {

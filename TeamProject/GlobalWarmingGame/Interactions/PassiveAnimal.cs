@@ -1,9 +1,6 @@
-﻿
-using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using Engine.PathFinding;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -21,13 +18,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         protected RandomAI ai;
 
-        public PassiveAnimal(Vector2 position, string tag, Texture2D[][] textureSet, float speed, RandomAI ai, float frameTime = 100f) : base
+        public PassiveAnimal(Vector2 position, Texture2D[][] textureSet, float speed, RandomAI ai, float frameTime = 100f) : base
         (
             position: position,
-            size: new Vector2(textureSet[0][0].Width, textureSet[0][0].Height),
-            rotation: 0f,
-            origin: new Vector2(textureSet[0][0].Width / 2f, textureSet[0][0].Height / 2f),
-            depth: 0.9f,
             textureSet: textureSet,
             frameTime: frameTime
         )

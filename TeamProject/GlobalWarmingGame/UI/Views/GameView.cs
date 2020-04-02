@@ -1,5 +1,4 @@
-﻿using Engine.TileGrid;
-using GeonBit.UI;
+﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
 using GlobalWarmingGame.UI.Menus;
 using Microsoft.Xna.Framework;
@@ -83,7 +82,7 @@ namespace GlobalWarmingGame.UI.Views
             #endregion
 
 
-            temperatureButton = new Icon(IconType.Book, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
+            temperatureButton = new Icon(IconType.PotionRed, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
             {
                 OnClick = d => { GameObjectManager.ZoneMap.TemperatureMode = !GameObjectManager.ZoneMap.TemperatureMode; }
             };
@@ -297,6 +296,18 @@ namespace GlobalWarmingGame.UI.Views
             {
                 inventories[id].AddChild(CreateInventoryElement(new ItemElement(null, "0")));
             }
+        }
+
+        internal void SetActiveInventory(int id)
+        {
+            foreach(Icon i in inventoryButtons.Values)
+            {
+                i.FillColor = new Color(255,255,255,255);
+            }
+
+            inventoryButtons[id].FillColor = new Color(255, 255, 255, 129);
+
+            SetInventoryVisiblity(id);
         }
 
         private Entity CreateInventoryElement(ItemElement i)

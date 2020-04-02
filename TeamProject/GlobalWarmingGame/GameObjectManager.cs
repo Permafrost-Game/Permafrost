@@ -1,15 +1,11 @@
 ﻿using Engine;
-using Engine.Drawing;
 using Engine.PathFinding;
 using Engine.TileGrid;
-using GlobalWarmingGame.Action;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
-using GlobalWarmingGame.Interactions.Interactables.Environment;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-using SimplexNoise;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -104,7 +100,7 @@ namespace GlobalWarmingGame
             return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, TileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
-        private static void SetZone(Vector2 position, List<Colonist> colonists = null)
+        private static void SetZone(Vector2 position, IEnumerable<Colonist> colonists = null)
         {
             
             zonePos = position;
@@ -225,12 +221,15 @@ namespace GlobalWarmingGame
 
         public static void MoveZone(Vector2 direction)
         {
-            List<Colonist> colonists = GameObjectManager.Filter<Colonist>().ToList();
+            List<Colonist> colonists = Filter<Colonist>().ToList();
 
-            foreach (Colonist colonist in colonists)
-                Remove(colonist);
+            foreach (Colonist c in colonists)
+                Remove(c);
 
             SaveZone();
+
+            foreach (GameObject o in Objects)
+                Remove(o);
 
             foreach (Colonist colonist in colonists)
             {
@@ -261,6 +260,7 @@ namespace GlobalWarmingGame
             {
                 c.CheckMove();
             }
+            GlobalCombatDetector.Initalise();
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }

@@ -1,16 +1,8 @@
 ﻿using Engine.TileGrid;
-using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Animals;
-using GlobalWarmingGame.Interactions.Interactables.Enemies;
-using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Event.Events
 {

@@ -2,16 +2,23 @@
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    public class WorkBench : Sprite, IInteractable, IBuildable
+    public class WorkBench : Sprite, IInteractable, IBuildable, IReconstructable
     {
 
-        private static readonly Dictionary<Resource, List<ResourceItem>> workbenchCrafting;
+        private static readonly Dictionary<Resource, List<ResourceItem>> crafting;
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
         static WorkBench()
         {
             workbenchCrafting = new Dictionary<Resource, List<ResourceItem>>
@@ -59,11 +66,15 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public List<InstructionType> InstructionTypes { get; }
 
 
+        public WorkBench() : base(Vector2.Zero, Textures.Map[TextureTypes.WorkBench])
+        {
 
-        public WorkBench(Vector2 position, TextureTypes type = TextureTypes.WorkBench) : base
+        }
+
+        public WorkBench(Vector2 position) : base
         (
             position: position,
-            texture: Textures.Map[type]
+            texture: Textures.Map[TextureTypes.WorkBench]
         )
         {
             Resource r;
@@ -94,6 +105,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public void Build()
         {
             GameObjectManager.Add(this);
+        }
+
+        public object Reconstruct()
+        {
+            return new WorkBench(PFSPosition);
         }
     }
 }

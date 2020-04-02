@@ -1,5 +1,4 @@
-﻿using GlobalWarmingGame.Interactions.Enemies;
-using GlobalWarmingGame.Interactions.Interactables.Animals;
+﻿using GlobalWarmingGame.Interactions.Interactables.Animals;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.Interactions.Interactables.Enemies;
 using GlobalWarmingGame.Interactions.Interactables.Environment;

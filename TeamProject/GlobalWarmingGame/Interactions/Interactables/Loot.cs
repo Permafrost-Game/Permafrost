@@ -2,11 +2,7 @@
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
@@ -20,7 +16,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             get { return Position; }
             set { Position = value; }
         }
-        List<ResourceItem> lootDrop;
+
+        [PFSerializable]
+        public List<ResourceItem> lootDrop;
+
         List<InstructionType> IInteractable.InstructionTypes => InstructionTypes;
 
         [PFSerializable]

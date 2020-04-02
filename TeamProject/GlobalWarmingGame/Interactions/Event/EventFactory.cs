@@ -1,10 +1,5 @@
 ﻿using GlobalWarmingGame.Interactions.Event.Events;
-using GlobalWarmingGame.Interactions.Interactables;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Event
 {

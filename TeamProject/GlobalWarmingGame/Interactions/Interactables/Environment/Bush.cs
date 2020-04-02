@@ -1,9 +1,6 @@
-﻿
-using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -44,30 +41,22 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             set { Position = value; }
         }
 
-        [PFSerializable]
-        public readonly int textureHarvestableID;
-
-        [PFSerializable]
-        public readonly int textureHarvestedID;
         #endregion
         public Bush() : base(Vector2.Zero, Vector2.Zero)
         {
 
         }
 
-        public Bush(Vector2 position, TextureTypes textureTypeHarvestable = TextureTypes.BushH, TextureTypes textureTypeHarvested = TextureTypes.BushN, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
+        public Bush(Vector2 position, bool isHarvestable = true, float timeUnitlHarvestable = 0) : base
         (
             position: position,
-            texture: Textures.Map[textureTypeHarvestable]
+            texture: Textures.Map[TextureTypes.BushH]
         )
         {
-            textureHarvestableID = (int)textureTypeHarvestable;
-            textureHarvestedID = (int)textureTypeHarvested;
-
             InstructionTypes = new List<InstructionType>();
             
-            this.textureHarvestable = Textures.Map[textureTypeHarvestable];
-            this.textureHarvested = Textures.Map[textureTypeHarvested];
+            this.textureHarvestable = Textures.Map[TextureTypes.BushH];
+            this.textureHarvested = Textures.Map[TextureTypes.BushN];
 
             forrage = new InstructionType(
                 id: "forrage",
@@ -129,7 +118,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            return new Bush(PFSPosition, (TextureTypes)textureHarvestableID, (TextureTypes)textureHarvestedID, _isHarvestable, timeUnitlHarvestable);
+            return new Bush(PFSPosition, _isHarvestable, timeUnitlHarvestable);
         }
     }
 }

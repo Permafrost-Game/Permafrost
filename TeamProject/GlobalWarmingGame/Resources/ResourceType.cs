@@ -22,7 +22,9 @@ namespace GlobalWarmingGame.ResourceItems
 
         public ResourceType()
         {
-
+            displayName = "";
+            description = "";
+            textureIconID = 0;
         }
 
         public ResourceType(string displayName, string description, TextureIconTypes textureIconType)

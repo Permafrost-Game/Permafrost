@@ -1,36 +1,54 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    public class Robot : Enemy
+    public class Robot : Enemy, IReconstructable
     {
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
         private readonly List<ResourceItem> loot = new List<ResourceItem>
             {
                 new ResourceItem(Resource.MachineParts, 2)
             };
 
-        public Robot(Vector2 position, TextureSetTypes type = TextureSetTypes.Robot) : base("Robot",5000, 70, 0, 500, position, textureSet: Textures.MapSet[type])
+        public Robot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Robot)
         {
-        
+
+        }
+
+        public Robot(Vector2 position, int hp = 500) : base("Robot",5000, 70, 0, hp, position, TextureSetTypes.Robot)
+        {
+
         }
 
         public override void AnimateAttack()
         {
                 isAnimated = true;
-                this.TextureGroupIndex = 3;    
- 
+                this.TextureGroupIndex = 3;
+
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
-           
+
+
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -49,7 +67,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.robotShock);
+            SoundFactory.PlaySoundEffect(Sound.RobotAttack);
         }
 
         public override void EnemyAttack(GameTime gameTime) {
@@ -60,16 +78,21 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.robotBreak);
+            SoundFactory.PlaySoundEffect(Sound.RobotDeath);
         }
 
         protected override void SetDead()
         {
-            //remove the enemy from the game 
+            //remove the enemy from the game
             this.DeathSound();
             notDefeated = false;
             GameObjectManager.Add(new Loot(loot, this.Position));
             GameObjectManager.Remove(this);
+        }
+
+        public object Reconstruct()
+        {
+            return new Robot(PFSPosition, (int)PFSHealth);
         }
     }
 }
