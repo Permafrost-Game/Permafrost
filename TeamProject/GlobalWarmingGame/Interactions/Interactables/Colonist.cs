@@ -19,7 +19,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
     public class Colonist : AnimatedSprite, IHealthbased, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
-        private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
+        public const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
         private static readonly Random random = new Random();
 
         #region Instruction
@@ -29,6 +29,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         [PFSerializable]
         public readonly Inventory inventory;
+        public Dictionary<Resource, int> InventoryRules { get; } = new Dictionary<Resource, int>();
+
         public event EventHandler<ResourceItem> InventoryChange = delegate { };
 
         public Inventory Inventory { get => inventory; }
@@ -141,7 +143,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public Colonist() : this(position: Vector2.Zero) { }
 
-        public Colonist(Vector2 position, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        public Colonist(Vector2 position, Inventory inventory = default) : base
         (
             position: position,
             textureSet: Textures.MapSet[TextureSetTypes.Colonist],
@@ -149,12 +151,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             if (inventory == null)
-                this.inventory = new Inventory(capacity);
+                this.inventory = new Inventory(COLONIST_DEFAULT_INVENTORY_SIZE);
             else
                 this.inventory = inventory;
 
             this.inventory.InventoryChange += InvokeInventoryChange;
-            
+
+            InventoryRules.Add(Resource.Food, 15);
 
             AttackRange = 70;
             AttackPower = 18;
@@ -510,17 +513,24 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         private void CheckInventoryDump()
         {
-            foreach(StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
+            foreach (StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
             {
-                if(storageUnit.ResourceItem != null && inventory.ContainsType(storageUnit.ResourceItem.ResourceType.ResourceID))
+                if (storageUnit.ResourceItem != null)
                 {
-                    AddInstruction(new Instruction(
-                        type: storageUnit.StoreInstruction,
-                        activeMember: this,
-                        passiveMember: storageUnit
-                        )
-                    );
-                    break;
+                    Resource id = storageUnit.ResourceItem.ResourceType.ResourceID;
+                    if (inventory.ContainsType(id)
+                       && (!InventoryRules.ContainsKey(id)
+                       || inventory.Resources[id].Weight > InventoryRules[id])
+                    )
+                    {
+                        AddInstruction(new Instruction(
+                            type: storageUnit.StoreInstruction,
+                            activeMember: this,
+                            passiveMember: storageUnit
+                            )
+                        );
+                        break;
+                    }
                 }
             }
         }
