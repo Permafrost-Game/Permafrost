@@ -72,6 +72,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
     }
 }
 
+public enum Buildable
+{
+    CampFire,
+    WorkBench,
+    Forge,
+    Farm,
+    Storage,
+}
+
 public enum Interactable
 {
     Bear,
