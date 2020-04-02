@@ -65,6 +65,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Tower(position);
                 case Interactable.Storage:
                     return new StorageUnit(position);
+                case Interactable.BridgeTile:
+                    return new BridgeTile(position);
                 default:
                     throw new NotImplementedException(interactable + " has not been implemented");
             }
@@ -93,4 +95,5 @@ public enum Interactable
     loot,
     Bandit,
     SmallRobot,
+    BridgeTile
 }

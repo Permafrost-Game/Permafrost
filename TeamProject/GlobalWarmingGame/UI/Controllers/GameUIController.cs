@@ -324,7 +324,8 @@ namespace GlobalWarmingGame.UI.Controllers
                 new ButtonHandler<Interactable>(Interactable.Farm,      SelectBuildableCallback),
                 new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildableCallback),
                 new ButtonHandler<Interactable>(Interactable.Forge, SelectBuildableCallback),
-                new ButtonHandler<Interactable>(Interactable.Storage, SelectBuildableCallback)
+                new ButtonHandler<Interactable>(Interactable.Storage, SelectBuildableCallback),
+                new ButtonHandler<Interactable>(Interactable.BridgeTile, SelectBuildableCallback)
             });
 
             if (devMode)
