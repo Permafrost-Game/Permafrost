@@ -146,7 +146,7 @@ namespace GlobalWarmingGame
 
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
 
-                        Tower startingTower = new Tower(position: pos * ZoneMap.Tiles[0, 0].Size, captured: true);
+                        Tower startingTower = new Tower(position: pos * ZoneMap.Tiles[0, 0].Size, isCaptured: true);
                         GameObjectManager.Add(startingTower);
                     }
                 }
@@ -179,7 +179,7 @@ namespace GlobalWarmingGame
 
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
 
-                        Tower startingTower = new Tower(position: pos * ZoneMap.Tiles[0, 0].Size, captured: true);
+                        Tower startingTower = new Tower(position: pos * ZoneMap.Tiles[0, 0].Size, isCaptured: true);
                         GameObjectManager.Add(startingTower);
                     }
                         

@@ -7,8 +7,6 @@ using System;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using Microsoft.Xna.Framework;
-using SimplexNoise;
-using System;
 
 namespace GlobalWarmingGame
 {

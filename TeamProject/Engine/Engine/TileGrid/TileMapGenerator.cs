@@ -113,7 +113,7 @@ namespace Engine.TileGrid
                 {
                     float value = noise.GetNoise(x + xOffset, y + yOffset);
 
-                    if (value < -0.9f)
+                    if (value < -0.93f)
                     {
                         tiles[x, y] = new Tile(
                             texture: tileSet.TileSetTextures[5],

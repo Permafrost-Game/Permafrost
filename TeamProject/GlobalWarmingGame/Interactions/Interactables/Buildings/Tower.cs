@@ -104,7 +104,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         : this(
             pos: position,
             captured: isCaptured,
-            robots: rand.Next(capturedCount + 1, (capturedCount + 1) * 2),
+            robots: isCaptured ? 0 : rand.Next(capturedCount + 1, (capturedCount + 1) * 2),
             isFinal: capturedCount == FINAL_TOWER_INDEX
         )
         {
