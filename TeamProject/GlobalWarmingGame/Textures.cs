@@ -186,6 +186,77 @@ namespace GlobalWarmingGame
                     }
             });
 
+            MapSet.Add(TextureSetTypes.Bandit, new Texture2D[][]
+                {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/idlebandit"),
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit2")
+                    },
+                    new Texture2D[]
+                    {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit2")
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack3"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack5"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack6")
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/downedBandit"),
+
+                }
+            });
+
+            MapSet.Add(TextureSetTypes.SmallRobot, new Texture2D[][]
+            {
+                new Texture2D[]
+                {
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/idleSmallRobot"),
+                },
+                new Texture2D[]
+                {
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/idleSmallRobot")
+                },
+                new Texture2D[]
+                {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotWalkUp")
+
+                },
+                new Texture2D[]
+                {
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight1"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight2"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight3"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight4"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight5"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight6")
+                },
+                new Texture2D[]
+                {
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotDies"),
+
+                },
+                new Texture2D[]
+                {
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot3"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot4")
+
+                }
+            });
+
             #endregion
         }
     }
@@ -234,6 +305,8 @@ namespace GlobalWarmingGame
         CampFire,
         Bear,
         Robot,
-        Rabbit
+        Rabbit,
+        Bandit,
+        SmallRobot
     }
 }

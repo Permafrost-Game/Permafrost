@@ -20,7 +20,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
             get { return Position; }
             set { Position = value; }
         }
-        List<ResourceItem> lootDrop;
+
+        [PFSerializable]
+        public List<ResourceItem> lootDrop;
+
         List<InstructionType> IInteractable.InstructionTypes => InstructionTypes;
 
         [PFSerializable]

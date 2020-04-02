@@ -20,22 +20,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
             set { Position = value; }
         }
 
-        [PFSerializable]
-        public readonly int textureID;
-
         public TallGrass() : base(Vector2.Zero, Vector2.Zero)
         {
 
         }
 
-        public TallGrass(Vector2 position, TextureTypes textureType = TextureTypes.TallGrass) : base
+        public TallGrass(Vector2 position) : base
         (
             position: position,
-            texture: Textures.Map[textureType]
+            texture: Textures.Map[TextureTypes.TallGrass]
         )
         {
-            textureID = (int)textureType;
-
             InstructionTypes = new List<InstructionType>
             {
                 new InstructionType(
@@ -61,7 +56,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public object Reconstruct()
         {
-            return new TallGrass(PFSPosition, (TextureTypes)textureID);
+            return new TallGrass(PFSPosition);
         }
     }
 }

@@ -6,8 +6,21 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    public class Bear : Enemy
+    public class Bear : Enemy, IReconstructable
     {
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
 
         private readonly List<ResourceItem> loot = new List<ResourceItem>
             {
@@ -15,8 +28,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.Leather, 2)
             };
 
-        public Bear ( Vector2 position, Texture2D[][] textureSet)
-        : base ("Bear",2000, 70, 6, 300, position,textureSet)
+        public Bear() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.Bear)
+        {
+
+        }
+
+        public Bear ( Vector2 position, int hp = 300)
+        : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.Bear)
         { }
 
        
@@ -66,6 +84,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         internal override void DeathSound()
         {
             SoundFactory.PlaySoundEffect(Sound.bearDying);
+        }
+        public object Reconstruct()
+        {
+            return new Bear(PFSPosition, (int)PFSHealth);
         }
     }
 }

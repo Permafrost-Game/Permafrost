@@ -18,22 +18,17 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             set { Position = value; }
         }
 
-        [PFSerializable]
-        public readonly int textureID;
-
         public SmallStoneNode() : base(Vector2.Zero, Vector2.Zero)
         {
 
         }
 
-        public SmallStoneNode(Vector2 position, TextureTypes textureType = TextureTypes.SmallStoneNode) : base
+        public SmallStoneNode(Vector2 position) : base
         (
             position: position,
-            texture: Textures.Map[textureType]
+            texture: Textures.Map[TextureTypes.SmallStoneNode]
         )
         {
-            textureID = (int)textureType;
-
             InstructionTypes = new List<InstructionType>
             {
                 new InstructionType(
@@ -68,7 +63,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public object Reconstruct()
         {
-            return new SmallStoneNode(PFSPosition, (TextureTypes)textureID);
+            return new SmallStoneNode(PFSPosition);
         }
     }
 }

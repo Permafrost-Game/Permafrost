@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
-    class SmallRobot : Enemy
+    class SmallRobot : Enemy, IReconstructable
     {
 
         private readonly List<ResourceItem> loot = new List<ResourceItem>
@@ -20,9 +20,28 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 new ResourceItem(Resource.RobotCore, 1)
             };
 
-        private bool robotExploded = false;
+        private bool robotExploded;
 
-        public SmallRobot(Vector2 position, Texture2D[][] textureSet) : base("SmallRobot", 1000, 70, 0, 500, position, textureSet)
+        [PFSerializable]
+        public float PFSHealth
+        {
+            get { return Health; }
+            set { Health = value; }
+        }
+
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        public SmallRobot() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.SmallRobot)
+        {
+
+        }
+
+        public SmallRobot(Vector2 position, int hp = 500) : base("SmallRobot", 1000, 70, 0, hp, position, TextureSetTypes.SmallRobot)
         {
 
         }
@@ -37,8 +56,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (robotExploded)
-            {
+            if (robotExploded) {
                 GameObjectManager.Remove(this);
             }
 
@@ -111,6 +129,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 });
 
             }
+        }
+
+        public object Reconstruct()
+        {
+            return new SmallRobot(PFSPosition, (int)PFSHealth);
         }
     }
 }

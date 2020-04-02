@@ -10,24 +10,67 @@ using System.Linq;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
-    class StorageUnit : Sprite, IInteractable, IBuildable
+    class StorageUnit : Sprite, IInteractable, IBuildable, IReconstructable
     {
         public List<ResourceItem> CraftingCosts { get; } = new List<ResourceItem>() { new ResourceItem(Resource.Stone, 4),
                                                                                       new ResourceItem(Resource.Wood,  8)};
 
         public List<InstructionType> InstructionTypes { get; private set; }
 
-        public ResourceItem ResourceItem { get; private set; }
+        public static ResourceItem ResourceItemEmpty = new ResourceItem(new ResourceType());
+
+        public ResourceItem ResourceItem { get; set; }
+
+        [PFSerializable]
+        public ResourceItem PFSResourceItem
+        {
+            get { return ResourceItem != null ? ResourceItem : ResourceItemEmpty; }
+            set { ResourceItem = value; }
+        }
 
         public InstructionType StoreInstruction { get; private set; }
 
-        public StorageUnit(Vector2 position, TextureTypes textureType = TextureTypes.StorageUnit) : base
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+
+        public StorageUnit() : base(Vector2.Zero, Textures.Map[TextureTypes.StorageUnit])
+        {
+
+        }
+
+        public StorageUnit(Vector2 position, ResourceItem resourceItem = null) : base
         (
             position: position,
-            texture: Textures.Map[textureType]
+            texture: Textures.Map[TextureTypes.StorageUnit]
         )
         {
             ResetState();
+
+            if (resourceItem != null)
+            {
+                this.ResourceItem = resourceItem;
+
+                StoreInstruction = new InstructionType(
+                id: "storeItems",
+                name: $"Store {ResourceItem.ResourceType.displayName}",
+                description: "",
+                //requiredResources: new List<ResourceItem> { new ResourceItem(ResourceItem.ResourceType, 1) },
+                //checkValidity: (Instruction i) => i.ActiveMember.Inventory.ContainsType(ResourceItem.ResourceType.ResourceID),
+                onStart: StoreItem
+                );
+
+                InstructionTypes.Add(new InstructionType(
+                                id: "takeItems",
+                                name: $"Take All {ResourceItem.ResourceType.displayName}",
+                                description: "",
+                                onStart: TakeItems
+                                )
+                    );
+            }
         }
 
         public InstructionType TakeItemInstruction(int amount)
@@ -149,5 +192,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             }
         }
 
+        public object Reconstruct()
+        {
+            return new StorageUnit(PFSPosition);
+        }
     }
 }
