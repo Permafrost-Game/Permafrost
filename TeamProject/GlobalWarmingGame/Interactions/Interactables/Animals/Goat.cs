@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
-    class Fox : PassiveAnimal, IReconstructable
+    class Goat : PassiveAnimal, IReconstructable
     {
-        private static readonly RandomAI FoxAI = new RandomAI(63f, 64f);
+        private static readonly RandomAI GoatAI = new RandomAI(63f, 64f);
 
         #region PFSerializable
         [PFSerializable]
@@ -25,17 +25,17 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         [PFSerializable]
         public readonly int textureSetID;
 
-        public Fox() : this(Vector2.Zero) { }
+        public Goat() : this(Vector2.Zero) { }
         #endregion
-        public Fox(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Fox) : base
+        public Goat(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Goat) : base
         (
-            position, Textures.MapSet[textureSetType], 0.05f, FoxAI, FoxAI.MoveDistance * 3
+            position, Textures.MapSet[textureSetType], 0.05f, GoatAI, GoatAI.MoveDistance * 2
         )
         {
             textureSetID = (int)textureSetType;
 
             this.InstructionTypes.Add(
-                new InstructionType("hunt", "Hunt", "Hunt the Fox", onComplete: Hunt)
+                new InstructionType("hunt", "Hunt", "Hunt the Goat", onComplete: Hunt)
             );
         }
 
@@ -44,7 +44,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 4));
             instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Leather, 1));
             Dispose();
-            SoundFactory.PlaySoundEffect(Sound.FoxDeath);
+            SoundFactory.PlaySoundEffect(Sound.GoatDeath);
         }
 
         private void Dispose()
@@ -55,7 +55,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         public object Reconstruct()
         {
-            return new Fox(PFSPosition, (TextureSetTypes)textureSetID);
+            return new Goat(PFSPosition, (TextureSetTypes)textureSetID);
         }
     }
 }
