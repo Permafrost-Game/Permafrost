@@ -243,6 +243,10 @@ namespace GlobalWarmingGame
             {
                 Exit();
             }
+            else if (GameState == GameState.CutScene)
+            {
+                CutSceneFactory.Update(gameTime);
+            }
             else if (GameState == GameState.MainMenu)
             {
                 MainMenuUIController.Update(gameTime);

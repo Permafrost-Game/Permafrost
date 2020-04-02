@@ -146,7 +146,7 @@ namespace GlobalWarmingGame.UI.Controllers
             hasBeenLoaded = true;
 
             Game1.GameState = GameState.CutScene;
-            CutSceneFactory.PlayVideo(VideoN.Intro);
+            CutSceneFactory.PlayVideo(VideoN.Intro, () => Game1.GameState = GameState.Playing);
         }
 
         private static void LoadSaveGame(int saveGame)

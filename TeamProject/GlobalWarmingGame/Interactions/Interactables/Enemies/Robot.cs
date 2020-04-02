@@ -67,7 +67,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.robotShock);
+            SoundFactory.PlaySoundEffect(Sound.RobotAttack);
         }
 
         public override void EnemyAttack(GameTime gameTime) {
@@ -78,7 +78,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.robotBreak);
+            SoundFactory.PlaySoundEffect(Sound.RobotDeath);
         }
 
         protected override void SetDead()

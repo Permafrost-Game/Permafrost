@@ -141,7 +141,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                 if (isFinal)
                 {
                     Game1.GameState = GameState.CutScene;
-                    CutSceneFactory.PlayVideo(VideoN.Intro);
+                    CutSceneFactory.PlayVideo(VideoN.Intro, () => Game1.GameState = GameState.Playing);
                 }
             }
             else

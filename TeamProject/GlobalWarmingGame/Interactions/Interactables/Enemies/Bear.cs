@@ -77,12 +77,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.roaringBear);
+            SoundFactory.PlaySoundEffect(Sound.BearAttack);
         }
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.bearDying);
+            SoundFactory.PlaySoundEffect(Sound.BearDeath);
         }
         public object Reconstruct()
         {

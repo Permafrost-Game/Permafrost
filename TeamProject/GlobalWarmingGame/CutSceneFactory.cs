@@ -6,11 +6,12 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame
 {
-    static class CutSceneFactory  
+    static class CutSceneFactory
     {
         private static Dictionary<VideoN, Video> cutScenes;
         private static VideoPlayer vp;
-        private static Video video; 
+        private static float timeSinceStartOfVideo;
+        private static Video video;
         public static void LoadContent(ContentManager content)
         {
             vp = new VideoPlayer();
@@ -20,15 +21,31 @@ namespace GlobalWarmingGame
             };
 
         }
-        public static void PlayVideo(VideoN vid)
+        public delegate void VideoEvent();
+        private static VideoEvent onVideoEnd;
+
+
+        public static void PlayVideo(VideoN vid, VideoEvent onVideoEnd)
         {
             video = cutScenes[vid];
-
+            CutSceneFactory.onVideoEnd = onVideoEnd;
+            timeSinceStartOfVideo = 0f;
             vp.Play(video);
         }
+
+
         public static void StopVideo()
         {
             vp.Stop();
+        }
+
+        public static void Update(GameTime gameTime)
+        {
+            timeSinceStartOfVideo += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timeSinceStartOfVideo >= video.Duration.TotalMilliseconds)
+            {
+                onVideoEnd?.Invoke();
+            }
         }
 
         public static void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
