@@ -169,6 +169,7 @@ namespace GlobalWarmingGame
                 }
             }
 
+            
             GreyTilesSize = ZoneMap.Size * ZoneMap.TileSize * 3;
 
             GreyTiles?.Dispose();

@@ -14,7 +14,7 @@ using System.Linq;
 namespace GlobalWarmingGame.Interactions.Enemies
 {
 
-    public abstract class Enemy : AnimatedSprite, IUpdatable,IInteractable,IPathFindable
+    public abstract class Enemy : AnimatedSprite, IHealthbased, IUpdatable, IInteractable,IPathFindable
     {
         public Colonist Target { get; set; } = null; //target is anything within aggro range
         private Colonist targetInRange=null; //targetInRange is anything in attacking range
@@ -22,6 +22,8 @@ namespace GlobalWarmingGame.Interactions.Enemies
         //declaring stats variables
         public float AttackPower { get; set; }
 
+
+        public float MaxHealth { get; }
         public float Health { get; set; }
         public float AttackRange { get; set; }
         private double AttackSpeed { get; set; }
@@ -58,13 +60,14 @@ namespace GlobalWarmingGame.Interactions.Enemies
 
             //generic stats:
             this.AttackRange = aRange;
+            this.MaxHealth = maxHp;
             this.Health = maxHp;
             this.AttackPower = aPower;
             this.AttackSpeed = aSpeed;
             Speed = 0.2f;
         }
 
-        public abstract void SetEnemyDead();
+        protected abstract void SetDead();
 
 
 
@@ -165,7 +168,7 @@ namespace GlobalWarmingGame.Interactions.Enemies
             base.Update(gameTime); //update the game
 
             if (this.Health <= 0) {
-                this.SetEnemyDead();
+                this.SetDead();
                 return;
             }
 

@@ -85,7 +85,7 @@ namespace GlobalWarmingGame.UI.Views
 
             temperatureButton = new Icon(IconType.Book, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
             {
-                OnClick = d => { Tile.TemperatureMode = !Tile.TemperatureMode; }
+                OnClick = d => { GameObjectManager.ZoneMap.TemperatureMode = !GameObjectManager.ZoneMap.TemperatureMode; }
             };
 
             UserInterface.Active.AddEntity(temperatureButton);

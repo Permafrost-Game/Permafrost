@@ -71,9 +71,8 @@
     <Compile Include="Interactions\Event\EventManager.cs" />
     <Compile Include="Interactions\Event\Events\EventMerchant.cs" />
     <Compile Include="Interactions\Event\Events\EventRobotSiege.cs" />
-    <Compile Include="Interactions\Event\Events\EventRabbit.cs" />
     <Compile Include="Interactions\Event\Events\EventColonist.cs" />
-    <Compile Include="Interactions\Event\Events\EventBearAttack.cs" />
+    <Compile Include="Interactions\Event\Events\EventSpawnNPCs.cs" />
     <Compile Include="Interactions\Event\Events\IEvent.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Bandit.cs" />
     <Compile Include="Interactions\Interactables\Enemies\SmallRobot.cs" />
@@ -82,6 +81,7 @@
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
     <Compile Include="Interactions\Interactables\Environment\EnvironmentObject.cs" />
+    <Compile Include="Interactions\Interactables\IHealthbased.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
@@ -121,8 +121,10 @@
     <Compile Include="UI\Controllers\MainMenuUIController.cs" />
     <Compile Include="UI\InventoryTransactionMessage.cs" />
     <Compile Include="UI\ItemElement.cs" />
+    <Compile Include="UI\IUpdatableUI.cs" />
     <Compile Include="UI\KeyboardInputHandler.cs" />
     <Compile Include="UI\Menus\DeleteConfirmationDialogue.cs" />
+    <Compile Include="UI\FloatingHealthBar.cs" />
     <Compile Include="UI\Menus\LoadMenu.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\SettingsMenu.cs" />
