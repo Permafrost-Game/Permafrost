@@ -13,12 +13,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Tower : Sprite, IInteractable, IReconstructable, IHeatSource
     {
-        public Temperature Temperature { get; set; } = new Temperature(100);
+        public Temperature Temperature { get; set; } = new Temperature(1000);
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get;}
-        private readonly Texture2D hostileTexture;
-        private readonly Texture2D capturedTexture;
 
+        #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
         {
@@ -27,7 +26,28 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         }
 
         [PFSerializable]
-        public bool captured;
+        public readonly int hostileTextureID;
+
+        [PFSerializable]
+        public readonly int capturedTextureID;
+        #endregion
+
+        private readonly Texture2D hostileTexture;
+        private readonly Texture2D capturedTexture;
+
+
+        [PFSerializable]
+        public bool _isCaptured;
+
+        private bool IsCaptured
+        {
+            get { return _isCaptured; }
+            set
+            {
+                _isCaptured = value;
+                Texture = _isCaptured ? capturedTexture : hostileTexture;
+            }
+        }
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
@@ -41,7 +61,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             capturedTexture = Textures.Map[TextureTypes.TowerC];
             InstructionTypes = new List<InstructionType>();
 
-            if (this.captured = captured)
+            if (IsCaptured = captured)
             {
                 Texture = capturedTexture;
                 Heating = true;
@@ -61,11 +81,24 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Capture(Instruction instruction)
         {
-            captured = true;
-            InstructionTypes.Clear();
-            this.Texture = capturedTexture;
-            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
+            IsCaptured = true;
             Heating = true;
+            InstructionTypes.Clear();
+            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2 (this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));           
+        }
+
+        public void ResetCapture()
+        {
+            IsCaptured = false;
+            Heating = false;
+            InstructionTypes.Clear();
+            InstructionTypes.Add(new InstructionType(
+                     id: "capture",
+                     name: "Capture",
+                     description: "Capture",
+                     checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                     onComplete: Capture)
+                     );
         }
 
         public object Reconstruct()

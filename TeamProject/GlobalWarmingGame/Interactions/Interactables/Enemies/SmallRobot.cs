@@ -13,8 +13,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 {
     class SmallRobot : Enemy, IReconstructable
     {
-       
-        private bool robotExploded=false;
+
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.MachineParts, 2),
+                new ResourceItem(Resource.RobotCore, 1)
+            };
 
         [PFSerializable]
         public float PFSHealth
@@ -50,11 +54,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-                if (robotExploded) {
-                    GameObjectManager.Remove(this);
-                }
-
+            if (robotExploded) {
+                GameObjectManager.Remove(this);
             }
+
+        }
 
         protected override void ChaseColonist(Colonist colonist)
         {
@@ -78,7 +82,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         public override void EnemyAttack(GameTime gameTime)
         {
             Random dmg = new Random();
-            AttackPower = dmg.Next(1, 10);
+            AttackPower = dmg.Next(1, 6);
             base.EnemyAttack(gameTime);
         }
 
@@ -86,26 +90,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             SoundFactory.PlaySoundEffect(Sound.robotBreak);
         }
-        internal override List<ResourceItem> Loot()
-        {
-            List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.robotCore, 1));
-            return loot;
-        }
 
-        public override void SetEnemyDead()
-        {
-                //remove the enemy from the game 
-                if (notDefeated)
-                {
-                    isInCombat = false;
-                    Goals.Clear();
-                    notDefeated = false;
-                    TextureGroupIndex = 4;
-                    this.DeathSound();
-                    InstructionTypes.Clear();
-                    InstructionTypes.Add(new InstructionType("Extract Core", $"Extract core (chance of explosion!)", onComplete: SelfDestruct));
-                }
+        protected override void SetDead()
+    {
+            //remove the enemy from the game
+            if (notDefeated)
+            {
+                isInCombat = false;
+                Goals.Clear();
+                notDefeated = false;
+                TextureGroupIndex = 4;
+                this.DeathSound();
+                InstructionTypes.Clear();
+                InstructionTypes.Add(new InstructionType("Extract Core", $"Extract core (chance of explosion!)", onComplete: SelfDestruct));
+            }
         }
 
         private void SelfDestruct(Instruction instruction)
@@ -114,20 +112,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             int chance = rd.Next(1, 100);
             if (chance > 50)
             {
-                GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+                GameObjectManager.Add(new Loot(loot, this.Position));
                 robotExploded = true;
             }
             else
             {
                 SoundFactory.PlaySoundEffect(Sound.Explosion);
                 TextureGroupIndex = 5;
-                Colonist colonist = (Colonist) instruction.ActiveMember;
+                Colonist colonist = (Colonist)instruction.ActiveMember;
                 colonist.Health = colonist.Health - 50;
                 Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
                 {
                     robotExploded = true;
                 });
-               
+
             }
         }
 

@@ -16,10 +16,11 @@ using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables
 {
-    public class Colonist : AnimatedSprite, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
+    public class Colonist : AnimatedSprite, IHealthbased, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
         private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
+        private static readonly Random random = new Random();
 
         #region Instruction
 
@@ -79,12 +80,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 if (value == false)
                 {
                     AttackRange = 70;
-                    AttackPower = 30;
+                    AttackPower = 18;
                     AttackSpeed = 1000;
                 }
                 else {
                     AttackRange = 350;
-                    AttackPower = 45;
+                    AttackPower = 27;
                     AttackSpeed = 1500;
                 }
 
@@ -111,9 +112,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
         #endregion
 
         #region Temperature
-        public Temperature Temperature { get; set; } = new Temperature(38);
-        public float UpperComfortRange { get; private set; } = 50;
-        public float LowerComfortRange { get; private set; } = 15;
+        public Temperature Temperature { get; set; } = new Temperature(50);
+        public float TemperatureMax { get; }
+        public float TemperatureMin { get; }
+        public float LowerComfortRange { get; private set; } = 5;
         private float timeToFreezeCheck;
         private readonly float timeUntillNextFreezeCheck = 2000f;
         #endregion
@@ -155,15 +157,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
             
 
             AttackRange = 70;
-            AttackPower = 30;
+            AttackPower = 18;
             AttackSpeed = 1000;
             lastPosition = position;
 
 
-            Speed = 0.25f;
+            Speed = 0.15f;
             MaxHealth = 100f;
             Health = MaxHealth;
 
+            TemperatureMin = Temperature.Min;
+            TemperatureMax = 50;
             timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
             timeToFreezeCheck = timeUntillNextFreezeCheck;
 
@@ -175,13 +179,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
-            if (inventory.ContainsType(Resource.Shotgun))
-            {
-                Ranged = true;
-            }
-            else {
-                Ranged= false;
-            }
+            Ranged = inventory.ContainsType(Resource.Shotgun);
         }
 
         internal void SetDead()
@@ -207,13 +205,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if (Goals.Count == 0
                 && instructions.Count > 0
-                && completedGoal == (instructions.First.PassiveMember.Position)
-                    )
+                && this.Position == (instructions.First.PassiveMember.Position)
+                )
             {
                 Instruction currentInstruction = instructions.First;
                 try
                 {
-                        currentInstruction.Start();    
+                    currentInstruction.Start();    
                 }
                 catch (InvalidInstruction e)
                 {
@@ -222,18 +220,14 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
                 
             }
+
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requiredResources"></param>
-        /// <returns></returns>
         private bool CheckRequireResources(Instruction instruction)
         {
             List<Instruction> instructionsToEnqueue = new List<Instruction>();
 
-            List<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
+            IEnumerable<StorageUnit> storageUnits = GameObjectManager.Filter<StorageUnit>();
             Queue<ResourceItem> requiredItems = new Queue<ResourceItem>(instruction.Type.RequiredResources.Select(i => i.Clone()));
 
             
@@ -301,7 +295,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     droppedItems.Add(item);
                 }
 
-                GameObjectManager.Add(new Loot(droppedItems, this.Position));
+                if (droppedItems.Count > 0) 
+                {
+                    GameObjectManager.Add(new Loot(droppedItems, this.Position));
+                }
+
                 GameObjectManager.Remove(this);
                 return;
             }
@@ -335,7 +333,15 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             if (instructions.Count > 0)
             {
-                instructions.First.Update(gameTime);
+                try
+                {
+                    instructions.First.Update(gameTime);
+                }
+                catch (InvalidInstruction e)
+                {
+                    OnInstructionComplete(e.instruction);
+                }
+                
                 if (instructions.Count > 0)
                 {
                     if (Goals.Count == 0 )
@@ -350,9 +356,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         else
                         {
                             //No valid resources
-                            GameUIController.ResourceNotification(instructions.Dequeue());
-                            
-                            
+                            instructions.Dequeue();
+                            GameUIController.Notification($"Resources Required to {i1.Type.Name}:", 4, i1.Type.RequiredResources);
+
+
                         }
                         
                     }
@@ -415,7 +422,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeToFreezeCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeToFreezeCheck < 0f)
             {
-                if (Temperature.Value < LowerComfortRange || Temperature.Value > UpperComfortRange)
+                if (Temperature.Value < LowerComfortRange)
                 {
                     Health -= 1;
                 }
@@ -434,23 +441,24 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillNextHungerCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntillNextHungerCheck < 0)
             {
-                //If colonist doesn't have food on them, they are starving -1 health
-                if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
+                //If the colonist is hungry they take health damage and reset else increase hunger
+                if (Hunger == 5)
                 {
-                    //If the colonist is hungry they take health damage and reset else increase hunger
-                    if (Hunger == 5)
+                    //If colonist doesn't have food on them, they are starving -1 health
+                    if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
                     {
                         Health -= 1;
                     }
                     else
                     {
-                        Hunger++;
+                        //Food was eaten, reset hunger
+                        Hunger = 0;
+                        Health = Math.Min(Health + 5, MaxHealth);
                     }
                 }
-                else 
+                else
                 {
-                    //Food was eaten, reset hunger
-                    Hunger = 0;
+                    Hunger++;
                 }
 
                 //If colonist's current temperature is lower than their acceptable lowerComfortRange
@@ -463,30 +471,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 {
                     timeUntillNextHungerCheck = BASE_FOOD_CONSUMPTION;
                 }
-            }
-        }
-        #endregion
-
-        #region Update Temperature
-        /// <summary>
-        /// Adjust the colonist's temperature based on the tile they are over and their lower comfort range
-        /// </summary>
-        /// <param name="tileTemp">temperature of the tile below the colonist</param>
-        public void UpdateTemp(float tileTemp)
-        {
-            //If tile temperature is greater than the colonists temperature and greater than LowerComfortRange
-            //Increase the colonist's temperature by 2
-            //clamp the colonist's temperature with the tile's temperature as the max 
-            if (tileTemp > Temperature.Value && tileTemp > LowerComfortRange)
-            {
-                Temperature.Value = MathHelper.Clamp(Temperature.Value + 2, Temperature.Min, tileTemp);
-            }
-            //If tile temperature is less than the colonists temperature and less than LowerComfortRange
-            //Decrease the colonist's temperature by 1
-            //clamp the colonist's temperature with the tile's temperature as the min
-            else if (tileTemp < Temperature.Value && tileTemp < LowerComfortRange)
-            {
-                Temperature.Value = MathHelper.Clamp(Temperature.Value - 1, tileTemp, Temperature.Max);
             }
         }
         #endregion
@@ -563,6 +547,28 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 else
                 {
                     throw new Exception("Async instruction completed");
+                }
+            }
+
+            CheckMove();
+        }
+
+        public void CheckMove()
+        {
+            if (instructions.Count == 0)
+            {
+                //If a colonis is standing on another colonist, he should move
+                foreach (Colonist c in GlobalCombatDetector.colonists)
+                {
+                    if (c != this
+                        && this.Position == c.Position)
+                    {
+                        if (c.Goals.Count == 0)
+                        {
+                            Vector2 tileSize = GameObjectManager.ZoneMap.TileSize;
+                            Goals.Enqueue(this.Position + new Vector2(random.Next(-1, 2) * tileSize.X, random.Next(-1, 2) * tileSize.Y));
+                        }
+                    }
                 }
             }
         }

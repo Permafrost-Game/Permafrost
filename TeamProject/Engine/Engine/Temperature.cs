@@ -11,7 +11,7 @@ namespace Engine
     {
         private float value;
 
-        public float Max { get; private set; } = 100;
+        public float Max { get; private set; } = 1000;
         public float Min { get; private set; } = -50;
 
         public float Value

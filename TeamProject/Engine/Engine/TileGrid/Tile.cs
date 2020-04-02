@@ -36,12 +36,26 @@ namespace Engine.TileGrid
 
         public void Draw(SpriteBatch spriteBatch)
         {
+                spriteBatch.Draw(
+                    texture: texture,
+                    destinationRectangle: destinationRectangle,
+                    sourceRectangle: sourceRectangle,
+                    color: Color.White
+                    );
+                
+        }
+
+        public void DrawTemperatureMode(SpriteBatch spriteBatch)
+        {
             spriteBatch.Draw(
-                texture: texture,
-                destinationRectangle: destinationRectangle,
-                sourceRectangle: sourceRectangle,
-                color: Color.White
-                );
+                     texture: texture,
+                     destinationRectangle: destinationRectangle,
+                     sourceRectangle: sourceRectangle,
+                     color: new Color(
+                         r: (Temperature.Value + 10f) / 40f,
+                         g: 0f,
+                         b: -((Temperature.Value - 20f) / 40f)
+                     ));
         }
     }
 }

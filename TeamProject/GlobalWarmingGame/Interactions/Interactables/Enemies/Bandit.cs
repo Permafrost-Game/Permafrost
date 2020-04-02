@@ -31,11 +31,22 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             get { return Position; }
             set { Position = value; }
         }
-        
+
+        private readonly List<ResourceItem> loot = new List<ResourceItem>
+            {
+                new ResourceItem(Resource.Food, 2),
+                new ResourceItem(Resource.Coat, 1),
+                new ResourceItem(Resource.Axe, 1)
+            };
+
         public Bandit() : base("", 0, 0, 0, 0, Vector2.Zero, TextureSetTypes.bandit)
         {
 
-        }
+
+
+        public Bandit(Vector2 position, Texture2D[][] textureSet)
+        : base("Bandit", 1500, 70, 6, 300, position, textureSet)
+        { }
 
         public Bandit(Vector2 position, int hp = 300, bool dying = false)
         : base("Bandit", 1500, 70, 10, hp, position, TextureSetTypes.bandit)
@@ -82,16 +93,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         {
             SoundFactory.PlaySoundEffect(Sound.banditDying);
         }
-        internal override List<ResourceItem> Loot()
-        {
-            List<ResourceItem> loot = new List<ResourceItem>();
-            loot.Add(new ResourceItem(Resource.Food, 2));
-            loot.Add(new ResourceItem(Resource.Axe, 1));
-            loot.Add(new ResourceItem(Resource.Pickaxe, 1));
-            return loot;
-        }
 
-        public override void SetEnemyDead() {
+        protected override void SetDead() {
             
             if (notDefeated)
             {
@@ -123,7 +126,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             SoundFactory.PlaySoundEffect(Sound.banditDying);
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
-                GameObjectManager.Add(new Loot(this.Loot(), this.Position));
+                GameObjectManager.Add(new Loot(loot, this.Position));
                 killed = true;
             });
         }

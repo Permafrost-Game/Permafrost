@@ -34,7 +34,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <OutputPath>bin\Windows\AnyCPU\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,12 +67,20 @@
     <Compile Include="Action\Instruction.cs" />
     <Compile Include="Action\InstructionType.cs" />
     <Compile Include="Action\InvalidInstructionMemberTypeException.cs" />
+    <Compile Include="Interactions\Event\EventFactory.cs" />
+    <Compile Include="Interactions\Event\EventManager.cs" />
+    <Compile Include="Interactions\Event\Events\EventMerchant.cs" />
+    <Compile Include="Interactions\Event\Events\EventRobotSiege.cs" />
+    <Compile Include="Interactions\Event\Events\EventColonist.cs" />
+    <Compile Include="Interactions\Event\Events\EventSpawnNPCs.cs" />
+    <Compile Include="Interactions\Event\Events\IEvent.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Bandit.cs" />
     <Compile Include="Interactions\Interactables\Enemies\SmallRobot.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
     <Compile Include="CutSceneFactory.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Tower.cs" />
+    <Compile Include="Interactions\Interactables\IHealthbased.cs" />
     <Compile Include="Interactions\Interactables\InteractablesFactory.cs" />
     <Compile Include="Interactions\Interactables\Buildings\CampFire.cs" />
     <Compile Include="Interactions\Interactables\Buildings\IBuildable.cs" />
@@ -82,7 +90,6 @@
     <Compile Include="Interactions\Interactables\Environment\TallGrass.cs" />
     <Compile Include="Interactions\Interactables\Buildings\WorkBench.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Enemy.cs" />
-    <Compile Include="Interactions\Interactables\Environment\CoalNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
     <Compile Include="Interactions\Interactables\Environment\Bush.cs" />
@@ -92,6 +99,8 @@
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Farm.cs" />
     <Compile Include="Interactions\Interactables\Loot.cs" />
+    <Compile Include="SettingsManager.cs" />
+    <Compile Include="Interactions\Interactables\Merchant.cs" />
     <Compile Include="SoundFactory.cs" />
     <Compile Include="ISerializationInfo.cs" />
     <Compile Include="Resources\IStorage.cs" />
@@ -110,8 +119,10 @@
     <Compile Include="UI\Controllers\MainMenuUIController.cs" />
     <Compile Include="UI\InventoryTransactionMessage.cs" />
     <Compile Include="UI\ItemElement.cs" />
+    <Compile Include="UI\IUpdatableUI.cs" />
     <Compile Include="UI\KeyboardInputHandler.cs" />
     <Compile Include="UI\Menus\DeleteConfirmationDialogue.cs" />
+    <Compile Include="UI\FloatingHealthBar.cs" />
     <Compile Include="UI\Menus\LoadMenu.cs" />
     <Compile Include="UI\Menus\MainMenu.cs" />
     <Compile Include="UI\Menus\SettingsMenu.cs" />
