@@ -54,6 +54,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 this.ResourceItem = resourceItem;
 
+                InstructionTypes.Clear();
+
                 StoreInstruction = new InstructionType(
                 id: "storeItems",
                 name: $"Store {ResourceItem.ResourceType.displayName}",
@@ -194,7 +196,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public object Reconstruct()
         {
-            return new StorageUnit(PFSPosition);
+            return new StorageUnit(PFSPosition, PFSResourceItem);
         }
     }
 }
