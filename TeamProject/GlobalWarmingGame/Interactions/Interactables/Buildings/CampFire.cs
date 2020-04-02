@@ -14,6 +14,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
 
+        #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
         {
@@ -21,10 +22,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             set { Position = value; }
         }
 
-        public CampFire() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.CampFire])
-        {
+        public CampFire() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.CampFire]) { }
+        #endregion
 
-        }
 
         public CampFire(Vector2 position) : base
         (

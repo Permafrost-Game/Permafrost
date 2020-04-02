@@ -9,6 +9,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
     {
         private static readonly RandomAI RabbitAI = new RandomAI(63f, 64f);
 
+        #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
         {
@@ -19,14 +20,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         [PFSerializable]
         public readonly int textureSetID;
 
-        public Rabbit() : this(Vector2.Zero)
-        {
-
-        }
-
+        public Rabbit() : this(Vector2.Zero) { }
+        #endregion
         public Rabbit(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Rabbit) : base
         (
-            position, "Rabbit", Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
+            position, Textures.MapSet[textureSetType], 0.05f, RabbitAI, RabbitAI.MoveDistance * 3
         )
         {
             textureSetID = (int)textureSetType;

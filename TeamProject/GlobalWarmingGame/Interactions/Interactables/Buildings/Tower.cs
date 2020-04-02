@@ -126,7 +126,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             {
                 this.robots--;
             }
+            else if(GameObject == this)
+            {
+                GameObjectManager.ObjectRemoved -= ObjectRemovedEventHandler;
+            }
         }
+
         private void Capture(Instruction instruction)
         {
             if (robots == 0)
