@@ -112,8 +112,8 @@ namespace GlobalWarmingGame.UI.Controllers
 
             
 
-        if (!Directory.Exists(SavesPath))
-            Directory.CreateDirectory(SavesPath);
+            if (!Directory.Exists(SavesPath))
+                Directory.CreateDirectory(SavesPath);
 
             string[] saveDirectories = Directory.GetDirectories(SavesPath);
 
@@ -145,7 +145,8 @@ namespace GlobalWarmingGame.UI.Controllers
 
             hasBeenLoaded = true;
 
-            Game1.GameState = GameState.Intro;
+            Game1.GameState = GameState.CutScene;
+            CutSceneFactory.PlayVideo(VideoN.Intro, () => Game1.GameState = GameState.Playing);
         }
 
         private static void LoadSaveGame(int saveGame)

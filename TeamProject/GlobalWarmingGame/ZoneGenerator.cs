@@ -1,12 +1,10 @@
 ﻿using Engine;
 using Engine.TileGrid;
-using Engine.Drawing;
-using GlobalWarmingGame.Interactions;
-using System.Collections.Generic;
-using System;
-using SimplexNoise;
 using GlobalWarmingGame.Interactions.Interactables;
+using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using Microsoft.Xna.Framework;
+using SimplexNoise;
+using System;
 
 namespace GlobalWarmingGame
 {
@@ -33,16 +31,9 @@ namespace GlobalWarmingGame
                 && !GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water")
                 )
             {
-                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
-
-                for (int i = 0; i < rand.Next(1, 5); i++)
-                {
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
-                        GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water") ?
-                        zoneCenter :
-                        zoneCenter + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
-                        ));
-                }
+               
+                GameObjectManager.Add((Tower)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
+                
             }
 
 

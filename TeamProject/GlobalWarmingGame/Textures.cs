@@ -33,6 +33,7 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.TallGrass,         contentManager.Load<Texture2D>(@"textures/interactables/environment/grass/tallgrass"));
             Map.Add(TextureTypes.TowerC,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/captured_tower"));
             Map.Add(TextureTypes.TowerH,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
+            Map.Add(TextureTypes.TowerF,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/final_tower"));
             Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
             Map.Add(TextureTypes.Loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
             
@@ -78,11 +79,11 @@ namespace GlobalWarmingGame
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist2"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist3"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist4"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist5")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/attackingColonist5"),
                     },
                     new Texture2D[]{
                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite1"),
-                       contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0")
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/sprite0"),
                     },
                     new Texture2D[]
                     {
@@ -90,7 +91,7 @@ namespace GlobalWarmingGame
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist2"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist3"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist4"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist5")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/colonist/shotgunColonist5"),
                     }
                });
 
@@ -105,39 +106,37 @@ namespace GlobalWarmingGame
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_2"),
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_3"),
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_4"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_5")
+                        contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_5"),
                     }
 
             });
 
             MapSet.Add(TextureSetTypes.Bear, new Texture2D[][] {
-                new Texture2D[]
-                {
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite4")
-
-
-                },
+                    new Texture2D[]
+                    {
+                            contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite4"),
+                    },
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite2"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite3")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite3"),
                     },
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite5"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite6")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/sprite6"),
 
                     },
                     new Texture2D[]
                     {
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bear/attackingBear"),
                     }
             });
 
             MapSet.Add(TextureSetTypes.Robot, new Texture2D[][]  {
                     new Texture2D[]
                     {
-                       contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0"),
 
                     },
                      new Texture2D[]
@@ -150,35 +149,53 @@ namespace GlobalWarmingGame
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite6"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite7"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite8"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite9")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite9"),
 
 
                     },
                       new Texture2D[]
                     {
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0")
-
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/sprite0"),
                     },
                      new Texture2D[]
                     {
 
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot1"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot2")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/robot/attackingRobot2"),
 
                     }
                 });
+
+            MapSet.Add(TextureSetTypes.Merchent, new Texture2D[][] {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/merchent/sprite0"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/merchent/sprite1"),
+                    },
+                     new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/merchent/sprite0"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/merchent/sprite1"),
+
+                    },
+                      new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/merchent/sprite0"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/merchent/sprite1"),
+                    },
+            });
 
             MapSet.Add(TextureSetTypes.Rabbit, new Texture2D[][] {
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite0"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite1"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite2")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite2"),
                     },
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite3"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite4")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/rabbit2/sprite4"),
                     },
                     new Texture2D[]
                     {
@@ -195,12 +212,12 @@ namespace GlobalWarmingGame
                     new Texture2D[]
                     {
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit1"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit2")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit2"),
                     },
                     new Texture2D[]
                     {
                             contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit1"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit2")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/walkingbandit2"),
                     },
                     new Texture2D[]
                     {
@@ -209,7 +226,7 @@ namespace GlobalWarmingGame
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack3"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack4"),
                         contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack5"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack6")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/bandit/banditAttack6"),
                     },
                     new Texture2D[]
                     {
@@ -226,11 +243,11 @@ namespace GlobalWarmingGame
                 },
                 new Texture2D[]
                 {
-                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/idleSmallRobot")
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/idleSmallRobot"),
                 },
                 new Texture2D[]
                 {
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotWalkUp")
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotWalkUp"),
 
                 },
                 new Texture2D[]
@@ -240,7 +257,7 @@ namespace GlobalWarmingGame
                     contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight3"),
                     contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight4"),
                     contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight5"),
-                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight6")
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/smallRobotFight6"),
                 },
                 new Texture2D[]
                 {
@@ -250,9 +267,9 @@ namespace GlobalWarmingGame
                 new Texture2D[]
                 {
                     contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot1"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot2"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot3"),
-                        contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot4")
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot2"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot3"),
+                    contentManager.Load<Texture2D>(@"textures/interactables/animals/smallrobot/explosionRobot4"),
 
                 }
             });
@@ -274,6 +291,7 @@ namespace GlobalWarmingGame
         TallGrass,
         TowerC,
         TowerH,
+        TowerF,
         StorageUnit,
         Loot,
     }
@@ -301,6 +319,7 @@ namespace GlobalWarmingGame
 
     public enum TextureSetTypes
     {
+        Merchent,
         Colonist,
         CampFire,
         Bear,

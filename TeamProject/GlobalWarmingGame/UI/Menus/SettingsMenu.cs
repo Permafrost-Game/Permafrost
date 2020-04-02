@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using GeonBit.UI.Entities;
+﻿using GeonBit.UI.Entities;
 using GlobalWarmingGame.UI.Controllers;
-using Microsoft.Xna.Framework;
+using System;
 
 namespace GlobalWarmingGame.UI.Menus
 {

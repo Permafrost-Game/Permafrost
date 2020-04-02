@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Lighting;
+﻿using Engine.Lighting;
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Event;
@@ -9,10 +8,7 @@ using GlobalWarmingGame.UI;
 using GlobalWarmingGame.UI.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace GlobalWarmingGame
 {
@@ -61,7 +57,7 @@ namespace GlobalWarmingGame
                             GameUIController.ClearUI();
                         }
                         break;
-                    case GameState.Intro:
+                    case GameState.CutScene:
                         CutSceneFactory.StopVideo();
                         break;
                 }
@@ -92,9 +88,6 @@ namespace GlobalWarmingGame
                             SoundFactory.PlaySong(Songs.Main);
                             GameUIController.CreateUI();
                         }
-                        break;
-                    case GameState.Intro:
-                        CutSceneFactory.PlayVideo(VideoN.Intro);
                         break;
                 }
 
@@ -250,6 +243,10 @@ namespace GlobalWarmingGame
             {
                 Exit();
             }
+            else if (GameState == GameState.CutScene)
+            {
+                CutSceneFactory.Update(gameTime);
+            }
             else if (GameState == GameState.MainMenu)
             {
                 MainMenuUIController.Update(gameTime);
@@ -356,7 +353,7 @@ namespace GlobalWarmingGame
 
                     GameUIController.Draw(spriteBatch);
                     break;
-                case GameState.Intro:
+                case GameState.CutScene:
                     spriteBatch.Begin();
                     CutSceneFactory.Draw(spriteBatch, GraphicsDevice);
                     spriteBatch.End();
@@ -406,5 +403,5 @@ namespace GlobalWarmingGame
         #endregion
     }
 
-    public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting }
+    public enum GameState { MainMenu, Playing, Paused, Settings, Exiting, CutScene }
 }

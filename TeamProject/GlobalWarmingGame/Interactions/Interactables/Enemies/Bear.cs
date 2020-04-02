@@ -1,7 +1,6 @@
 ﻿using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
@@ -78,12 +77,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.roaringBear);
+            SoundFactory.PlaySoundEffect(Sound.BearAttack);
         }
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.bearDying);
+            SoundFactory.PlaySoundEffect(Sound.BearDeath);
         }
         public object Reconstruct()
         {

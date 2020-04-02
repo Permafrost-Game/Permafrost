@@ -1,16 +1,9 @@
 ﻿using Engine;
 using Engine.Drawing;
 using GlobalWarmingGame.Action;
-using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
@@ -21,6 +14,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public bool Heating { get; private set; }
         public List<InstructionType> InstructionTypes { get; }
 
+        #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
         {
@@ -28,10 +22,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             set { Position = value; }
         }
 
-        public CampFire() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.CampFire])
-        {
+        public CampFire() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.CampFire]) { }
+        #endregion
 
-        }
 
         public CampFire(Vector2 position) : base
         (

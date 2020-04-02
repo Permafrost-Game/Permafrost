@@ -2,11 +2,8 @@
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
@@ -82,12 +79,12 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.banditCut);
+            SoundFactory.PlaySoundEffect(Sound.BandidtAttack);
         }
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.banditDying);
+            SoundFactory.PlaySoundEffect(Sound.BanditDeath);
         }
 
         protected override void SetDead() {
@@ -99,7 +96,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 TextureGroupIndex = 4;
                 notDefeated=false;
                 isInCombat = false;
-                SoundFactory.PlaySoundEffect(Sound.banditGiveUp);
+                SoundFactory.PlaySoundEffect(Sound.BanditGiveUp);
                 InstructionTypes.Clear();
                 InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:Dying));
                 InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));     
@@ -108,7 +105,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         private void join(Instruction instruction)
         {
-            SoundFactory.PlaySoundEffect(Sound.banditJoins);
+            SoundFactory.PlaySoundEffect(Sound.BanditJoins);
             killed = true;
             Vector2 spawnplace = new Vector2(this.Position.X + 20, this.Position.Y);
             GameObjectManager.Add(new Colonist(spawnplace));
@@ -119,7 +116,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
             this.Rotation = 1.5f;
             isAnimated = false;
-            SoundFactory.PlaySoundEffect(Sound.banditDying);
+            SoundFactory.PlaySoundEffect(Sound.BanditDeath);
             Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
             {
                 GameObjectManager.Add(new Loot(loot, this.Position));

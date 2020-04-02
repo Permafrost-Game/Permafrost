@@ -190,7 +190,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
            
             if (!deathSoundPlayed)
             { 
-                SoundFactory.PlaySoundEffect(Sound.colonistDying);
+                SoundFactory.PlaySoundEffect(Sound.ColonistDeath);
                 deathSoundPlayed = true;
             }
             
@@ -602,7 +602,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             }
             else
             {
-                SoundFactory.PlaySoundEffect(Sound.slashSound);
+                SoundFactory.PlaySoundEffect(Sound.Slash);
             }
         }
 

@@ -1,9 +1,6 @@
-﻿
-using Engine;
-using Engine.Drawing;
+﻿using Engine.Drawing;
 using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;

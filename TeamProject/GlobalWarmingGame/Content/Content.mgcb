@@ -2285,6 +2285,30 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/animals/colonist/sprite2.png
 
+#begin textures/interactables/animals/merchent/sprite0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/merchent/sprite0.png
+
+#begin textures/interactables/animals/merchent/sprite1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/animals/merchent/sprite1.png
+
 #begin textures/interactables/animals/rabbit2/sprite0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2788,6 +2812,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/interactables/buildings/storage/sprite0.png
+
+#begin textures/interactables/buildings/tower/black.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/interactables/buildings/tower/black.png;textures/interactables/buildings/tower/final_tower.png
 
 #begin textures/interactables/buildings/tower/tower.png
 /importer:TextureImporter

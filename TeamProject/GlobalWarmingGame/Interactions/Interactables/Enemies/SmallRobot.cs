@@ -2,11 +2,8 @@
 using GlobalWarmingGame.Interactions.Enemies;
 using GlobalWarmingGame.ResourceItems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Enemies
@@ -78,7 +75,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void AttackingSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.robotFire);
+            SoundFactory.PlaySoundEffect(Sound.RobotFire);
         }
 
         public override void EnemyAttack(GameTime gameTime)
@@ -90,7 +87,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         internal override void DeathSound()
         {
-            SoundFactory.PlaySoundEffect(Sound.robotBreak);
+            SoundFactory.PlaySoundEffect(Sound.RobotDeath);
         }
 
         protected override void SetDead()

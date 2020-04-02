@@ -1,19 +1,12 @@
-﻿
-using Engine;
-using Engine.Drawing;
-using Engine.PathFinding;
-using GlobalWarmingGame.Action;
+﻿using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
-using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Priority_Queue;
 using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Animals
 {
-    public class Merchant : PassiveAnimal
+    public class Merchant : PassiveAnimal, IReconstructable
     {
         private static readonly Dictionary<Resource, List<ResourceItem>> prices;
         static Merchant()
@@ -82,9 +75,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
 
         private readonly Random rand;
 
-        public Merchant(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Colonist) : base
+        #region PFSerializable
+        [PFSerializable]
+        public Vector2 PFSPosition
+        {
+            get { return Position; }
+            set { Position = value; }
+        }
+        public Merchant() : base(Vector2.Zero, Textures.MapSet[TextureSetTypes.Merchent], 0f, null) { }
+        #endregion
+        
+        public Merchant(Vector2 position, TextureSetTypes textureSetType = TextureSetTypes.Merchent) : base
         (
-            position, "Merchant", Textures.MapSet[textureSetType], 0.05f, null
+            position, Textures.MapSet[textureSetType], 0.05f, null
         )
         {
             Speed = 0.10f;
@@ -126,6 +129,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                 }
                 colonist.Inventory.AddItem(new ResourceItem(resource, 1));
             }
+        }
+
+        public object Reconstruct()
+        {
+            return new Merchant(PFSPosition);
         }
     }
 }
