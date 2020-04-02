@@ -25,7 +25,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
         /// <returns></returns>
         public static IInteractable MakeInteractable(Interactable interactable, Vector2 position)
         {
-
             switch(interactable)
             {
                 case Interactable.Colonist:

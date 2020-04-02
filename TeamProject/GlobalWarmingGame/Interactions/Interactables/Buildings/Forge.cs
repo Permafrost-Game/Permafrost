@@ -73,8 +73,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             };
         }
 
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.MachineParts, 8),
-                                                                                                   new ResourceItem(Resource.Stone, 6) };
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.MachineParts, 4),
+                                                                                                   new ResourceItem(Resource.Stone, 20) };
         public List<InstructionType> InstructionTypes { get; }
 
         public Forge(Vector2 position, TextureTypes type = TextureTypes.Forge) : base

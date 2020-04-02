@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         [PFSerializable]
         public float timeUntilGrown;
 
-        private const float growTime = 15000f;
+        private const float growTime = 30000f;
 
         [PFSerializable]
         public Vector2 PFSPosition

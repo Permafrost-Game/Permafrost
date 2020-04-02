@@ -4,6 +4,7 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
@@ -18,6 +19,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             get { return Position; }
             set { Position = value; }
         }
+
+        private static readonly Random rand = new Random();
 
         public BigStoneNode() : base(Vector2.Zero, Vector2.Zero)
         {

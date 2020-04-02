@@ -501,7 +501,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     {
                         //Food was eaten, reset hunger
                         Hunger = 0;
-                        Health = Math.Min(Health + 10, MaxHealth);
+                        Health = Math.Min(Health + 5, MaxHealth);
                     }
                 }
                 else

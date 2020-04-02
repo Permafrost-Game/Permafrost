@@ -10,7 +10,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     public class WorkBench : Sprite, IInteractable, IBuildable, IReconstructable
     {
 
-        private static readonly Dictionary<Resource, List<ResourceItem>> crafting;
+        private static readonly Dictionary<Resource, List<ResourceItem>> workbenchCrafting;
 
         [PFSerializable]
         public Vector2 PFSPosition
