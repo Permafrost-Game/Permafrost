@@ -14,11 +14,17 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Tower : Sprite, IInteractable, IReconstructable, IHeatSource
     {
+        private const int FINAL_TOWER_INDEX = 10;
+        private static int capturedCount;
+        private static readonly Random rand = new Random();
+
+        #region Temperature
         public Temperature Temperature { get; set; } = new Temperature(1000);
-        public bool Heating { get; private set; }
+        public bool Heating { get => IsCaptured; }
+        #endregion
+
         public List<InstructionType> InstructionTypes { get; }
-        public static int captured_count;
-        public static bool final_isset = false; 
+        
         #region PFSerializable
         [PFSerializable]
         public Vector2 PFSPosition
@@ -27,22 +33,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             set { Position = value; }
         }
 
-        [PFSerializable]
-        public readonly int hostileTextureID;
-
-        [PFSerializable]
-        public readonly int capturedTextureID;
         #endregion
 
         private readonly Texture2D hostileTexture;
         private readonly Texture2D capturedTexture;
 
-        public int robots;
         [PFSerializable]
+        public int robots;
 
-        public bool _isFinal;
+        [PFSerializable]
+        public bool isFinal;
+
+        [PFSerializable]
         public bool _isCaptured;
-        private Random rand; 
+
         private bool IsCaptured
         {
             get { return _isCaptured; }
@@ -55,55 +59,29 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public Tower() : base(Vector2.Zero, Vector2.Zero) { }
 
-        public Tower(Vector2 position, bool captured = false) : base
-        (
-            position: position,
-            texture: Textures.Map[TextureTypes.TowerH]
+        /// <summary>
+        /// Creates a tower without robots
+        /// </summary>
+        /// <param name="captured"></param>
+        /// <param name="pos"></param>
+        /// <param name="robots"></param>
+        /// <param name="isFinal"></param>
+        private Tower(Vector2 pos, bool captured, int robots, bool isFinal) 
+        : base(
+              position: pos,
+              texture: captured? isFinal? Textures.Map[TextureTypes.TowerF] : Textures.Map[TextureTypes.TowerH] : Textures.Map[TextureTypes.TowerC]
         )
         {
-           
-            rand = new Random();
-            if (captured_count == 10 && final_isset == false)
-            {
-                hostileTextureType = TextureTypes.TowerF;
-                _isFinal = true;
-                final_isset = true; 
-            }
-            else
-            {
-                _isFinal = false;
-            }
-                this.robots = rand.Next(captured_count+1, (captured_count+1) *2);
-                int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
-                for (int i = 0; i < robots; i++)
-                {
-                    GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
-                        GameObjectManager.ZoneMap.GetTileAtPosition(position).Type.Equals("textures/tiles/main_tileset/water") ?
-                        position :
-                        position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3), rand.Next(-tileSize * 3, tileSize * 3))
-                        ));
-                }
+            this.robots = robots;
+            this.isFinal = isFinal;
+            this.IsCaptured = captured;
+            this.hostileTexture = Textures.Map[TextureTypes.TowerH];
+            this.capturedTexture = Textures.Map[TextureTypes.TowerC];
             GameObjectManager.ObjectRemoved += ObjectRemovedEventHandler;
 
-            hostileTextureID = (int)hostileTextureType;
-            capturedTextureID = (int)capturedTextureType;
-
-            hostileTexture = Textures.Map[hostileTextureType];
-            capturedTexture = Textures.Map[capturedTextureType];
-
-            hostileTextureID = (int)hostileTextureType;
-            capturedTextureID = (int)capturedTextureType;
-
-            hostileTexture = Textures.Map[TextureTypes.TowerH];
-            capturedTexture = Textures.Map[TextureTypes.TowerC];
             InstructionTypes = new List<InstructionType>();
 
-            if (IsCaptured = captured)
-            {
-                Texture = capturedTexture;
-                Heating = true;
-            }
-            else
+            if (IsCaptured)
             {
                 InstructionTypes.Add(new InstructionType(
                     id: "capture",
@@ -112,7 +90,30 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
                     onComplete: Capture)
                     );
-                Heating = false;
+            }
+        }
+
+        /// <summary>
+        /// Creates a tower with randomized robots
+        /// </summary>
+        /// <param name="position">The position the tower should be</param>
+        /// <param name="isCaptured">whether the tower is a captured one</param>
+        public Tower(Vector2 position, bool isCaptured = false)
+        : this(
+            pos: position,
+            captured: isCaptured,
+            robots: rand.Next(capturedCount + 1, (capturedCount + 1) * 2),
+            isFinal: capturedCount == FINAL_TOWER_INDEX
+        )
+        {
+            int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
+            for (int i = 0; i < robots; i++)
+            {
+                GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Robot,
+                    GameObjectManager.ZoneMap.GetTileAtPosition(position).Walkable ?
+                    position + new Vector2(rand.Next(-tileSize * 3, tileSize * 3))
+                    : position
+                    ));
             }
             
         }
@@ -129,14 +130,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             if (robots == 0)
             {
                 IsCaptured = true;
-                Heating = true;
                 InstructionTypes.Clear();
                 GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Colonist, new Vector2(this.Position.X, this.Position.Y + GameObjectManager.ZoneMap.TileSize.Y)));
-                if (captured_count < 10)
+                if (capturedCount < FINAL_TOWER_INDEX)
                 {
-                    captured_count++;
+                    capturedCount++;
                 }
-                if (_isFinal)
+                if (isFinal)
                 {
                     CutSceneFactory.PlayVideo(VideoN.Intro);
                 }
@@ -150,7 +150,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         public void ResetCapture()
         {
             IsCaptured = false;
-            Heating = false;
             InstructionTypes.Clear();
             InstructionTypes.Add(new InstructionType(
                      id: "capture",
@@ -163,7 +162,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         public object Reconstruct()
         {
-            return new Tower(PFSPosition, _isCaptured);
+            return new Tower(PFSPosition, _isCaptured, robots, isFinal);
         }
     }
 }
