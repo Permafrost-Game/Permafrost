@@ -82,7 +82,7 @@ namespace GlobalWarmingGame.UI.Views
             #endregion
 
 
-            temperatureButton = new Icon(IconType.Book, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
+            temperatureButton = new Icon(IconType.PotionRed, Anchor.BottomRight, background: true, offset: new Vector2(+30, +120))
             {
                 OnClick = d => { GameObjectManager.ZoneMap.TemperatureMode = !GameObjectManager.ZoneMap.TemperatureMode; }
             };
