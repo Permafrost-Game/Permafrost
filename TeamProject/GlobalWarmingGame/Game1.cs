@@ -57,7 +57,7 @@ namespace GlobalWarmingGame
                             GameUIController.ClearUI();
                         }
                         break;
-                    case GameState.Intro:
+                    case GameState.CutScene:
                         CutSceneFactory.StopVideo();
                         break;
                 }
@@ -88,9 +88,6 @@ namespace GlobalWarmingGame
                             SoundFactory.PlaySong(Songs.Main);
                             GameUIController.CreateUI();
                         }
-                        break;
-                    case GameState.Intro:
-                        CutSceneFactory.PlayVideo(VideoN.Intro);
                         break;
                 }
 
@@ -352,7 +349,7 @@ namespace GlobalWarmingGame
 
                     GameUIController.Draw(spriteBatch);
                     break;
-                case GameState.Intro:
+                case GameState.CutScene:
                     spriteBatch.Begin();
                     CutSceneFactory.Draw(spriteBatch, GraphicsDevice);
                     spriteBatch.End();
@@ -402,5 +399,5 @@ namespace GlobalWarmingGame
         #endregion
     }
 
-    public enum GameState { MainMenu, Playing, Paused, Settings, Intro, Exiting }
+    public enum GameState { MainMenu, Playing, Paused, Settings, Exiting, CutScene }
 }
