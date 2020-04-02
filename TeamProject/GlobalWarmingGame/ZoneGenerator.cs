@@ -46,6 +46,7 @@ namespace GlobalWarmingGame
 
             Random random = new Random(seed);
             int chance;
+            int tileCount = GameObjectManager.ZoneMap.Tiles.Length;
 
             foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
             {
@@ -53,63 +54,63 @@ namespace GlobalWarmingGame
 
                 if (t.Type.Equals("textures/tiles/main_tileset/Grass"))
                 {
-                    if (value > 0.35f || value < -0.35f)
+                    if (value > 0.4f || value < -0.4f)
                     {
-                        chance = random.Next(1000);
-                        if (chance < 667)
+                        chance = random.Next(tileCount);
+                        if (chance < 6666)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                     }
 
                     else if (value < 0.01f && value > 0)
                     {
-                        chance = random.Next(1000);
-                        if (chance < 667)
+                        chance = random.Next(tileCount);
+                        if (chance < 6666)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
                     }
 
                     else if (value > -0.01f && value < 0)
                     {
-                        chance = random.Next(1000);
-                        if (chance < 667)
+                        chance = random.Next(tileCount);
+                        if (chance < 6666)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
                     }
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
-                    chance = random.Next(1000);
+                    chance = random.Next(tileCount);
 
-                    if (chance < 75)
+                    if (chance < 750)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
 
-                    else if (chance < 100)
+                    else if (chance < 1000)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeBig, t.Position));
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
                 {
-                    chance = random.Next(1000);
-                    if (value > 0.5f || value < -0.5f)
-                        if (chance < 667)
+                    chance = random.Next(tileCount);
+                    if (value > 0.4f || value < -0.4f)
+                        if (chance < 750)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
                 {
-                    chance = random.Next(1000);
-                    if (value > 0.6f || value < -0.6f)
-                        if (chance < 667)
+                    chance = random.Next(tileCount);
+                    if (value > 0.4f || value < -0.4f)
+                        if (chance < 1000)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                 }
 
-                chance = random.Next(1000);
+                chance = random.Next(tileCount);
                 if (!t.Type.Equals("textures/tiles/main_tileset/Stone") && !t.Type.Equals("textures/tiles/main_tileset/water"))
-                    if (chance < 3)
+                    if (chance < 15)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
 
-                chance = random.Next(1000);
+                chance = random.Next(tileCount);
                 if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
-                    if(chance < 1)
+                    if(chance < 5)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
             }
         }
