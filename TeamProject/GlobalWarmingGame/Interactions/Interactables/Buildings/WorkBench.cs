@@ -11,10 +11,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
     public class WorkBench : Sprite, IInteractable, IBuildable
     {
 
-        private static readonly Dictionary<Resource, List<ResourceItem>> crafting;
+        private static readonly Dictionary<Resource, List<ResourceItem>> workbenchCrafting;
         static WorkBench()
         {
-            crafting = new Dictionary<Resource, List<ResourceItem>>
+            workbenchCrafting = new Dictionary<Resource, List<ResourceItem>>
             {
                 {
                     Resource.Shotgun,
@@ -45,7 +45,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                     new List<ResourceItem>()
                     {
                         new ResourceItem(Resource.Coat, 1),
-                        new ResourceItem(Resource.Cloth, 4),
+                        new ResourceItem(Resource.Cloth, 2),
                         new ResourceItem(Resource.Leather, 2)
                     }
                 }
@@ -69,10 +69,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             Resource r;
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType((r = Resource.Shotgun).ToString(), "Shotgun", requiredResources: crafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.Cloth).ToString(), "Cloth", requiredResources: crafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.Coat).ToString(), "Coat", requiredResources: crafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.ThickCoat).ToString(), "ThickCoat", requiredResources: crafting[r], onComplete: Craft)
+                new InstructionType((r = Resource.Shotgun).ToString(), "Shotgun", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Cloth).ToString(), "Cloth", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Coat).ToString(), "Coat", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.ThickCoat).ToString(), "ThickCoat", requiredResources: workbenchCrafting[r], onComplete: Craft)
             };
         }
 

@@ -49,7 +49,7 @@ namespace GlobalWarmingGame.Resources
             AddResource(new ResourceType(Resource.Axe, "Axe", "An axe", TextureIconTypes.Axe));
             AddResource(new ResourceType(Resource.Hoe, "Hoe", "A hoe", TextureIconTypes.Hoe));
             AddResource(new ResourceType(Resource.Pickaxe, "Pickaxe", "A Pickaxe", TextureIconTypes.Pickaxe));
-            AddResource(new ResourceType(Resource.CombatKnife, "Iron", "A iron ingot", TextureIconTypes.CombatKnife));
+            AddResource(new ResourceType(Resource.CombatKnife, "CombatKnife", "A CombatKnife", TextureIconTypes.CombatKnife));
             AddResource(new ResourceType(Resource.IronIngot, "Iron", "A iron ingot", TextureIconTypes.IronIngot));
             AddResource(new ResourceType(Resource.MKIIShotgun, "Shotgun MKII", "A MKII Shotgun", TextureIconTypes.MKIIShotgun));
             //AddResource(new ResourceType(Resource.MultiTool, "MultiTool", "A MultiTool", TextureIconTypes.MultiTool)); 

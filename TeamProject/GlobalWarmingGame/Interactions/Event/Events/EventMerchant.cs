@@ -31,10 +31,6 @@ namespace GlobalWarmingGame.Interactions.Event.Events
 
         private float timeToMerchantLeave = 60000f;
 
-        //Time until: Stop merchant by closest colonist
-        private float timeToStopMerchant = 500f;
-        private readonly float timeUntilStopMerchant = 500f;
-
         private float timeToRemoveMerchant = 1000f;
         private readonly float timeUntilRemoveMerchant = 1000f;
 
@@ -77,18 +73,6 @@ namespace GlobalWarmingGame.Interactions.Event.Events
 
         public void UpdateEvent(GameTime gameTime)
         {
-            timeToStopMerchant -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (timeToStopMerchant < 0)
-            {
-                //If the merchant is close to their spawn (roughly within two tiles)
-                if (Vector2.Distance(eventMerchant.Position, closestColonistLocation) <= eventTileMap.TileSize.X * 2) 
-                {
-                    eventMerchant.Goals.Clear();
-                }
-                timeToStopMerchant = timeUntilStopMerchant;
-            }
-
             timeToMerchantLeave -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             //If the merchant isn't leaving yet but its now time to leave

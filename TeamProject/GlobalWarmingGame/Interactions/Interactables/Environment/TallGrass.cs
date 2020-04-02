@@ -42,6 +42,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     id: "trim",
                     name:"Trim grass",
                     checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type),
+                    timeCost: 1000f,
                     onComplete: Trim
                     )
             };
