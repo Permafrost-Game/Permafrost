@@ -65,7 +65,7 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.Shotgun,      contentManager.Load<Texture2D>(@"textures/icons/shotgun"));
             MapIcon.Add(TextureIconTypes.MKIIShotgun,  contentManager.Load<Texture2D>(@"textures/icons/mkIIShotgun"));
 
-            MapIcon.Add(TextureIconTypes.Cloth,        null);
+            MapIcon.Add(TextureIconTypes.Cloth,        contentManager.Load<Texture2D>(@"textures/icons/cloth"));
             MapIcon.Add(TextureIconTypes.Coat,         contentManager.Load<Texture2D>(@"textures/icons/coat"));
             MapIcon.Add(TextureIconTypes.ThickCoat,    contentManager.Load<Texture2D>(@"textures/icons/thickCoat"));
 

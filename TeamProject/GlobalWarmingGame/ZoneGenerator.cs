@@ -12,13 +12,16 @@ namespace GlobalWarmingGame
 {
     static class ZoneGenerator
     {
-
         private static readonly int towerDistance = 7;
         private static readonly int towerSpan = 100;
 
+        /// <summary>
+        /// Generates <see cref="GameObject"/> around the map
+        /// </summary>
+        /// <param name="seed"></param>
+        /// <param name="zonePos"></param>
         public static void SpawnGameObjects(int seed, Vector2 zonePos)
         {
-            Random rand = new Random(seed);
             int tileSize = (int)GameObjectManager.ZoneMap.TileSize.Y;
 
             Vector2 zoneCenter = tileSize * (GameObjectManager.ZoneMap.Size / 2);
@@ -31,11 +34,10 @@ namespace GlobalWarmingGame
                 && zonePos.Y > -towerSpan
                 && !zonePos.Equals(Vector2.Zero)
                 && !GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water")
+                && !GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/deepWater")
                 )
             {
-               
                 GameObjectManager.Add((Tower)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
-                
             }
 
             seed++;
