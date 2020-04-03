@@ -88,7 +88,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
 
         public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Stone, 8),
-                                                                                                   new ResourceItem(Resource.Wood, 16)};
+                                                                                                   new ResourceItem(Resource.Wood, 8)};
 
         public List<InstructionType> InstructionTypes { get; }
 
