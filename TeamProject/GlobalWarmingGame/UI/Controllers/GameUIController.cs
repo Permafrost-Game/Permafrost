@@ -179,7 +179,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
                         if (constructingMode)
                         {
-                            building = (IBuildable)InteractablesFactory.MakeInteractable(SelectedBuildable, objectClicked.Position);
+                            building = InteractablesFactory.MakeBuildable(SelectedBuildable, objectClicked.Position);
 
                             options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, requiredResources: building.CraftingCosts, onComplete: Build),
                                                                                        activeMember,
@@ -290,7 +290,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
         private static bool constructingMode = false;
         private static IBuildable building;
-        private static Interactable SelectedBuildable { get; set; }
+        private static Buildable SelectedBuildable { get; set; }
         public static Camera Camera { get => GameObjectManager.Camera; }
 
         private static bool _devMode;
@@ -318,12 +318,8 @@ namespace GlobalWarmingGame.UI.Controllers
         {
             view.ClearDropDown();
             //Buildings drop down
-            view.CreateDropDown("Building", new List<ButtonHandler<Interactable>>
-            {
-                new ButtonHandler<Interactable>(Interactable.CampFire,  SelectBuildableCallback),
-                new ButtonHandler<Interactable>(Interactable.Farm,      SelectBuildableCallback),
-                new ButtonHandler<Interactable>(Interactable.WorkBench, SelectBuildableCallback)
-            });
+            view.CreateDropDown("Building", Enum.GetValues(typeof(Buildable)).Cast<Buildable>()
+                .Select(b => new ButtonHandler<Buildable>(b, SelectBuildableCallback)).ToList());
 
             if (devMode)
             {
@@ -350,9 +346,9 @@ namespace GlobalWarmingGame.UI.Controllers
         /// Selects an Interactable for construction
         /// </summary>
         /// <param name="interactable"></param>
-        private static void SelectBuildableCallback(Interactable interactable)
+        private static void SelectBuildableCallback(Buildable buildable)
         {
-            SelectedBuildable = interactable;
+            SelectedBuildable = buildable;
             constructingMode = true;
         }
 
@@ -429,6 +425,13 @@ namespace GlobalWarmingGame.UI.Controllers
             {
                 if(i.IsActive)
                     i.Update(gameTime);
+            }
+
+            foreach(Colonist colonist in GlobalCombatDetector.colonists)
+            {
+                view.UpdateTemperatureColonistWarning(colonist.inventory.GetHashCode(), colonist.Temperature.Value < colonist.LowerComfortRange);
+                view.UpdateHungerColonistWarning(colonist.inventory.GetHashCode(), colonist.Hunger >= 5);
+                view.UpdateCombatColonistWarning(colonist.inventory.GetHashCode(), colonist.InCombat);
             }
 
             previousMouseState = currentMouseState;

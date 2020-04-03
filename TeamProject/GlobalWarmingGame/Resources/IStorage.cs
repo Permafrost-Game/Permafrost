@@ -1,5 +1,6 @@
 ﻿using GlobalWarmingGame.ResourceItems;
 using System;
+using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Resources
 {
@@ -9,5 +10,6 @@ namespace GlobalWarmingGame.Resources
         event EventHandler<ResourceItem> InventoryChange;
 
         Inventory Inventory { get; }
+        Dictionary<Resource,int> InventoryRules { get; }
     }
 }

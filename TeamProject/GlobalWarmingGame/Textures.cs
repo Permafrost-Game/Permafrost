@@ -36,33 +36,37 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.TowerF,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/final_tower"));
             Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
             Map.Add(TextureTypes.Loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
-            
+            Map.Add(TextureTypes.Forge,                contentManager.Load<Texture2D>(@"textures/interactables/buildings/forge/forge"));
+            Map.Add(TextureTypes.Mill,                 null);
 
             #endregion
 
             #region Icon
-            MapIcon.Add(TextureIconTypes.Stone, contentManager.Load<Texture2D>(@"textures/icons/stone"));
-            MapIcon.Add(TextureIconTypes.Wood, contentManager.Load<Texture2D>(@"textures/icons/wood"));
-            MapIcon.Add(TextureIconTypes.Fibers, contentManager.Load<Texture2D>(@"textures/icons/fibers"));
-            MapIcon.Add(TextureIconTypes.Apple, contentManager.Load<Texture2D>(@"textures/icons/apple"));
-            
+            MapIcon.Add(TextureIconTypes.Stone,        contentManager.Load<Texture2D>(@"textures/icons/stone"));
+            MapIcon.Add(TextureIconTypes.Wood,         contentManager.Load<Texture2D>(@"textures/icons/wood"));
+            MapIcon.Add(TextureIconTypes.Coal,         contentManager.Load<Texture2D>(@"textures/icons/coal"));
+            MapIcon.Add(TextureIconTypes.Fibers,       contentManager.Load<Texture2D>(@"textures/icons/fibers"));
+            MapIcon.Add(TextureIconTypes.Apple,        contentManager.Load<Texture2D>(@"textures/icons/apple"));
+            MapIcon.Add(TextureIconTypes.Wheat,        contentManager.Load<Texture2D>(@"textures/icons/wheat"));
+            MapIcon.Add(TextureIconTypes.IronOre,      contentManager.Load<Texture2D>(@"textures/icons/ironOre"));
+            MapIcon.Add(TextureIconTypes.IronIngot,    contentManager.Load<Texture2D>(@"textures/icons/ironIngot"));
 
-            /* todo */
-            MapIcon.Add(TextureIconTypes.Coal, null);
-            MapIcon.Add(TextureIconTypes.Leather, null);
-            MapIcon.Add(TextureIconTypes.RobotCore, contentManager.Load<Texture2D>(@"textures/icons/robotCore"));
+            MapIcon.Add(TextureIconTypes.Leather,      contentManager.Load<Texture2D>(@"textures/icons/leather"));
+            MapIcon.Add(TextureIconTypes.RobotCore,    contentManager.Load<Texture2D>(@"textures/icons/robotCore"));
             MapIcon.Add(TextureIconTypes.MachineParts, contentManager.Load<Texture2D>(@"textures/icons/machineparts"));
 
-            MapIcon.Add(TextureIconTypes.Axe, contentManager.Load<Texture2D>(@"textures/icons/axe"));
-            MapIcon.Add(TextureIconTypes.Hoe, contentManager.Load<Texture2D>(@"textures/icons/hoe"));
-            MapIcon.Add(TextureIconTypes.Pickaxe, contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
+            MapIcon.Add(TextureIconTypes.Axe,          contentManager.Load<Texture2D>(@"textures/icons/axe"));
+            MapIcon.Add(TextureIconTypes.Hoe,          contentManager.Load<Texture2D>(@"textures/icons/hoe"));
+            MapIcon.Add(TextureIconTypes.Pickaxe,      contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
+            //MapIcon.Add(TextureIconTypes.MultiTool,    null);
 
-            MapIcon.Add(TextureIconTypes.Shotgun, contentManager.Load<Texture2D>(@"textures/icons/Shotgun"));
-            /* todo */
-            MapIcon.Add(TextureIconTypes.Backpack, null);
-            MapIcon.Add(TextureIconTypes.Bow, null);
-            MapIcon.Add(TextureIconTypes.Cloth, null);
-            MapIcon.Add(TextureIconTypes.Coat, null);
+            MapIcon.Add(TextureIconTypes.CombatKnife,  contentManager.Load<Texture2D>(@"textures/icons/combatKnife"));
+            MapIcon.Add(TextureIconTypes.Shotgun,      contentManager.Load<Texture2D>(@"textures/icons/shotgun"));
+            MapIcon.Add(TextureIconTypes.MKIIShotgun,  contentManager.Load<Texture2D>(@"textures/icons/mkIIShotgun"));
+
+            MapIcon.Add(TextureIconTypes.Cloth,        null);
+            MapIcon.Add(TextureIconTypes.Coat,         contentManager.Load<Texture2D>(@"textures/icons/coat"));
+            MapIcon.Add(TextureIconTypes.ThickCoat,    contentManager.Load<Texture2D>(@"textures/icons/thickCoat"));
 
             #endregion
 
@@ -203,6 +207,44 @@ namespace GlobalWarmingGame
                     }
             });
 
+            MapSet.Add(TextureSetTypes.Fox, new Texture2D[][] {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf5"),
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf6"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf7"),
+                    },
+                    new Texture2D[]
+                    {
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf0"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf1"),
+                    }
+            });
+            MapSet.Add(TextureSetTypes.Goat, new Texture2D[][] {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite0"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite3"),
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite8"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite9"),
+                    },
+                    new Texture2D[]
+                    {
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite4"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite5"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite6"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite7"),
+                    }
+            });
             MapSet.Add(TextureSetTypes.Bandit, new Texture2D[][]
                 {
                     new Texture2D[]
@@ -294,27 +336,33 @@ namespace GlobalWarmingGame
         TowerF,
         StorageUnit,
         Loot,
+        Forge,
+        Mill
     }
 
     public enum TextureIconTypes
     {
         Stone,
+        IronOre,
+        IronIngot,
         Wood,
+        Coal,
         Fibers,
         Apple,
-        Coal,
+        Wheat,
         Leather,
         MachineParts,
         Axe,
         Hoe,
         Pickaxe,
-        Backpack,
-        BasicRifle,
-        Bow,
         Cloth,
         Coat,
+        CombatKnife,
         Shotgun,
-        RobotCore
+        RobotCore,
+        //MultiTool,
+        MKIIShotgun,
+        ThickCoat
     }
 
     public enum TextureSetTypes
@@ -326,6 +374,8 @@ namespace GlobalWarmingGame
         Robot,
         Rabbit,
         Bandit,
-        SmallRobot
+        SmallRobot,
+        Fox,
+        Goat
     }
 }

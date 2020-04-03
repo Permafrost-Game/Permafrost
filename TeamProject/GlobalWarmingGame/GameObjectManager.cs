@@ -256,6 +256,7 @@ namespace GlobalWarmingGame
             foreach (Colonist colonist in colonists)
             {
                 colonist.ClearInstructions();
+                colonist.InCombat = false;
 
 
                 if (direction.X != 0)
@@ -283,6 +284,19 @@ namespace GlobalWarmingGame
                 c.CheckMove();
             }
             GlobalCombatDetector.Initalise();
+
+            foreach (GameObject j in gameObjects)
+            {
+                if (j is Tower tower)
+                {
+                    if (!tower._isCaptured)
+                        SoundFactory.PlaySong(Songs.EnemyZone);
+                    break;
+                }
+
+                else
+                    SoundFactory.PlaySong(Songs.Main);
+            }
         }
 
         public static List<GameObject> Objects { get => gameObjects.ToList(); }

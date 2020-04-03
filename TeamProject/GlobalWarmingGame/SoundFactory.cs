@@ -11,13 +11,15 @@ namespace GlobalWarmingGame
         public static Dictionary<Sound, SoundEffect> sounds;
         public static Dictionary<Songs, Song> songs;
         public static float Volume { get; set; } = 0.1f;
-
+        private static Songs currSong;
         public static void Loadsounds(ContentManager content)
         {
             sounds = new Dictionary<Sound, SoundEffect>
             {
                 { Sound.WoodChop, content.Load<SoundEffect>(@"sound/sounds/wood_chop") },
                 { Sound.RabbitDeath, content.Load<SoundEffect>(@"sound/sounds/rabbit_death") },
+                { Sound.FoxDeath, content.Load<SoundEffect>(@"sound/sounds/foxDeath") },
+                { Sound.GoatDeath, content.Load<SoundEffect>(@"sound/sounds/goatDeath") },
                 { Sound.StonePickup, content.Load<SoundEffect>(@"sound/sounds/stone_pickup") },
                 { Sound.BearAttack, content.Load<SoundEffect>(@"sound/sounds/bear_roar") },
                 { Sound.RobotAttack, content.Load<SoundEffect>(@"sound/sounds/robot_electricity") },
@@ -44,10 +46,13 @@ namespace GlobalWarmingGame
  
         public static void PlaySong(Songs songS)
         {
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = Volume;
-            MediaPlayer.Play(songs[songS]);
-            
+            if (currSong != songS)
+            {
+                currSong = songS;
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = Volume;
+                MediaPlayer.Play(songs[currSong]);
+            }
         }
         public static void PlaySoundEffect(Sound sound)
         {
@@ -70,6 +75,8 @@ public enum Sound
 {
     WoodChop,
     RabbitDeath,
+    GoatDeath,
+    FoxDeath,
     StonePickup,
     BearAttack,
     RobotAttack,

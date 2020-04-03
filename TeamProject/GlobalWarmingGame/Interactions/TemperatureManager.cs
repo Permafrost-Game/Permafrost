@@ -17,7 +17,7 @@ namespace GlobalWarmingGame.Interactions
         private static readonly float timeUntilTemperatureUpdate = 2000f;
         private static float timeToTemperatureUpdate = timeUntilTemperatureUpdate;
 
-        private static readonly float timeUntilColonistTemperatureUpdate = 2000f;
+        private static readonly float timeUntilColonistTemperatureUpdate = 4000f;
         private static float timeToColonistTemperatureUpdate = timeUntilColonistTemperatureUpdate;
 
         private static readonly float timeToBuildingTemperatureUpdate = 2000f;
@@ -204,17 +204,19 @@ namespace GlobalWarmingGame.Interactions
                     //Position is offset in regards to temperature tests with objects
                     Tile t = tileMap.GetTileAtPosition(new Vector2(position.X - (size.X / 2.5f) + x * tileWidth,
                                                                    position.Y + (size.Y / 2.5f) - y * tileWidth));
-
-                    if (heating)
+                    if (t != null) 
                     {
-                        //Prevent this tile's temperature from being reduced and set it to the buildings output temperature
-                        t.Temperature.Value = temperature;
-                        t.Heated = true;
-                    }
-                    else
-                    {
-                        //Allow this tile's temperature to be changed
-                        t.Heated = false;
+                        if (heating)
+                        {
+                            //Prevent this tile's temperature from being reduced and set it to the buildings output temperature
+                            t.Temperature.Value = temperature;
+                            t.Heated = true;
+                        }
+                        else
+                        {
+                            //Allow this tile's temperature to be changed
+                            t.Heated = false;
+                        }
                     }
                 }
             }

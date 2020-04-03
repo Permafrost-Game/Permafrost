@@ -33,7 +33,7 @@ namespace GlobalWarmingGame
                 && !GameObjectManager.ZoneMap.GetTileAtPosition(zoneCenter).Type.Equals("textures/tiles/main_tileset/water")
                 )
             {
-            
+               
                 GameObjectManager.Add((Tower)InteractablesFactory.MakeInteractable(Interactable.Tower, zoneCenter));
                 
             }
