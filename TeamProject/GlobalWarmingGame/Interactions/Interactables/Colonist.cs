@@ -125,10 +125,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Food
         public int Hunger { get; private set; } = 0;
-        private static readonly InstructionType EAT_INSTRUCTION_TYPE = new InstructionType("eat", "Eat", "Eat food", 0, new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 15) });
+        private static readonly InstructionType EAT_INSTRUCTION_TYPE = new InstructionType("eat", "Eat", "Eat food", 0, 
+                                                                                           new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)},
+                                                                                           0,
+                                                                                           onStart: Eat);
+        private static void Eat(Instruction i) 
+        {
+            Colonist colonist = (Colonist)i.ActiveMember;
+            if (colonist.Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+            {
+                colonist.Hunger = 0;
+                colonist.Health = Math.Min(colonist.Health + 5, colonist.MaxHealth);
+            }
+            else
+                colonist.Health -= 1;
+        }
+
         private float timeUntillNextHungerCheck;
         private readonly float BASE_FOOD_CONSUMPTION = 6000f;
         #endregion
+
         private bool deathSoundPlayed;
         private bool AttackTrigger=false;
         private Enemy target;
@@ -185,6 +201,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             InventoryChange.Invoke(this, resourceItem);
             Ranged = inventory.ContainsType(Resource.Shotgun);
+
+            foreach(KeyValuePair<Resource, int> r in InventoryRules)
+            {
+                ResourceItem item = new ResourceItem(r.Key, r.Value);
+                ResourceItem itemRequired = new ResourceItem(r.Key, r.Value / 3 * 2);
+                if (!inventory.Contains(itemRequired))
+                {
+                    CheckRequireResources(new Instruction(new InstructionType("InventoryRule", "InventoryRule", requiredResources: new List<ResourceItem>() { item })), false);
+                }
+            }
+
         }
 
         internal void SetDead()
@@ -228,7 +255,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        private bool CheckRequireResources(Instruction instruction)
+        private bool CheckRequireResources(Instruction instruction, bool requiresAllRequiredResources = true)
         {
             List<Instruction> instructionsToEnqueue = new List<Instruction>();
 
@@ -267,7 +294,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
                     }
                 }
-                if(requiredItem.Weight > 0)
+                if(requiredItem.Weight > 0 && requiresAllRequiredResources)
                 {
                     return false;
                 }
@@ -361,7 +388,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         else
                         {
                             //No valid resources
-                            instructions.Dequeue();
+                            instructions.Remove(i1);
                             GameUIController.Notification($"Resources Required to {i1.Type.Name}:", 4, i1.Type.RequiredResources);
 
 
@@ -446,23 +473,18 @@ namespace GlobalWarmingGame.Interactions.Interactables
             timeUntillNextHungerCheck -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timeUntillNextHungerCheck < 0)
             {
-                Instruction i = new Instruction(EAT_INSTRUCTION_TYPE, 0, this, this);
-                instructions.Enqueue(i, i.Priority);
                 //If the colonist is hungry they take health damage and reset else increase hunger
-                if (Hunger >= 5)
+                if (Hunger == 1)
                 {
-                    //If colonist doesn't have food on them, they are starving -1 health
-                    
-                    //if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
-                    //{
-                    //    Health -= 1;
-                    //}
-                    //else
-                    //{
-                        //Food was eaten, reset hunger
-                        //Hunger = 0;
-                        //Health = Math.Min(Health + 5, MaxHealth);
-                    //}
+                    //AddInstruction(new Instruction(EAT_INSTRUCTION_TYPE, EAT_INSTRUCTION_TYPE.Priority, this, this));
+
+                    if (Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+                    {
+                        Hunger = 0;
+                        Health = Math.Min(Health + 5, MaxHealth);
+                    }
+                    else
+                        Health -= 1;
                 }
                 else
                 {
@@ -547,7 +569,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (instructions.First == instruction)
                 {
-                    instructions.Dequeue();
+                    instructions.Remove(instruction);
                     if (instruction.Type.ID != "takeItem")
                     {
                         CheckInventoryDump();
@@ -561,7 +583,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
                 else
                 {
-                    throw new Exception("Async instruction completed");
+                    //throw new Exception("Async instruction completed");
                 }
             }
 
