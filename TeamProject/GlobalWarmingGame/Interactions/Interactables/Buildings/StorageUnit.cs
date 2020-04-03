@@ -54,7 +54,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             ResetState();
 
             if (resourceItem != null &&
-                resourceItem.ResourceType.displayName != ResourceItemEmpty.ResourceType.displayName)
+                resourceItem.ResourceType.displayName != EMPTY_RESOURCE_ITEM.ResourceType.displayName)
             {
                 this.ResourceItem = resourceItem;
 

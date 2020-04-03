@@ -253,7 +253,6 @@ namespace GlobalWarmingGame.Interactions.Interactables
             #endregion
         }
 
-        }
 
         internal void SetDead()
         {
