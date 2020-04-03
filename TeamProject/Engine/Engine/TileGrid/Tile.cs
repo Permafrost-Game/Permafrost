@@ -14,7 +14,7 @@ namespace Engine.TileGrid
         public Temperature Temperature { get; set; }
         public bool Heated { get; set; }
         public string Type { get; }
-        public bool Walkable { get; }
+        public bool Walkable { get; set; }
 
         private readonly Rectangle sourceRectangle;
         private readonly Rectangle destinationRectangle;

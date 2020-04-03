@@ -8,7 +8,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 {
     public class Farm : Sprite, IInteractable, Engine.IUpdatable, IBuildable, IReconstructable
     {
-        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 8), 
+        public List<ResourceItem> CraftingCosts { get; private set; } = new List<ResourceItem>() { new ResourceItem(Resource.Wood, 8),
                                                                                                    new ResourceItem(Resource.Hoe, 1)};
 
         public List<InstructionType> InstructionTypes { get; }
@@ -22,7 +22,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
         [PFSerializable]
         public float timeUntilGrown;
 
-        private const float growTime = 15000f;
+        private const float growTime = 30000f;
 
         [PFSerializable]
         public Vector2 PFSPosition
@@ -69,7 +69,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Harvest(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 20));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Wheat, 30));
 
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);

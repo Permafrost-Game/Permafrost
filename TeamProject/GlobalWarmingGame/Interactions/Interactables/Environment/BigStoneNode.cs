@@ -4,6 +4,7 @@ using GlobalWarmingGame.Action;
 using GlobalWarmingGame.ResourceItems;
 using GlobalWarmingGame.Resources;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
@@ -18,6 +19,8 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
             get { return Position; }
             set { Position = value; }
         }
+
+        private static readonly Random rand = new Random();
 
         public BigStoneNode() : base(Vector2.Zero, Vector2.Zero)
         {
@@ -39,7 +42,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
                     requiredResources: new List<ResourceItem>() {new ResourceItem(ResourceTypeFactory.GetResource(Resource.Pickaxe), 1)},
                     //checkValidity: (Instruction i) => InstructionTypes.Contains(i.Type)
                     //                               && i.ActiveMember.Inventory.ContainsType(Resource.Pickaxe),
-                    timeCost: 3000f,
+                    timeCost: 6000f,
                     onStart: StartMine,
                     onComplete: EndMine
                     )
@@ -55,7 +58,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
         private void EndMine(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.StonePickup);
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Stone, 12));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Stone, 8));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.IronOre, rand.Next(0,3)));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Coal, rand.Next(0,6)));
             Dispose();
         }
 

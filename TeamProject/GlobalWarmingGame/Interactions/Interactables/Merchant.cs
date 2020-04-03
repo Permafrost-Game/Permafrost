@@ -69,11 +69,25 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     {
                         new ResourceItem(Resource.MachineParts, 4)
                     }
-                }
+                },
+                /*{
+                    Resource.CombatKnife,
+                    new List<ResourceItem>()
+                    {
+                        new ResourceItem(Resource.Food, 1)
+                    }
+                },
+                {
+                    Resource.MKIIShotgun,
+                    new List<ResourceItem>()
+                    {
+                        new ResourceItem(Resource.Food, 1)
+                    }
+                }*/
             };
         }
 
-        private readonly Random rand;
+        private static readonly Random rand = new Random();
 
         #region PFSerializable
         [PFSerializable]
@@ -91,8 +105,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
         )
         {
             Speed = 0.10f;
-
-            rand = new Random();
 
             Resource r;
             switch (rand.Next(0,2))
@@ -113,6 +125,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     InstructionTypes.Add(new InstructionType((r = Resource.Coat).ToString(), "Buy Coat", requiredResources: prices[r], onComplete: Trade));
                     break;
             }
+
+            //InstructionTypes.Add(new InstructionType((r = Resource.CombatKnife).ToString(), "CombatKnife", requiredResources: prices[r], onComplete: Trade));
+            //InstructionTypes.Add(new InstructionType((r = Resource.MKIIShotgun).ToString(), "MKIIShotgun", requiredResources: prices[r], onComplete: Trade));
 
         }
 

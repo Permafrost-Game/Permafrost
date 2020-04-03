@@ -119,7 +119,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 SoundFactory.PlaySoundEffect(Sound.Explosion);
                 TextureGroupIndex = 5;
                 Colonist colonist = (Colonist)instruction.ActiveMember;
-                colonist.Health = colonist.Health - 50;
+                colonist.Health -= 50;
                 Task.Delay(new TimeSpan(0, 0, 2)).ContinueWith(o =>
                 {
                     robotExploded = true;

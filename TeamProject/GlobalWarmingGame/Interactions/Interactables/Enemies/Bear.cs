@@ -36,18 +36,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         : base ("Bear",2000, 70, 10, hp, position, TextureSetTypes.Bear)
         { }
 
-       
+
 
         public override void AnimateAttack()
         {
             isAnimated = true;
             this.TextureGroupIndex = 3;
-            
+
         }
 
         protected override void SetDead()
         {
-            //remove the enemy from the game 
+            //remove the enemy from the game
             this.DeathSound();
             notDefeated = false;
             GameObjectManager.Add(new Loot(loot, this.Position));
@@ -55,10 +55,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         }
 
         public override void Update(GameTime gameTime)
-        {   
+        {
             base.Update(gameTime);
-            
-            
+
+
         }
 
         protected override void ChaseColonist(Colonist colonist)

@@ -34,21 +34,21 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         public Robot(Vector2 position, int hp = 500) : base("Robot",5000, 70, 0, hp, position, TextureSetTypes.Robot)
         {
-        
+
         }
 
         public override void AnimateAttack()
         {
                 isAnimated = true;
-                this.TextureGroupIndex = 3;    
- 
+                this.TextureGroupIndex = 3;
+
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
-           
+
+
         }
 
         protected override void ChaseColonist(Colonist colonist)
@@ -83,7 +83,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
 
         protected override void SetDead()
         {
-            //remove the enemy from the game 
+            //remove the enemy from the game
             this.DeathSound();
             notDefeated = false;
             GameObjectManager.Add(new Loot(loot, this.Position));
