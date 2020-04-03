@@ -234,6 +234,7 @@ namespace GlobalWarmingGame
             foreach (Colonist colonist in colonists)
             {
                 colonist.ClearInstructions();
+                colonist.InCombat = false;
 
 
                 if (direction.X != 0)

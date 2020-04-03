@@ -427,6 +427,13 @@ namespace GlobalWarmingGame.UI.Controllers
                     i.Update(gameTime);
             }
 
+            foreach(Colonist colonist in GlobalCombatDetector.colonists)
+            {
+                view.UpdateTemperatureColonistWarning(colonist.inventory.GetHashCode(), colonist.Temperature.Value < colonist.LowerComfortRange);
+                view.UpdateHungerColonistWarning(colonist.inventory.GetHashCode(), colonist.Hunger >= 5);
+                view.UpdateCombatColonistWarning(colonist.inventory.GetHashCode(), colonist.InCombat);
+            }
+
             previousMouseState = currentMouseState;
 
         }

@@ -27,6 +27,9 @@ namespace GlobalWarmingGame.UI.Views
         private Panel menu;
         private readonly Dictionary<int, Panel> inventories;
         private readonly Dictionary<int, Icon> inventoryButtons;
+        private readonly Dictionary<int, Icon> temperatureWarnings;
+        private readonly Dictionary<int, Icon> foodWarnings;
+        private readonly Dictionary<int, Icon> combatWarnings;
 
         /// <summary>True if the current mouse position is over a UI entity</summary>
         internal bool Hovering { get; set; }
@@ -35,6 +38,9 @@ namespace GlobalWarmingGame.UI.Views
         {
             inventories = new Dictionary<int, Panel>();
             inventoryButtons = new Dictionary<int, Icon>();
+            temperatureWarnings = new Dictionary<int, Icon>();
+            foodWarnings = new Dictionary<int, Icon>();
+            combatWarnings = new Dictionary<int, Icon>();
         }
 
         internal void Initalise(ContentManager content)
@@ -51,6 +57,9 @@ namespace GlobalWarmingGame.UI.Views
             UserInterface.Active.Clear();
             inventories.Clear();
             inventoryButtons.Clear();
+            temperatureWarnings.Clear();
+            foodWarnings.Clear();
+            combatWarnings.Clear();
             menu = null;
         }
 
@@ -260,6 +269,30 @@ namespace GlobalWarmingGame.UI.Views
             Icon inventoryButton = new Icon(customIcon ? IconType.None : IconType.Sack, Anchor.BottomLeft, 1f, true, new Vector2(64f * inventories.Count, 0f)) ;
             if(customIcon) inventoryButton.Texture = icon;
 
+            Icon tempWarning = new Icon(IconType.OrbBlue)
+            {
+                Locked = true,
+                Scale = 0.75f
+            };
+            inventoryButton.AddChild(tempWarning);
+            temperatureWarnings.Add(buttonHandler.Tag.GetHashCode(), tempWarning);
+
+            Icon foodWarning = new Icon(IconType.Apple)
+            {
+                Locked = true,
+                Scale = 0.75f
+            };
+            inventoryButton.AddChild(foodWarning);
+            foodWarnings.Add(buttonHandler.Tag.GetHashCode(), foodWarning);
+
+            Icon combatWarning = new Icon(IconType.ShieldAndSword)
+            {
+                Locked = true,
+                Scale = 0.75f
+            };
+            inventoryButton.AddChild(combatWarning);
+            combatWarnings.Add(buttonHandler.Tag.GetHashCode(), combatWarning);
+
             inventoryButtons.Add(buttonHandler.Tag.GetHashCode(), inventoryButton);
             bottomPanel.AddChild(inventoryButton);
 
@@ -344,6 +377,9 @@ namespace GlobalWarmingGame.UI.Views
         {
             bottomPanel.RemoveChild(inventoryButtons[id]);
             inventoryButtons.Remove(id);
+            combatWarnings.Remove(id);
+            foodWarnings.Remove(id);
+            temperatureWarnings.Remove(id);
             bottomPanel.RemoveChild(inventories[id]);
             inventories[id].Dispose();
             inventories.Remove(id);
@@ -364,6 +400,19 @@ namespace GlobalWarmingGame.UI.Views
         {
             temperatureReadout.Text = text;
             temperatureReadout.Offset = position + new Vector2(20,30);
+        }
+
+        internal void UpdateHungerColonistWarning(int id, bool display)
+        {
+            if (foodWarnings.ContainsKey(id)) foodWarnings[id].Visible = display;
+        }
+        internal void UpdateTemperatureColonistWarning(int id, bool display)
+        {
+            if (temperatureWarnings.ContainsKey(id)) temperatureWarnings[id].Visible = display;
+        }
+        internal void UpdateCombatColonistWarning(int id, bool display)
+        {
+            if (combatWarnings.ContainsKey(id)) combatWarnings[id].Visible = display;
         }
     }
 }
