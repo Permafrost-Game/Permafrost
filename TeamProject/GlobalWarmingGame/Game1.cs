@@ -225,7 +225,7 @@ namespace GlobalWarmingGame
                 MainMenuUIController.GameTime += gameTime.ElapsedGameTime;
                 autoSaveTimer += gameTime.ElapsedGameTime;
 
-                System.Console.WriteLine(autoSaveTimer.TotalMinutes);
+                //System.Console.WriteLine(autoSaveTimer.TotalMinutes);
 
                 if (autoSaveTimer.TotalMinutes >= 5)
                 {

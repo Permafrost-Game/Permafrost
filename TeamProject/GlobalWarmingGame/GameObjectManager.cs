@@ -92,7 +92,7 @@ namespace GlobalWarmingGame
             }
             else
             {
-                Console.WriteLine("Saving to " + ZoneFilePath());
+                //Console.WriteLine("Saving to " + ZoneFilePath());
                 Serializer.Serialize(ZoneFilePath(), gameObjects);
             }
         }
@@ -166,9 +166,9 @@ namespace GlobalWarmingGame
             {
                 try
                 {
-                     IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
+                    IDictionary<Type, IEnumerable<object>> objs = Serializer.Deserialize(ZoneFilePath());
 
-                    Console.WriteLine("Loading from " + ZoneFilePath());
+                    //Console.WriteLine("Loading from " + ZoneFilePath());
 
                     foreach (IEnumerable<object> objList in objs.Values)
                         foreach (GameObject gameObject in objList)
@@ -177,7 +177,7 @@ namespace GlobalWarmingGame
 
                 catch (FileNotFoundException)
                 {
-                    Console.WriteLine("Creating " + ZoneFilePath());
+                    //Console.WriteLine("Creating " + ZoneFilePath());
 
                     ZoneGenerator.SpawnGameObjects(seed, zonePos);
 
