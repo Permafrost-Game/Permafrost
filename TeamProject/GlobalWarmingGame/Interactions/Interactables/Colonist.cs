@@ -261,13 +261,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             if (Goals.Count == 0
                 && instructions.Count > 0
-                && this.Position == (instructions.First.PassiveMember.Position)
                 )
             {
                 Instruction currentInstruction = instructions.First;
                 try
                 {
-                    currentInstruction.Start();
+                    if(this.Position == (instructions.First.PassiveMember.Position))
+                    {
+                        currentInstruction.Start();
+                    } else
+                    {
+                        throw new InvalidInstruction(currentInstruction, "failed to path find");
+                    }
+                    
                 }
                 catch (InvalidInstruction e)
                 {
