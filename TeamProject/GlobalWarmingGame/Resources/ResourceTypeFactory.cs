@@ -25,12 +25,10 @@ namespace GlobalWarmingGame.Resources
             AddResource(new ResourceType(Resource.Coal, "Coal", "A lump of coal", TextureIconTypes.Coal));
             AddResource(new ResourceType(Resource.Fibers, "Fibers", "A bundle of fibers", TextureIconTypes.Fibers));
             AddResource(new ResourceType(Resource.Food, "Food", "Food", TextureIconTypes.Apple));
-            AddResource(new ResourceType(Resource.Wheat, "Wheat", "Wheat", TextureIconTypes.Wheat));
             AddResource(new ResourceType(Resource.Leather, "Leather", "Tanned leather", TextureIconTypes.Leather)); 
             AddResource(new ResourceType(Resource.MachineParts, "Machine Parts", "Machine parts", TextureIconTypes.MachineParts));
             AddResource(new ResourceType(Resource.IronOre, "Iron", "A iron ore", TextureIconTypes.IronOre));
             AddResource(new ResourceType(Resource.RobotCore, "Robot Core", "A Core", TextureIconTypes.RobotCore));
-            //Add a wheat resource to replace food from farm
 
             //Teir 1 Craftable Resource Type definitions
 
@@ -46,7 +44,6 @@ namespace GlobalWarmingGame.Resources
             AddResource(new ResourceType(Resource.CombatKnife, "CombatKnife", "A CombatKnife", TextureIconTypes.CombatKnife));
             AddResource(new ResourceType(Resource.IronIngot, "Iron", "A iron ingot", TextureIconTypes.IronIngot));
             AddResource(new ResourceType(Resource.MKIIShotgun, "Shotgun MKII", "A MKII Shotgun", TextureIconTypes.MKIIShotgun));
-            //AddResource(new ResourceType(Resource.MultiTool, "MultiTool", "A MultiTool", TextureIconTypes.MultiTool)); 
 
 
         }
@@ -71,7 +68,6 @@ public enum Resource
     Wood,
     Fibers,
     Food,
-    Wheat,
     Coal,
     Leather,
     MachineParts,
@@ -83,8 +79,6 @@ public enum Resource
     CombatKnife,
     Shotgun,
     RobotCore,
-    //MultiTool,
     MKIIShotgun,
     ThickCoat
-
 }

@@ -18,14 +18,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Leather,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.MachineParts, 2)
-                    }
-                },
-                {
-                    Resource.MachineParts,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.MachineParts, 2)
+                        new ResourceItem(Resource.MachineParts, 1)
                     }
                 },
                 {
@@ -53,7 +46,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Shotgun,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.MachineParts, 12)
+                        new ResourceItem(Resource.MachineParts, 10)
                     }
                 },
                 {
@@ -69,21 +62,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     {
                         new ResourceItem(Resource.MachineParts, 4)
                     }
-                },
-                /*{
-                    Resource.CombatKnife,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Food, 1)
-                    }
-                },
-                {
-                    Resource.MKIIShotgun,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Food, 1)
-                    }
-                }*/
+                }
             };
         }
 
@@ -113,7 +92,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                 case 0:
                     InstructionTypes.Add(new InstructionType((r = Resource.Leather).ToString(), "Buy Leather", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Cloth).ToString(), "Buy Cloth", requiredResources: prices[r], onComplete: Trade));
-                    InstructionTypes.Add(new InstructionType((r = Resource.MachineParts).ToString(), "Buy MachineParts", requiredResources: prices[r], onComplete: Trade));
                     InstructionTypes.Add(new InstructionType((r = Resource.Shotgun).ToString(), "Buy Shotgun", requiredResources: prices[r], onComplete: Trade));
                     break;
 
@@ -125,9 +103,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     InstructionTypes.Add(new InstructionType((r = Resource.Coat).ToString(), "Buy Coat", requiredResources: prices[r], onComplete: Trade));
                     break;
             }
-
-            //InstructionTypes.Add(new InstructionType((r = Resource.CombatKnife).ToString(), "CombatKnife", requiredResources: prices[r], onComplete: Trade));
-            //InstructionTypes.Add(new InstructionType((r = Resource.MKIIShotgun).ToString(), "MKIIShotgun", requiredResources: prices[r], onComplete: Trade));
 
         }
 

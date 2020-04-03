@@ -28,7 +28,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 case Interactable.Colonist:
                     Inventory i = new Inventory(Colonist.COLONIST_DEFAULT_INVENTORY_SIZE);
-                    i.AddItem(new ResourceItem(Resource.Food, 32));
+                    i.AddItem(new ResourceItem(Resource.Food, 10));
                     return new Colonist(position, i);
                 case Interactable.Merchant:
                     return new Merchant(position);
@@ -48,7 +48,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new SnowTree(position);
                 case Interactable.TundraTree:
                     return new TundraTree(position);
-                case Interactable.WorkBench:
+                case Interactable.Workbench:
                     return new WorkBench(position);
                 case Interactable.Forge:
                     return new Forge(position);
@@ -60,7 +60,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Loot(new List<ResourceItem> { new ResourceItem(Resource.Shotgun, 1) }, position);
                 case Interactable.TallGrass:
                     return new TallGrass(position);
-                case Interactable.CampFire:
+                case Interactable.Campfire:
                     return new CampFire(position);
                 case Interactable.Robot:
                     return new Robot(position);
@@ -91,11 +91,11 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 case Buildable.Farm:
                     return new Farm(position);
-                case Buildable.WorkBench:
+                case Buildable.Workbench:
                     return new WorkBench(position);
                 case Buildable.Forge:
                     return new Forge(position);
-                case Buildable.CampFire:
+                case Buildable.Campfire:
                     return new CampFire(position);
                 case Buildable.Storage:
                     return new StorageUnit(position);
@@ -108,8 +108,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
 public enum Buildable
 {
-    CampFire,
-    WorkBench,
+    Campfire,
+    Workbench,
     Forge,
     Farm,
     Storage
@@ -119,11 +119,11 @@ public enum Interactable
 {
     Bear,
     Robot,
-    CampFire,
+    Campfire,
     TallGrass,
     StoneNodeSmall,
     StoneNodeBig,
-    WorkBench,
+    Workbench,
     Forge,
     Tree,
     SnowTree,

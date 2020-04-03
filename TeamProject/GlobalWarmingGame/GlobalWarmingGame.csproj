@@ -97,7 +97,6 @@
     <Compile Include="Interactions\Interactables\Environment\SmallStoneNode.cs" />
     <Compile Include="Interactions\Interactables\Environment\Tree.cs" />
     <Compile Include="Interactions\Interactables\Environment\Bush.cs" />
-    <Compile Include="Interactions\Interactables\Buildings\Mill.cs" />
     <Compile Include="Interactions\Interactables\Buildings\Forge.cs" />
     <Compile Include="Interactions\Interactables\Buildings\StorageUnit.cs" />
     <Compile Include="Interactions\Interactables\Animals\Rabbit.cs" />

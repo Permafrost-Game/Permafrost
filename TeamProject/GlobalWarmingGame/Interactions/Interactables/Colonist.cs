@@ -133,8 +133,9 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Food
         public int Hunger { get; private set; } = 0;
+        public bool Starving { get; private set; } = false;
         private float timeUntillNextHungerCheck;
-        private readonly float BASE_FOOD_CONSUMPTION = 12000f;
+        private readonly float BASE_FOOD_CONSUMPTION = 8000f;
         #endregion
 
         private bool deathSoundPlayed;
@@ -164,7 +165,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
             this.inventory.InventoryChange += InvokeInventoryChange;
 
-            InventoryRules.Add(Resource.Food, 15);
+            InventoryRules.Add(Resource.Food, 10);
 
             AttackRange = 70;
             AttackPower = 18;
@@ -520,9 +521,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     {
                         Hunger = 0;
                         Health = Math.Min(Health + 5, MaxHealth);
+                        Starving = false;
                     }
                     else
+                    {
                         Health -= 1;
+                        Starving = true;
+                    }
                 }
                 else
                 {
