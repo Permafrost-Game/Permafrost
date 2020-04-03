@@ -20,7 +20,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
     public class Colonist : AnimatedSprite, IHealthbased, IPathFindable, IInstructionFollower, IInteractable, Engine.IUpdatable, IReconstructable
     {
         private const float COLONIST_FRAME_TIME = 100f;
-        private const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
+        public const int COLONIST_DEFAULT_INVENTORY_SIZE = 100;
         private static readonly Random random = new Random();
 
         #region Instruction
@@ -30,6 +30,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         [PFSerializable]
         public readonly Inventory inventory;
+        public Dictionary<Resource, int> InventoryRules { get; } = new Dictionary<Resource, int>();
+
         public event EventHandler<ResourceItem> InventoryChange = delegate { };
 
         public Inventory Inventory { get => inventory; }
@@ -131,9 +133,26 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Food
         public int Hunger { get; private set; } = 0;
+        private static readonly InstructionType EAT_INSTRUCTION_TYPE = new InstructionType("eat", "Eat", "Eat food", 0, 
+                                                                                           new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)},
+                                                                                           0,
+                                                                                           onStart: Eat);
+        private static void Eat(Instruction i) 
+        {
+            Colonist colonist = (Colonist)i.ActiveMember;
+            if (colonist.Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
+            {
+                colonist.Hunger = 0;
+                colonist.Health = Math.Min(colonist.Health + 5, colonist.MaxHealth);
+            }
+            else
+                colonist.Health -= 1;
+        }
+
         private float timeUntillNextHungerCheck;
-        private readonly float BASE_FOOD_CONSUMPTION = 12000f;
+        private readonly float BASE_FOOD_CONSUMPTION = 6000f;
         #endregion
+
         private bool deathSoundPlayed;
         private bool AttackTrigger = false;
         private Enemy target;
@@ -147,7 +166,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         public Colonist() : this(position: Vector2.Zero) { }
 
-        public Colonist(Vector2 position, Inventory inventory = default, int capacity = COLONIST_DEFAULT_INVENTORY_SIZE) : base
+        public Colonist(Vector2 position, Inventory inventory = default) : base
         (
             position: position,
             textureSet: Textures.MapSet[TextureSetTypes.Colonist],
@@ -155,12 +174,13 @@ namespace GlobalWarmingGame.Interactions.Interactables
         )
         {
             if (inventory == null)
-                this.inventory = new Inventory(capacity);
+                this.inventory = new Inventory(COLONIST_DEFAULT_INVENTORY_SIZE);
             else
                 this.inventory = inventory;
 
             this.inventory.InventoryChange += InvokeInventoryChange;
 
+            InventoryRules.Add(Resource.Food, 15);
 
             AttackRange = 70;
             AttackPower = 18;
@@ -186,6 +206,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
         private void InvokeInventoryChange(Object sender, ResourceItem resourceItem)
         {
             InventoryChange.Invoke(this, resourceItem);
+            Ranged = inventory.ContainsType(Resource.Shotgun);
+
+            foreach(KeyValuePair<Resource, int> r in InventoryRules)
+            {
+                ResourceItem item = new ResourceItem(r.Key, r.Value);
+                ResourceItem itemRequired = new ResourceItem(r.Key, r.Value / 3 * 2);
+                if (!inventory.Contains(itemRequired))
+                {
+                    CheckRequireResources(new Instruction(new InstructionType("InventoryRule", "InventoryRule", requiredResources: new List<ResourceItem>() { item })), false);
+                }
+            }
 
             #region Combat
             if (inventory.ContainsType(Resource.Shotgun) || inventory.ContainsType(Resource.MKIIShotgun))
@@ -220,6 +251,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 LowerComfortRange = baseLowerComfortRange;
             }
             #endregion
+        }
+
         }
 
         internal void SetDead()
@@ -263,7 +296,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         }
 
-        private bool CheckRequireResources(Instruction instruction)
+        private bool CheckRequireResources(Instruction instruction, bool requiresAllRequiredResources = true)
         {
             List<Instruction> instructionsToEnqueue = new List<Instruction>();
 
@@ -302,7 +335,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
                     }
                 }
-                if (requiredItem.Weight > 0)
+                if(requiredItem.Weight > 0 && requiresAllRequiredResources)
                 {
                     return false;
                 }
@@ -397,7 +430,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                         else
                         {
                             //No valid resources
-                            instructions.Dequeue();
+                            instructions.Remove(i1);
 
                             List<string> detailedRequiredResources = new List<string>();
                             foreach (ResourceItem resourceItem in i1.Type.RequiredResources)
@@ -490,19 +523,17 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (timeUntillNextHungerCheck < 0)
             {
                 //If the colonist is hungry they take health damage and reset else increase hunger
-                if (Hunger == 5)
+                if (Hunger == 1)
                 {
-                    //If colonist doesn't have food on them, they are starving -1 health
-                    if (!Inventory.RemoveItem(new ResourceItem(Resource.Food, 1)))
+                    //AddInstruction(new Instruction(EAT_INSTRUCTION_TYPE, EAT_INSTRUCTION_TYPE.Priority, this, this));
+
+                    if (Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
                     {
-                        Health -= 1;
-                    }
-                    else
-                    {
-                        //Food was eaten, reset hunger
                         Hunger = 0;
                         Health = Math.Min(Health + 5, MaxHealth);
                     }
+                    else
+                        Health -= 1;
                 }
                 else
                 {
@@ -560,15 +591,22 @@ namespace GlobalWarmingGame.Interactions.Interactables
         {
             foreach (StorageUnit storageUnit in GameObjectManager.Filter<StorageUnit>())
             {
-                if (storageUnit.ResourceItem != null && inventory.ContainsType(storageUnit.ResourceItem.ResourceType.ResourceID))
+                if (storageUnit.ResourceItem != null)
                 {
-                    AddInstruction(new Instruction(
-                        type: storageUnit.StoreInstruction,
-                        activeMember: this,
-                        passiveMember: storageUnit
-                        )
-                    );
-                    break;
+                    Resource id = storageUnit.ResourceItem.ResourceType.ResourceID;
+                    if (inventory.ContainsType(id)
+                       && (!InventoryRules.ContainsKey(id)
+                       || inventory.Resources[id].Weight > InventoryRules[id])
+                    )
+                    {
+                        AddInstruction(new Instruction(
+                            type: storageUnit.StoreInstruction,
+                            activeMember: this,
+                            passiveMember: storageUnit
+                            )
+                        );
+                        break;
+                    }
                 }
             }
         }
@@ -580,7 +618,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
             {
                 if (instructions.First == instruction)
                 {
-                    instructions.Dequeue();
+                    instructions.Remove(instruction);
                     if (instruction.Type.ID != "takeItem")
                     {
                         CheckInventoryDump();
@@ -594,7 +632,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 }
                 else
                 {
-                    throw new Exception("Async instruction completed");
+                    //throw new Exception("Async instruction completed");
                 }
             }
 

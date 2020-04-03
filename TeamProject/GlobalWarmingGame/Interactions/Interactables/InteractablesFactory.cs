@@ -27,13 +27,19 @@ namespace GlobalWarmingGame.Interactions.Interactables
             switch(interactable)
             {
                 case Interactable.Colonist:
-                    return new Colonist(position);
+                    Inventory i = new Inventory(Colonist.COLONIST_DEFAULT_INVENTORY_SIZE);
+                    i.AddItem(new ResourceItem(Resource.Food, 32));
+                    return new Colonist(position, i);
                 case Interactable.Merchant:
                     return new Merchant(position);
                 case Interactable.Farm:
                     return new Farm(position);
                 case Interactable.Rabbit:
                     return new Rabbit(position);
+                case Interactable.Fox:
+                    return new Fox(position);
+                case Interactable.Goat:
+                    return new Goat(position);
                 case Interactable.Bush:
                     return new Bush(position);
                 case Interactable.Tree:
@@ -118,6 +124,8 @@ public enum Interactable
     Tree,
     Bush,
     Rabbit,
+    Fox,
+    Goat,
     Farm,
     Colonist,
     Merchant,

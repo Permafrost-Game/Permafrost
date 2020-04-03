@@ -207,6 +207,44 @@ namespace GlobalWarmingGame
                     }
             });
 
+            MapSet.Add(TextureSetTypes.Fox, new Texture2D[][] {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf4"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf5"),
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf6"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf7"),
+                    },
+                    new Texture2D[]
+                    {
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf0"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/fox/Wolf1"),
+                    }
+            });
+            MapSet.Add(TextureSetTypes.Goat, new Texture2D[][] {
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite0"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite1"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite2"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite3"),
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite8"),
+                        contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite9"),
+                    },
+                    new Texture2D[]
+                    {
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite4"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite5"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite6"),
+                       contentManager.Load<Texture2D>(@"textures/interactables/animals/goat/Goat/sprite7"),
+                    }
+            });
             MapSet.Add(TextureSetTypes.Bandit, new Texture2D[][]
                 {
                     new Texture2D[]
@@ -336,6 +374,8 @@ namespace GlobalWarmingGame
         Robot,
         Rabbit,
         Bandit,
-        SmallRobot
+        SmallRobot,
+        Fox,
+        Goat
     }
 }
