@@ -123,7 +123,15 @@ namespace GlobalWarmingGame.UI.Views
             UserInterface.Active.Update(gameTime);
         }
 
-        internal void SetPauseMenuVisiblity(bool show)    => PauseMenu.Visible = show;
+        internal void SetPauseMenuVisiblity(bool show)
+        {
+            if (menu != null)
+            {
+                UserInterface.Active.RemoveEntity(menu);
+                menu = null;
+            }
+            PauseMenu.Visible = show;
+        }
         internal void SetSettingsMenuVisiblity(bool show) => SettingsMenu.Visible = show;
 
         internal void Draw(SpriteBatch spriteBatch)
