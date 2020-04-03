@@ -99,7 +99,7 @@ namespace GlobalWarmingGame
             MapSet.Add(TextureSetTypes.CampFire, new Texture2D[][]    {
                     new Texture2D[]
                     {
-                        contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_1")
+                        contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_0")
                     },
                      new Texture2D[]
                     {
@@ -108,7 +108,11 @@ namespace GlobalWarmingGame
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_3"),
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_4"),
                         contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_5"),
-                    }
+                    },
+                    new Texture2D[]
+                    {
+                        contentManager.Load<Texture2D>(@"textures/interactables/buildings/campfire/sprite_6")
+                    },
 
             });
 
