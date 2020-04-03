@@ -41,12 +41,19 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             frameTime: 50f
         )
         {
-            TextureGroupIndex = 1;
-
             InstructionTypes = new List<InstructionType>();
             fuel = new InstructionType("fuel", "Fuel", "Fuel campfire", requiredResources: new List<ResourceItem>() { new ResourceItem(Resource.Wood, 1) }, onComplete: Fuel);
 
             Heating = heating;
+
+            if (Heating == true)
+                TextureGroupIndex = 1;
+            else
+            {
+                TextureGroupIndex = 2;
+                InstructionTypes.Add(fuel);
+            }
+
             this.timeUntilBurntout = timeUntilBurntout;
         }
 
