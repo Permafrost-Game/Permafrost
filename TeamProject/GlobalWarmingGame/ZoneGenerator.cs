@@ -79,12 +79,15 @@ namespace GlobalWarmingGame
                 else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
                     chance = random.Next(tileCount);
-
                     if (chance < 750)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
 
                     else if (chance < 1000)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeBig, t.Position));
+
+                    chance = random.Next(tileCount);
+                    if (chance < 30)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Goat, t.Position));
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
@@ -105,8 +108,14 @@ namespace GlobalWarmingGame
 
                 chance = random.Next(tileCount);
                 if (!t.Type.Equals("textures/tiles/main_tileset/Stone") && !t.Type.Equals("textures/tiles/main_tileset/water") && !t.Type.Equals("textures/tiles/main_tileset/deepWater"))
+                {
                     if (chance < 15)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+
+                    if (chance < 5)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Fox, t.Position));
+                }
+                    
 
                 chance = random.Next(tileCount);
                 if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
