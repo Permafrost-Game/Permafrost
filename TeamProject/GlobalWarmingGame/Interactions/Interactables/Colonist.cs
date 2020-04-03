@@ -133,24 +133,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
 
         #region Food
         public int Hunger { get; private set; } = 0;
-        private static readonly InstructionType EAT_INSTRUCTION_TYPE = new InstructionType("eat", "Eat", "Eat food", 0, 
-                                                                                           new List<ResourceItem>() { new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)},
-                                                                                           0,
-                                                                                           onStart: Eat);
-        private static void Eat(Instruction i) 
-        {
-            Colonist colonist = (Colonist)i.ActiveMember;
-            if (colonist.Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
-            {
-                colonist.Hunger = 0;
-                colonist.Health = Math.Min(colonist.Health + 5, colonist.MaxHealth);
-            }
-            else
-                colonist.Health -= 1;
-        }
-
         private float timeUntillNextHungerCheck;
-        private readonly float BASE_FOOD_CONSUMPTION = 6000f;
+        private readonly float BASE_FOOD_CONSUMPTION = 12000f;
         #endregion
 
         private bool deathSoundPlayed;
@@ -522,10 +506,8 @@ namespace GlobalWarmingGame.Interactions.Interactables
             if (timeUntillNextHungerCheck < 0)
             {
                 //If the colonist is hungry they take health damage and reset else increase hunger
-                if (Hunger == 1)
+                if (Hunger == 5)
                 {
-                    //AddInstruction(new Instruction(EAT_INSTRUCTION_TYPE, EAT_INSTRUCTION_TYPE.Priority, this, this));
-
                     if (Inventory.RemoveItem(new ResourceItem(ResourceTypeFactory.GetResource(Resource.Food), 1)))
                     {
                         Hunger = 0;
