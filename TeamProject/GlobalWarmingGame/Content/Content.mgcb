@@ -2981,6 +2981,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/interactables/environment/tree/tree.png
 
+#begin textures/tiles/main_tileset/deepWater.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/tiles/main_tileset/deepWater.png
+
 #begin textures/tiles/main_tileset/error.png
 /importer:TextureImporter
 /processor:TextureProcessor

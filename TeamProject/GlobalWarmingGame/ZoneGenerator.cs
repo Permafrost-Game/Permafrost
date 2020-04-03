@@ -104,7 +104,7 @@ namespace GlobalWarmingGame
                 }
 
                 chance = random.Next(tileCount);
-                if (!t.Type.Equals("textures/tiles/main_tileset/Stone") && !t.Type.Equals("textures/tiles/main_tileset/water"))
+                if (!t.Type.Equals("textures/tiles/main_tileset/Stone") && !t.Type.Equals("textures/tiles/main_tileset/water") && !t.Type.Equals("textures/tiles/main_tileset/deepWater"))
                     if (chance < 15)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
 

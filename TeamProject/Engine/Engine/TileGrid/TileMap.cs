@@ -12,7 +12,7 @@ namespace Engine.TileGrid
     {
 
         public bool TemperatureMode { get; set; } = false;
-        public Tile[,] Tiles { get; }
+        public Tile[,] Tiles { get; set; }
         public Vector2 TileSize { get; }
 
         public Vector2 Size

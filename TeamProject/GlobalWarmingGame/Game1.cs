@@ -181,7 +181,8 @@ namespace GlobalWarmingGame
                     { 2, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Grass") },
                     { 3, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Snow") },
                     { 4, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/Stone") },
-                    { 5, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water") }
+                    { 5, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/water") },
+                    { 6, this.Content.Load<Texture2D>(@"textures/tiles/main_tileset/deepWater") }
                 };
 
                 Textures.LoadContent(Content);

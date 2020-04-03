@@ -21,7 +21,7 @@ namespace Engine.TileGrid
         /// <param name="height">The number of tiles to be generated in the Y direction</param>
         /// <param name="tileSet">The TileSet that is to be used</param>
         /// <returns>A TileMap</returns>
-        public static TileMap GenerateTileMap(int seed, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
+        private static TileMap GenerateTerrain(int seed, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
         {
             Tile[,] tiles = new Tile[width, height];
 
@@ -99,7 +99,7 @@ namespace Engine.TileGrid
                     }
                 }
 
-            //3rd Pass: Rivers
+            //3rd Pass: Deep Water
             seed++;
             noise = new FastNoise(seed);
             noise.SetNoiseType(FastNoise.NoiseType.CubicFractal);
@@ -108,15 +108,14 @@ namespace Engine.TileGrid
             noise.SetFractalOctaves(1);
 
             for (var x = 0; x < width; x++)
-            {
                 for (var y = 0; y < height; y++)
                 {
                     float value = noise.GetNoise(x + xOffset, y + yOffset);
 
-                    if (value < -0.93f)
+                    if (value < -0.92f)
                     {
                         tiles[x, y] = new Tile(
-                            texture: tileSet.TileSetTextures[5],
+                            texture: tileSet.TileSetTextures[6],
                             position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
                             size: tileSet.textureSize,
                             walkable: false,
@@ -124,9 +123,41 @@ namespace Engine.TileGrid
                             );
                     }
                 }
-            }
 
             return new TileMap(tiles);
+        }
+
+        public static TileMap GenerateTileMap(int seed, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
+        {
+            TileMap tileMap = GenerateTerrain(seed, xOffset, yOffset, width, height, tileSet, globalTemperature);
+
+            //4th Pass: Shallow Water
+            seed++;
+            FastNoise noise = new FastNoise(seed);
+            noise.SetNoiseType(FastNoise.NoiseType.SimplexFractal);
+            noise.SetFrequency(0.01f);
+            noise.SetFractalType(FastNoise.FractalType.Billow);
+            noise.SetFractalOctaves(1);
+
+            for (var x = 0; x < width; x++)
+                for (var y = 0; y < height; y++)
+                {
+                    float value = noise.GetNoise(x + xOffset, y + yOffset);
+
+                    if (tileMap.Tiles[x, y].Type.Equals("textures/tiles/main_tileset/deepWater"))
+                        if (value < -0.9f)
+                        {
+                            tileMap.Tiles[x, y] = new Tile(
+                                texture: tileSet.TileSetTextures[5],
+                                position: new Vector2(x * tileSet.textureSize.X, y * tileSet.textureSize.Y),
+                                size: tileSet.textureSize,
+                                walkable: true,
+                                initialTemperature: globalTemperature
+                                );
+                        }
+                }
+
+            return tileMap;
         }
     }
 }
