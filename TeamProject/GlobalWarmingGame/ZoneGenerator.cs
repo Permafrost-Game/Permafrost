@@ -1,10 +1,12 @@
 ﻿using Engine;
 using Engine.TileGrid;
+using Engine.Drawing;
+using GlobalWarmingGame.Interactions;
+using System.Collections.Generic;
+using System;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
 using Microsoft.Xna.Framework;
-using SimplexNoise;
-using System;
 
 namespace GlobalWarmingGame
 {
@@ -36,70 +38,90 @@ namespace GlobalWarmingGame
                 
             }
 
+            seed++;
+            FastNoise noise = new FastNoise(seed);
+            noise.SetNoiseType(FastNoise.NoiseType.PerlinFractal);
+            noise.SetFrequency(0.005f);
+            noise.SetFractalOctaves(1);
+
+            Random random = new Random(seed);
+            int chance;
+            int tileCount = GameObjectManager.ZoneMap.Tiles.Length;
 
             foreach (Tile t in GameObjectManager.ZoneMap.Tiles)
             {
-                //int item = rand.Next(0, 100);
-                float value = ((Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 4f) / 255) + (Noise.CalcPixel2D((int)t.Position.X, (int)t.Position.Y, 0.1f) / 255)) / 2;
+                float value = noise.GetNoise(t.Position.X, t.Position.Y);           
 
-                if (!t.Type.Equals("textures/tiles/main_tileset/water"))
+                if (t.Type.Equals("textures/tiles/main_tileset/Grass"))
                 {
-
-                    if (t.Type.Equals("textures/tiles/main_tileset/Grass"))
+                    if (value > 0.4f || value < -0.4f)
                     {
-                        if (value > 0.80 && value < 0.85)
-                        {
+                        chance = random.Next(tileCount);
+                        if (chance < 6666)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                        }
-                        else if (value > 0.85 && value < 0.9)
-                        {
+                    }
+
+                    else if (value < 0.01f && value > 0)
+                    {
+                        chance = random.Next(tileCount);
+                        if (chance < 6666)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
-                        }
+                    }
 
-                        else if (value < 0.1)
-                        {
+                    else if (value > -0.01f && value < 0)
+                    {
+                        chance = random.Next(tileCount);
+                        if (chance < 6666)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
-                        }
-                        else if (value < 0.12)
-                        {
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
-                        }
                     }
                 }
 
-                if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
+                else if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
-                    if (value > 0.8 && value < 0.825)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeBig, t.Position));
-                    }
-                    else if (value > 0.85)
-                    {
+                    chance = random.Next(tileCount);
+                    if (chance < 750)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
-                    } 
+
+                    else if (chance < 1000)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeBig, t.Position));
+
+                    chance = random.Next(tileCount);
+                    if (chance < 25)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Goat, t.Position));
                 }
 
-                if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
+                else if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))
                 {
-                    if (value > 0.9)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                    }
+                    chance = random.Next(tileCount);
+                    if (value > 0.4f || value < -0.4f)
+                        if (chance < 750)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                 }
+
+                else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
+                {
+                    chance = random.Next(tileCount);
+                    if (value > 0.4f || value < -0.4f)
+                        if (chance < 1000)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                }
+
+                chance = random.Next(tileCount);
+                if (!t.Type.Equals("textures/tiles/main_tileset/Stone") && !t.Type.Equals("textures/tiles/main_tileset/water") && !t.Type.Equals("textures/tiles/main_tileset/deepWater"))
+                {
+                    if (chance < 10)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Rabbit, t.Position));
+
+                    if (chance < 2)
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Fox, t.Position));
+                }
+                    
+
+                chance = random.Next(tileCount);
                 if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
-                {
-                    if (value > 0.9)
-                    {
-                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
-                    }
-
-                    else if (rand.Next(0, 10000) == 99)
-                    {
+                    if(chance < 5)
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bear, t.Position));
-                    }
-                }
             }
         }
     }
-    
 }

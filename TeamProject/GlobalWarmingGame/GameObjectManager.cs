@@ -4,8 +4,10 @@ using Engine.TileGrid;
 using GlobalWarmingGame.Interactions;
 using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.Interactions.Interactables.Buildings;
+using GlobalWarmingGame.Interactions.Interactables.Environment;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,14 +99,15 @@ namespace GlobalWarmingGame
 
         public static TileMap GenerateMap(Vector2 pos)
         {
-            return TileMapGenrator.GenerateTileMap(seed: seed, scale: 0.005f, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, TileSet, TemperatureManager.GlobalTemperature.Value);
+            return TileMapGenrator.GenerateTileMap(seed: seed, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, TileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
         private static void SetZone(Vector2 position, IEnumerable<Colonist> colonists = null)
         {
             
             zonePos = position;
-                ZoneMap = GenerateMap(position);            
+            ZoneMap = GenerateMap(position);
+
             PathFinder.TileMap = ZoneMap;
 
             gameObjects.Clear();
@@ -129,14 +132,23 @@ namespace GlobalWarmingGame
                     Drawables = Filter<IDrawable>().ToList();
                     Interactables = Filter<IInteractable>().ToList();
                 }
+
                 else
                 {
-
                     ZoneGenerator.SpawnGameObjects(seed, zonePos);
                     zoneMap.Add(zonePos, gameObjects);
 
+                    Vector2 pos = ZoneMap.Size / 2;
                     if (position == Vector2.Zero)
-                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+                    {
+                        while (!ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Walkable)
+                            pos += Vector2.One;
+
+                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
+
+                        Tower startingTower = new Tower(position: pos * ZoneMap.Tiles[0, 0].Size, isCaptured: true);
+                        GameObjectManager.Add(startingTower);
+                    }
                 }
             }
 
@@ -152,15 +164,25 @@ namespace GlobalWarmingGame
                         foreach (GameObject gameObject in objList)
                              Add(gameObject);
                 }
+
                 catch (FileNotFoundException)
                 {
                     Console.WriteLine("Creating " + ZoneFilePath());
 
                     ZoneGenerator.SpawnGameObjects(seed, zonePos);
 
+                    Vector2 pos = ZoneMap.Size / 2;
                     if (position == Vector2.Zero)
-                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: ZoneMap.Size * ZoneMap.Tiles[0, 0].Size / 2));
+                    {
+                        while (!ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Walkable)
+                            pos += Vector2.One;
 
+                        Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
+
+                        Tower startingTower = new Tower(position: pos * ZoneMap.Tiles[0, 0].Size, isCaptured: true);
+                        GameObjectManager.Add(startingTower);
+                    }
+                        
                     SaveZone();
                 }
             }
