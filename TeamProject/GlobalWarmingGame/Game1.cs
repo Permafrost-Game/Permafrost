@@ -210,8 +210,6 @@ namespace GlobalWarmingGame
         protected override void UnloadContent()
         {
             MainMenuUIController.UnloadSave();
-
-            SettingsManager.WriteSettings();
         }
         #endregion
 

@@ -17,16 +17,16 @@ namespace GlobalWarmingGame
 
                 string key = "isFullScreen";
                 if (settings.ContainsKey(key))
-                    fullScreen = bool.Parse(settings[key]);
+                    _fullScreen = bool.Parse(settings[key]);
 
 
                 key = "resolutionScale";
                 if (settings.ContainsKey(key))
-                    resolutionScale = float.Parse(settings[key]);
+                    _resolutionScale = float.Parse(settings[key]);
 
                 key = "devMode";
                 if (settings.ContainsKey(key))
-                    devMode = bool.Parse(settings[key]);
+                    _devMode = bool.Parse(settings[key]);
 
             }
             InvokeSettingsChange();
@@ -35,53 +35,57 @@ namespace GlobalWarmingGame
         #region events
         public delegate void SettingsChange();
         public static List<SettingsChange> OnSettingsChange = new List<SettingsChange>();
-        private static void InvokeSettingsChange() => OnSettingsChange.ForEach(a => a.Invoke());
+        private static void InvokeSettingsChange()
+        {
+            OnSettingsChange.ForEach(a => a.Invoke());
+            WriteSettings();
+        }
         #endregion
 
         #region settings properties
-        private static float resolutionScale = 1f;
+        private static float _resolutionScale = 1f;
         public static float ResolutionScale
         {
             get
             {
-                return resolutionScale;
+                return _resolutionScale;
             }
             set
             {
-                resolutionScale = value;
+                _resolutionScale = value;
                 InvokeSettingsChange();
             }
         }
 
-        private static bool fullScreen = true;
+        private static bool _fullScreen = true;
         public static bool Fullscreen
         {
             get
             {
-                return fullScreen;
+                return _fullScreen;
             }
             set
             {
-                fullScreen = value;
+                _fullScreen = value;
                 InvokeSettingsChange();
             }
         }
 
-        private static bool devMode = false;
+        private static bool _devMode = false;
         public static bool DevMode
         {
             get
             {
-                return devMode;
+                return _devMode;
             }
             set
             {
-                devMode = value;
+                _devMode = value;
                 InvokeSettingsChange();
             }
         }
 
-        public static void WriteSettings()
+        private static void WriteSettings()
         {
             var settingsData = JsonConvert.SerializeObject(new
             {

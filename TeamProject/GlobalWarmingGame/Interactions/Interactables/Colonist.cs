@@ -270,10 +270,12 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     {
                         currentInstruction.Start();
                     } else
+                    if(this.Position != GameObjectManager.ZoneMap.GetTileAtPosition(completedGoal).Position)
                     {
                         throw new InvalidInstruction(currentInstruction, "failed to path find");
                     }
-                    
+
+
                 }
                 catch (InvalidInstruction e)
                 {
