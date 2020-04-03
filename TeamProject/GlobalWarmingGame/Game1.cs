@@ -94,7 +94,7 @@ namespace GlobalWarmingGame
             }
         }
 
-        
+        System.TimeSpan autoSaveTimer;
 
         public Game1()
         {
@@ -223,6 +223,15 @@ namespace GlobalWarmingGame
             if (GameState == GameState.Playing)
             {
                 MainMenuUIController.GameTime += gameTime.ElapsedGameTime;
+                autoSaveTimer += gameTime.ElapsedGameTime;
+
+                System.Console.WriteLine(autoSaveTimer.TotalMinutes);
+
+                if (autoSaveTimer.TotalMinutes >= 5)
+                {
+                    autoSaveTimer = new System.TimeSpan();
+                    MainMenuUIController.UnloadSave();
+                }
 
                 GameObjectManager.Camera.Update(gameTime);
 
