@@ -97,14 +97,24 @@ namespace GlobalWarmingGame
             }
         }
 
+        /// <summary>
+        /// Generates the game <see cref="ZoneMap"/>
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public static TileMap GenerateMap(Vector2 pos)
         {
-            return TileMapGenrator.GenerateTileMap(seed: seed, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, TileSet, TemperatureManager.GlobalTemperature.Value);
+            return TileMapGenerator.GenerateTileMap(seed: seed, xOffset: (int)pos.X * 99, yOffset: (int)pos.Y * 99, width: 100, height: 100, TileSet, TemperatureManager.GlobalTemperature.Value);
         }
 
+        /// <summary>
+        /// Sets the current <see cref="ZoneMap"/> 
+        /// after saving the previous one
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="colonists"></param>
         private static void SetZone(Vector2 position, IEnumerable<Colonist> colonists = null)
         {
-            
             zonePos = position;
             ZoneMap = GenerateMap(position);
 
@@ -141,7 +151,7 @@ namespace GlobalWarmingGame
                     Vector2 pos = ZoneMap.Size / 2;
                     if (position == Vector2.Zero)
                     {
-                        while (!ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Walkable)
+                        while (ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/water") || ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/water"))
                             pos += Vector2.One;
 
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
@@ -174,7 +184,7 @@ namespace GlobalWarmingGame
                     Vector2 pos = ZoneMap.Size / 2;
                     if (position == Vector2.Zero)
                     {
-                        while (!ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Walkable)
+                        while (ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/water") || ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/deepWater"))
                             pos += Vector2.One;
 
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
@@ -241,6 +251,11 @@ namespace GlobalWarmingGame
             GraphicsDevice.SetRenderTarget(null);
         }
 
+        /// <summary>
+        /// Moves colonist to the appropriate <see cref="ZoneMap"/> 
+        /// based on a given direction
+        /// </summary>
+        /// <param name="direction"></param>
         public static void MoveZone(Vector2 direction)
         {
             List<Colonist> colonists = Filter<Colonist>().ToList();

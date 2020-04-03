@@ -25,8 +25,9 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.Farm,              contentManager.Load<Texture2D>(@"textures/interactables/buildings/farm/sprite0"));
             Map.Add(TextureTypes.BushH,             contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite0"));
             Map.Add(TextureTypes.BushN,             contentManager.Load<Texture2D>(@"textures/interactables/environment/berry_bush/sprite1"));
-            Map.Add(TextureTypes.Tree,              contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite0"));
-            Map.Add(TextureTypes.TreeStump,         contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/sprite2"));
+            Map.Add(TextureTypes.Tree,              contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/tree"));
+            Map.Add(TextureTypes.SnowTree,          contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/snowtree"));
+            Map.Add(TextureTypes.TundraTree,        contentManager.Load<Texture2D>(@"textures/interactables/environment/tree/tundratree"));
             Map.Add(TextureTypes.WorkBench,         contentManager.Load<Texture2D>(@"textures/interactables/buildings/workbench"));
             Map.Add(TextureTypes.SmallStoneNode,    contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_0"));
             Map.Add(TextureTypes.BigStoneNode,      contentManager.Load<Texture2D>(@"textures/interactables/environment/stone/stone_1"));
@@ -35,9 +36,9 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.TowerH,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
             Map.Add(TextureTypes.TowerF,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/final_tower"));
             Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
-            Map.Add(TextureTypes.Loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
-            Map.Add(TextureTypes.Forge,                contentManager.Load<Texture2D>(@"textures/interactables/buildings/forge/forge"));
-            Map.Add(TextureTypes.Mill,                 null);
+            Map.Add(TextureTypes.Loot,              contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
+            Map.Add(TextureTypes.Forge,             contentManager.Load<Texture2D>(@"textures/interactables/buildings/forge/forge"));
+            Map.Add(TextureTypes.Mill,              null);
 
             #endregion
 
@@ -64,7 +65,7 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.Shotgun,      contentManager.Load<Texture2D>(@"textures/icons/shotgun"));
             MapIcon.Add(TextureIconTypes.MKIIShotgun,  contentManager.Load<Texture2D>(@"textures/icons/mkIIShotgun"));
 
-            MapIcon.Add(TextureIconTypes.Cloth,        null);
+            MapIcon.Add(TextureIconTypes.Cloth,        contentManager.Load<Texture2D>(@"textures/icons/cloth"));
             MapIcon.Add(TextureIconTypes.Coat,         contentManager.Load<Texture2D>(@"textures/icons/coat"));
             MapIcon.Add(TextureIconTypes.ThickCoat,    contentManager.Load<Texture2D>(@"textures/icons/thickCoat"));
 
@@ -326,7 +327,8 @@ namespace GlobalWarmingGame
         BushH,
         BushN,
         Tree,
-        TreeStump,
+        SnowTree,
+        TundraTree,
         WorkBench,
         SmallStoneNode,
         BigStoneNode,

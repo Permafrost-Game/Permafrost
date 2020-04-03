@@ -44,6 +44,10 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new Bush(position);
                 case Interactable.Tree:
                     return new Tree(position);
+                case Interactable.SnowTree:
+                    return new SnowTree(position);
+                case Interactable.TundraTree:
+                    return new TundraTree(position);
                 case Interactable.WorkBench:
                     return new WorkBench(position);
                 case Interactable.Forge:
@@ -122,6 +126,8 @@ public enum Interactable
     WorkBench,
     Forge,
     Tree,
+    SnowTree,
+    TundraTree,
     Bush,
     Rabbit,
     Fox,
