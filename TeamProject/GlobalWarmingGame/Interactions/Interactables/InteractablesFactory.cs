@@ -48,7 +48,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                     return new SnowTree(position);
                 case Interactable.TundraTree:
                     return new TundraTree(position);
-                case Interactable.WorkBench:
+                case Interactable.Workbench:
                     return new WorkBench(position);
                 case Interactable.Forge:
                     return new Forge(position);
