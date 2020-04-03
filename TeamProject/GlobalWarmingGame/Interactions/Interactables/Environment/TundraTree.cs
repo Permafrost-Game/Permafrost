@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions.Interactables.Environment
 {
-    public class Tree : Sprite, IInteractable, IReconstructable
+    public class TundraTree : Sprite, IInteractable, IReconstructable
     {
         [PFSerializable]
         public bool _choppable;
@@ -35,20 +35,20 @@ namespace GlobalWarmingGame.Interactions.Interactables.Environment
 
         public List<InstructionType> InstructionTypes { get; }
 
-        public Tree() : base(Vector2.Zero, Vector2.Zero)
+        public TundraTree() : base(Vector2.Zero, Vector2.Zero)
         {
 
         }
 
-        public Tree(Vector2 position, bool choppable = true) : base
+        public TundraTree(Vector2 position, bool choppable = true) : base
         (
             position: position,
-            texture: Textures.Map[TextureTypes.Tree]
+            texture: Textures.Map[TextureTypes.TundraTree]
         )
         {
             InstructionTypes = new List<InstructionType>();
 
-            this.texture = Textures.Map[TextureTypes.Tree];
+            this.texture = Textures.Map[TextureTypes.TundraTree];
 
             Choppable = choppable;
 

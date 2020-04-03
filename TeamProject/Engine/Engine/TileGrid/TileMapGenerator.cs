@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Engine.TileGrid
 {
-    public static class TileMapGenrator
+    public static class TileMapGenerator
     {
-
         /// <summary>
         /// Generates a <see cref="TileMap"/>
         /// </summary>
@@ -127,6 +126,17 @@ namespace Engine.TileGrid
             return new TileMap(tiles);
         }
 
+        /// <summary>
+        /// Generates shallow rivers using a generated<see cref="TileMap"/>
+        /// </summary>
+        /// <param name="seed">The Seed for noise generation</param>
+        /// <param name="scale">The Scale for noise generation</param>
+        /// <param name="xOffset">The number of tile to ofset in the X direction</param>
+        /// <param name="yOffset">The number of tile to ofset in the Y direction</param>
+        /// <param name="width">The number of tiles to be generated in the X direction</param>
+        /// <param name="height">The number of tiles to be generated in the Y direction</param>
+        /// <param name="tileSet">The TileSet that is to be used</param>
+        /// <returns>A TileMap</returns>
         public static TileMap GenerateTileMap(int seed, int xOffset, int yOffset, int width, int height, TileSet tileSet, float globalTemperature)
         {
             TileMap tileMap = GenerateTerrain(seed, xOffset, yOffset, width, height, tileSet, globalTemperature);
