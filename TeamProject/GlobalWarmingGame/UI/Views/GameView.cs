@@ -383,7 +383,16 @@ namespace GlobalWarmingGame.UI.Views
             bottomPanel.RemoveChild(inventories[id]);
             inventories[id].Dispose();
             inventories.Remove(id);
-            
+            UpdateInventoryButtonPositions();
+        }
+
+        private void UpdateInventoryButtonPositions()
+        {
+            int counter = 0;
+            foreach(Entity e in inventoryButtons.Values)
+            {
+                e.Offset = new Vector2(64f * counter++, 0f);
+            }
         }
 
 

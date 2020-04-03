@@ -69,10 +69,14 @@ namespace GlobalWarmingGame
 
                 if (t.Type.Equals("textures/tiles/main_tileset/Stone"))
                 {
-                    if (value > 0.85)
+                    if (value > 0.8 && value < 0.825)
+                    {
+                        GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeBig, t.Position));
+                    }
+                    else if (value > 0.85)
                     {
                         GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.StoneNodeSmall, t.Position));
-                    }
+                    } 
                 }
 
                 if (t.Type.Equals("textures/tiles/main_tileset/Tundra1"))

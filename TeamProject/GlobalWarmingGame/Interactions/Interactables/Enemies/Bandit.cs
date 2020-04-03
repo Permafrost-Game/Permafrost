@@ -88,10 +88,10 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
         }
 
         protected override void SetDead() {
-            
+
             if (notDefeated)
             {
-             
+
                 Goals.Clear();
                 TextureGroupIndex = 4;
                 notDefeated=false;
@@ -99,11 +99,11 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
                 SoundFactory.PlaySoundEffect(Sound.BanditGiveUp);
                 InstructionTypes.Clear();
                 InstructionTypes.Add(new InstructionType("Kill", $"Kill Bandit", onComplete:Dying));
-                InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:join));     
+                InstructionTypes.Add(new InstructionType("Spare", $"Spare Bandit", onComplete:Join));
             }
         }
 
-        private void join(Instruction instruction)
+        private void Join(Instruction instruction)
         {
             SoundFactory.PlaySoundEffect(Sound.BanditJoins);
             killed = true;
@@ -129,5 +129,5 @@ namespace GlobalWarmingGame.Interactions.Interactables.Enemies
             return new Bandit(PFSPosition, (int)PFSHealth, dying);
         }
     }
-    
+
 }
