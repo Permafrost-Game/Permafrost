@@ -65,6 +65,7 @@ namespace GlobalWarmingGame.UI.Views
 
         internal void CreateUI()
         {
+            UserInterface.Active.UseRenderTarget = false;
             PauseMenu = new PauseMenu
             {
                 Visible = false

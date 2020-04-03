@@ -55,6 +55,7 @@ namespace GlobalWarmingGame.UI.Menus
             saveEntries = new Dictionary<S, SaveGameEntity>();
 
             menu = new Panel(Vector2.Zero, PanelSkin.Simple, Anchor.Center);
+            menu.PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
             this.AddChild(menu);
 
             Paragraph title = new Paragraph("Load a save game", anchor: Anchor.TopCenter)

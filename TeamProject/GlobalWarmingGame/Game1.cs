@@ -357,6 +357,7 @@ namespace GlobalWarmingGame
                     }
 
                     GameUIController.Draw(spriteBatch);
+
                     break;
                 case GameState.CutScene:
                     spriteBatch.Begin();
@@ -372,6 +373,7 @@ namespace GlobalWarmingGame
 
                     break;
             }
+
 
             base.Draw(gameTime);
 

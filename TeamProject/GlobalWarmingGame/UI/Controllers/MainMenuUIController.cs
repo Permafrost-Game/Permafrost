@@ -1,4 +1,5 @@
-﻿using GlobalWarmingGame.Interactions.Interactables;
+﻿using GeonBit.UI;
+using GlobalWarmingGame.Interactions.Interactables;
 using GlobalWarmingGame.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -199,6 +200,7 @@ namespace GlobalWarmingGame.UI.Controllers
         public static void Draw(SpriteBatch spriteBatch)
         {
             view.Draw(spriteBatch);
+            UserInterface.Active.DrawMainRenderTarget(spriteBatch);
         }
     }
 }

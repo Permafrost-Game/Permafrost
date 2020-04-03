@@ -38,6 +38,7 @@ namespace GlobalWarmingGame.UI.Views
         private bool startNewGame = false;
         internal void CreateUI(Texture2D MainMenuLogo, NewGame newGame)
         {
+            UserInterface.Active.UseRenderTarget = true;
             this.newGame = newGame;
             mainMenu = new MainMenu(MainMenuLogo);
 
