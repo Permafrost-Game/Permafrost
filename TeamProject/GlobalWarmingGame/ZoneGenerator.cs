@@ -57,21 +57,21 @@ namespace GlobalWarmingGame
                     if (value > 0.4f || value < -0.4f)
                     {
                         chance = random.Next(tileCount);
-                        if (chance < 6666)
+                        if (chance < 5000)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
                     }
 
                     else if (value < 0.01f && value > 0)
                     {
                         chance = random.Next(tileCount);
-                        if (chance < 6666)
+                        if (chance < 5000)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Bush, t.Position));
                     }
 
-                    else if (value > -0.01f && value < 0)
+                    else if (value > -0.05f && value < 0)
                     {
                         chance = random.Next(tileCount);
-                        if (chance < 6666)
+                        if (chance < 5000)
                             GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TallGrass, t.Position));
                     }
                 }
@@ -94,8 +94,8 @@ namespace GlobalWarmingGame
                 {
                     chance = random.Next(tileCount);
                     if (value > 0.4f || value < -0.4f)
-                        if (chance < 750)
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                        if (chance < 1000)
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.TundraTree, t.Position));
                 }
 
                 else if (t.Type.Equals("textures/tiles/main_tileset/Snow"))
@@ -103,7 +103,7 @@ namespace GlobalWarmingGame
                     chance = random.Next(tileCount);
                     if (value > 0.4f || value < -0.4f)
                         if (chance < 1000)
-                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.Tree, t.Position));
+                            GameObjectManager.Add((GameObject)InteractablesFactory.MakeInteractable(Interactable.SnowTree, t.Position));
                 }
 
                 chance = random.Next(tileCount);

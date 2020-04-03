@@ -141,7 +141,7 @@ namespace GlobalWarmingGame
                     Vector2 pos = ZoneMap.Size / 2;
                     if (position == Vector2.Zero)
                     {
-                        while (!ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Walkable)
+                        while (ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/water") || ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/water"))
                             pos += Vector2.One;
 
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));
@@ -174,7 +174,7 @@ namespace GlobalWarmingGame
                     Vector2 pos = ZoneMap.Size / 2;
                     if (position == Vector2.Zero)
                     {
-                        while (!ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Walkable)
+                        while (ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/water") || ZoneMap.Tiles[(int)pos.X, (int)pos.Y].Type.Equals("textures/tiles/main_tileset/deepWater"))
                             pos += Vector2.One;
 
                         Add((Colonist)InteractablesFactory.MakeInteractable(Interactable.Colonist, position: pos * ZoneMap.Tiles[0, 0].Size));

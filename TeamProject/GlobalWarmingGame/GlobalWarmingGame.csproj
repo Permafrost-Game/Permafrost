@@ -78,6 +78,8 @@
     <Compile Include="Interactions\Interactables\Animals\Fox.cs" />
     <Compile Include="Interactions\Interactables\Enemies\Bandit.cs" />
     <Compile Include="Interactions\Interactables\Enemies\SmallRobot.cs" />
+    <Compile Include="Interactions\Interactables\Environment\SnowTree.cs" />
+    <Compile Include="Interactions\Interactables\Environment\TundraTree.cs" />
     <Compile Include="Interactions\Interactables\GlobalCombatDetector.cs" />
     <Compile Include="CutSceneFactory.cs" />
     <Compile Include="Interactions\Interactables\Environment\BigStoneNode.cs" />
