@@ -18,56 +18,56 @@ namespace GlobalWarmingGame.Interactions.Interactables.Animals
                     Resource.Leather,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
+                        new ResourceItem(Resource.MachineParts, 2)
                     }
                 },
                 {
                     Resource.MachineParts,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
+                        new ResourceItem(Resource.MachineParts, 2)
                     }
                 },
                 {
                     Resource.Axe,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
+                        new ResourceItem(Resource.MachineParts, 2)
                     }
                 },
                 {
                     Resource.Hoe,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 4)
+                        new ResourceItem(Resource.MachineParts, 2)
                     }
                 },
                 {
                     Resource.Pickaxe,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 5)
+                        new ResourceItem(Resource.MachineParts, 2)
                     }
                 },
                 {
                     Resource.Shotgun,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 24)
+                        new ResourceItem(Resource.MachineParts, 12)
                     }
                 },
                 {
                     Resource.Cloth,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 2)
+                        new ResourceItem(Resource.MachineParts, 1)
                     }
                 },
                 {
                     Resource.Coat,
                     new List<ResourceItem>()
                     {
-                        new ResourceItem(Resource.Food, 8)
+                        new ResourceItem(Resource.MachineParts, 4)
                     }
                 }
             };
