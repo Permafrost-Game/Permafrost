@@ -17,33 +17,6 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             forgeCrafting = new Dictionary<Resource, List<ResourceItem>>
             {
                 {
-                    Resource.Axe,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Wood, 1),
-                        new ResourceItem(Resource.Fibers, 2),
-                        new ResourceItem(Resource.Stone, 1),
-                    }
-                },
-                {
-                    Resource.Hoe,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Wood, 1),
-                        new ResourceItem(Resource.Fibers, 2),
-                        new ResourceItem(Resource.Stone, 1),
-                    }
-                },
-                {
-                    Resource.Pickaxe,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Wood, 1),
-                        new ResourceItem(Resource.Fibers, 2),
-                        new ResourceItem(Resource.Stone, 2),
-                    }
-                },
-                {
                     Resource.IronIngot,
                     new List<ResourceItem>()
                     {
@@ -86,12 +59,9 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             Resource r;
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType((r = Resource.Axe).ToString(), "Axe", requiredResources: forgeCrafting[r], onComplete: ForgeItem),
-                new InstructionType((r = Resource.Hoe).ToString(), "Hoe", requiredResources: forgeCrafting[r], onComplete: ForgeItem),
-                new InstructionType((r = Resource.Pickaxe).ToString(), "Pickaxe", requiredResources: forgeCrafting[r], onComplete: ForgeItem),
                 new InstructionType((r = Resource.IronIngot).ToString(), "IronIngot", requiredResources: forgeCrafting[r], onComplete: ForgeItem),
                 new InstructionType((r = Resource.CombatKnife).ToString(), "CombatKnife", requiredResources: forgeCrafting[r], onComplete: ForgeItem),
-                new InstructionType((r = Resource.MKIIShotgun).ToString(), "MKIIShotgun", requiredResources: forgeCrafting[r], onComplete: ForgeItem)
+                new InstructionType((r = Resource.MKIIShotgun).ToString(), "MKIIShotgun", requiredResources: forgeCrafting[r], onComplete: ForgeItem),
             };
         }
 

@@ -2,6 +2,7 @@
 using Engine.TileGrid;
 using GlobalWarmingGame.Interactions.Interactables;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace GlobalWarmingGame.Interactions
@@ -157,7 +158,7 @@ namespace GlobalWarmingGame.Interactions
                 //Cap colonists temperature at -50 and 50
                 colonist.Temperature.Value = MathHelper.Clamp(colonistTemp, colonist.TemperatureMin, colonist.TemperatureMax);
 
-                //Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health);
+                Console.Out.WriteLine("Colonist temp: " + colonist.Temperature.Value + " tile temperature: " + tileTemp + " health: " + colonist.Health + " starving: " + colonist.Starving);
             }
         }
         #endregion

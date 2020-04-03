@@ -35,9 +35,8 @@ namespace GlobalWarmingGame
             Map.Add(TextureTypes.TowerH,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/hostile_tower"));
             Map.Add(TextureTypes.TowerF,            contentManager.Load<Texture2D>(@"textures/interactables/buildings/tower/final_tower"));
             Map.Add(TextureTypes.StorageUnit,       contentManager.Load<Texture2D>(@"textures/interactables/buildings/storage/sprite0"));
-            Map.Add(TextureTypes.Loot, contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
-            Map.Add(TextureTypes.Forge,                contentManager.Load<Texture2D>(@"textures/interactables/buildings/forge/forge"));
-            Map.Add(TextureTypes.Mill,                 null);
+            Map.Add(TextureTypes.Loot,              contentManager.Load<Texture2D>(@"textures/interactables/environment/loot/loot-bag"));
+            Map.Add(TextureTypes.Forge,             contentManager.Load<Texture2D>(@"textures/interactables/buildings/forge/forge"));
 
             #endregion
 
@@ -47,7 +46,6 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.Coal,         contentManager.Load<Texture2D>(@"textures/icons/coal"));
             MapIcon.Add(TextureIconTypes.Fibers,       contentManager.Load<Texture2D>(@"textures/icons/fibers"));
             MapIcon.Add(TextureIconTypes.Apple,        contentManager.Load<Texture2D>(@"textures/icons/apple"));
-            MapIcon.Add(TextureIconTypes.Wheat,        contentManager.Load<Texture2D>(@"textures/icons/wheat"));
             MapIcon.Add(TextureIconTypes.IronOre,      contentManager.Load<Texture2D>(@"textures/icons/ironOre"));
             MapIcon.Add(TextureIconTypes.IronIngot,    contentManager.Load<Texture2D>(@"textures/icons/ironIngot"));
 
@@ -58,7 +56,6 @@ namespace GlobalWarmingGame
             MapIcon.Add(TextureIconTypes.Axe,          contentManager.Load<Texture2D>(@"textures/icons/axe"));
             MapIcon.Add(TextureIconTypes.Hoe,          contentManager.Load<Texture2D>(@"textures/icons/hoe"));
             MapIcon.Add(TextureIconTypes.Pickaxe,      contentManager.Load<Texture2D>(@"textures/icons/pickaxe"));
-            //MapIcon.Add(TextureIconTypes.MultiTool,    null);
 
             MapIcon.Add(TextureIconTypes.CombatKnife,  contentManager.Load<Texture2D>(@"textures/icons/combatKnife"));
             MapIcon.Add(TextureIconTypes.Shotgun,      contentManager.Load<Texture2D>(@"textures/icons/shotgun"));
@@ -336,8 +333,7 @@ namespace GlobalWarmingGame
         TowerF,
         StorageUnit,
         Loot,
-        Forge,
-        Mill
+        Forge
     }
 
     public enum TextureIconTypes
@@ -349,7 +345,6 @@ namespace GlobalWarmingGame
         Coal,
         Fibers,
         Apple,
-        Wheat,
         Leather,
         MachineParts,
         Axe,
@@ -360,7 +355,6 @@ namespace GlobalWarmingGame
         CombatKnife,
         Shotgun,
         RobotCore,
-        //MultiTool,
         MKIIShotgun,
         ThickCoat
     }

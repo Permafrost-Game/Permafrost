@@ -69,7 +69,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Harvest(Instruction instruction)
         {
-            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Wheat, 30));
+            instruction.ActiveMember.Inventory.AddItem(new ResourceItem(Resource.Food, 30));
 
             InstructionTypes.Remove(harvest);
             InstructionTypes.Add(plant);

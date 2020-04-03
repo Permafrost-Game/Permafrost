@@ -181,7 +181,13 @@ namespace GlobalWarmingGame.UI.Controllers
                         {
                             building = InteractablesFactory.MakeBuildable(SelectedBuildable, objectClicked.Position);
 
-                            options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, requiredResources: building.CraftingCosts, onComplete: Build),
+                            List<ResourceItem> requiredResources = new List<ResourceItem>();
+
+                            if (!DevMode)
+                            {
+                                requiredResources = building.CraftingCosts;
+                            }
+                            options.Add(new ButtonHandler<Instruction>(new Instruction(new InstructionType("build", "Build", "Build the " + SelectedBuildable.ToString(), 0, requiredResources: requiredResources, onComplete: Build),
                                                                                        activeMember,
                                                                                        (GameObject)building), IssueInstructionCallback));
                         } 
@@ -430,7 +436,7 @@ namespace GlobalWarmingGame.UI.Controllers
             foreach(Colonist colonist in GlobalCombatDetector.colonists)
             {
                 view.UpdateTemperatureColonistWarning(colonist.inventory.GetHashCode(), colonist.Temperature.Value < colonist.LowerComfortRange);
-                view.UpdateHungerColonistWarning(colonist.inventory.GetHashCode(), colonist.Hunger >= 5);
+                view.UpdateHungerColonistWarning(colonist.inventory.GetHashCode(), colonist.Starving);
                 view.UpdateCombatColonistWarning(colonist.inventory.GetHashCode(), colonist.InCombat);
             }
 

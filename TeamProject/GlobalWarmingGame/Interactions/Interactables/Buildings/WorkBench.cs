@@ -24,19 +24,37 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             workbenchCrafting = new Dictionary<Resource, List<ResourceItem>>
             {
                 {
-                    Resource.Shotgun,
-                    new List<ResourceItem>()
-                    {
-                        new ResourceItem(Resource.Wood, 8),
-                        new ResourceItem(Resource.Leather, 2),
-                        new ResourceItem(Resource.MachineParts, 4),
-                    }
-                },
-                {
                     Resource.Cloth,
                     new List<ResourceItem>()
                     {
                         new ResourceItem(Resource.Fibers, 4),
+                    }
+                },
+                {
+                    Resource.Axe,
+                    new List<ResourceItem>()
+                    {
+                        new ResourceItem(Resource.Wood, 1),
+                        new ResourceItem(Resource.Fibers, 2),
+                        new ResourceItem(Resource.Stone, 1),
+                    }
+                },
+                {
+                    Resource.Hoe,
+                    new List<ResourceItem>()
+                    {
+                        new ResourceItem(Resource.Wood, 1),
+                        new ResourceItem(Resource.Fibers, 2),
+                        new ResourceItem(Resource.Stone, 1),
+                    }
+                },
+                {
+                    Resource.Pickaxe,
+                    new List<ResourceItem>()
+                    {
+                        new ResourceItem(Resource.Wood, 1),
+                        new ResourceItem(Resource.Fibers, 2),
+                        new ResourceItem(Resource.Stone, 2),
                     }
                 },
                 {
@@ -55,7 +73,16 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
                         new ResourceItem(Resource.Cloth, 2),
                         new ResourceItem(Resource.Leather, 2)
                     }
-                }
+                },
+                {
+                    Resource.Shotgun,
+                    new List<ResourceItem>()
+                    {
+                        new ResourceItem(Resource.Wood, 8),
+                        new ResourceItem(Resource.Leather, 2),
+                        new ResourceItem(Resource.MachineParts, 4),
+                    }
+                },
             };
         }
 
@@ -80,10 +107,13 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
             Resource r;
             InstructionTypes = new List<InstructionType>
             {
-                new InstructionType((r = Resource.Shotgun).ToString(), "Shotgun", requiredResources: workbenchCrafting[r], onComplete: Craft),
                 new InstructionType((r = Resource.Cloth).ToString(), "Cloth", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Axe).ToString(), "Axe", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Hoe).ToString(), "Hoe", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Pickaxe).ToString(), "Pickaxe", requiredResources: workbenchCrafting[r], onComplete: Craft),
                 new InstructionType((r = Resource.Coat).ToString(), "Coat", requiredResources: workbenchCrafting[r], onComplete: Craft),
-                new InstructionType((r = Resource.ThickCoat).ToString(), "ThickCoat", requiredResources: workbenchCrafting[r], onComplete: Craft)
+                new InstructionType((r = Resource.ThickCoat).ToString(), "ThickCoat", requiredResources: workbenchCrafting[r], onComplete: Craft),
+                new InstructionType((r = Resource.Shotgun).ToString(), "Shotgun", requiredResources: workbenchCrafting[r], onComplete: Craft),
             };
         }
 
