@@ -451,7 +451,7 @@ namespace GlobalWarmingGame.UI.Controllers
 
             if (t != null && !view.Hovering)
             {
-                int temperature = MathHelper.Clamp((int)Math.Round(t.Temperature.Value), -50, +50);
+                int temperature = MathHelper.Clamp((int)Math.Round(t.Temperature.Value), -50, +50) - 30;
                 if (temperature == 0)
                     temp = "±";
                  else if (temperature > 0)
