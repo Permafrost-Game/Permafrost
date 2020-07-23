@@ -12,7 +12,7 @@ namespace GlobalWarmingGame
 {
     static class ZoneGenerator
     {
-        private static readonly int towerDistance = 7;
+        private static readonly int towerDistance = 3;
         private static readonly int towerSpan = 100;
 
         /// <summary>

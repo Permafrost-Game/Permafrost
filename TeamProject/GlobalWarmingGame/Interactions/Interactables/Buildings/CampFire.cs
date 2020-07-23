@@ -32,7 +32,7 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         [PFSerializable]
         public float timeUntilBurntout;
-        private const float burnoutTime = 15000f;
+        private const float burnoutTime = 30000f;
 
         public CampFire(Vector2 position, bool heating = true, float timeUntilBurntout = burnoutTime) : base
         (
@@ -59,9 +59,18 @@ namespace GlobalWarmingGame.Interactions.Interactables.Buildings
 
         private void Fuel(Instruction instruction)
         {
-            Heating = true;
-            TextureGroupIndex = 1;
-            InstructionTypes.Clear();
+            if (instruction.ActiveMember.Inventory.ContainsAll(instruction.Type.RequiredResources))
+            {
+                foreach (ResourceItem item in instruction.Type.RequiredResources)
+                {
+                    instruction.ActiveMember.Inventory.RemoveItem(item);
+                }
+
+                Heating = true;
+                TextureGroupIndex = 1;
+                InstructionTypes.Clear();
+
+            }
         }
 
         public override void Update(GameTime gameTime)

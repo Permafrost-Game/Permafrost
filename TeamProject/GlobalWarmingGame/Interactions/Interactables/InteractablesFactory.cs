@@ -29,6 +29,7 @@ namespace GlobalWarmingGame.Interactions.Interactables
                 case Interactable.Colonist:
                     Inventory i = new Inventory(Colonist.COLONIST_DEFAULT_INVENTORY_SIZE);
                     i.AddItem(new ResourceItem(Resource.Food, 10));
+                    i.AddItem(new ResourceItem(Resource.Wood, 10));
                     return new Colonist(position, i);
                 case Interactable.Merchant:
                     return new Merchant(position);
